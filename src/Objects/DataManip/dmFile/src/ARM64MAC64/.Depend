@@ -1,5 +1,0 @@
-ARM64MAC64/dmFileInfo.o:dmFileInfo.o
-ARM64MAC64/dmFileInit.o:dmFileInit.o
-ARM64MAC64/dmFileRead.o:dmFileRead.o
-ARM64MAC64/dmFileUtil.o:dmFileUtil.o
-ARM64MAC64/ldm2mrc.o:ldm2mrc.o

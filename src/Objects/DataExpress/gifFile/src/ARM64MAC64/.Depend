@@ -1,7 +1,0 @@
-ARM64MAC64/decoder.o:decoder.o
-ARM64MAC64/gifFileInit.o:gifFileInit.o
-ARM64MAC64/gifFileWrite.o:gifFileWrite.o
-ARM64MAC64/gifUtil.o:gifUtil.o
-ARM64MAC64/gifcompr.o:gifcompr.o
-ARM64MAC64/gifencod.o:gifencod.o
-ARM64MAC64/lmrc2gif.o:lmrc2gif.o

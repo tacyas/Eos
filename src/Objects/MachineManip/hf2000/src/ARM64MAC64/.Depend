@@ -1,8 +1,0 @@
-ARM64MAC64/hf2000Close.o:hf2000Close.o
-ARM64MAC64/hf2000Command.o:hf2000Command.o
-ARM64MAC64/hf2000Init.o:hf2000Init.o
-ARM64MAC64/hf2000Read.o:hf2000Read.o
-ARM64MAC64/hf2000Write.o:hf2000Write.o
-ARM64MAC64/lhf2000LenzCurrent.o:lhf2000LenzCurrent.o
-ARM64MAC64/lhf2000SpecimenPosition.o:lhf2000SpecimenPosition.o
-ARM64MAC64/ltkhf2000.o:ltkhf2000.o

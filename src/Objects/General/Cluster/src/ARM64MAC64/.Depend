@@ -1,5 +1,0 @@
-ARM64MAC64/clusterLogAnalysis.o:clusterLogAnalysis.o
-ARM64MAC64/clusterLogInit.o:clusterLogInit.o
-ARM64MAC64/clusterLogRead.o:clusterLogRead.o
-ARM64MAC64/clusterLogUtil.o:clusterLogUtil.o
-ARM64MAC64/clusterLogWrite.o:clusterLogWrite.o

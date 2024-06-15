@@ -12,6 +12,7 @@ database \
 eosBayes \
 eosMath \
 eosPoint \
+eosStarFile \
 filter \
 hf2000 \
 khorosTool \

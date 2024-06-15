@@ -32,6 +32,9 @@ check:
 		echo making directory; \
 		mkdir -p $(EOS_HOME)/hostdepend/$(OSTYPE)/src/$(WORLDNAME)/$(CLASSNAME)/$(OBJECTNAME)/src/$(OSTYPE); \
 	fi
+	@if [ ! -L src/$(OSTYPE) ] ; then \ 
+		rm -rf src/$(OSTYPE);  \
+	fi
 	ln -sf ../../../../../hostdepend/$(OSTYPE)/src/$(WORLDNAME)/$(CLASSNAME)/$(OBJECTNAME)/src/$(OSTYPE) src/$(OSTYPE); 
 	@$(RM) src/Makefile
 	@echo "New src/Makefile" 

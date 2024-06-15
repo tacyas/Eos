@@ -9,8 +9,8 @@
 #
 */
 /* $Log$ */
-#ifndef EOS_MATH_H
-#define EOS_MATH_H
+#ifndef EOS_MATH_H 
+#define EOS_MATH_H 
 
 #include <stdio.h>
 
@@ -29,13 +29,7 @@ extern "C" {
 #endif
 
 /* prototype begin */
-
-extern void eosMathSorting(double* v, int n);
-extern double eosMathMedian(double* v, int n);
-extern double eosMathAverage(double* v, int n);
-extern double eosMathStdDev(double* v, int n);
-extern double eosMathTrimmedAverage(double* v, int n, double trim);
-extern double eosMathHodgesLehmannEstimator(double* v, int n);
+extern double eosBeseel_I(double x, int n);
 
 
 /* prototype end */
@@ -44,4 +38,4 @@ extern double eosMathHodgesLehmannEstimator(double* v, int n);
 };
 #endif
 
-#endif  /* EOS_MATH_H */ 
+#endif  /* XXXX */ 

@@ -291,6 +291,7 @@ mrcImateToPointsSet \
 mrcInfo \
 mrcInfoSet \
 mrcMask \
+mrcMaskedImageInfo \
 mrcMeanYlinePos \
 mrcMirrorImageCreate \
 mrcMultiFFTCentralSectionsCompare \

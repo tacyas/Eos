@@ -1,6 +1,0 @@
-ARM64MAC64/arrayInfo.o:arrayInfo.o
-ARM64MAC64/arrayInit.o:arrayInit.o
-ARM64MAC64/arrayPCA.o:arrayPCA.o
-ARM64MAC64/arrayRead.o:arrayRead.o
-ARM64MAC64/arrayWrite.o:arrayWrite.o
-ARM64MAC64/larray2mrc.o:larray2mrc.o
