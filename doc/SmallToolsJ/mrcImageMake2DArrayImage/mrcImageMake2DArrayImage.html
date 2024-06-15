@@ -1,0 +1,249 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageMake2DArrayImage</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageMake2DArrayImage<br></h2></b></font>
+	<h4></h4>
+
+	<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>オプション</th>
+				<th>必須項目/選択項目</th>
+				<th>NULL</th>
+				<th>デフォルト</th>
+			</tr>
+			<tr>
+				<td>-i</td>
+				<td>必須</td>
+				<td>入力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-o</td>
+				<td>必須</td>
+				<td>出力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-N</td>
+				<td>選択</td>
+				<td>出力ファイルのｘ軸の画像の幅を設定（２とすると画像２枚分の幅となる）</td>
+				<td>1</td>
+			</tr>
+			<tr>
+				<td>-w</td>
+				<td>選択</td>
+				<td>画像のつなぎ幅を設定</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-v</td>
+				<td>選択</td>
+				<td>画像のつなぎ幅の色を設定</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-h</td>
+				<td>選択</td>
+				<td>ヘルプを表示</td>
+				<td>　</td>
+			</tr>
+		</table>
+
+<!-- モード詳細 -->
+
+	<br>
+	<br>
+	<caption><b>モードの詳細</b></caption>
+	<table border="1">
+	<div align="left">
+		<tr>
+			<th>モード</th>
+			<th>説明</th>
+		</tr>
+		<tr>
+			<td>0</td>
+			<td>入力ファイルがリストの場合に設定</td>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>入力ファイルが３Ｄの場合に設定</td>
+		</tr>
+	</div>
+	</table>
+
+	<h4>******実行例******</h4>
+
+<!-- 入力ファイル説明 -->
+
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<div>ファイルの内容<br>
+	<img src="list.png" border="1" alt="list.png(709 byte)" width="96" height="63"></div>
+	<div>1vom-rot0.mrc</div>
+	<table>
+		<tr>
+			<td><img src="1vom-rot0.png" border="0" alt="1vom-rot0.png(2221 byte)" width="64" height="64"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				73.1421<br>
+				6.29881<br>
+				13.7886<br>
+				0.215447<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<div>1vom-rot1.mrc</div>
+	<table>
+		<tr>
+			<td><img src="1vom-rot1.png" border="0" alt="1vom-rot1.png(2155 byte)" width="64" height="64"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				77.0909<br>
+				6.29894<br>
+				14.3204<br>
+				0.223756<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<div>1vom-rot2.mrc</div>
+	<table>
+		<tr>
+			<td><img src="1vom-rot2.png" border="0" alt="1vom-rot2.png(2010 byte)" width="64" height="64"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				83.9283<br>
+				6.29888<br>
+				15.77<br>
+				0.246406<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<div>1vom-rot3.mrc</div>
+	<table>
+		<tr>
+			<td><img src="1vom-rot3.png" border="0" alt="1vom-rot3.png(2031 byte)" width="64" height="64"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				87.0306<br>
+				6.29884<br>
+				15.437<br>
+				0.241203<br></p>
+			</td>
+		</tr>
+	</table>
+
+<!-- 実行結果 -->
+
+	<caption><font color="blue">------選択オプション指定なし------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="outdata-lst.png" border="0" alt="outdata-lst.png(5470 byte)" width="64" height="256"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				87.0306<br>
+				6.29887<br>
+				14.8509<br>
+				0.116022<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<caption><font color="blue">------オプション　-N------</font></caption><br>
+	<div>-N=2に設定し実行</div>
+	<table>
+		<tr>
+			<td><img src="outdata-lst-N2.png" border="0" alt="outdata-lst-N2.png(5446 byte)" width="128" height="128"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				87.0306<br>
+				6.29887<br>
+				14.8509<br>
+				0.116022<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<caption><font color="blue">------オプション　-w------</font></caption><br>
+	<div>-w=10に設定し実行</div>
+	<table>
+		<tr>
+			<td><img src="ouutdata-lst-w10.png" border="0" alt="ouutdata-lst-w10.png(5486 byte)" width="64" height="286"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				87.0306<br>
+				5.63815<br>
+				14.1823<br>
+				0.104827<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<caption><font color="blue">------オプション　-v------</font></caption><br>
+	<div>-w=10,-v=50に設定し実行</div>
+	<table>
+		<tr>
+			<td><img src="ouutdata-lst-v50W10.png" border="0" alt="ouutdata-lst-v50W10.png(5524 byte)" width="64" height="286"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				87.0306<br>
+				10.8829<br>
+				19.4095<br>
+				0.143463<br></p>
+			</td>
+		</tr>
+	</table>
+
+</body>
+</html>

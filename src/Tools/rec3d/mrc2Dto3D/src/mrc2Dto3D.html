@@ -1,0 +1,72 @@
+<HTML>
+<HEAD>
+<TITLE>mrc2Dto3D</TITLE>
+</HEAD>
+<BODY>
+<H1>mrc2Dto3D</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrc2Dto3D
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Optional  :InputDataFile
+    [-I[nput]            In2                 (NULL      ).as(inFileListNoOpen    ) ] :Optional  :InputDataFile
+    [-each                                                                         ] :Optional  :Read each projection file if necessary, not at once.
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-O[utput]           Out2                (NULL      ).as(outFile             ) ] :Optional  :OutputDataFile[2DMulti]
+    [-Rmax               Rmax                (1.0       ).as(Real                ) ] :Optional  :Rmax: High Cut [/A]
+    [-single             single              (1         ).as(Integer             ) ] :Optional  :SingleTiltMode
+    [-singleFilter       singleFilter        (0         ).as(Integer             ) ] :Optional  :SingleFilterMode
+    [-InterpolationMode  InterpolationMode   (1         ).as(Integer             ) ] :Optional  :InterpolationMode
+    [-Double                                                                       ] :Optional  :DoubleTiltMode
+    [-DoubleCounter      DoubleCounter       (NULL      ).as(outFile             ) ] :Optional  :DoubleCounter
+    [-CounterThreshold   CounterThreshold    (1e-6      ).as(Real                ) ] :Optional  :CounterThreshold
+    [-CounterThresholdModeCounterThresholdMode(0         ).as(Integer             ) ] :Optional  :CounterThresholdMode
+    [-WeightMode         WeightMode          (0         ).as(Integer             ) ] :Optional  :WeightMode
+    [-thicknessWeight                                                              ] :Optional  :ThicknessWeight
+    [-Sub[Sampling]      SubSampling         (1         ).as(Integer             ) ] :Optional  :SubSampling: [pixel]
+    [-PlusXrot                                                                     ] :Optional  :plus x-rotation by 180 for rasmol.
+    [-N                  Nx                  (0         ).as(Integer             ) 
+                         Ny                  (0         ).as(Integer             ) 
+                         Nz                  (0         ).as(Integer             ) ] :Optional  :OutputSize
+    [-SIRT                                                                         ] :Optional  :by SIRT
+    [-max[Iter]          maxIter             (30        ).as(Integer             ) ] :Optional  :MaxIteration for SIRT
+    [-rms                rms                 (1.0       ).as(Real                ) ] :Optional  :Ending Conditions: rms for SIRT
+    [-CTF[Info]          CTFInfo             (NULL      ).as(inFileList          ) ] :Optional  :CTFInfo: for SIRT
+    [-pthread            pthreadMax          (1         ).as(Integer             ) ] :Optional  :pthread: max
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+-m Option
+    0:SimpleBackProjection
+    1:FilteredBackProjection(Fourier Space)
+    2:WeightedBackProjection(Real Space)
+-single 0|1 
+    0: tilt axis is parallel to x-axis
+    1: tilt axis is parallel to y-axis
+-singleFilter 0|1|2 
+    0: simple rho filter
+    1: Ram-Lak Filter
+    2: Shepp-Logan Filter
+-Double 
+    Double Tilt 
+-WeightMode 
+    1 : RealSpace: Circle(same density)
+    2 : RealSpace: Circle(weighted density)
+    3 : RealSpace: Square(weighted density) 
+    4 : Fourier Space : Plane(same density) -CounterThreshold 0.5
+    5 : Fourier Space : Plane(Linear Gradient)-CounterThreshold 0.5
+    6 : Fourier Space : Plane(Cosine Gradient) Current Recommende using -CounterThreshold 0.5
+-------------------------------
+-I Option file format
+filename0 RotationOrder0 rot1 rot2 rot3
+filename1 RotationOrder1 rot1 rot2 rot3
+.......................................
+>>> RotationOrder : Eular Angle Expression <<< 
+Example: YOYS : RotY(rot3)RotX(rot2)RotY(rot1)*v
+First Rotation  : y-axis : Y: Y     : [X|Y|Z] Axis used initially
+Second Rotation : x-axis : O: Odd   : [O|E]   Parity of axis permutation
+Last Rotation   : z-axis : Y: Yes   : [Y|N]   Repetition of initial axis as last
+v1 = A v0                : S: Staic : [S|R]   Frame from which axes are taken
+</PRE>
+</BODY>
+</HTML>

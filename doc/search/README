@@ -1,0 +1,152 @@
+##############################################################################
+# Simple Search                 Version 1.0                                  #
+# Copyright 1996 Matt Wright    mattw@worldwidemart.com                      #
+# Created 12/16/95              Last Modified 12/16/95                       #
+# Scripts Archive at:           http://www.worldwidemart.com/scripts/        #
+##############################################################################
+# If you run into any problems while trying to configure this scripts, help  #
+# is available.  The steps you should take to get the fastest results, are:  #
+#       1) Read this file thoroughly					     #
+#       2) Consult the Matt's Script Archive Frequently Asked Questions:     #
+#               http://www.worldwidemart.com/scripts/faq/	             #
+#       3) If you are still having difficulty installing this script, send   #
+#          e-mail to: scripts-help@tahoenet.com				     #
+#          Include any error messages you are receiving and as much detail   #
+#          as you can so we can spot your problem.  Also include the variable#
+#          configuration block that is located at the top of the script.     #
+#									     #
+# Hopefully we will be able to help you solve your problems.  Thank you.     #
+##############################################################################
+# COPYRIGHT NOTICE                                                           #
+# Copyright 1996 Matthew M. Wright  All Rights Reserved.                     #
+#                                                                            #
+# Simple Search may be used and modified free of charge by anyone so long as #
+# this copyright notice and the comments above remain intact.  By using this #
+# code you agree to indemnify Matthew M. Wright from any liability that      #  
+# might arise from it's use.                                                 #  
+#                                                                            #
+# Selling the code for this program without prior written consent is         #
+# expressly forbidden.  In other words, please ask first before you try and  #
+# make money off of my program.                                              #
+#                                                                            #
+# Obtain permission before redistributing this software over the Internet or #
+# in any other medium.  In all cases copyright and header must remain intact.#
+##############################################################################
+
+	The simple search script was written to allow people to set up a 
+search of their site, so their users could enter keywords and find all 
+documents matching those keywords.  It was written to be simple, so there 
+are not many options.  When the search returns pages, it returns them in 
+no real order, and they are referenced with the <title> tag of that page.
+
+	The instructions below explain how to set up and configure the 
+Simple Search script.  The script should have come with three files:
+
+	1) README 	- Useful installation instructions.
+	2) search.pl 	- The Perl script which does the searching.
+	3) search.html  - A sample HTML Search Page.
+
+SEARCH.PL
+=========
+
+	This script is the one that you will need to define what files 
+you want to be searched and the locations of those files.  First you need 
+to define the variables:
+
+	$basedir = '';
+		This is the base directory to the files you will want to 
+	   search.  If you have all of your files in /home/joe/public_html
+	   and you want to search files that are in 
+	   /home/joe/public_html/work and /home/joe/public_html/fun, then
+	   you would set your base directory at /home/joe/public_html/ and
+	   then put subdirectories into the @files array, since they will be 
+	   put together at run time.  The $basedir variable just saves you the 
+	   time of having to type out the basedir over and over again for 
+	   every file you want to include.
+
+	$baseurl = '';
+		This is very similar to the basedir variable except that 
+	   it will be used as a base reference to the files you want to search
+	   in terms of the web.  For the example above with user joe, his 
+	   baseurl would probably be something like: http://joe.host.com/~joe/ 
+	   so that when the searched files are appended to this baseurl, they 
+	   form a complete url to his files to place in the results.
+
+	@files = ();
+		This is an array that includes all of the files you want 
+	   to search.  The directory paths and filenames should be in 
+	   reference to $basedir.  Wild cards are allowed in this array, so if 
+	   joe wanted to search all html files in fun/ and work/, he would set 
+	   his @files array up as: @files = ('fun/*.html','work/*.html');  You 
+	   can also search whole directories at one time, like: @files = 
+	   ('fun/','work/');  This would search all text files located in these 
+	   directories.  Putting exact filenames will search only that filename.
+
+	$title = "";
+		This variable is used to display the title of your page 
+	   in the search results and used to link back to your main page.
+
+	$title_url = '';
+		This is the url that would link to the page $title.
+
+	$search_url = '';
+		This is the url to the search.html page you set up, so 
+	   that it can be referenced from in the results page if users want
+	   to make another search.
+
+    That is all of the variables that need to be configured in your 
+script.  You must also chmod this script to 755 so that all users can 
+execute it and place it in your cgi-bin or change the name to 
+search.cgi.  Now you simply have to edit the search.html page and you are 
+ready to go!
+------------------------------------------------------------------------------
+
+SEARCH.HTML
+===========
+
+	This page needs only a little changing.  You will probably want 
+to change the title and header of this page to match your site, and you 
+may want to change the background and other features of it to make it fit 
+into your site better.
+
+	The main thing you will need to change is the action="" of your 
+script from the fake url, to the url of your search.pl script.  Once you 
+have changed this, and have implemented the changes listed above in 
+search.pl, the search program should work.
+
+	search.html should be chmoded 744 so that it is readable by everyone.
+------------------------------------------------------------------------------
+
+README
+======
+
+	Just read it!
+------------------------------------------------------------------------------
+
+HISTORY
+=======
+
+Version 1.0	-	12/16/95	- First Version Released.
+
+------------------------------------------------------------------------------
+
+	If you have any questions about setting up or implementing this 
+script feel free to mail me at the address at the top of this file AFTER 
+you have read the Frequently Asked Questions located at:
+
+	http://www.worldwidemart.com/scripts/faq/
+
+------------------------------------------------------------------------------
+
+Feel free to change/hack/modify whatever this script, but please leave 
+my name and url in it at all times.  If you end up implementing this 
+script on a page, please let me know by filling out the form located at:
+
+	http://www.worldwidemart.com/scripts/implement.html
+
+Feel free to link back to my site at the bottom of your page if you enjoy 
+these scripts and use them, although it is not required.  And most of all 
+Have fun!
+
+------------------------------------------------------------------------------
+Matt Wright - mattw@worldwidemart.com - http://www.worldwidemart.com/scripts/

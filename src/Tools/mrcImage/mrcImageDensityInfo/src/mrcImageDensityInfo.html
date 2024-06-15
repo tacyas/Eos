@@ -1,0 +1,27 @@
+<HTML>
+<HEAD>
+<TITLE>mrcImageDensityInfo</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageDensityInfo</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageDensityInfo
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-o[utput]           Out                 (stdout    ).as(outFile             ) ] :Optional  :OutputDataFile
+    [-C[ontour]          Contour             (10        ).as(Real                ) ] :Optional  :ContourLevel: 10 3.025695e-314ach
+    [-log                Log                 (NULL      ).as(appendFile          ) ] :Optional  :OutputDataFile
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Attention !!!-----
+In Eos system, positive values are regarded as density.
+If a pixel has a negative value, the value of the pixel is regarded as zero.lmrcImageDensityInfo Mode: 
+1: PercentageVolume
+2: CentreOfGravity 
+4: Max             
+8: SD around CentreOfGravity 
+16: SD around Max             
+</PRE>
+</BODY>
+</HTML>

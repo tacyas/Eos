@@ -1,0 +1,14 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","Output: Filtered Image","Essential","1","1","Out","outFile","NULL"
+"-IQ","-IQ","Output: IQ Map","Optional","1","1","IQ","outFile","NULL"
+"-vx","-vx","Vector(x)","Optional","1","1","vx","Real","0"
+"-vy","-vy","Vector(y)","Optional","1","1","vy","Real","0"
+"-v1","-v1","Vector(v1)","Optional","2","1","v1x","Real","0","2","v1y","Real","0"
+"-v2","-v2","Vector(v2)","Optional","2","1","v2x","Real","0","2","v2y","Real","0"
+"-sx","-sx","Size(x)","Optional","1","1","sx","Integer","1"
+"-sy","-sy","Size(y)","Optional","1","1","sy","Integer","1"
+"-negF00","-neg[lect]F00","Neglect F00","Optional","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

@@ -1,0 +1,8 @@
+.onlineHelp EOS randomNormalGet "Introduction to randomNormalGet"
+.
+.section 1 "Introduction to randomNormalGet"
+.
+.\" This is the help page associated with the Help button on
+.\" the toplevel window of randomNormalGet
+If you are reading this text,
+you should report it as a bug :-)

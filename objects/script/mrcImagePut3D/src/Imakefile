@@ -1,0 +1,19 @@
+#define DoNotAutoRecreate NO
+
+#include EOS_INCLUDE
+
+OBJECT_TYPE = script
+
+TOOLBOX_NAME = eos
+
+OBJECT_NAME = mrcImagePut3D
+
+BINARY_NAME = mrcImagePut3D
+
+INSTPGMFLAGS =
+
+SCRIPTS = \
+	mrcImagePut3D.ksh
+
+#define KKSH_DEF
+#include <Script.template>

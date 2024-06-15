@@ -1,0 +1,73 @@
+<HTML>
+<HEAD>
+<TITLE>
+Control File Format on Eos
+</TITLE>
+</HEAD>
+<BODY>
+<H1> Control File Format on Eos</H1>
+<H2> Format </H2>
+<TR> <TH>"Option",<TH>"fullOption",<TH>"OptionName",<TH>"OptionProperties",<TH>"OptionNumber",<TH>"argIndex",<TH>"argName",<TH>"argType",<TH>"InitialValue",...
+<DL><H3>Item Expression</H3>
+	<DT>Option
+		<DD>
+	<DT>fullOption
+		<DD> If OptionNumber is equal to zero, fullOption will be defined as flagName in program.
+		<DD>
+	<DT>OptionName
+		<DD>
+	<DT>OptionProperties
+		<DD> Refer to <A HREF="#TableOfPredefined">the below predefined word table.</A>
+	<DT>OptionNumber
+		<DD>
+	<DT>argIndex
+		<DD>
+	<DT>argName
+		<DD>
+	<DT>argType
+		<DD> Refer to <A HREF="#TableOfPredefined">the below predefined word table.</A>
+	<DT>InitialValue
+		<DD> This is an intial value of this argument.  It is used in the code of init.c.
+</DL>
+<H2> Predefined Words</H2>
+	In columns of option properties and argument types, predefined words are used as below.
+<P>
+<A NAME="TableOfPredefined">
+<TABLE BORDER>
+<CAPTION><STRONG>Table of Predefined Words</STRONG></CAPTION>
+<TR> 
+<TH>Option Properties <TH>Argument Type
+<TR>
+<TD> 	
+	<DT>Essential 
+		<DD> essential argument
+	<DT>Optional 
+		<DD> optional argument
+	<DT>Variable 
+		<DD> only one. 
+<TD> 
+	<DT> Integer 
+		<DD> 
+	<DT> Real 
+		<DD>
+	<DT> inFile 
+		<DD> input filename
+	<DT> outFile 
+		<DD> output filename
+	<DT> appendFile 
+		<DD> output filename (append)
+	<DT> inFileList 
+		<DD> a list of filenames to be inputted
+	<DT> outFileList 
+		<DD> a list of filenames to be outputted
+	<DT> appendFileList
+		<DD> a list of filenames to be outputted (append)
+	<DT> Character 
+		<DD>
+	<DT> String 
+		<DD>
+</TABLE>
+</A>
+<H2> Examples </H2>
+</BODY>
+</HTML>

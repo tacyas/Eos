@@ -1,0 +1,10 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input:eosPoint","Essential","1","1","In","inFile::eosPoint","NULL"
+"-it","-i[nput]t[ype]","Input:eosPointMode","Optional","1","1","InType","Integer","0"
+"-n","-n[umber]","Input:number of Point, n, dependent upon m=n/(n-1)/2, a point number in In","Optional","1","1","N","Integer","-1"
+"-o","-o[utput]","Output:eosPoint","Optional","1","1","Out","outFile::eosPoint","stdout"
+"-ot","-o[utput]t[ype]","Output:eosPoint","Optional","1","1","OutType","Integer","0"
+"-delta","-delta","Output:eosPoint","Optional","1","1","OutDelta","outFile::eosPoint","stdout"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

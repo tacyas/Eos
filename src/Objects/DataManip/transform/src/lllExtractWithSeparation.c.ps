@@ -1,0 +1,888 @@
+%!PS-Adobe-1.0
+%%Title: lllExtractWithSeparation.c
+%%Creator: Id: a2ps,v 1.32 1993/06/25 00:44:18 utashiro Exp 
+%%CreationDate: Tue Aug 18 16:46:09 JST 1998
+%%Pages: (atend)
+%%PageOrder: Ascend
+%%DocumentPaperSizes: A4
+%%Orientation: Landscape
+%%EndComments
+
+/$a2psdict 100 dict def
+$a2psdict begin
+% Initialize page description variables.
+/inch {72 mul} bind def
+%% SelectTray
+statusdict /a4tray known { statusdict begin a4tray end } if
+/landscape true def
+/twinpage false def
+/sheetheight 11.64 inch def
+/sheetwidth 8.27 inch def
+/lmargin 1.2 inch def
+/smargin 1.2 inch def
+/paper_adjust 0.05 inch def
+/noborder false def
+/noheader false def
+/headersize 0.22 inch def
+/nofooter false def
+/nopunchmark true def
+/bodyfontsize 6.6 def
+/kanjiAsciiRatio 1 def
+/lines 66 def
+/columns 188 def
+/date (Aug 18 1998 16:46) def
+/doasciimag false def
+%!  PostScript Source Code
+%
+%  File: imag:/users/local/a2ps/header.ps
+%  Created: Tue Nov 29 12:14:02 1988 by miguel@imag (Miguel Santana)
+%  Version: 2.0
+%  Description: PostScript prolog for a2ps ascii to PostScript program.
+% 
+%  Edit History:
+%  - Original version by evan@csli (Evan Kirshenbaum).
+%  - Modified by miguel@imag to:
+%    1) Correct an overflow bug when printing page number 10 (operator
+%	cvs).
+%    2) Define two other variables (sheetwidth, sheetheight) describing
+%	the physical page (by default A4 format).
+%    3) Minor changes (reorganization, comments, etc).
+%  - Modified by tullemans@apolloway.prl.philips.nl
+%    1) Correct stack overflows with regard to operators cvs and copy.
+%       The resulting substrings where in some cases not popped off 
+%       the stack, what can result in a stack overflow.
+%    2) Replaced copypage and erasepage by showpage. Page througput
+%       degrades severely (see red book page 140) on our ps-printer
+%       after printing sheet 16 (i.e. page 8) of a file which was 
+%       actually bigger. For this purpose the definitions of startdoc
+%       and startpage are changed.
+%  - Modified by Tim Clark <T.Clark@uk.ac.warwick> to:
+%    1) Print one page per sheet (portrait) as an option.
+%    2) Reduce size of file name heading, if it's too big.
+%    3) Save and restore PostScript state at begining/end. It now uses
+%	conventional %%Page %%Trailer markers.
+%    4) Print one wide page per sheet in landscape mode as an option.
+%  - Modified by miguel@imag.fr to
+%    1) Add new option to print n copies of a file.
+%    2) Add new option to suppress heading printing.
+%    3) Add new option to suppress page surrounding border printing.
+%    4) Add new option to change font size. Number of lines and columns
+%	are now automatically adjusted, depending on font size and
+%	printing mode used.
+%    5) Minor changes (best layout, usage message, etc).
+%  - Modified by kanazawa@sra.co.jp to:
+%    1) Handle Japanese code
+%  - Modified by utashiro@sra.co.jp to:
+%    1) Fix bug in printing long label
+%    2) Handle carriage-return
+%    3) Specify kanji-ascii character retio
+%    4) Add footer label
+%    5) Change filename->fname becuase ghostscript has operator filename
+%    6) Support three different font style
+%    7) Incorporate B4 paper support and punchmark contributed
+%       by Masami Ueno <cabbage@kki.esi.yamanashi.ac.jp>
+%
+
+% Copyright (c) 1988, Miguel Santana, miguel@imag.imag.fr
+%
+% Permission is granted to copy and distribute this file in modified
+% or unmodified form, for noncommercial use, provided (a) this copyright
+% notice is preserved, (b) no attempt is made to restrict redistribution
+% of this file, and (c) this file is not distributed as part of any
+% collection whose redistribution is restricted by a compilation copyright.
+%
+
+
+% General macros.
+/xdef {exch def} bind def
+/getfont {exch findfont exch scalefont} bind def
+
+% Page description variables and inch function are defined by a2ps program.
+
+% Character size for differents fonts.
+   landscape
+   { /filenamefontsize 12 def }
+   { /filenamefontsize 16 def }
+ifelse
+/datefontsize filenamefontsize 0.8 mul def
+/headermargin filenamefontsize 0.25 mul def
+/bodymargin bodyfontsize 0.7 mul def
+
+% Font assignment to differents kinds of "objects"
+/filenamefontname /Helvetica-Bold def
+/stdfilenamefont filenamefontname filenamefontsize getfont def
+/datefont /Helvetica datefontsize getfont def
+/footerfont /Helvetica-Bold datefontsize getfont def
+/mag { doasciimag { [ 1 0 0 asciimagsize 0 0 ] makefont } if } def
+/bodynfont /Courier bodyfontsize getfont mag def
+/bodybfont /Courier-Bold bodyfontsize getfont mag def
+/bodyofont /Courier-BoldOblique bodyfontsize getfont mag def
+/fontarray [ bodynfont bodybfont bodyofont ] def
+/bodyfont bodynfont def
+
+% Initializing kanji fonts
+/kanji_initialized false def
+/kanji_init {
+   kanji_initialized not
+   {
+      /bodykfontsize bodyfontsize kanjiAsciiRatio mul def
+      /bodyknfont /Ryumin-Light-H bodykfontsize getfont def
+      /bodykbfont /GothicBBB-Medium-H bodykfontsize getfont def
+      /bodykofont bodykbfont [ 1 0 .2 1 0 0 ] makefont def
+      /KanjiRomanDiff 1.2 bodyfontsize mul 1.0 bodykfontsize mul sub def
+      /KanjiRomanDiffHalf KanjiRomanDiff 2 div def
+      /kfontarray [ bodyknfont bodykbfont bodykofont ] def
+      /kanji_initialized true def
+   } if
+} def
+
+% Backspace width
+/backspacewidth
+   bodyfont setfont (0) stringwidth pop
+   def
+
+% Logical page attributs (a half of a real page or sheet).
+/pagewidth
+   bodyfont setfont (0) stringwidth pop columns mul bodymargin dup add add
+   def
+/pageheight
+   bodyfontsize 1.1 mul lines mul bodymargin dup add add headersize add
+   def
+
+% Coordinates for upper corner of a logical page and for sheet number.
+% Coordinates depend on format mode used.
+% In twinpage mode, coordinate x of upper corner is not the same for left
+% and right pages: upperx is an array of two elements, indexed by sheetside.
+/rightmargin smargin 3 div def
+/leftmargin smargin 2 mul 3 div def
+/topmargin lmargin twinpage {3} {2} ifelse div def
+landscape
+{  % Landscape format
+   /punchx .4 inch def           % for PunchMark
+   /punchy sheetwidth 2 div def  % for PunchMark
+   /uppery rightmargin pageheight add bodymargin add def
+   /sheetnumbery sheetwidth leftmargin pageheight add datefontsize add sub def
+   twinpage
+   {  % Two logical pages
+      /upperx [ topmargin 2 mul			% upperx for left page
+		dup topmargin add pagewidth add	% upperx for right page
+	      ] def
+      /sheetnumberx sheetheight topmargin 2 mul sub def
+   }
+   {  /upperx [ topmargin dup ] def
+      /sheetnumberx sheetheight topmargin sub datefontsize sub def
+   }
+   ifelse
+}
+{  % Portrait format
+   /punchx .3 inch def
+   /punchy sheetheight 2 div def
+   /uppery topmargin pageheight add def
+   /upperx [ leftmargin dup ] def
+   /sheetnumberx sheetwidth rightmargin sub datefontsize sub def
+   /sheetnumbery
+	 sheetheight 
+	 topmargin pageheight add datefontsize add headermargin add
+      sub
+      def
+}
+ifelse
+
+% Strings used to make easy printing numbers
+/pnum 12 string def
+/empty 12 string def
+
+% Other initializations.
+datefont setfont
+/datewidth date stringwidth pop def
+/pagenumwidth (Page 999) stringwidth pop def
+/filenameroom
+         pagewidth
+	 filenamefontsize 4 mul datewidth add pagenumwidth add
+      sub
+   def
+
+
+% Function startdoc: initializes printer and global variables.
+/startdoc
+    { /sheetside 0 def			% sheet side that contains current page
+      /sheet 1 def			% sheet number
+   } bind def
+
+% Function newfile: init file name for each new file.
+/newfile
+    { cleanup
+      /fname xdef
+      stdfilenamefont setfont
+      /filenamewidth fname stringwidth pop def
+      /filenamefont
+	 filenamewidth filenameroom gt
+	 {
+	       filenamefontname
+	       filenamefontsize filenameroom mul filenamewidth div
+	    getfont
+	 }
+	 {  stdfilenamefont }
+	 ifelse
+	 def
+    } bind def
+
+% Function printpage: Print a physical page.
+/printpage
+    { /sheetside 0 def
+      twinpage
+      {  noborder not
+	    { sheetnumber }
+	 if
+      }
+      {  noheader noborder not and
+	    { sheetnumber }
+	 if
+      }
+      ifelse
+      showpage 
+%      pagesave restore
+      /sheet sheet 1 add def
+    } bind def
+
+% Function cleanup: terminates printing, flushing last page if necessary.
+/cleanup
+    { twinpage sheetside 1 eq and
+         { printpage }
+      if
+    } bind def
+
+%
+% Function startpage: prints page header and page border and initializes
+% printing of the file lines.  Page number is stored on the top of stack.
+/startpage
+    { /pagenum exch def
+      sheetside 0 eq
+	{ % /pagesave save def
+	  landscape
+	    { sheetwidth 0 inch translate	% new coordinates system origin
+	      90 rotate				% landscape format
+	      paper_adjust neg 0 translate
+	    } if
+	} if
+      noborder not { printborder } if
+      noheader not { printheader } if
+      nofooter not { printfooter } if
+      nopunchmark not { punchmark } if
+	 upperx sheetside get  bodymargin  add
+	    uppery
+	    bodymargin bodyfontsize add  noheader {0} {headersize} ifelse  add
+	 sub
+      moveto
+    } bind def
+
+% Function printheader: prints page header.
+/printheader
+    { upperx sheetside get  uppery headersize sub 1 add  moveto
+      datefont setfont
+      gsave
+        datefontsize headermargin rmoveto
+	date show					% date/hour
+      grestore
+      gsave
+	pagenum pnum cvs pop
+	   pagewidth pagenumwidth sub
+	   headermargin
+	rmoveto
+        (Page ) show pnum show				% page number
+      grestore
+      empty pnum copy pop
+      gsave
+        filenamefont setfont
+	      filenameroom fname stringwidth pop sub 2 div datewidth add
+	      filenamefontsize 2 mul 
+	   add 
+	   headermargin
+	rmoveto
+        fname show						% file name
+      grestore
+    } bind def
+
+% Function printfooter: prints page footer.
+/printfooter
+    { upperx 0 get sheetnumbery moveto
+      footerfont setfont
+      fname show
+    } bind def
+
+% Function printborder: prints border page.
+/printborder 
+    { upperx sheetside get uppery moveto
+      gsave					% print the four sides
+        pagewidth 0 rlineto			% of the square
+        0 pageheight neg rlineto
+        pagewidth neg 0 rlineto
+        closepath stroke
+      grestore
+      noheader not
+         { 0 headersize neg rmoveto pagewidth 0 rlineto stroke }
+      if
+    } bind def
+
+% Punch Marker
+/punchmark {
+  gsave
+    newpath punchx punchy moveto
+    punchx 2 add punchy -0.5 add lineto
+    punchx 2 add punchy 0.5 add lineto
+    punchx punchy lineto
+    closepath
+    0 setgray .8 setlinewidth stroke
+  grestore
+  } bind def
+
+%
+% Function endpage: adds a sheet number to the page (footnote) and prints
+% the formatted page (physical impression). Activated at the end of each
+% source page (lines reached or FF character).
+/endpage
+   { twinpage  sheetside 0 eq  and
+        { /sheetside 1 def }
+        { printpage }
+     ifelse
+   } bind def
+
+% Function sheetnumber: prints the sheet number.
+/sheetnumber
+    { sheetnumberx sheetnumbery moveto
+      datefont setfont
+      sheet pnum cvs
+	 dup stringwidth pop (0) stringwidth pop sub neg 0 rmoveto show
+      empty pnum copy pop
+    } bind def
+
+% Function bs: go back one character width to emulate BS
+/bs { backspacewidth neg 0 rmoveto } bind def
+
+% Function s: print a source string
+/s  { fontarray fonttype get setfont
+      show
+    } bind def
+
+% Function ks: print a kanji source string
+/ks { kfontarray fonttype get setfont
+      KanjiRomanDiffHalf 0 rmoveto
+      KanjiRomanDiff 0 3 -1 roll ashow
+      KanjiRomanDiffHalf neg 0 rmoveto
+    } def
+
+% Function bl: beginning of line
+/bl { gsave } bind def
+
+% Function nl: newline
+/nl {
+      grestore
+      0 bodyfontsize 1.1 mul neg rmoveto
+    } bind def
+
+% Function cr: carriage return
+/cr { grestore } bind def
+
+% Function hlr: half-line up
+/hlr { 0 bodyfontsize 0.55 mul rmoveto } bind def
+
+% Function hlr: half-line down
+/hlf { 0 bodyfontsize 0.55 mul neg rmoveto } bind def
+
+% Function hlr: half-character backward
+/hcr { backspacewidth 2 div neg 0 rmoveto } bind def
+
+% Function hlr: half-character forward
+/hcf { backspacewidth 2 div 0 rmoveto } bind def
+
+/R { /fonttype 0 def } bind def
+/B { /fonttype 1 def } bind def
+/I { /fonttype 2 def } bind def
+R
+/docsave save def
+startdoc
+%%EndProlog
+
+(lllExtractWithSeparation.c) newfile
+/sheet 1 def
+%%Page: 1 1
+1 startpage
+bl ( ) s (/*) s nl
+bl ( ) s (# %M% %Y% %I%) s nl
+bl ( ) s (# The latest update : %G% at %U%) s nl
+bl ( ) s (#) s nl
+bl ( ) s (#%Z% lllExtractWithSeparation ver %I%) s nl
+bl ( ) s (#%Z% Created by ) s nl
+bl ( ) s (#%Z%) s nl
+bl ( ) s (#%Z% Usage : lllExtractWithSeparation ) s nl
+bl ( ) s (#%Z% Attention) s nl
+bl ( ) s (#%Z%) s nl
+bl ( ) s (*/) s nl
+bl ( ) s (static char __sccs_id[] = "%Z%lllExtractWithSeparation ver%I%; Date:%D% %Z%";) s nl
+bl ( ) s (#include <stdlib.h>) s nl
+bl ( ) s (#undef DEBUG) s nl
+bl ( ) s (#include "genUtil.h") s nl
+bl ( ) s (#include "nr2.h") s nl
+bl ( ) s (#include "lllExtract.h") s nl
+bl ( ) s (#include "lllDataMergeDifferentN.h") s nl
+bl ( ) s nl
+bl ( ) s (extern void lllExtractInitWithSeparation\() s nl
+bl ( ) s (        llDataBoth* dst, llDataBoth* src, lllExtractInfo* info, int mode\);) s nl
+bl ( ) s nl
+bl ( ) s (void) s nl
+bl ( ) s (lllExtractWithSeparationUsingFittingParameter\(llDataBoth* dst, llDataBoth* src,) s nl
+bl ( ) s (        llDataFittedParam* param, int numFile, lllExtractInfo* info, int mode\)) s nl
+bl ( ) s ({) s nl
+bl ( ) s (/*) s nl
+bl ( ) s (#ifdef DEBUG0000) s nl
+bl ( ) s (*/) s nl
+bl ( ) s (        long ll, l, ltot;) s nl
+bl ( ) s (        long i, j;) s nl
+bl ( ) s (        long iR, jR;) s nl
+bl ( ) s (        long llMax;) s nl
+bl ( ) s (    float** ANea;) s nl
+bl ( ) s (        float** bNea;) s nl
+bl ( ) s (    float** AFar;) s nl
+bl ( ) s (        float** bFar;) s nl
+bl ( ) s (        double phi, z, C;) s nl
+bl ( ) s (        long n1, n2, nl;) s nl
+bl ( ) s (        long l1, l2;) s nl
+bl ( ) s nl
+bl ( ) s (        DEBUGPRINT\("lllExtractWithSeparation\\n"\);) s nl
+bl ( ) s (        switch\(mode\) {) s nl
+bl ( ) s (                case 0: {) s nl
+bl ( ) s (                        for\(i=0; i<numFile; i++\) {) s nl
+bl ( ) s (                                lllExtractInitWithSeparation\(&\(dst[i]\), &\(src[0]\), info, 0\);) s nl
+bl ( ) s (                        }) s nl
+bl ( ) s (                        break;) s nl
+bl ( ) s (                }) s nl
+bl ( ) s (                case 1: {) s nl
+bl ( ) s (                        break;) s nl
+bl ( ) s (                }) s nl
+bl ( ) s (                default: {) s nl
+bl ( ) s (                        fprintf\(stderr, "Not supported mode: %d\\n", mode\);) s nl
+bl ( ) s (                        exit\(EXIT_FAILURE\);) s nl
+bl ( ) s (                        break;) s nl
+bl ( ) s (                }) s nl
+bl ( ) s (        }) s nl
+bl ( ) s (        ) s nl
+bl ( ) s (        llMax = 0;) s nl
+bl ( ) s (        for\(ll=0; ll<info->llMax; ll++\) {) s nl
+bl ( ) s (                llMax += info->nn[ll];) s nl
+bl ( ) s (        }) s nl
+bl ( ) s nl
+bl ( ) s (        for\(i=0; i<numFile; i++\) {) s nl
+bl ( ) s nl
+
+endpage
+%%Page: 2 2
+2 startpage
+bl ( ) s (        }) s nl
+bl ( ) s nl
+bl ( ) s (        ltot = 0;) s nl
+bl ( ) s (        for\(ll = 0; ll < info->llMax; ll++\) {) s nl
+bl ( ) s (                /* Near Side */) s nl
+bl ( ) s (                nl   = info->nn[ll];) s nl
+bl ( ) s (                ANea = matrix\(1, 2*nl, 1, 2*nl\);) s nl
+bl ( ) s (                bNea = matrix\(1, 2*nl, 1, src[0].Nea.LL[ll].nR\);) s nl
+bl ( ) s (                for\(l1=0; l1<nl; l1++\) { ) s nl
+bl ( ) s (                        for\(l2=0; l2<nl; l2++\) { ) s nl
+bl ( ) s (                                ANea[l2   +1][l1   +1] = 0.0;) s nl
+bl ( ) s (                                ANea[l2+nl+1][l1   +1] = 0.0;) s nl
+bl ( ) s (                                ANea[l2   +1][l1+nl+1] = 0.0;) s nl
+bl ( ) s (                                ANea[l2+nl+1][l1+nl+1] = 0.0;) s nl
+bl ( ) s (                                for\(i=0; i<numFile; i++\) {) s nl
+bl ( ) s (                                        phi = param[i].Para.phi.Value;) s nl
+bl ( ) s (                                        n1 = info->ns[ll][l1];) s nl
+bl ( ) s (                                        n2 = info->ns[ll][l2];) s nl
+bl ( ) s (                                        ANea[l2   +1][l1   +1] +=  cos\(\(n1 - n2\)*phi\);) s nl
+bl ( ) s (                                        ANea[l2+nl+1][l1   +1] += -sin\(\(n1 - n2\)*phi\); ) s nl
+bl ( ) s (                                        ANea[l2   +1][l1+nl+1] +=  sin\(\(n1 - n2\)*phi\);  ) s nl
+bl ( ) s (                                        ANea[l2+nl+1][l1+nl+1] +=  cos\(\(n1 - n2\)*phi\);) s nl
+bl ( ) s (                                }) s nl
+bl ( ) s (                        }) s nl
+bl ( ) s (                }) s nl
+bl ( ) s (                for\(l2=0; l2<nl; l2++\) {) s nl
+bl ( ) s (                        n2 = info->ns[ll][l2];) s nl
+bl ( ) s (                        for\(iR=0; iR<src[0].Nea.LL[ll].nR; iR++\) {) s nl
+bl ( ) s (                                bNea[l2   +1][iR+1] = 0.0;  ) s nl
+bl ( ) s (                                bNea[l2+nl+1][iR+1] = 0.0;) s nl
+bl ( ) s (                                for\(i=0; i<numFile; i++\) {) s nl
+bl ( ) s (                                        z   = param[i].Para.z.Value;) s nl
+bl ( ) s (                                        phi = param[i].Para.phi.Value;) s nl
+bl ( ) s (                                        C   = info->truePitch;) s nl
+bl ( ) s (                                        l   = info->l[ll];) s nl
+bl ( ) s (                                        bNea[l2   +1][iR+1] += \(src[i].Nea.LL[ll].data[iR].Re*cos\(-n2*phi + 2*M_PI*z/C*l\)) s nl
+bl ( ) s (                                                                                   -src[i].Nea.LL[ll].data[iR].Im*sin\(-n2*phi + 2*M_PI*z/C*l\)\);  ) s nl
+bl ( ) s (                                        bNea[l2+nl+1][iR+1] += \(src[i].Nea.LL[ll].data[iR].Re*sin\(-n2*phi + 2*M_PI*z/C*l\)) s nl
+bl ( ) s (                                                                                   +src[i].Nea.LL[ll].data[iR].Im*cos\(-n2*phi + 2*M_PI*z/C*l\)\); ) s nl
+bl ( ) s (                                }) s nl
+bl ( ) s (                        }) s nl
+bl ( ) s (                }) s nl
+bl ( ) s nl
+bl ( ) s (                /* Farr Side */) s nl
+bl ( ) s (                nl   = info->nn[ll];) s nl
+bl ( ) s (                AFar = matrix\(1, 2*nl, 1, 2*nl\);) s nl
+bl ( ) s (                bFar = matrix\(1, 2*nl, 1, src[0].Far.LL[ll].nR\);) s nl
+bl ( ) s (                for\(l1=0; l1<nl; l1++\) { ) s nl
+bl ( ) s (                        for\(l2=0; l2<nl; l2++\) { ) s nl
+bl ( ) s (                                AFar[l2   +1][l1   +1] = 0.0;) s nl
+bl ( ) s (                                AFar[l2+nl+1][l1   +1] = 0.0;) s nl
+bl ( ) s (                                AFar[l2   +1][l1+nl+1] = 0.0;) s nl
+bl ( ) s (                                AFar[l2+nl+1][l1+nl+1] = 0.0;) s nl
+bl ( ) s (                                for\(i=0; i<numFile; i++\) {) s nl
+bl ( ) s (                                        phi = param[i].Para.phi.Value;) s nl
+bl ( ) s (                                        n1 = info->ns[ll][l1];) s nl
+bl ( ) s (                                        n2 = info->ns[ll][l2];) s nl
+bl ( ) s (                                        AFar[l2   +1][l1   +1] +=  cos\(\(n1 - n2\)*phi\);) s nl
+bl ( ) s (                                        AFar[l2+nl+1][l1   +1] += -sin\(\(n1 - n2\)*phi\); ) s nl
+bl ( ) s (                                        AFar[l2   +1][l1+nl+1] +=  sin\(\(n1 - n2\)*phi\);  ) s nl
+bl ( ) s (                                        AFar[l2+nl+1][l1+nl+1] +=  cos\(\(n1 - n2\)*phi\);) s nl
+bl ( ) s (                                }) s nl
+bl ( ) s (                        }) s nl
+bl ( ) s (                }) s nl
+bl ( ) s (                for\(l2=0; l2<nl; l2++\) {) s nl
+bl ( ) s (                        n2 = info->ns[ll][l2];) s nl
+
+endpage
+%%Page: 3 3
+3 startpage
+bl ( ) s (                        for\(iR=0; iR<src[0].Far.LL[ll].nR; iR++\) {) s nl
+bl ( ) s (                                bFar[l2   +1][iR+1] = 0.0;  ) s nl
+bl ( ) s (                                bFar[l2+nl+1][iR+1] = 0.0;) s nl
+bl ( ) s (                                for\(i=0; i<numFile; i++\) {) s nl
+bl ( ) s (                                        z   = param[i].Para.z.Value;) s nl
+bl ( ) s (                                        phi = param[i].Para.phi.Value;) s nl
+bl ( ) s (                                        C   = info->truePitch;) s nl
+bl ( ) s (                                        l   = info->l[ll];) s nl
+bl ( ) s (                                        bFar[l2   +1][iR+1] += \(src[i].Far.LL[ll].data[iR].Re*cos\(-n2*phi + 2*M_PI*z/C*l\)) s nl
+bl ( ) s (                                                                                   -src[i].Far.LL[ll].data[iR].Im*sin\(-n2*phi + 2*M_PI*z/C*l\)\);  ) s nl
+bl ( ) s (                                        bFar[l2+nl+1][iR+1] += \(src[i].Far.LL[ll].data[iR].Re*sin\(-n2*phi + 2*M_PI*z/C*l\)) s nl
+bl ( ) s (                                                                                   +src[i].Far.LL[ll].data[iR].Im*cos\(-n2*phi + 2*M_PI*z/C*l\)\); ) s nl
+bl ( ) s (                                }) s nl
+bl ( ) s (                        }) s nl
+bl ( ) s (                }) s nl
+bl ( ) s nl
+bl ( ) s nl
+bl ( ) s (                gaussj\(ANea, nl, bNea, src[0].Nea.LL[ll].nR\);) s nl
+bl ( ) s (                gaussj\(AFar, nl, bFar, src[0].Far.LL[ll].nR\);) s nl
+bl ( ) s nl
+bl ( ) s (                /* Near Side of DST */) s nl
+bl ( ) s (                for\(i=0; i<numFile; i++\) {) s nl
+bl ( ) s (                        for\(l2=0; l2<nl; l2++\) {) s nl
+bl ( ) s (                                for\(iR=0; iR<dst->Nea.LL[ltot+l2].nR; iR++\) {) s nl
+bl ( ) s (                                        jR = dst->Nea.LL[ltot+l2].iRMin + iR;) s nl
+bl ( ) s (                                        if\(jR<src[0].Nea.LL[ll].nR\) {) s nl
+bl ( ) s (                                                if\(\(0 <= info->ns[ll][0] && 0 <= info->ns[ll][l2]\)) s nl
+bl ( ) s (                                                 ||\(info->ns[ll][0] < 0  && info->ns[ll][l2]\)\) {) s nl
+bl ( ) s (                                                        dst[i].Nea.LL[ltot+l2].data[iR].Re = bNea[l2   +1][jR+1];) s nl
+bl ( ) s (                                                        dst[i].Nea.LL[ltot+l2].data[iR].Im = bNea[l2+nl+1][jR+1];) s nl
+bl ( ) s (                                                } else {) s nl
+bl ( ) s (                                                        dst[i].Nea.LL[ltot+l2].data[iR].Re = bFar[l2   +1][jR+1];) s nl
+bl ( ) s (                                                        dst[i].Nea.LL[ltot+l2].data[iR].Im = bFar[l2+nl+1][jR+1];) s nl
+bl ( ) s (                                                }) s nl
+bl ( ) s (                                        } else {) s nl
+bl ( ) s (                                                fprintf\(stderr, "Something wrong: %d %d %d %d %d in lllExtractWithSeparationUsingFittingParameter\\n", ) s nl
+bl ( ) s (                                                        ltot, l2, iR, jR, src[0].Nea.LL[ll].nR\);) s nl
+bl ( ) s (                                                dst[i].Nea.LL[ltot+l2].data[iR].Re = 0.0;) s nl
+bl ( ) s (                                                dst[i].Nea.LL[ltot+l2].data[iR].Im = 0.0;) s nl
+bl ( ) s (                                        }) s nl
+bl ( ) s (                                }) s nl
+bl ( ) s (                        }) s nl
+bl ( ) s (                }) s nl
+bl ( ) s (                ) s nl
+bl ( ) s (                free_matrix\(ANea, 1, 2*nl, 1, 2*nl\);) s nl
+bl ( ) s (                free_matrix\(bNea, 1, 2*nl, 1, src[0].Nea.LL[l].nR\);) s nl
+bl ( ) s (                free_matrix\(AFar, 1, 2*nl, 1, 2*nl\);) s nl
+bl ( ) s (                free_matrix\(bFar, 1, 2*nl, 1, src[0].Far.LL[l].nR\);) s nl
+bl ( ) s nl
+bl ( ) s (                ltot += nl;) s nl
+bl ( ) s (        }) s nl
+bl ( ) s nl
+bl ( ) s (        for\(i=0; i<numFile; i++\) {) s nl
+bl ( ) s (                llDataFandPHISet\(&\(dst[i].Nea\)\);                ) s nl
+bl ( ) s (                llDataFandPHISet\(&\(dst[i].Far\)\);                ) s nl
+bl ( ) s nl
+bl ( ) s (                lllDataPhaseShiftInverse\(&\(dst[i].Nea\), &\(paraFit[i]\)\);) s nl
+bl ( ) s (                lllDataPhaseShiftInverse\(&\(dst[i].Nea\), &\(paraFit[i]\)\);) s nl
+bl ( ) s (        }) s nl
+bl ( ) s (/*) s nl
+bl ( ) s (#endif) s nl
+bl ( ) s (*/) s nl
+bl ( ) s (}) s nl
+bl ( ) s nl
+bl ( ) s nl
+bl ( ) s (void) s nl
+
+endpage
+%%Page: 4 4
+4 startpage
+bl ( ) s (lllExtractInitWithSeparation\(llDataBoth* dst, llDataBoth* src, lllExtractInfo* info, int mode\)) s nl
+bl ( ) s ({) s nl
+bl ( ) s (        long l, l1, ltot;) s nl
+bl ( ) s (        long llMax;) s nl
+bl ( ) s nl
+bl ( ) s (        *dst = *src;) s nl
+bl ( ) s (        llMax = 0;) s nl
+bl ( ) s (        for\(l=0; l<info->llMax; l++\) {) s nl
+bl ( ) s (                llMax += info->nn[l];) s nl
+bl ( ) s (        }) s nl
+bl ( ) s nl
+bl ( ) s (        dst->Nea.llMax = llMax;) s nl
+bl ( ) s (        dst->Far.llMax = llMax;) s nl
+bl ( ) s (        llDataHeaderInit\(&\(dst->Nea\)\);) s nl
+bl ( ) s (        llDataHeaderInit\(&\(dst->Far\)\);) s nl
+bl ( ) s nl
+bl ( ) s (        ltot = 0;) s nl
+bl ( ) s (        for\(l=0; l<src->Nea.llMax; l++\) {) s nl
+bl ( ) s (                for\(l1=0; l1<info->nn[l]; l1++\) {) s nl
+bl ( ) s (                        dst->Nea.LL[ltot]      = src->Nea.LL[l];) s nl
+bl ( ) s (                        dst->Far.LL[ltot]      = src->Far.LL[l];) s nl
+bl ( ) s nl
+bl ( ) s (                        dst->Nea.LL[ltot].nn   = info->ns[l][l1];) s nl
+bl ( ) s (                        dst->Far.LL[ltot].nn   = info->ns[l][l1];) s nl
+bl ( ) s (                        ltot++;) s nl
+bl ( ) s (                }) s nl
+bl ( ) s (        }) s nl
+bl ( ) s nl
+bl ( ) s (        llDataDataInit\(&\(dst->Nea\)\);) s nl
+bl ( ) s (        llDataDataInit\(&\(dst->Far\)\);) s nl
+bl ( ) s (}) s nl
+bl ( ) s nl
+bl ( ) s (void) s nl
+bl ( ) s (lllExtractWeightSetFollowingllExtractInfo\(llData* dst, lllExtractInfo* info, float weight, int mode\)) s nl
+bl ( ) s ({) s nl
+bl ( ) s (        long l, l1, i;) s nl
+bl ( ) s nl
+bl ( ) s (        for\(l=0; l<dst->llMax; l++\) {) s nl
+bl ( ) s (                dst->LL[l].Weight = 1.0;) s nl
+bl ( ) s (                for\(l1=0; l1<info->llMax; l1++\) {) s nl
+bl ( ) s (                        if\(dst->LL[l].nl == info->l[l1]\) {) s nl
+bl ( ) s (                                for\(i=0; i<info->nn[l1]; i++\) {) s nl
+bl ( ) s (                                        if\(dst->LL[l].nn==info->ns[l1][i]\) {) s nl
+bl ( ) s (                                                DEBUGPRINT2\("\(n,l\) = \(%d, %d\)\\n", ) s nl
+bl ( ) s (                                                        dst->LL[l].nn, dst->LL[l].nl\);) s nl
+bl ( ) s (                                                dst->LL[l].Weight = weight;     ) s nl
+bl ( ) s (                                        }) s nl
+bl ( ) s (                                }) s nl
+bl ( ) s (                        }) s nl
+bl ( ) s (                }) s nl
+bl ( ) s (        }) s nl
+bl ( ) s (}) s nl
+bl ( ) s nl
+bl ( ) s (void) s nl
+bl ( ) s (lllExtractWithSeparation\(llDataBoth* dst, llDataBoth* src, lllExtractInfo* info, int mode\)) s nl
+bl ( ) s ({) s nl
+bl ( ) s (        long l, l1;) s nl
+bl ( ) s (        long R;) s nl
+bl ( ) s nl
+bl ( ) s (        DEBUGPRINT\("lllExtractWithSeparation\\n"\);) s nl
+bl ( ) s (        switch\(mode\) {) s nl
+bl ( ) s (                case 0: {) s nl
+bl ( ) s (                        lllExtractInitWithSeparation\(dst, src, info, 0\);) s nl
+bl ( ) s (                        break;) s nl
+bl ( ) s (                }) s nl
+bl ( ) s (                case 1: {) s nl
+
+endpage
+%%Page: 5 5
+5 startpage
+bl ( ) s (                        break;) s nl
+bl ( ) s (                }) s nl
+bl ( ) s (                default: {) s nl
+bl ( ) s (                        fprintf\(stderr, "Not supported mode: %d\\n", mode\);) s nl
+bl ( ) s (                        exit\(EXIT_FAILURE\);) s nl
+bl ( ) s (                        break;) s nl
+bl ( ) s (                }) s nl
+bl ( ) s (        }) s nl
+bl ( ) s nl
+bl ( ) s (        for\(l=0; l<dst->Nea.llMax; l++\) {) s nl
+bl ( ) s (                for\(l1=0; l1<src->Nea.llMax; l1++\) {) s nl
+bl ( ) s (                        if\(\(dst->Nea.LL[l].nl==src->Nea.LL[l1].nl\) ) s nl
+bl ( ) s (                         &&\(dst->Far.LL[l].nl==src->Far.LL[l1].nl\)\) {) s nl
+bl ( ) s nl
+bl ( ) s (                                if\(src->Nea.LL[l1].iRMin!=src->Far.LL[l1].iRMin) s nl
+bl ( ) s (                                 ||src->Nea.LL[l1].iRMax!=src->Far.LL[l1].iRMax) s nl
+bl ( ) s (                                 ||dst->Nea.LL[l].iRMin!=dst->Far.LL[l].iRMin) s nl
+bl ( ) s (                                 ||dst->Nea.LL[l].iRMax!=dst->Far.LL[l].iRMax\) {) s nl
+bl ( ) s (                                        fprintf\(stderr, "NL   : Nea:%d->%d Far:%d->%d in lllExtractWithSeparation\\n", ) s nl
+bl ( ) s (                                                dst->Nea.LL[l].nl, src->Nea.LL[l1].nl,) s nl
+bl ( ) s (                                                dst->Far.LL[l].nl, src->Far.LL[l1].nl\);) s nl
+bl ( ) s (                                        fprintf\(stderr, "iRMin: Nea:%d->%d Far:%d->%d in lllExtractWithSeparation\\n", ) s nl
+bl ( ) s (                                                dst->Nea.LL[l].iRMin, src->Nea.LL[l1].iRMin,) s nl
+bl ( ) s (                                                dst->Far.LL[l].iRMin, src->Far.LL[l1].iRMin\);) s nl
+bl ( ) s (                                        fprintf\(stderr, "iRMax: Nea:%d->%d Far:%d->%d in lllExtractWithSeparation\\n", ) s nl
+bl ( ) s (                                                dst->Nea.LL[l].iRMax, src->Nea.LL[l1].iRMax,) s nl
+bl ( ) s (                                                dst->Far.LL[l].iRMax, src->Far.LL[l1].iRMax\);) s nl
+bl ( ) s (                                        fprintf\(stderr, "Different size between nea and far\\n"\);) s nl
+bl ( ) s (                                        return;) s nl
+bl ( ) s (                                }       ) s nl
+bl ( ) s (                                ) s nl
+bl ( ) s (                                /* Near Side in dst */) s nl
+bl ( ) s (                                if\(\(0<=src->Nea.LL[l1].nn   && 0<=dst->Nea.LL[l].nn\)) s nl
+bl ( ) s (                                 ||\(   src->Nea.LL[l1].nn<0 &&    dst->Nea.LL[l].nn<0\)\) {) s nl
+bl ( ) s (                                        for\(R=0; R<dst->Nea.LL[l].nR; R++\) {) s nl
+bl ( ) s (                                                dst->Nea.LL[l].data[R] = src->Nea.LL[l1].data[R + dst->Nea.LL[l].iRMin];) s nl
+bl ( ) s (                                        }) s nl
+bl ( ) s (                                } else {) s nl
+bl ( ) s (                                        DEBUGPRINT4\("\(N,L\): src\(%d,%d\)->dst\(%d,%d\)\\n",) s nl
+bl ( ) s (                                                src->Nea.LL[l1].nn,) s nl
+bl ( ) s (                                                src->Nea.LL[l1].nl,) s nl
+bl ( ) s (                                                dst->Nea.LL[l].nn,) s nl
+bl ( ) s (                                                dst->Nea.LL[l].nl\);) s nl
+bl ( ) s (                                        for\(R=0; R<dst->Nea.LL[l].nR; R++\) {) s nl
+bl ( ) s (                                                dst->Nea.LL[l].data[R] = src->Far.LL[l1].data[R + dst->Nea.LL[l].iRMin];) s nl
+bl ( ) s (                                        }) s nl
+bl ( ) s (                                        DEBUGPRINT3\("dstNea: %f src: Far:%f, Nea:%f\\n", ) s nl
+bl ( ) s (                                                                                                        dst->Nea.LL[l].data[1].Re, ) s nl
+bl ( ) s (                                                                                                        src->Far.LL[l1].data[dst->Nea.LL[l].iRMin+1].Re,) s nl
+bl ( ) s (                                                                                                        src->Nea.LL[l1].data[dst->Nea.LL[l].iRMin+1].Re\);) s nl
+bl ( ) s (                                }) s nl
+bl ( ) s nl
+bl ( ) s (                                /* Far Side in dst */) s nl
+bl ( ) s (                                if\(\(0<=src->Far.LL[l1].nn   && 0<=dst->Far.LL[l].nn\)) s nl
+bl ( ) s (                                 ||\(   src->Far.LL[l1].nn<0 &&    dst->Far.LL[l].nn<0\)\) {) s nl
+bl ( ) s (                                        for\(R=0; R<dst->Far.LL[l].nR; R++\) {) s nl
+bl ( ) s (                                                dst->Far.LL[l].data[R] = src->Far.LL[l1].data[R + dst->Far.LL[l].iRMin];) s nl
+bl ( ) s (                                        }) s nl
+bl ( ) s (                                } else {) s nl
+bl ( ) s (                                        DEBUGPRINT4\("\(N,L\): src\(%d,%d\)->dst\(%d,%d\)\\n",) s nl
+bl ( ) s (                                                src->Nea.LL[l1].nn,) s nl
+bl ( ) s (                                                src->Nea.LL[l1].nl,) s nl
+bl ( ) s (                                                dst->Nea.LL[l].nn,) s nl
+bl ( ) s (                                                dst->Nea.LL[l].nl\);) s nl
+bl ( ) s (                                        for\(R=0; R<dst->Far.LL[l].nR; R++\) {) s nl
+bl ( ) s (                                                dst->Far.LL[l].data[R] = src->Nea.LL[l1].data[R + dst->Far.LL[l].iRMin];) s nl
+
+endpage
+%%Page: 6 6
+6 startpage
+bl ( ) s (                                        }) s nl
+bl ( ) s (                                        DEBUGPRINT3\("dstFar: %f, src: Nea:%f Far:%f\\n", ) s nl
+bl ( ) s (                                                                                                        dst->Far.LL[l].data[1].Re, ) s nl
+bl ( ) s (                                                                                                        src->Nea.LL[l1].data[dst->Nea.LL[l].iRMin+1].Re,) s nl
+bl ( ) s (                                                                                                        src->Far.LL[l1].data[dst->Nea.LL[l].iRMin+1].Re\);) s nl
+bl ( ) s (                                }) s nl
+bl ( ) s (                        }) s nl
+bl ( ) s (                }) s nl
+bl ( ) s (        }) s nl
+bl ( ) s (        DEBUGPRINT2\("llMax: %d -> %d in lllExtractWithSeparation\\n", src->Nea.llMax, dst->Nea.llMax\);) s nl
+bl ( ) s (        lllDatarMaxLimit\(&\(dst->Nea\), info->rMax, lllDatarMaxLimitModeNoMemorySave\);) s nl
+bl ( ) s (        lllDatarMaxLimit\(&\(dst->Far\), info->rMax, lllDatarMaxLimitModeNoMemorySave\);) s nl
+bl ( ) s nl
+bl ( ) s (        if\(info->flagMagnitudeLimit\) {) s nl
+bl ( ) s (                llDataBoth tmpl;) s nl
+bl ( ) s (                float weight;) s nl
+bl ( ) s nl
+bl ( ) s (                llDataInitWithReference\(&\(tmpl.Nea\), &\(src->Nea\)\);) s nl
+bl ( ) s (                llDataInitWithReference\(&\(tmpl.Far\), &\(src->Far\)\);) s nl
+bl ( ) s nl
+bl ( ) s (                lllDataMergeDifferentN\(&tmpl, dst, 1\); ) s nl
+bl ( ) s nl
+bl ( ) s (                for\(l=0; l<dst->Nea.llMax; l++\) {) s nl
+bl ( ) s (                        for\(l1=0; l1<src->Nea.llMax; l1++\) {) s nl
+bl ( ) s (                                if\(\(dst->Nea.LL[l].nl==src->Nea.LL[l1].nl\) ) s nl
+bl ( ) s (                                 &&\(dst->Far.LL[l].nl==src->Far.LL[l1].nl\)\) {) s nl
+bl ( ) s (                                        if\(\(0<=src->Nea.LL[l1].nn   && 0<=dst->Nea.LL[l].nn\)) s nl
+bl ( ) s (                                         ||\(   src->Nea.LL[l1].nn<0 &&    dst->Nea.LL[l].nn<0\)\) {) s nl
+bl ( ) s (                                                for\(R=0; R<dst->Nea.LL[l].nR; R++\) {) s nl
+bl ( ) s (                                                        if\(0 == tmpl.Nea.LL[l1].data[R + dst->Nea.LL[l].iRMin].F\) {) s nl
+bl ( ) s (                                                                weight = 1.0;) s nl
+bl ( ) s (                                                        } else {) s nl
+bl ( ) s (                                                                weight = \( src->Nea.LL[l1].data[R + dst->Nea.LL[l].iRMin].F) s nl
+bl ( ) s (                                                                              /tmpl.Nea.LL[l1].data[R + dst->Nea.LL[l].iRMin].F\);) s nl
+bl ( ) s (                                                                if\(1.0<weight\) {) s nl
+bl ( ) s (                                                                        weight = 1.0;) s nl
+bl ( ) s (                                                                }) s nl
+bl ( ) s (                                                        }) s nl
+bl ( ) s (                                                        dst->Nea.LL[l].data[R].F = dst->Nea.LL[l].data[R].F*weight;) s nl
+bl ( ) s (                                                }) s nl
+bl ( ) s (                                        } else {) s nl
+bl ( ) s (                                                for\(R=0; R<dst->Nea.LL[l].nR; R++\) {) s nl
+bl ( ) s (                                                        if\(0 == tmpl.Far.LL[l1].data[R + dst->Nea.LL[l].iRMin].F\) {) s nl
+bl ( ) s (                                                                weight = 1.0;) s nl
+bl ( ) s (                                                        } else {) s nl
+bl ( ) s (                                                                weight = \( src->Far.LL[l1].data[R + dst->Nea.LL[l].iRMin].F) s nl
+bl ( ) s (                                                                              /tmpl.Far.LL[l1].data[R + dst->Nea.LL[l].iRMin].F\);) s nl
+bl ( ) s (                                                                if\(1.0<weight\) {) s nl
+bl ( ) s (                                                                        weight = 1.0;) s nl
+bl ( ) s (                                                                }) s nl
+bl ( ) s (                                                        }) s nl
+bl ( ) s (                                                        dst->Nea.LL[l].data[R].F = dst->Nea.LL[l].data[R].F*weight;) s nl
+bl ( ) s (                                                }) s nl
+bl ( ) s (                                        }) s nl
+bl ( ) s nl
+bl ( ) s (                                        /* Far Side in dst */) s nl
+bl ( ) s (                                        if\(\(0<=src->Far.LL[l1].nn   && 0<=dst->Far.LL[l].nn\)) s nl
+bl ( ) s (                                         ||\(   src->Far.LL[l1].nn<0 &&    dst->Far.LL[l].nn<0\)\) {) s nl
+bl ( ) s (                                                for\(R=0; R<dst->Far.LL[l].nR; R++\) {) s nl
+bl ( ) s (                                                        if\(0 == tmpl.Far.LL[l1].data[R + dst->Far.LL[l].iRMin].F\) {) s nl
+bl ( ) s (                                                                weight = 1.0;) s nl
+bl ( ) s (                                                        } else {) s nl
+bl ( ) s (                                                                weight = \( src->Far.LL[l1].data[R + dst->Far.LL[l].iRMin].F) s nl
+bl ( ) s (                                                                              /tmpl.Far.LL[l1].data[R + dst->Far.LL[l].iRMin].F\);) s nl
+bl ( ) s (                                                                if\(1.0<weight\) {) s nl
+bl ( ) s (                                                                        weight = 1.0;) s nl
+
+endpage
+%%Page: 7 7
+7 startpage
+bl ( ) s (                                                                }) s nl
+bl ( ) s (                                                        }) s nl
+bl ( ) s (                                                        dst->Far.LL[l].data[R].F = dst->Far.LL[l].data[R].F*weight;) s nl
+bl ( ) s (                                                }) s nl
+bl ( ) s (                                        } else {) s nl
+bl ( ) s (                                                for\(R=0; R<dst->Far.LL[l].nR; R++\) {) s nl
+bl ( ) s (                                                        if\(0 == tmpl.Nea.LL[l1].data[R + dst->Far.LL[l].iRMin].F\) {) s nl
+bl ( ) s (                                                                weight = 1.0;) s nl
+bl ( ) s (                                                        } else {) s nl
+bl ( ) s (                                                                weight = \( src->Nea.LL[l1].data[R + dst->Far.LL[l].iRMin].F) s nl
+bl ( ) s (                                                                              /tmpl.Nea.LL[l1].data[R + dst->Far.LL[l].iRMin].F\);) s nl
+bl ( ) s (                                                                if\(1.0<weight\) {) s nl
+bl ( ) s (                                                                        weight = 1.0;) s nl
+bl ( ) s (                                                                }) s nl
+bl ( ) s (                                                        }) s nl
+bl ( ) s (                                                        dst->Far.LL[l].data[R].F = dst->Far.LL[l].data[R].F*weight;) s nl
+bl ( ) s (                                                }) s nl
+bl ( ) s (                                        }) s nl
+bl ( ) s (                                }) s nl
+bl ( ) s (                        }) s nl
+bl ( ) s (                }) s nl
+bl ( ) s (                        ) s nl
+bl ( ) s (                llDataReAndImSet\(&\(dst->Nea\)\);) s nl
+bl ( ) s (                llDataReAndImSet\(&\(dst->Far\)\);) s nl
+bl ( ) s nl
+bl ( ) s (                llDataFree\(&\(tmpl.Nea\)\);) s nl
+bl ( ) s (                llDataFree\(&\(tmpl.Far\)\);) s nl
+bl ( ) s (        }) s nl
+bl ( ) s (}) s nl
+bl ( ) s nl
+bl ( ) s (void) s nl
+bl ( ) s (lllExtractWithWeightedSeparation\(llDataBoth* dst, llDataBoth* src, llData* weight, lllExtractInfo* info, int mode\)) s nl
+bl ( ) s ({) s nl
+bl ( ) s (        long l;) s nl
+bl ( ) s (        long R;) s nl
+bl ( ) s nl
+bl ( ) s (        lllExtractWithSeparation\(dst, src, info, mode\);) s nl
+bl ( ) s (        for\(l=0; l<dst->Nea.llMax; l++\) {) s nl
+bl ( ) s (                for\(R=0; R<dst->Nea.nRMax; R++\) {) s nl
+bl ( ) s (                        dst->Nea.LL[l].data[R]     =                         dst->Nea.LL[l].data[R];) s nl
+bl ( ) s (                        dst->Nea.LL[l].data[R].F   = weight->LL[l].data[R].F*dst->Nea.LL[l].data[R].F;) s nl
+bl ( ) s (                        dst->Nea.LL[l].data[R].Re  = weight->LL[l].data[R].F*dst->Nea.LL[l].data[R].Re;) s nl
+bl ( ) s (                        dst->Nea.LL[l].data[R].Im  = weight->LL[l].data[R].F*dst->Nea.LL[l].data[R].Im;) s nl
+bl ( ) s nl
+bl ( ) s (                        dst->Far.LL[l].data[R]     =                         dst->Far.LL[l].data[R];) s nl
+bl ( ) s (                        dst->Far.LL[l].data[R].F   = weight->LL[l].data[R].F*dst->Far.LL[l].data[R].F;) s nl
+bl ( ) s (                        dst->Far.LL[l].data[R].Re  = weight->LL[l].data[R].F*dst->Far.LL[l].data[R].Re;) s nl
+bl ( ) s (                        dst->Far.LL[l].data[R].Im  = weight->LL[l].data[R].F*dst->Far.LL[l].data[R].Im;) s nl
+bl ( ) s (                }) s nl
+bl ( ) s (        }) s nl
+bl ( ) s (        DEBUGPRINT2\("llMax: %d -> %d in lllExtractWithSeparation\\n", src->Nea.llMax, dst->Nea.llMax\);) s nl
+bl ( ) s (}) s nl
+bl ( ) s nl
+
+endpage
+
+%%Trailer
+cleanup
+docsave restore end

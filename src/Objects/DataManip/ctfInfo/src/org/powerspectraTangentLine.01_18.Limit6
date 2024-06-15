@@ -1,0 +1,172 @@
+/*
+# powerspectraTangentLine : $Revision$  
+# $Date$ 
+# Created by $Author$
+# Usage : powerspectraTangentLine 
+# Attention
+#   $Loccker$
+#  	$State$ 
+#
+*/
+/* $Log$ */
+static char __sccs_id[] = "%Z%lctfDetermination ver%I%; Date:%D% %Z%";
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include "./powerspectraTangentLine.h"
+#define DEBUG
+#include "genUtil.h"
+#include "Vector.h"
+#include "nr2.h"
+#include "Memory.h"
+
+double __power(double x,int a)
+{
+	int i;
+	double y = 1.0;
+	
+	for(i=0 ; i<a ; i++){
+		y *= x;
+	}
+	return(y);
+}
+
+void __CoefficientDetermine(floatVector* spacing,floatVector* Plog,floatVector* tmpcoefficient,float CutLow,float CutHigh,float Emax,int agree,float step)
+{
+	int j;
+	long i;
+	float E;
+	float Emin;
+	floatVector* min;
+	floatVector* max;
+	floatVector* coefficient;
+	floatVector* Tangent;
+	
+	min = floatVectorInit(NULL,7);
+	max = floatVectorInit(NULL,7);
+	coefficient = floatVectorInit(NULL,7);
+
+	for(i=0 ; i<=6 ; i++){
+		if(i <= agree){
+			min->data[i] = -10;
+			max->data[i] = 10;
+		}
+		else{
+			min->data[i] = 0;
+			max->data[i] = 0;
+		}
+	}
+	Emin = Emax;
+	
+	for(coefficient->data[0] = min->data[0] ; coefficient->data[0] < max->data[0] ; coefficient->data[0]++){
+		for(coefficient->data[1] = min->data[1] ; coefficient->data[1] < max->data[1] ; coefficient->data[1]++){
+			for(coefficient->data[2] = min->data[2] ; coefficient->data[2] < max->data[2] ; coefficient->data[2]++){
+				for(coefficient->data[3] = min->data[3] ; coefficient->data[3] < max->data[3] ; coefficient->data[3]++){
+					for(coefficient->data[4] = min->data[4] ; coefficient->data[4] < max->data[4] ; coefficient->data[4]++){
+						for(coefficient->data[5] = min->data[5] ; coefficient->data[5] < max->data[5] ; coefficient->data[5]++){
+							for(coefficient->data[6] = min->data[6] ; coefficient->data[6] < max->data[6] ; coefficient->data[6]++){
+								E = 0.0;
+								for(i=0 ; i<spacing->size ; i++){
+									if((spacing->data[i] > CutLow) && (spacing->data[i] < CutHigh)){
+										Tangent->data[i] = coefficient->data[0];
+										for(j=1 ; j<=agree ; j++){
+											Tangent->data[i] += coefficient->data[j]*__power(spacing->data[i],j);
+										}
+										E += fabs(Tangent->data[i]);
+										if((Tangent->data[i] - Plog->data[i]) > 0 || Tangent->data[i] < 0 || E>Emin){
+											E = Emax;
+											break;
+										}
+									}
+								}
+								if(E < Emin){
+									Emin = E;
+									tmpcoefficient->data[i] = coefficient->data[i];
+									fprintf(stdout,"0=%f 1=%f 2=%f E=%e\n",coefficient->data[0],coefficient->data[1],coefficient->data[2],E);
+								}
+								
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	fprintf(stdout,"0=%f 1=%f 2=%f\n",tmpcoefficient->data[0],tmpcoefficient->data[1],tmpcoefficient->data[2]);
+}
+
+
+void
+TangentLine(floatVector* spacing, floatVector* scatter, floatVector* Tangent,ctfInfo* ini,lctfDetermineInfo* linfo,  long mode)
+{	
+	long i;
+	floatVector* coefficient;
+	floatVector* tmpcoefficient;
+	float interval = 0.1;
+	float E;
+	float Emin;
+	float Emax;
+	float Pmax = 0.0;
+	floatVector* Plog;
+	
+	Plog = floatVectorInit(NULL,spacing->size);
+	
+	coefficient    = floatVectorInit(NULL,7);
+	tmpcoefficient = floatVectorInit(NULL,7);
+	
+	for(i=0;i<spacing->size;i++){
+		Plog->data[i] = log10(scatter->data[i]);
+
+		if(Pmax < Plog->data[i]){
+			Pmax = Plog->data[i];
+		}
+
+		if((spacing->data[i] > ini->CutLow) && (spacing->data[i] < ini->CutHigh)){
+			Emax += Plog->data[i];
+		}
+		//fprintf(stdout,"%f %f %f\n",scatter->data[i],Plog->data[i],Emax);
+	}
+	fprintf(stdout,"Pmax:%f stepsize:%f\n",Pmax,linfo->step);	
+	
+	__CoefficientDetermine(spacing,Plog,tmpcoefficient,ini->CutLow,ini->CutHigh,Emax,2,linfo->step);
+	
+/*	
+	for(coefficient->data[0] = 0 ; coefficient->data[0] <= Pmax ; coefficient->data[0] += linfo->step){
+		for(coefficient->data[1] = -10 ; coefficient->data[1] <= 10 ; coefficient->data[1] += linfo->step){
+			for(coefficient->data[2] = -10 ; coefficient->data[2] <= 10 ; coefficient->data[2] += linfo->step){
+				E = 0.0;
+				for(i = 0 ; i < Tangent->size ; i++){
+					if((spacing->data[i] > ini->CutLow) && (spacing->data[i] < ini->CutHigh)){
+						Tangent->data[i] = coefficient->data[0] + coefficient->data[1]*__power(spacing->data[i],1)+coefficient->data[2]*__power(spacing->data[i],2);
+						 E += fabs(Tangent->data[i] - Plog->data[i]);
+						if((Tangent->data[i] - Plog->data[i]) > 0 || Tangent->data[i] < 0 || E>Emin){
+							E = Emax;
+							break;
+						}
+					}
+				}
+
+				if(E < Emin){
+					Emin = E;
+					tmpcoefficient->data[0] = coefficient->data[0];
+					tmpcoefficient->data[1] = coefficient->data[1];
+					tmpcoefficient->data[2] = coefficient->data[2];
+					//fprintf(stdout,"0=%f 1=%f 2=%f E=%e\n",coefficient->data[0],coefficient->data[1],coefficient->data[2],E);
+				}
+			}
+		}
+	}
+	
+	
+	fprintf(stdout,"0=%5.3f 1=%5.3f 2=%5.3f\n\n",tmpcoefficient->data[0],tmpcoefficient->data[1],tmpcoefficient->data[2]);
+	
+	for(i=0 ; i<Tangent->size ; i++){
+		if((spacing->data[i] > ini->CutLow) && (spacing->data[i] < ini->CutHigh)){
+			Tangent->data[i] = tmpcoefficient->data[0] + tmpcoefficient->data[1]*spacing->data[i]+tmpcoefficient->data[2]*spacing->data[i]*spacing->data[i];
+			//fprintf(stdout,"%f %f %f\n",spacing->data[i],Plog->data[i],Tangent->data[i]);
+		}
+	}
+	*/
+	
+}
+

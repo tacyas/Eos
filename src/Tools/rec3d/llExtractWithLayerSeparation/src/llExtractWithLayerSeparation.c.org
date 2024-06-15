@@ -1,0 +1,583 @@
+/*
+# %M% %Y% %I%
+# The latest update : %G% at %U%
+#
+#%Z% llExtractWithLayerSeparation ver %I%
+#%Z% Created by 
+#%Z%
+#%Z% Usage : llDatallExtractWithLayerSeparation
+#%Z% Attention
+#%Z%
+*/
+static char __sccs_id[] = "%Z%llDataWithLayerSeparation ver%I%; Date:%D% %Z%";
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>                  
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+
+#define DEBUG
+#include "genUtil.h"
+#include "String.h"
+#include "Memory.h"
+#include "mrcImage.h"
+#include "llData.h"
+#include "lllExtract.h"
+#include "lllDatarMaxLimit.h"
+#include "lllDataLowPassFiltering.h"
+#include "lllDataDifferenceCalc.h"
+#include "lllDataMergeDifferentN.h"
+#include "lllDataContributionCalcDifferentN.h"
+#include "lllDataFitParamInverse.h"
+#include "lllDataFitAndAverage.h"
+
+typedef struct lllDataSeparateInfo {
+	lllExtractInfo* leInfo;
+} lllDataSeparateInfo;
+
+void
+main(int argc, char* argv[]) 
+{
+	mrcImage* mrcIn;     /* Fourier Space */
+	llData*   llMixNea;  /* Mixed Layer Line */
+	llData*   llMixFar;
+	llData*   llEstNea;  /* Estimated Layer Line */
+	llData*   llEstFar;
+	llData*   llSepNea;  /* Separated Layer Line */
+	llData*   llSepFar;
+	llData*   llSepASNea;  /* Separated Layer Line */
+	llData*   llSepASFar;
+	llData    llSepWeight;  /* Separated Layer Line */
+	llData*   llSepFitAvg;
+	llData*   llDifNea;  
+	llData*   llDifFar;
+	llData*   llSepDifNea;  /* Separated Layer Line */
+	llData*   llSepDifFar;
+	llData*   llSepDifASNea;  /* Separated Layer Line */
+	llData*   llSepDifASFar;
+	llData*   llSepASAvg;
+	llData    llAvg;
+	llData    llRef;
+	llData    llNea;
+	llData    llFar;
+	llExtractWithLayerSeparationInfo info;
+	lllDataSeparateInfo linfo;
+	lllDataFitAndAverageInfo lfitinfo;
+	llDataFittedParam* paraFit;
+	llDataFittedParam* paraFitInverse;
+	llDataParamToFit range;
+	llDataParaTypeInteger mode;	
+	int i, l;
+	int filNumber;
+	long times;
+	double rms, rmsFar, rmsNea, oldrms;
+	FILE* fpt;
+
+	init0(&info);
+    argCheck(&info, argc, argv);
+    init1(&info);
+
+	fpt = info.fptLog;
+	
+	DEBUGPRINT("Fitting Parameter Set\n"); 
+	range.Omega.Min = 0.0; 				  range.Omega.Max = 0.0; 			  	range.Omega.Delta = 1.0;
+	range.x.Min     = info.shiftmin; 	  range.x.Max     = info.shiftmax; 		range.x.Delta     = info.delshift;
+	range.z.Min     = info.zmin; 	 	  range.z.Max     = info.zmax; 			range.z.Delta     = info.delz;
+	range.phi.Min   = info.phimin*RADIAN; range.phi.Max   = info.phimax*RADIAN; range.phi.Delta   = info.delphi*RADIAN;
+	range.r.Min     = 1.0; 				  range.r.Max     = 1.0; 				range.r.Delta     = 1.0;
+
+	DEBUGPRINT("Program Start\n");
+	filNumber = info.flagIn;
+
+	/* Initialization */
+	mrcIn     = (mrcImage*)memoryAllocate(sizeof(mrcImage)*filNumber, "in main");
+	linfo.leInfo = (lllExtractInfo*)memoryAllocate(sizeof(lllExtractInfo)*filNumber, "in main");
+	llMixNea  = (llData*)memoryAllocate(sizeof(llData)*filNumber, "in main");
+	llMixFar  = (llData*)memoryAllocate(sizeof(llData)*filNumber, "in main");
+	llSepNea  = (llData*)memoryAllocate(sizeof(llData)*filNumber, "in main");
+	llSepFar  = (llData*)memoryAllocate(sizeof(llData)*filNumber, "in main");
+	llEstNea  = (llData*)memoryAllocate(sizeof(llData)*filNumber, "in main");
+	llEstFar  = (llData*)memoryAllocate(sizeof(llData)*filNumber, "in main");
+	llDifNea  = (llData*)memoryAllocate(sizeof(llData)*filNumber, "in main");
+	llDifFar  = (llData*)memoryAllocate(sizeof(llData)*filNumber, "in main");
+	paraFit 	   = (llDataFittedParam*)memoryAllocate(sizeof(llDataFittedParam)*filNumber, "in main");
+	paraFitInverse = (llDataFittedParam*)memoryAllocate(sizeof(llDataFittedParam)*filNumber, "in main");
+
+	/* Estimation of the 0th llSepNea and llSepFar */
+	rms = 0;
+	for(i=0; i<filNumber; i++) {
+		paraFit[i].Para        = range;
+		paraFitInverse[i].Para = range;
+		/* mrcFile Read*/
+		mrcFileRead(&(mrcIn[i]), info.In[i], "main routein", 0);
+
+		/* Mixed Layer Line Extract */
+		lllDataSeparationInfoRead(&(linfo.leInfo[i]), &(mrcIn[i]), info.fptllInfo[i]);
+		lllExtract (&(llMixNea[i]), &(llMixFar[i]), &(mrcIn[i]), &(linfo.leInfo[i])); 
+		llMixNea[i].truePitch = llMixFar[i].truePitch = info.truePitch;
+		llMixNea[i].Weight    = llMixFar[i].Weight    = 1.0;
+
+		/* RMax Limitation */
+		lllDataLowPassFiltering(&(llMixNea[i]), info.RMax, 0);
+		lllDataLowPassFiltering(&(llMixFar[i]), info.RMax, 0);
+
+		/* Layer Line Separation */
+		lllExtractWithSeparation(&(llSepNea[i]), &(llMixNea[i]), &(linfo.leInfo[i]), 0); 
+		lllExtractWithSeparation(&(llSepFar[i]), &(llMixFar[i]), &(linfo.leInfo[i]), 0); 
+		
+		/* rMax Limitation */
+		lllDatarMaxLimit(&(llSepNea[i]), info.rMax, 0);
+		lllDatarMaxLimit(&(llSepFar[i]), info.rMax, 0);
+
+		/* Check of each filaments */
+		llEstNea[i] = llMixNea[i]; llDataInit(&(llEstNea[i])); lllDataAttributeCopy(&(llEstNea[i]), &(llMixNea[i]));
+		llEstFar[i] = llMixFar[i]; llDataInit(&(llEstFar[i])); lllDataAttributeCopy(&(llEstFar[i]), &(llMixFar[i]));
+
+		lllDataMergeDifferentN(&(llEstNea[i]), &(llSepNea[i]), 1);
+		lllDataMergeDifferentN(&(llEstFar[i]), &(llSepFar[i]), 1);
+		rmsNea = lllDataDifferenceCalc(&(llDifNea[i]), &(llMixNea[i]), &(llEstNea[i]), 0);
+		rmsFar = lllDataDifferenceCalc(&(llDifFar[i]), &(llMixFar[i]), &(llEstFar[i]), 0);
+		rms = sqrt(SQR(rms) + SQR(rmsNea) + SQR(rmsFar)); 
+		DEBUGPRINT2("%d: rms %f\n", i, rms);
+	}
+	rms /= filNumber;
+	fprintf(fpt, "The 0th Tern: %f\n", rms);
+
+	/* Initialization */	
+	llSepDifNea  = (llData*)memoryAllocate(sizeof(llData)*filNumber, "in main");
+	llSepDifFar  = (llData*)memoryAllocate(sizeof(llData)*filNumber, "in main");
+	llSepDifASNea  = (llData*)memoryAllocate(sizeof(llData)*filNumber, "in main");
+	llSepDifASFar  = (llData*)memoryAllocate(sizeof(llData)*filNumber, "in main");
+	llSepASNea  = (llData*)memoryAllocate(sizeof(llData)*filNumber, "in main");
+	llSepASFar  = (llData*)memoryAllocate(sizeof(llData)*filNumber, "in main");
+	llSepASAvg  = (llData*)memoryAllocate(sizeof(llData)*filNumber, "in main");
+	for(i=0; i<filNumber; i++) {
+		llSepDifNea[i] = llSepNea[i]; llDataInit(&(llSepDifNea[i])); lllDataAttributeCopy(&(llSepDifNea[i]), &(llSepNea[i]));
+		llSepDifFar[i] = llSepFar[i]; llDataInit(&(llSepDifFar[i])); lllDataAttributeCopy(&(llSepDifFar[i]), &(llSepFar[i]));
+		llSepDifASNea[i] = llSepNea[i]; llDataInit(&(llSepDifASNea[i])); lllDataAttributeCopy(&(llSepDifASNea[i]), &(llSepNea[i]));
+		llSepDifASFar[i] = llSepFar[i]; llDataInit(&(llSepDifASFar[i])); lllDataAttributeCopy(&(llSepDifASFar[i]), &(llSepFar[i]));
+		llSepASNea[i] = llSepNea[i]; llDataInit(&(llSepASNea[i])); lllDataAttributeCopy(&(llSepASNea[i]), &(llSepNea[i]));
+		llSepASFar[i] = llSepFar[i]; llDataInit(&(llSepASFar[i])); lllDataAttributeCopy(&(llSepASFar[i]), &(llSepFar[i]));
+
+		llSepASAvg[i] = llSepNea[i]; llDataInit(&(llSepASAvg[i])); lllDataAttributeCopy(&(llSepASAvg[i]), &(llSepNea[i]));
+		for(l=0; l<llSepASAvg[i].llMax; l++) {
+			llSepASAvg[i].LL[l].Side = AverageSide;
+		}
+	}
+
+	llRef = llSepASAvg[0]; llDataInit(&llRef); lllDataAttributeCopy(&llRef, &(llSepASAvg[0]));
+	llAvg = llSepASAvg[0]; llDataInit(&llAvg); lllDataAttributeCopy(&llAvg, &(llSepASAvg[0]));
+	llSepFitAvg = (llData*)memoryAllocate(sizeof(llData)*filNumber, "in main");
+	for(i=0; i<filNumber; i++) {
+		llSepFitAvg[i] = llSepASAvg[0]; llDataInit(&(llSepFitAvg[i])); lllDataAttributeCopy(&(llSepFitAvg[i]), &(llSepASAvg[0]));
+	}
+	llNea = llSepASNea[0]; llDataInit(&llNea); lllDataAttributeCopy(&llNea, &(llSepASNea[0]));
+	llFar = llSepASFar[0]; llDataInit(&llFar); lllDataAttributeCopy(&llFar, &(llSepASFar[0]));
+
+	llSepWeight = llSepASAvg[0]; llDataInit(&llSepWeight); lllDataAttributeCopy(&llSepWeight, &(llSepASAvg[0]));
+
+	times = 0;
+	oldrms = rms*2;
+	while(info.rms < fabs(oldrms-rms) && info.rms < rms && times < info.MaxIteration) {
+		oldrms = rms;
+		DEBUGPRINT("---- Estimation of Intra-parameter ----\n");
+		for(i=0; i<filNumber; i++) {
+			DEBUGPRINT("Axis Search llSepNea/Far\n");
+			lllDataAxisSearch(&(llSepNea[i]), &(llSepFar[i]), &(paraFit[i]), QVALUE_MODE);
+			DEBUGPRINT("Phase Shift of llSepNea/Far\n"); 
+			lllDataPhaseShiftIntra(&(llSepASNea[i]), &(llSepNea[i]), &(paraFit[i]));
+			lllDataPhaseShiftIntra(&(llSepASFar[i]), &(llSepFar[i]), &(paraFit[i]));
+		}
+
+		DEBUGPRINT("---- Difference Check ----\n"); 
+		for(i=0; i<filNumber; i++) {
+			DEBUGPRINT("Separation of llDifNea\n");
+			lllDataContributionCalcDifferentN(&llSepWeight, &(llSepASNea[i]), 1); 
+			lllExtractWithWeightedSeparation(&(llSepDifNea[i]), &(llDifNea[i]), &llSepWeight, &(linfo.leInfo[i]), 1); 
+			lllDataContributionCalcDifferentN(&llSepWeight, &(llSepASFar[i]), 1);
+			lllExtractWithWeightedSeparation(&(llSepDifFar[i]), &(llDifFar[i]), &llSepWeight, &(linfo.leInfo[i]), 1); 
+			/*
+			lllExtractWithSeparation(&(llSepDifNea[i]), &(llDifNea[i]), &(linfo.leInfo[i]), 1); 
+			lllExtractWithSeparation(&(llSepDifFar[i]), &(llDifFar[i]), &(linfo.leInfo[i]), 1); 
+			*/
+			/* rMax Limitation */
+			lllDatarMaxLimit(&(llSepDifNea[i]), info.rMax, 0);
+			lllDatarMaxLimit(&(llSepDifFar[i]), info.rMax, 0);
+
+			/* Dif-shift */ 
+			lllDataPhaseShiftIntra(&llSepDifASNea[i], &llSepDifNea[i], &(paraFit[i]));
+			lllDataPhaseShiftIntra(&llSepDifASFar[i], &llSepDifFar[i], &(paraFit[i]));
+		}
+		/* Estimate New Parameters */
+		/*
+			Estimation of new llSepNea and llSepFar 
+		
+			F(i) = F(i-1) + labmda*Dif(i-1);
+				Dif(i-1) = Observe - F(i-1)
+		*/
+		for(i=0; i<filNumber; i++) {
+			/* Multiply weight: lambda */
+			lllDataMultiplyReal(&(llSepDifASNea[i]), info.lambda);
+			lllDataMultiplyReal(&(llSepDifASFar[i]), info.lambda);
+		
+			/* Estimate */
+			lllDataAdd(&(llSepASNea[i]), &(llSepDifASNea[i]));
+			lllDataAdd(&(llSepASFar[i]), &(llSepDifASFar[i]));
+
+			/* Average */
+			lllDataAdd2(&(llSepASAvg[i]), &(llSepASNea[i]), &(llSepASFar[i]));
+			lllDataDevidedByReal(&(llSepASAvg[i]), 2.0);
+		}
+		if(times==0) {
+			if(info.flagRef) {
+				llDataFileReadFollowingAttributes(info.Ref, &llRef, &mode); 
+			} else {
+				lllDataCopy(&llRef, &(llSepASAvg[0]));
+			}
+		} else {
+			lllDataCopy(&llRef, &llAvg);
+		}
+
+		DEBUGPRINT("FitAndAverage\n");
+		lfitinfo.times = times;
+		lfitinfo.nFile = filNumber;
+		lfitinfo.flagOutParam2  = 0; 
+		lfitinfo.OutParam2  = NULL; 
+		lfitinfo.In         = info.In;
+		lllDataFitAndAverage(&llAvg, llSepFitAvg, llSepASAvg, llRef, paraFit, lfitinfo); 
+
+		/* For Next Step */
+		lllDataAvgToNea(&llNea, &llAvg);
+		lllDataAvgToFar(&llFar, &llAvg);
+		lllDatarMaxLimit(&llNea, info.rMax, 0);
+		lllDatarMaxLimit(&llFar, info.rMax, 0);
+		
+		/* Estimation of each filaments */
+		for(i=0; i<filNumber; i++) {
+			/* parameter inverse */
+			lllDataFitParamOutput(fpt, "Model:Normal ", info.In[i], &(paraFit[i]), 0);
+			lllDataFitParamInverse(&(paraFitInverse[i]), &(paraFit[i]));
+			lllDataFitParamOutput(fpt, "Model:Inverse", info.In[i], &(paraFitInverse[i]), 0);
+
+			/* shift-z and rotation-phi */ 
+			lllDataPhaseShiftInter(&(llSepASNea[i]), &llNea, &(paraFitInverse[i]));  
+			lllDataPhaseShiftInter(&(llSepASFar[i]), &llFar, &(paraFitInverse[i])); 
+
+			/* shift-x */
+			lllDataPhaseShiftIntra(&(llSepNea[i]), &(llSepASNea[i]), &(paraFitInverse[i]));
+			lllDataPhaseShiftIntra(&(llSepFar[i]), &(llSepASFar[i]), &(paraFitInverse[i]));
+		}
+
+		DEBUGPRINT("---- Chek of each filaments ----\n");
+		rms = 0;
+		for(i=0; i<filNumber; i++) {
+			lllDataMergeDifferentN(&(llEstNea[i]), &(llSepNea[i]), 1);
+			lllDataMergeDifferentN(&(llEstFar[i]), &(llSepFar[i]), 1);
+			rmsNea = lllDataDifferenceCalc(&(llDifNea[i]), &(llMixNea[i]), &(llEstNea[i]), 1);
+			rmsFar = lllDataDifferenceCalc(&(llDifFar[i]), &(llMixFar[i]), &(llEstFar[i]), 1);
+			rms = sqrt(SQR(rms) + SQR(rmsNea) + SQR(rmsFar)); 
+			DEBUGPRINT1("rms: %f\n", rms);
+		}
+		rms /= filNumber;
+		fprintf(fpt, "%ld times: rms:= %g oldrms:=%g\n", times, rms, oldrms);
+		times++;
+	}
+	/* Output */
+	llDataFileWrite(info.fptOut, &llAvg, &mode);
+
+	if(info.flagOut2) {
+		for(i=0; i<info.flagOut2; i++) {
+			llDataFileWrite(info.fptOut2[i], &(llSepASAvg[i]), &mode);
+		}	
+	}
+	if(info.flagOut3) {
+		for(i=0; i<info.flagOut3; i++) {
+			llDataFileWrite(info.fptOut3[i], &(llSepDifASNea[i]), &mode);
+		}	
+
+	}
+	if(info.flagOut4) {
+		for(i=0; i<info.flagOut4; i++) {
+			llDataFileWrite(info.fptOut4[i], &(llMixNea[i]), &mode);
+		}	
+
+	}
+	if(info.flagOut5) {
+		for(i=0; i<info.flagOut5; i++) {
+			llDataFileWrite(info.fptOut5[i], &(llSepDifNea[i]), &mode);
+		}	
+
+	}
+	if(info.flagOut6) {
+		for(i=0; i<info.flagOut6; i++) {
+			llDataFileWrite(info.fptOut6[i], &(llSepASNea[i]), &mode);
+		}	
+
+	}
+	if(info.flagOut7) {
+		for(i=0; i<info.flagOut7; i++) {
+			llDataFileWrite(info.fptOut7[i], &(llSepNea[i]), &mode);
+		}	
+
+	}
+	if(info.flagOut8) {
+		for(i=0; i<info.flagOut8; i++) {
+			llDataFileWrite(info.fptOut8[i], &(llEstNea[i]), &mode);
+		}	
+
+	}
+	exit(EXIT_SUCCESS);
+}
+
+void
+additionalUsage()
+{
+	fprintf(stderr, "----- Additional Usage -----\n");
+	fprintf(stderr, ">> llDataSepartionControlFile <<\n");
+	fprintf(stderr, "llMax(different)\n");
+	fprintf(stderr, "nl Z numberOfN n0 n1 n2...\n");
+}
+
+
+void
+lllExtractWithLayerSeparation() 
+{
+	/* Initialization */
+	mrcIn     = (mrcImage*)memoryAllocate(sizeof(mrcImage)*filNumber, "in main");
+	linfo.leInfo = (lllExtractInfo*)memoryAllocate(sizeof(lllExtractInfo)*filNumber, "in main");
+	llMixNea  = (llData*)memoryAllocate(sizeof(llData)*filNumber, "in main");
+	llMixFar  = (llData*)memoryAllocate(sizeof(llData)*filNumber, "in main");
+	llSepNea  = (llData*)memoryAllocate(sizeof(llData)*filNumber, "in main");
+	llSepFar  = (llData*)memoryAllocate(sizeof(llData)*filNumber, "in main");
+	llEstNea  = (llData*)memoryAllocate(sizeof(llData)*filNumber, "in main");
+	llEstFar  = (llData*)memoryAllocate(sizeof(llData)*filNumber, "in main");
+	llDifNea  = (llData*)memoryAllocate(sizeof(llData)*filNumber, "in main");
+	llDifFar  = (llData*)memoryAllocate(sizeof(llData)*filNumber, "in main");
+	paraFit 	   = (llDataFittedParam*)memoryAllocate(sizeof(llDataFittedParam)*filNumber, "in main");
+	paraFitInverse = (llDataFittedParam*)memoryAllocate(sizeof(llDataFittedParam)*filNumber, "in main");
+
+	/* Estimation of the 0th llSepNea and llSepFar */
+	rms = 0;
+	for(i=0; i<filNumber; i++) {
+		paraFit[i].Para        = range;
+		paraFitInverse[i].Para = range;
+		/* mrcFile Read*/
+		mrcFileRead(&(mrcIn[i]), info.In[i], "main routein", 0);
+
+		/* Mixed Layer Line Extract */
+		lllDataSeparationInfoRead(&(linfo.leInfo[i]), &(mrcIn[i]), info.fptllInfo[i]);
+		lllExtract (&(llMixNea[i]), &(llMixFar[i]), &(mrcIn[i]), &(linfo.leInfo[i])); 
+		llMixNea[i].truePitch = llMixFar[i].truePitch = info.truePitch;
+		llMixNea[i].Weight    = llMixFar[i].Weight    = 1.0;
+
+		/* RMax Limitation */
+		lllDataLowPassFiltering(&(llMixNea[i]), info.RMax, 0);
+		lllDataLowPassFiltering(&(llMixFar[i]), info.RMax, 0);
+
+		/* Layer Line Separation */
+		lllExtractWithSeparation(&(llSepNea[i]), &(llMixNea[i]), &(linfo.leInfo[i]), 0); 
+		lllExtractWithSeparation(&(llSepFar[i]), &(llMixFar[i]), &(linfo.leInfo[i]), 0); 
+		
+		/* rMax Limitation */
+		lllDatarMaxLimit(&(llSepNea[i]), info.rMax, 0);
+		lllDatarMaxLimit(&(llSepFar[i]), info.rMax, 0);
+
+		/* Check of each filaments */
+		llEstNea[i] = llMixNea[i]; llDataInit(&(llEstNea[i])); lllDataAttributeCopy(&(llEstNea[i]), &(llMixNea[i]));
+		llEstFar[i] = llMixFar[i]; llDataInit(&(llEstFar[i])); lllDataAttributeCopy(&(llEstFar[i]), &(llMixFar[i]));
+
+		lllDataMergeDifferentN(&(llEstNea[i]), &(llSepNea[i]), 1);
+		lllDataMergeDifferentN(&(llEstFar[i]), &(llSepFar[i]), 1);
+		rmsNea = lllDataDifferenceCalc(&(llDifNea[i]), &(llMixNea[i]), &(llEstNea[i]), 0);
+		rmsFar = lllDataDifferenceCalc(&(llDifFar[i]), &(llMixFar[i]), &(llEstFar[i]), 0);
+		rms = sqrt(SQR(rms) + SQR(rmsNea) + SQR(rmsFar)); 
+		DEBUGPRINT2("%d: rms %f\n", i, rms);
+	}
+	rms /= filNumber;
+	fprintf(fpt, "The 0th Tern: %f\n", rms);
+
+	/* Initialization */	
+	llSepDifNea  = (llData*)memoryAllocate(sizeof(llData)*filNumber, "in main");
+	llSepDifFar  = (llData*)memoryAllocate(sizeof(llData)*filNumber, "in main");
+	llSepDifASNea  = (llData*)memoryAllocate(sizeof(llData)*filNumber, "in main");
+	llSepDifASFar  = (llData*)memoryAllocate(sizeof(llData)*filNumber, "in main");
+	llSepASNea  = (llData*)memoryAllocate(sizeof(llData)*filNumber, "in main");
+	llSepASFar  = (llData*)memoryAllocate(sizeof(llData)*filNumber, "in main");
+	llSepASAvg  = (llData*)memoryAllocate(sizeof(llData)*filNumber, "in main");
+	for(i=0; i<filNumber; i++) {
+		llSepDifNea[i] = llSepNea[i]; llDataInit(&(llSepDifNea[i])); lllDataAttributeCopy(&(llSepDifNea[i]), &(llSepNea[i]));
+		llSepDifFar[i] = llSepFar[i]; llDataInit(&(llSepDifFar[i])); lllDataAttributeCopy(&(llSepDifFar[i]), &(llSepFar[i]));
+		llSepDifASNea[i] = llSepNea[i]; llDataInit(&(llSepDifASNea[i])); lllDataAttributeCopy(&(llSepDifASNea[i]), &(llSepNea[i]));
+		llSepDifASFar[i] = llSepFar[i]; llDataInit(&(llSepDifASFar[i])); lllDataAttributeCopy(&(llSepDifASFar[i]), &(llSepFar[i]));
+		llSepASNea[i] = llSepNea[i]; llDataInit(&(llSepASNea[i])); lllDataAttributeCopy(&(llSepASNea[i]), &(llSepNea[i]));
+		llSepASFar[i] = llSepFar[i]; llDataInit(&(llSepASFar[i])); lllDataAttributeCopy(&(llSepASFar[i]), &(llSepFar[i]));
+
+		llSepASAvg[i] = llSepNea[i]; llDataInit(&(llSepASAvg[i])); lllDataAttributeCopy(&(llSepASAvg[i]), &(llSepNea[i]));
+		for(l=0; l<llSepASAvg[i].llMax; l++) {
+			llSepASAvg[i].LL[l].Side = AverageSide;
+		}
+	}
+
+	llRef = llSepASAvg[0]; llDataInit(&llRef); lllDataAttributeCopy(&llRef, &(llSepASAvg[0]));
+	llAvg = llSepASAvg[0]; llDataInit(&llAvg); lllDataAttributeCopy(&llAvg, &(llSepASAvg[0]));
+	llSepFitAvg = (llData*)memoryAllocate(sizeof(llData)*filNumber, "in main");
+	for(i=0; i<filNumber; i++) {
+		llSepFitAvg[i] = llSepASAvg[0]; llDataInit(&(llSepFitAvg[i])); lllDataAttributeCopy(&(llSepFitAvg[i]), &(llSepASAvg[0]));
+	}
+	llNea = llSepASNea[0]; llDataInit(&llNea); lllDataAttributeCopy(&llNea, &(llSepASNea[0]));
+	llFar = llSepASFar[0]; llDataInit(&llFar); lllDataAttributeCopy(&llFar, &(llSepASFar[0]));
+
+	llSepWeight = llSepASAvg[0]; llDataInit(&llSepWeight); lllDataAttributeCopy(&llSepWeight, &(llSepASAvg[0]));
+
+	times = 0;
+	oldrms = rms*2;
+	while(info.rms < fabs(oldrms-rms) && info.rms < rms && times < info.MaxIteration) {
+		oldrms = rms;
+		DEBUGPRINT("---- Estimation of Intra-parameter ----\n");
+		for(i=0; i<filNumber; i++) {
+			DEBUGPRINT("Axis Search llSepNea/Far\n");
+			lllDataAxisSearch(&(llSepNea[i]), &(llSepFar[i]), &(paraFit[i]), QVALUE_MODE);
+			DEBUGPRINT("Phase Shift of llSepNea/Far\n"); 
+			lllDataPhaseShiftIntra(&(llSepASNea[i]), &(llSepNea[i]), &(paraFit[i]));
+			lllDataPhaseShiftIntra(&(llSepASFar[i]), &(llSepFar[i]), &(paraFit[i]));
+		}
+
+		DEBUGPRINT("---- Difference Check ----\n"); 
+		for(i=0; i<filNumber; i++) {
+			DEBUGPRINT("Separation of llDifNea\n");
+			lllDataContributionCalcDifferentN(&llSepWeight, &(llSepASNea[i]), 1); 
+			lllExtractWithWeightedSeparation(&(llSepDifNea[i]), &(llDifNea[i]), &llSepWeight, &(linfo.leInfo[i]), 1); 
+			lllDataContributionCalcDifferentN(&llSepWeight, &(llSepASFar[i]), 1);
+			lllExtractWithWeightedSeparation(&(llSepDifFar[i]), &(llDifFar[i]), &llSepWeight, &(linfo.leInfo[i]), 1); 
+			/*
+			lllExtractWithSeparation(&(llSepDifNea[i]), &(llDifNea[i]), &(linfo.leInfo[i]), 1); 
+			lllExtractWithSeparation(&(llSepDifFar[i]), &(llDifFar[i]), &(linfo.leInfo[i]), 1); 
+			*/
+			/* rMax Limitation */
+			lllDatarMaxLimit(&(llSepDifNea[i]), info.rMax, 0);
+			lllDatarMaxLimit(&(llSepDifFar[i]), info.rMax, 0);
+
+			/* Dif-shift */ 
+			lllDataPhaseShiftIntra(&llSepDifASNea[i], &llSepDifNea[i], &(paraFit[i]));
+			lllDataPhaseShiftIntra(&llSepDifASFar[i], &llSepDifFar[i], &(paraFit[i]));
+		}
+		/* Estimate New Parameters */
+		/*
+			Estimation of new llSepNea and llSepFar 
+		
+			F(i) = F(i-1) + labmda*Dif(i-1);
+				Dif(i-1) = Observe - F(i-1)
+		*/
+		for(i=0; i<filNumber; i++) {
+			/* Multiply weight: lambda */
+			lllDataMultiplyReal(&(llSepDifASNea[i]), info.lambda);
+			lllDataMultiplyReal(&(llSepDifASFar[i]), info.lambda);
+		
+			/* Estimate */
+			lllDataAdd(&(llSepASNea[i]), &(llSepDifASNea[i]));
+			lllDataAdd(&(llSepASFar[i]), &(llSepDifASFar[i]));
+
+			/* Average */
+			lllDataAdd2(&(llSepASAvg[i]), &(llSepASNea[i]), &(llSepASFar[i]));
+			lllDataDevidedByReal(&(llSepASAvg[i]), 2.0);
+		}
+		if(times==0) {
+			if(info.flagRef) {
+				llDataFileReadFollowingAttributes(info.Ref, &llRef, &mode); 
+			} else {
+				lllDataCopy(&llRef, &(llSepASAvg[0]));
+			}
+		} else {
+			lllDataCopy(&llRef, &llAvg);
+		}
+
+		DEBUGPRINT("FitAndAverage\n");
+		lfitinfo.times = times;
+		lfitinfo.nFile = filNumber;
+		lfitinfo.flagOutParam2  = 0; 
+		lfitinfo.OutParam2  = NULL; 
+		lfitinfo.In         = info.In;
+		lllDataFitAndAverage(&llAvg, llSepFitAvg, llSepASAvg, llRef, paraFit, lfitinfo); 
+
+		/* For Next Step */
+		lllDataAvgToNea(&llNea, &llAvg);
+		lllDataAvgToFar(&llFar, &llAvg);
+		lllDatarMaxLimit(&llNea, info.rMax, 0);
+		lllDatarMaxLimit(&llFar, info.rMax, 0);
+		
+		/* Estimation of each filaments */
+		for(i=0; i<filNumber; i++) {
+			/* parameter inverse */
+			lllDataFitParamOutput(fpt, "Model:Normal ", info.In[i], &(paraFit[i]), 0);
+			lllDataFitParamInverse(&(paraFitInverse[i]), &(paraFit[i]));
+			lllDataFitParamOutput(fpt, "Model:Inverse", info.In[i], &(paraFitInverse[i]), 0);
+
+			/* shift-z and rotation-phi */ 
+			lllDataPhaseShiftInter(&(llSepASNea[i]), &llNea, &(paraFitInverse[i]));  
+			lllDataPhaseShiftInter(&(llSepASFar[i]), &llFar, &(paraFitInverse[i])); 
+
+			/* shift-x */
+			lllDataPhaseShiftIntra(&(llSepNea[i]), &(llSepASNea[i]), &(paraFitInverse[i]));
+			lllDataPhaseShiftIntra(&(llSepFar[i]), &(llSepASFar[i]), &(paraFitInverse[i]));
+		}
+
+		DEBUGPRINT("---- Chek of each filaments ----\n");
+		rms = 0;
+		for(i=0; i<filNumber; i++) {
+			lllDataMergeDifferentN(&(llEstNea[i]), &(llSepNea[i]), 1);
+			lllDataMergeDifferentN(&(llEstFar[i]), &(llSepFar[i]), 1);
+			rmsNea = lllDataDifferenceCalc(&(llDifNea[i]), &(llMixNea[i]), &(llEstNea[i]), 1);
+			rmsFar = lllDataDifferenceCalc(&(llDifFar[i]), &(llMixFar[i]), &(llEstFar[i]), 1);
+			rms = sqrt(SQR(rms) + SQR(rmsNea) + SQR(rmsFar)); 
+			DEBUGPRINT1("rms: %f\n", rms);
+		}
+		rms /= filNumber;
+		fprintf(fpt, "%ld times: rms:= %g oldrms:=%g\n", times, rms, oldrms);
+		times++;
+	}
+	/* Output */
+	llDataFileWrite(info.fptOut, &llAvg, &mode);
+
+	if(info.flagOut2) {
+		for(i=0; i<info.flagOut2; i++) {
+			llDataFileWrite(info.fptOut2[i], &(llSepASAvg[i]), &mode);
+		}	
+	}
+	if(info.flagOut3) {
+		for(i=0; i<info.flagOut3; i++) {
+			llDataFileWrite(info.fptOut3[i], &(llSepDifASNea[i]), &mode);
+		}	
+
+	}
+	if(info.flagOut4) {
+		for(i=0; i<info.flagOut4; i++) {
+			llDataFileWrite(info.fptOut4[i], &(llMixNea[i]), &mode);
+		}	
+
+	}
+	if(info.flagOut5) {
+		for(i=0; i<info.flagOut5; i++) {
+			llDataFileWrite(info.fptOut5[i], &(llSepDifNea[i]), &mode);
+		}	
+
+	}
+	if(info.flagOut6) {
+		for(i=0; i<info.flagOut6; i++) {
+			llDataFileWrite(info.fptOut6[i], &(llSepASNea[i]), &mode);
+		}	
+
+	}
+	if(info.flagOut7) {
+		for(i=0; i<info.flagOut7; i++) {
+			llDataFileWrite(info.fptOut7[i], &(llSepNea[i]), &mode);
+		}	
+
+	}
+	if(info.flagOut8) {
+		for(i=0; i<info.flagOut8; i++) {
+			llDataFileWrite(info.fptOut8[i], &(llEstNea[i]), &mode);
+		}	
+
+	}
+}

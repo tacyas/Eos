@@ -1,0 +1,31 @@
+<HTML>
+<HEAD>
+<TITLE>mrcImageSamplingUnitChange</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageSamplingUnitChange</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageSamplingUnitChange
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-S[amplingUnit]     Sx                  (0.0       ).as(Real                ) 
+                         Sy                  (0.0       ).as(Real                ) 
+                         Sz                  (0.0       ).as(Real                ) ] :Optional  :SamplingUnit[A]
+    [-N                  Nx                  (0.0       ).as(Integer             ) 
+                         Ny                  (0.0       ).as(Integer             ) 
+                         Nz                  (0.0       ).as(Real                ) ] :Optional  :N[Integer]
+    [-R[atio]            Ratio               (1.0       ).as(Real                ) ] :Optional  :R[Real]
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+---- Ratio ---- 
+-R and -S
+   Ratio*Sx Ratio*Sy Ratio*Sy
+---- Mode ---- 
+0: Nearest
+1: Linear 
+2: Cubic 
+</PRE>
+</BODY>
+</HTML>

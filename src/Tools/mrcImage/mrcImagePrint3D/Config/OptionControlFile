@@ -1,0 +1,11 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-stereo","-stereo","Stereo View [degree] around z-axis","Optional","1","1","Stereo","Real","6.0"
+"-rotation","-rotation","(Number, angle) : Rotation View around z-axis","Optional","2","1","nRotation","Integer","60","2","RotationAngle","Real","6.0"
+"-eye","-eye[Position]","Eye Position","Optional","3","1","eyeX","Real","100.0","2","eyeY","Real","0.0","3","eyeZ","Real","0.0"
+"-plane","-plane[Position]","Plane Position","Optional","3","1","planeX","Real","0.0","2","planeY","Real","0.0","3","planeZ","Real","0.0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"
+"-C","-C[ontour]","Contour Level ...","Variable","1","1","contourLevel","Real","0.0"

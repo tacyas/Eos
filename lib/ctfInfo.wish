@@ -1,0 +1,1243 @@
+#
+#
+# ctfInfo 
+# 	namespace eval CTF
+#
+namespace eval CTF {
+	variable ctfInfo
+	namespace export ctfInfoLoad ctfInfoSave ctfInfoSaveAsPS ctfInfoGraphUpdate 
+
+proc Init { { mrc __null__ } } {
+	variable ctfInfo
+	
+	#puts "Init"
+	# mrcImage Information Check: set ctfInfo(mrc) $mrc
+	set ctfInfo(DEBUGCOMMENT) "DEBUG"	
+	if { $mrc != "__null__" } { 
+		# New Object 
+        array set mrcImage $mrc 
+		#puts "name:  $mrcImage(filename)"
+		if [ info exists mrcImage(filename) ] {
+			# Set New mrcImage
+			set filename $mrcImage(filename)
+    		set ctfInfo(mrc) $mrc
+		} else { # mrc is a new filename
+			# Set New file
+			set filename $mrc
+			catch { unset ctfInfo(mrc) }
+		}
+	} else { 
+		# No setting 
+		if [ info exists ctfInfo(filename) ] {
+			set filename $ctfInfo(filename)
+			# puts  "Already FileName"
+		} elseif [ info exists ctfInfo(mrc) ] {
+        	array set mrcImage $ctfInfo(mrc)
+			set filename $mrcImage(filename)
+		} else { # mrc is filename 
+			set filename $mrc
+		}
+	}
+
+	if [ info exists ctfInfo(filename) ] {
+		if { $ctfInfo(filename) != $filename } {
+			set ctfInfo(flagInit) 0
+		} else {
+			set ctfInfo(flagInit) 1 
+		}
+	} else {
+		set ctfInfo(flagInit) 0
+	}
+
+	if { $ctfInfo(flagInit) == 1 }  {
+		return
+	} else {
+		set ctfInfo(filename)   $filename
+	}
+
+	# Start Initialization 
+	set ctfInfo(flagInit) 	1
+
+	# Molecular Envelope for signal
+	#Elastic
+	set ctfInfo(.defctfinfo)    "./.DefCTFInfo"
+	set ctfInfo(.defdir)        "~/.Eos"
+	set ctfInfo(.defdirctfinfo) "~/.Eos/DefCTFInfo"
+	set ctfInfo(whichMolec)         Gauss
+	set ctfInfo(.molcEnvTable)      "./carbon.table"
+    set ctfInfo(MolcEnv)     1.0    
+    set ctfInfo(dMolcEnv)    1.0    
+    set ctfInfo(Elastic)     2.4912    
+    set ctfInfo(dElastic)    0.0000    
+    set ctfInfo(ElaShift)    0.0108    
+    set ctfInfo(dElaShift)   0.0000    
+    set ctfInfo(ElaWidth)    0.2226
+    set ctfInfo(dElaWidth)   0.0100    
+    set ctfInfo(ElaRing)     1.0000
+    set ctfInfo(dElaRing)    0.1000    
+    set ctfInfo(ElaRShift)   0.2500
+    set ctfInfo(dElaRShift)  0.0100    
+    set ctfInfo(ElaRWidth)   0.1000
+    set ctfInfo(dElaRWidth)  0.0100    
+	#Inelastic
+	set ctfInfo(whichInElaMolec)  No 
+	set ctfInfo(.inElaMolcEnvTable) "./carbon.table"
+    set ctfInfo(InElaMolcEnv)     8.0    
+    set ctfInfo(dInElaMolcEnv)    1.0    
+    set ctfInfo(InElastic)     2.4912    
+    set ctfInfo(dInElastic)    0.0000    
+    set ctfInfo(InElaShift)    0.0108    
+    set ctfInfo(dInElaShift)   0.0000    
+    set ctfInfo(InElaWidth)    0.2226
+    set ctfInfo(dInElaWidth)   0.0100    
+    set ctfInfo(InElaRing)     1.0000
+    set ctfInfo(dInElaRing)    0.1000    
+    set ctfInfo(InElaRShift)   0.2500
+    set ctfInfo(dInElaRShift)  0.0100    
+    set ctfInfo(InElaRWidth)   0.1000
+    set ctfInfo(dInElaRWidth)  0.0100    
+	#
+	#
+	#
+	set ctfInfo(flagScatGraph) 		            1
+	set ctfInfo(flagScatGraphSubtraction) 	    0	
+    set ctfInfo(Imax) 		0.001
+    set ctfInfo(dImax) 		0.0001
+    set ctfInfo(Rmax) 		0.20
+    set ctfInfo(dRmax) 		0.01
+    set ctfInfo(Imin) 	    0.00	
+    set ctfInfo(dImin) 		0.0001
+    set ctfInfo(Rmin) 		0.00
+    set ctfInfo(dRmin) 		0.01
+	#
+	#
+	#
+	set ctfInfo(flagZero)   1
+	set ctfInfo(zeroMax)    6
+	for { set i 1 } { $i <= $ctfInfo(zeroMax) } { incr i } {
+    	set ctfInfo(zero$i) [ expr 0.01*$i ]
+    	set ctfInfo(dzero$i) 0.01
+	}	
+	set ctfInfo(ThonRingCanvas)     1 
+
+    set ctfInfo(flagCTFGraph)       1	
+    set ctfInfo(flagCTFcoreGraph)   0	
+    set ctfInfo(flagCTFPower)       1	
+    set ctfInfo(flagLogScale)       0	
+
+	# Thon Ring Information
+    set ctfInfo(flagpredictThonRing) 0 	
+    set ctfInfo(flagpredictZero)     0 	
+    set ctfInfo(flagpredictZeroMax)  1
+    set ctfInfo(predictZeroMaxMax)  30 
+
+	##
+    set ctfInfo(defocus) 	 500 
+    set ctfInfo(ddefocus) 	-100 
+    set ctfInfo(defocus2D0) 	   0 
+    set ctfInfo(ddefocus2D0) 	-100 
+    set ctfInfo(defocus2D1) 	   0 
+    set ctfInfo(ddefocus2D1) 	-100 
+    set ctfInfo(defocus0axis) 	   0 
+    set ctfInfo(ddefocus0axis) 	 -10 
+	set ctfInfo(numDivision)      12
+    set ctfInfo(Cs)          2.1
+    set ctfInfo(dCs)         0.1
+    set ctfInfo(kV)          200
+    set ctfInfo(dkV)           5 
+    set ctfInfo(AoverP)      0.1
+    set ctfInfo(dAoverP)     -0.01
+    set ctfInfo(Ai)          0.02
+    set ctfInfo(dAi)         0.01
+    set ctfInfo(Cc)          0.7
+    set ctfInfo(dCc)         0.1
+    set ctfInfo(dV)          0.7
+    set ctfInfo(ddV)         0.1
+    set ctfInfo(I)          0.015
+    set ctfInfo(dI)         0.002
+    set ctfInfo(SN)         0.1 
+    set ctfInfo(dSN)        0.1 
+    set ctfInfo(SN2)        0.1 
+    set ctfInfo(dSN2)       0.1 
+    set ctfInfo(Isignal)    0.015
+    set ctfInfo(dIsignal)   0.002
+    set ctfInfo(Inoise)     0.0015 
+    set ctfInfo(dInoise)    0.0002 
+    set ctfInfo(Inoise2)     0.0015 
+    set ctfInfo(dInoise2)    0.0002 
+	set ctfInfo(whichMTF)   singleExp
+
+	# MTF
+    set ctfInfo(MTF)        38 
+    set ctfInfo(dMTF)        1
+
+	set ctfInfo(MTFd2)       0
+	set ctfInfo(dMTFd2)      1
+	set ctfInfo(MTFd3)       0
+	set ctfInfo(dMTFd3)      1
+	set ctfInfo(MTFd4)       0
+	set ctfInfo(dMTFd4)      1
+	set ctfInfo(MTFd5)       0
+	set ctfInfo(dMTFd5)      1
+	set ctfInfo(MTFd6)       0
+	set ctfInfo(dMTFd6)      1
+    
+	set ctfInfo(MTF2)        38 
+    set ctfInfo(dMTF2)        1 
+    set ctfInfo(MTF2Weight)  0
+    set ctfInfo(dMTF2Weight) 0.1 
+	set ctfInfo(Magnification)  1.0
+	set ctfInfo(dMagnification) -0.005 
+	# Vibration 
+	set ctfInfo(flagVibration) 0 
+	set ctfInfo(BofVibration)  4.0 
+	set ctfInfo(VibrationMode) 0 
+	# Aliasing
+	set ctfInfo(flagAliasing)     1 
+	set ctfInfo(flagSampling)     0 
+	set ctfInfo(NyquistFrequency) 1 
+
+	## Evaluation of ctfInfo
+	set ctfInfo(flagEvaluation)   0
+	set ctfInfo(EvalMinMaxMethod) NULL 
+	# Canvas 
+	set ctfInfo(flagThonRingOnCanvas) 1 
+
+	set ctfInfo(.ctfinfoMode) "Every"
+
+	### Input Graph Data
+	if { $filename == "__null__" } {
+		if [ info exists ctfInfo(mrc) ] {
+       		array set mrcImage $ctfInfo(mrc)
+			if [ info exists mrcImage(filename) ] {
+				set ctfInfo(filename) $mrcImage(filename)
+			} 
+		} 
+		if [ info exists ctfInfo(filename) ] {
+			puts "ANYWAY, move but strange"	
+		} else {
+			puts "No CTFInfo File"
+			flush stdout
+			return
+		}
+	} else { 
+		set ctfInfo(filename) $filename
+	}
+	if [ file exists $ctfInfo(filename) ]  {
+		
+	} else {
+		puts "mrc file not found: Please check; $filename"
+	}
+
+	### Input Default Data 
+	if [ string match ".fft"   [ file extension $ctfInfo(filename) ]  ] {
+		set ctfInfo(.ctfps)    [ file rootname  $ctfInfo(filename) ].ctfps 
+		set ctfInfo(.ctfinfo)  [ file rootname  $ctfInfo(filename) ].ctfinfo 
+	} else {
+		set ctfInfo(.ctfps)   $ctfInfo(filename).ctfps 
+		set ctfInfo(.ctfinfo) $ctfInfo(filename).ctfinfo 
+	}
+	set ctfInfo(.ctfinfoMode) "Every"
+	#puts "ctfinfoMode: $ctfInfo(.ctfinfoMode) "
+
+
+	if [ file exists $ctfInfo(.defdir) ] {
+		#	
+	} else {
+		file mkdir $ctfInfo(.defdir) 
+	}
+	if [ file exists $ctfInfo(.ctfinfo) ] {
+		ctfInfoLoad 
+	} elseif [ file exists $ctfInfo(.defctfinfo) ] {
+		ctfInfoLoad $ctfInfo(.defctfinfo)
+	} elseif [ file exists $ctfInfo(.defdirctfinfo) ] {
+		ctfInfoLoad $ctfInfo(.defdirctfinfo)
+	}
+	
+	#
+    # Data Taking (Scattering)
+	#
+	ctfInfoScatteringCalc 
+
+	#puts "InitEnd"
+}
+
+#
+# CTF Program
+#
+proc Win { { win .ctfInfo } { filename __null__ } { extension 2 } } {
+	variable ctfInfo 
+
+	### Initialization
+	Init
+
+	if [ catch { toplevel $win -bd 4 -class CTFInfo } ] {
+		raise $win
+	} else {
+		### Create New Window
+        set w  $win
+		#
+		# Graph Frame
+		#
+		set f [ frame $w.graph ]
+        # Frame for Graph 
+        set  ctfInfo(graph) [ graph  $f.graph ]
+		ctfInfoGraphInfoFrameCreate $f.info  top
+		pack $f.graph $f.info -side left -expand true -fill both
+
+		# Graph Update
+		ctfInfoGraphUpdate
+
+		pack $w.graph -side left -expand true -fill both 
+
+	}
+
+    if [ catch { toplevel $win$extension -bd 4 -class CTFInfo } ] {  # Window Create
+        raise $win$extension 
+    } else {
+		### Create New Window
+        set w  $win$extension 
+
+		# ctfInfo Frame
+		ctfInfoCTFInfoFrameCreate $w.ctf left 
+		#
+		# Packing
+		#
+		pack $w.ctf -side left -expand true -fill both 
+
+    }
+
+	# Marker : Thon Ring
+	ctfInfoPredictedMarkerSet 
+    ctfInfoMarkerReset
+}
+
+#
+# GraphInfo Frame
+#
+proc ctfInfoGraphInfoFrameCreate { f side } {
+	frame $f
+	
+	ctfInfoGraphInfoFrameCreate1 $f.f1
+	ctfInfoGraphInfoFrameCreate2 $f.f2
+
+	pack $f.f1 $f.f2 -side $side -expand true -fill both
+	return $f
+}
+
+#
+# Related to scattering frame
+#
+proc ctfInfoGraphInfoFrameCreate1 { f } {
+	variable ctfInfo
+	
+    frame $f
+	# Scattering Information: Scattering/SubtractScattering
+    set cmd  "[ namespace code {ctfInfoGraphUpdate} ]"
+	set name  [ namespace current ]::
+
+	#
+	set ff [ frame $f.graph ]
+    checkbutton $ff.graph    -text "Scattering" -variable [subst $name]ctfInfo(flagScatGraph)            -command $cmd
+    checkbutton $ff.graphsub -text "Subtract"   -variable [subst $name]ctfInfo(flagScatGraphSubtraction) -command $cmd
+	checkbutton $ff.log      -text "Log"        -variable [subst $name]ctfInfo(flagLogScale)             -command $cmd
+	pack $ff.graph $ff.graphsub $ff.log -side left
+
+	# Scattering Graph Configure
+	set ff [ frame $f.graphConfig ] 
+    CommandEntryWithUpDown $ff.intensity Imax 4 $cmd [subst $name]ctfInfo(Imax) [subst $name]ctfInfo(dImax) -width 10 
+    CommandEntryWithUpDown $ff.imin      Imin 4 $cmd [subst $name]ctfInfo(Imin) [subst $name]ctfInfo(dImin) -width 10 
+    CommandEntryWithUpDown $ff.brmax     Rmax 4 $cmd [subst $name]ctfInfo(Rmax) [subst $name]ctfInfo(dRmax) -width 10 
+    CommandEntryWithUpDown $ff.brmin     Rmin 4 $cmd [subst $name]ctfInfo(Rmin) [subst $name]ctfInfo(dRmin) -width 10 
+	pack $ff.intensity $ff.imin $ff.brmax $ff.brmin -side top
+
+	#
+	# File Frame 
+	#
+	set ff  [ frame $f.file ]
+
+	#PS
+	set fff [ frame $ff.printPS ]
+    button $fff.printPS -text "Save" -command "[subst $name]ctfInfoSaveAsPS"
+	CommandEntry $fff.printPSEntry  Graph 5   "[subst $name]ctfInfoSaveAsPS" -textvar [subst $name]ctfInfo(.ctfps)
+	pack $fff.printPS $fff.printPSEntry  -side left
+
+	# Info
+	set fff [ frame $ff.printInfo ]
+    button $fff.printInfo -text "Save" -command "[subst $name]ctfInfoSave"
+	CommandEntry $fff.printInfoEntry Info  5    "[subst $name]ctfInfoSave" -textvar [subst $name]ctfInfo(.ctfinfo)
+	pack $fff.printInfo   $fff.printInfoEntry -side left
+
+	# InfoLoad
+	set fff [ frame $ff.loadInfo ]
+    button $fff.loadInfo -text "Load" -command "[subst $name]ctfInfoLoad"
+	CommandEntry $fff.loadInfoEntry Info  5    "[subst $name]ctfInfoLoad"  -textvar [subst $name]ctfInfo(.ctfinfo)
+	pack $fff.loadInfo  $fff.loadInfoEntry -side left
+	pack $ff.printPS $ff.printInfo $ff.loadInfo -side top
+
+	pack $ff.printPS $ff.printInfo $ff.loadInfo -side top
+
+    # Packing
+    pack \
+    	$f.graph     \
+		$f.graphConfig  \
+        $f.file      \
+        -side top -expand true 
+	return $f
+}
+
+#
+# Thon Ring on canvas
+#    Incomplete procedure
+#
+proc ctfInfoGraphInfoFrameCreate2 { f } {
+	variable ctfInfo
+
+    frame $f
+
+	# Thon Ring 
+    set cmd  ctfInfoMarkerSet
+    checkbutton $f.zero -text "Thon Ring (zero)" -variable ctfInfo(flagZero) -command $cmd
+	for { set i 1 } { $i <= $ctfInfo(zeroMax) } { incr i } { 
+    	CommandEntryWithUpDown $f.zero$i $i 4 $cmd ctfInfo(zero$i) ctfInfo(dzero$i)  -width 6
+	}
+    button $f.zeroReset -text Reset -command ctfInfoMarkerReset
+		
+    pack $f.zero -side top -expand true 
+
+	for { set i 1 } { $i <= $ctfInfo(zeroMax) } { incr i } {
+		pack $f.zero$i -side top -expand true
+	}
+	pack $f.zeroReset -side top -expand true
+
+	return $f
+}
+
+#
+# Graph Save as a PS file
+#
+proc ctfInfoSaveAsPS { } {
+	variable ctfInfo
+
+	#puts $ctfInfo(.ctfps)
+    $ctfInfo(graph) postscript output $ctfInfo(.ctfps) -center false
+}
+
+#
+# ctfInfoFile
+# 
+# Save
+#
+proc ctfInfoSave { { filename __null__ } { ctfinfomode __null__  } } {
+	variable ctfInfo
+
+	if { $filename == "__null__" } {
+		set filename $ctfInfo(.ctfinfo) 
+	}
+	#puts $filename
+	set fpt [ open	$filename a 0600 ]
+
+	if { $ctfinfomode == "__null__" } {
+		set ctfinfomode $ctfInfo(.ctfinfoMode) 
+	}
+
+	switch $ctfinfomode {
+		Every {
+			foreach { name value } [ array get ctfInfo ] {
+				if { $name == "filename" || $name=="mrc" || $name=="" } {
+
+				} else {
+					puts -nonewline $fpt "$name:" 
+					foreach  v  $value  {
+						if [ string is double $v ] {
+						 	puts -nonewline $fpt [ format " %g" $v ]
+						} else {
+							puts -nonewline $fpt [ format " %s" $v ]
+						}
+					}
+					puts -nonewline $fpt [ format "\n" ]
+				}
+			}
+		}	
+		Main {
+			foreach { name } { defocus defocus2D0 defocus2D1 defocus0axis 
+							   numDivision
+							   AoverP kV Cs Cc Ai 
+							   I SN SN2
+							   Isignal Inoise Inoise2 
+							   whichMTF MTF     MTF2   MolcEnv
+							   Magnification
+							   flagCTFPower BofVibration flagVibration VibrationMode
+							   Imax Imin Rmax Rmin 
+							   }  {
+				puts $fpt "[subst $name]:  [ subst $ctfInfo([subst $name])] "
+			}
+		}
+		Control {
+			foreach { name } { defocus ddefocus
+							   defocus2D0 ddefocus2D0  
+							   defocus2D1 ddefocus2D1  
+							   defocus0axis ddefocus0axis
+							   numDivision
+							   AoverP     dAoverP
+							   kV Cs Cc Ai 
+							   I SN SN2
+							   Isignal dIsignal
+							   Inoise  dInoise
+							   Inoise2 dInoise2
+							   whichMTF
+							   MTF     dMTF
+							   MTF2    dMTF2
+							   MolcEnv
+							   Magnification
+							   flagCTFPower
+							   BofVibration
+							   flagVibration
+							   VibrationMode
+							   Imax dImax
+							   Imin dImin
+							   Rmax dRmax
+							   Rmin dRmin
+							   }  {
+				puts $fpt "[subst $name]:  [ subst $ctfInfo([subst $name])] "
+			}
+		}
+	}
+	if [ info exists fpt ] { 
+		close $fpt
+	}	
+}
+
+#
+# ctfInfoFile
+#
+# Load
+#
+proc ctfInfoLoad { { filename __null__ } } {
+	variable ctfInfo
+
+	if { $filename != "__null__"  } {
+		if [ file exists $filename ] {
+			#puts $filename 
+			set fpt [ open $filename r ]
+		} else {
+			puts "No such file: $filename"
+			return
+		}
+	} else {
+		if [ info exists ctfInfo ] {
+			puts "Use previous ctfInfo: $ctfInfo(.ctfinfo)"
+			#puts $ctfInfo(DEBUGCOMMENT)
+		} else {
+			puts "ctfInfo does not exist" 
+			return
+		}
+		#puts $ctfInfo(.ctfinfo) 
+		set fpt [ open	$ctfInfo(.ctfinfo) r ]
+	}
+
+	while { ! [ eof $fpt ]  } {
+		gets  $fpt s
+		set slist [ split $s ":" ]	
+		set name  [ string trim [ lindex $slist 0 ] ]
+		set value [ string trim [ lindex $slist 1 ] ]
+		switch $ctfInfo(.ctfinfoMode) {
+			Every {
+				if { $name == "filename" || $name=="mrc"} {
+					#	
+				} else {
+					set ctfInfo($name) $value
+				 	#puts "ctfInfo($name) $value"
+				}
+			}
+			Main {
+				if { 
+				    $name == "defocus"
+				 || $name == "defocus2D0"
+				 || $name == "defocus2D1"
+				 || $name == "defocus0axis"
+				 || $name == "AoverP"
+			 	 ||	$name == "kV"
+				 || $name == "Cs"
+				 || $name == "Cc"
+				 || $name == "Ai"
+				 || $name == "I"
+			 	 ||	$name == "SN"
+			 	 ||	$name == "SN2"
+				 || $name == "Isignal"
+			 	 ||	$name == "Inoise"
+			 	 ||	$name == "Inoise2"
+				 || $name == "whichMTF"
+				 || $name == "MTF"
+				 || $name == "MTF2"
+				 || $name == "MTF2Weight"
+				 || $name == "MolcEnv"
+				 || $name == "Magnification"
+				 || $name == "flagCTFPower" 
+				 || $name == "BofVibration" 
+				 || $name == "Vibration" 
+				 || $name == "VibrationMode" 
+				 || $name == "Imax" 
+				 || $name == "Imin" 
+				 || $name == "Imax" 
+				 || $name == "Rmin" 
+				 || $name == "MTFd2"
+				 || $name == "MTFd3"
+				 || $name == "MTFd4"
+				 || $name == "MTFd5"
+				 || $name == "MTFd6"} {
+				 	set ctfInfo($name) $value
+				 	#puts "ctfInfo($name) $value"
+				}
+			} 
+		}
+	}
+	if [ info exists fpt ] {
+		close $fpt
+	}	
+	if [ info exists ctfInfo(graph) ] {
+		if [ info exists $ctfInfo(graph) ] {
+    		ctfInfoGraphUpdate
+		}
+	}	
+	if [ info exists ctfInfo(defocus) ] {
+		if { $ctfInfo(defocus2D0) == 0 && $ctfInfo(defocus2D1)==0 && $ctfInfo(defocus0axis)==0 } {
+			set ctfInfo(defocus2D0) $ctfInfo(defocus)
+			set ctfInfo(defocus2D1) $ctfInfo(defocus)
+		}
+	}
+}
+#
+#
+#
+proc ctfInfoMolecEnvSet {  } {
+	variable ctfInfo
+
+	# Elastic	
+	switch $ctfInfo(whichMolec) {
+		Gauss {
+			ctfInfoSet MolecEnv      $ctfInfo(MolcEnv) 
+			ctfInfoSet Elastic       0
+			ctfInfoSet MolecEnvMode  0 
+		}
+		Lorentz {
+			ctfInfoSet Elastic 1 $ctfInfo(Elastic) $ctfInfo(ElaShift) $ctfInfo(ElaWidth) \
+			                     $ctfInfo(ElaRing) $ctfInfo(ElaRShift) $ctfInfo(ElaRWidth) 
+			ctfInfoSet MolecEnvMode  0 
+		}
+		Table {
+			ctfInfoSet Elastic       0 
+			ctfInfoSet MolecEnvTable $ctfInfo(.molcEnvTable)
+			ctfInfoSet MolecEnvMode  1
+		}
+	}
+
+	# Inelastic 
+	switch $ctfInfo(whichInElaMolec) {
+		No {
+			ctfInfoSet InElasticMode      0
+			ctfInfoSet InElastic          0
+			ctfInfoSet InElaMolecEnvMode  0
+		}
+		Gauss {
+			ctfInfoSet InElasticMode      1
+			ctfInfoSet InElaMolecEnv      $ctfInfo(InElaMolcEnv) 
+			ctfInfoSet InElastic          0
+			ctfInfoSet InElaMolecEnvMode  0 
+		}
+		Lorentz {
+			ctfInfoSet InElasticMode      0 
+			ctfInfoSet InElastic 1 $ctfInfo(InElastic) $ctfInfo(InElaShift) $ctfInfo(InElaWidth) \
+			                       $ctfInfo(InElaRing) $ctfInfo(InElaRShift) $ctfInfo(InElaRWidth) 
+			ctfInfoSet InElaMolecEnvMode  0 
+		}
+		Table {
+			ctfInfoSet InElasticMode      0 
+			ctfInfoSet InElastic          1 
+			ctfInfoSet InElaMolecEnvTable $ctfInfo(.inElaMolcEnvTable)
+			ctfInfoSet InElaMolecEnvMode  1
+		}
+	}
+}
+
+#
+#
+#
+proc ctfInfoCTFInfoFrameCreate { f side } {
+	# Frame for ctfInfo
+	frame $f
+	
+	ctfInfoCTFInfoFrameCreate1 $f.f1
+	ctfInfoCTFInfoFrameCreate2 $f.f2
+
+	pack $f.f1 $f.f2 -side $side  
+	return $f		
+}
+
+proc ctfInfoCTFInfoFrameCreate1 { f } {
+	variable ctfInfo
+
+	# Frame for ctfInfo
+    set cmd "[ namespace code {ctfInfoGraphUpdate}]"
+	set name [ namespace current ]::
+
+	frame $f
+
+	# Which CTF Plot 
+	set ff [ frame $f.title ]
+    checkbutton $ff.main  -text "CTF Params" -variable [subst $name]ctfInfo(flagCTFGraph)     -command $cmd
+    checkbutton $ff.sub   -text "Core"       -variable [subst $name]ctfInfo(flagCTFcoreGraph) -command $cmd
+    checkbutton $ff.power -text "Power"      -variable [subst $name]ctfInfo(flagCTFPower)     -command $cmd
+	pack $ff.main $ff.sub $ff.power -side left -expand true
+
+	# Main Parameters 
+	set ff [ frame $f.main ] 
+    CommandEntryWithUpDown $ff.defocus "defocus A "  10 $cmd  [subst $name]ctfInfo(defocus)       [subst $name]ctfInfo(ddefocus)       -width 6
+    CommandEntryWithUpDown $ff.aoverP  "AoverP    "  10 $cmd  [subst $name]ctfInfo(AoverP)        [subst $name]ctfInfo(dAoverP)        -width 6
+    CommandEntryWithUpDown $ff.is      "Isingal   "  10 $cmd  [subst $name]ctfInfo(Isignal)       [subst $name]ctfInfo(dIsignal)       -width 6 
+    CommandEntryWithUpDown $ff.in      "Inoise    "  10 $cmd  [subst $name]ctfInfo(Inoise)        [subst $name]ctfInfo(dInoise)        -width 6 
+    CommandEntryWithUpDown $ff.in2     "Inoise2   "  10 $cmd  [subst $name]ctfInfo(Inoise2)       [subst $name]ctfInfo(dInoise2)       -width 6 
+    CommandEntryWithUpDown $ff.mag     "Mag       "  10 $cmd  [subst $name]ctfInfo(Magnification) [subst $name]ctfInfo(dMagnification) -width 6 
+	pack $ff.defocus $ff.aoverP $ff.is $ff.in $ff.in2 $ff.mag -side top -expand true 
+
+	# MTF
+	set ff  [ frame $f.mtf ]
+	RadioButtonsCreateWithPackWithCommand $ff.which MTF $cmd left [subst $name]ctfInfo(whichMTF) singleExp Lorentz BothMul BothSum Linear Polynomial 
+	CommandEntryWithUpDown     $ff.mtf     "MTF  A    "  10 $cmd  [subst $name]ctfInfo(MTF)        [subst $name]ctfInfo(dMTF)        -width 6
+	CommandEntryWithUpDown     $ff.mtf2    "MTF2 A    "  10 $cmd  [subst $name]ctfInfo(MTF2)       [subst $name]ctfInfo(dMTF2)       -width 6
+	CommandEntryWithUpDown     $ff.mtfw    "MTF2Weight"  10 $cmd  [subst $name]ctfInfo(MTF2Weight) [subst $name]ctfInfo(dMTF2Weight) -width 6 
+	pack    $ff.which $ff.mtf $ff.mtf2 $ff.mtfw -side top
+	
+	set ff [ frame $f.pol ]	
+	CommandEntryWithUpDown     $ff.mtfd2   "MTF  A  d2"  10 $cmd  [subst $name]ctfInfo(MTFd2)      [subst $name]ctfInfo(dMTFd2)      -width 6
+	CommandEntryWithUpDown     $ff.mtfd3   "MTF  A  d3"  10 $cmd  [subst $name]ctfInfo(MTFd3)      [subst $name]ctfInfo(dMTFd3)      -width 6
+	CommandEntryWithUpDown     $ff.mtfd4   "MTF  A  d4"  10 $cmd  [subst $name]ctfInfo(MTFd4)      [subst $name]ctfInfo(dMTFd4)      -width 6
+	CommandEntryWithUpDown     $ff.mtfd5   "MTF  A  d5"  10 $cmd  [subst $name]ctfInfo(MTFd5)      [subst $name]ctfInfo(dMTFd5)      -width 6
+	CommandEntryWithUpDown     $ff.mtfd6   "MTF  A  d6"  10 $cmd  [subst $name]ctfInfo(MTFd6)      [subst $name]ctfInfo(dMTFd6)      -width 6
+	pack   $ff.mtfd2 $ff.mtfd3 $ff.mtfd4 $ff.mtfd5 $ff.mtfd6 -side top
+
+	# Elastic Scattering
+	set ff [ frame $f.molec ]
+	RadioButtonsCreateWithPackWithCommand $ff.which Elastic $cmd left [subst $name]ctfInfo(whichMolec) Gauss Lorentz Table 
+	# For Gaussian
+    CommandEntryWithUpDown $ff.molecEnv   "GaussB   A"  10 $cmd  [subst $name]ctfInfo(MolcEnv)   [subst $name]ctfInfo(dMolcEnv)    -width 6 
+	# For Lorenztian
+    CommandEntryWithUpDown $ff.ratio      "E         "  10 $cmd  [subst $name]ctfInfo(Elastic)   [subst $name]ctfInfo(dElastic)    -width 6 
+    CommandEntryWithUpDown $ff.shift      "E    Shift"  10 $cmd  [subst $name]ctfInfo(ElaShift)  [subst $name]ctfInfo(dElaShift)   -width 6 
+    CommandEntryWithUpDown $ff.width      "E    Width"  10 $cmd  [subst $name]ctfInfo(ElaWidth)  [subst $name]ctfInfo(dElaWidth)   -width 6 
+    CommandEntryWithUpDown $ff.ring       "E   Ring  "  10 $cmd  [subst $name]ctfInfo(ElaRing)   [subst $name]ctfInfo(dElaRing)    -width 6 
+    CommandEntryWithUpDown $ff.ringShift  "E   RShift"  10 $cmd  [subst $name]ctfInfo(ElaRShift) [subst $name]ctfInfo(dElaRShift)  -width 6 
+    CommandEntryWithUpDown $ff.ringWidth  "E   RWidth"  10 $cmd  [subst $name]ctfInfo(ElaRWidth) [subst $name]ctfInfo(dElaRWidth)  -width 6 
+	# For MolcEnvLoad
+	CommandEntry $ff.loadEntry Info  5  $cmd -textvar [subst $name]ctfInfo(.molcEnvTable)
+	pack $ff.which $ff.molecEnv $ff.ratio $ff.shift $ff.width $ff.ring $ff.ringShift $ff.ringWidth $ff.loadEntry -side top 
+
+	# Inelastic
+	set ff [ frame $f.inelamolec ]
+	checkbutton  $ff.use -text "With Inelastic" -variable [subst $name]ctfInfo(flagInElastic)     -command $cmd
+	RadioButtonsCreateWithPackWithCommand $ff.which Inelastic $cmd left [subst $name]ctfInfo(whichInElaMolec) No Gauss Lorentz Table 
+	# For Gaussian
+    CommandEntryWithUpDown $ff.molecEnv   "IE Gauss B" 10 $cmd  [subst $name]ctfInfo(InElaMolcEnv) [subst $name]ctfInfo(dInElaMolcEnv) -width 6 
+	# For Lorenztian
+    CommandEntryWithUpDown $ff.ratio      "IE        "  10 $cmd  [subst $name]ctfInfo(InElastic)   [subst $name]ctfInfo(dInElastic)    -width 6 
+    CommandEntryWithUpDown $ff.shift      "IE   Shift"  10 $cmd  [subst $name]ctfInfo(InElaShift)  [subst $name]ctfInfo(dInElaShift)   -width 6 
+    CommandEntryWithUpDown $ff.width      "IE   Width"  10 $cmd  [subst $name]ctfInfo(InElaWidth)  [subst $name]ctfInfo(dInElaWidth)   -width 6 
+    CommandEntryWithUpDown $ff.ring       "IE  Ring  "  10 $cmd  [subst $name]ctfInfo(InElaRing)   [subst $name]ctfInfo(dInElaRing)    -width 6 
+    CommandEntryWithUpDown $ff.ringShift  "IE  RShift"  10 $cmd  [subst $name]ctfInfo(InElaRShift) [subst $name]ctfInfo(dInElaRShift)  -width 6 
+    CommandEntryWithUpDown $ff.ringWidth  "IE  RWidth"  10 $cmd  [subst $name]ctfInfo(InElaRWidth) [subst $name]ctfInfo(dInElaRWidth)  -width 6 
+	# For MolcEnvLoad
+	CommandEntry $ff.loadEntry Info  5  $cmd -textvar [subst $name]ctfInfo(.inElaMolcEnvTable)
+	pack $ff.which $ff.molecEnv $ff.ratio $ff.shift $ff.width $ff.ring $ff.ringShift $ff.ringWidth $ff.loadEntry -side top 
+
+	set ff [ frame $f.calc ]
+    button $ff.draw -text Draw        -command $cmd
+    button $ff.initS -text InitSearch -command [subst $name]ctfInitSearch 
+    button $ff.fineT -text FineTune   -command [subst $name]ctfFineTuning 
+	pack $ff.draw $ff.initS $ff.fineT -side left -expand true
+
+    pack \
+            $f.title \
+            $f.main  \
+            $f.mtf   \
+            $f.molec \
+            $f.inelamolec \
+            $f.calc  \
+            -side top -expand true 
+
+	return $f		
+}
+
+proc ctfInitSearch { } {
+	variable ctfInfo
+
+	ctfInfoSave
+	puts "ctfDetermine -i $ctfInfo(filename) -o $ctfInfo(.ctfinfo) -c $ctfInfo(.ctfinfo) -m 1"
+	exec ctfDetermine -i $ctfInfo(filename) -o $ctfInfo(.ctfinfo) -c $ctfInfo(.ctfinfo) -m 0
+	ctfInfoLoad
+}
+
+proc ctfFineTuning { } {
+	ctfInfoSave
+	puts "ctfDetermine -i $ctfInfo(filename) -o $ctfInfo(.ctfinfo) -c $ctfInfo(.ctfinfo) -m 16"
+	exec ctfDetermine -i $ctfInfo(filename) -o $ctfInfo(.ctfinfo) -c $ctfInfo(.ctfinfo) -m 16
+	ctfInfoLoad
+}
+
+#
+# CTF Information 
+#
+proc ctfInfoCTFInfoFrameCreate2 { f } {
+	variable ctfInfo
+
+	# Frame for ctfInfo
+	frame $f
+    set cmd "[ namespace code {ctfInfoGraphUpdate}]"
+    set name [ namespace current ]::
+
+    CommandEntry $f.i       "I(calc)   "  10 $cmd -textvar "[subst $name]ctfInfo(I)"   -width 6
+    CommandEntry $f.sN      "SN(calc)  "  10 $cmd -textvar "[subst $name]ctfInfo(SN)"  -width 6
+    CommandEntry $f.sN2     "SN2(calc) "  10 $cmd -textvar "[subst $name]ctfInfo(SN2)" -width 6
+    CommandEntry $f.cs      "Cs mm     "  10 $cmd -textvar "[subst $name]ctfInfo(Cs)"  -width 6
+    CommandEntry $f.kV      "kV kV     "  10 $cmd -textvar "[subst $name]ctfInfo(kV)"  -width 6
+    CommandEntry $f.ai      "Ai mrad   "  10 $cmd -textvar "[subst $name]ctfInfo(Ai)"  -width 6
+    CommandEntry $f.cc      "Cc mm     "  10 $cmd -textvar "[subst $name]ctfInfo(Cc)"  -width 6
+    CommandEntry $f.dkV     "dV eV     "  10 $cmd -textvar "[subst $name]ctfInfo(dV)"  -width 6
+    CommandEntry $f.vib     "Vibration "  10 $cmd -textvar "[subst $name]ctfInfo(BofVibration)"  -width 6
+    CommandEntry $f.vibMode "Vib-mode  "  10 $cmd -textvar "[subst $name]ctfInfo(VibrationMode)" -width 6
+	checkbutton  $f.aliasing -text "Aliasing" -variable [subst $name]ctfInfo(flagAliasing) -command $cmd
+	checkbutton  $f.sampling -text "Sampling" -variable [subst $name]ctfInfo(flagSampling) -command $cmd
+    CommandEntry $f.nyquist "Nyquist   "  10 $cmd -textvar "[subst $name]ctfInfo(NyquistFrequency)" -width 6
+
+    pack \
+            $f.i        \
+            $f.sN       \
+            $f.sN2      \
+            $f.cs       \
+            $f.kV       \
+            $f.ai       \
+            $f.cc       \
+            $f.dkV      \
+            $f.vib      \
+            $f.vibMode  \
+            $f.aliasing \
+            $f.sampling \
+            $f.nyquist  \
+            -side top -expand true 
+	return $f		
+}
+
+#
+# ctfInfoMarker: Thon Ring Line
+#     Movable marker for thonRingDetermine
+#
+
+#  Marker Set
+proc ctfInfoMarkerSet { } {
+	variable ctfInfo
+
+	ctfInfoMarkerUnset
+    for { set i 1 } { $i <= $ctfInfo(zeroMax) }  { incr i } {
+        $ctfInfo(graph) marker create line -name zero$i \
+										-coords { $ctfInfo(zero$i)  0 \
+												  $ctfInfo(zero$i)  1 } 
+		$ctfInfo(graph) marker configure zero$i	-dashes { 2 2 }
+    }
+}
+
+# Marker Unset
+proc ctfInfoMarkerUnset { } {
+	variable ctfInfo
+
+    for { set i 1 } { $i <= $ctfInfo(zeroMax) }  { incr i } {
+        catch { $ctfInfo(graph) marker delete zero$i  }
+    }
+}
+
+#
+# Thon Ring Information
+#    Predicted Marker Set for Graph 
+#
+proc ctfInfoPredictedThonRing { } {
+	variable ctfInfo
+
+    set size [ llength $ctfInfo(R) ]
+	set dR   [ expr [lindex $ctfInfo(R) 1]-[lindex $ctfInfo(R) 0]]
+	set RMax [ lindex $ctfInfo(R) [expr $size-1] ]
+	set Zero [ ctfInfoGet Zero $RMax $ctfInfo(predictZeroMaxMax) $dR ]
+	set ctfInfo(predictZeroMax) [ expr [ llength $Zero ] / 3 ]
+
+    for { set i 0 } { $i < $ctfInfo(predictZeroMax) } { incr i } {
+		set ctfInfo(predictZero$i)     [ lindex $Zero [ expr 3*$i ] ]
+		set ctfInfo(predictZeroCTF$i)  [ expr   0.8*$ctfInfo(Imax) ]
+		set data  [ lindex $Zero [ expr 3*$i + 1 ] ] 
+		set data1 [ lindex $Zero [ expr 3*$i + 2 ] ] 
+		if { $ctfInfo(flagCTFPower) == 1 } {
+			set ctfInfo(predictZeroCTF$i) [ expr $data*$data + $data1*$data1 ] 
+		} else {
+			set ctfInfo(predictZeroCTF$i) [ expr $data + $data1 ]
+		}
+   	}
+	set ctfInfo(flagpredictThonRing) 1
+}
+
+#
+# PredictedMarker of ThonRing on canvas
+#
+proc ctfInfoPredictedMarkerOnCanvas { } {
+	variable ctfInfo
+
+	if [ info exists ctfInfo(mrc) ] { 
+    	array set mainImage $ctfInfo(mrc)
+		if [ info exists mainImage(mainCanvas) ] {
+			puts $mainImage(mainCanvas)
+			#$mainImage(mainCanvas) create oval 0 0 10 10   
+			.main_canvas create oval 0 0 10 10   
+		} else {
+			puts "No canvas to draw Thon rings: in ctfInfoCTFLineCreate"
+		}
+	} else {
+		puts "No mrc Setting"
+	}
+}
+
+#
+# PredictedMarker of ThonRing on graph
+#
+proc ctfInfoPredictedMarkerSet { } {
+	variable ctfInfo
+
+    # Zero Point
+	ctfInfoPredictedThonRing 
+
+    for { set i 0 } { $i < $ctfInfo(predictZeroMax) } { incr i } {
+		set ymax [ expr 1.2*$ctfInfo(predictZeroCTF$i) ]
+        $ctfInfo(graph) marker create line -name predictZero$i -coords { 
+			$ctfInfo(predictZero$i)  0 \
+			$ctfInfo(predictZero$i)  $ymax } 
+		#$ctfInfo(graph) marker configure predictZero$i -foreground black
+   	}
+	set ctfInfo(flagpredictZero) 1
+}
+
+#
+proc ctfInfoPredictedMarkerUnset { } {
+	variable ctfInfo
+	if { $ctfInfo(flagpredictZero) == 1 } {
+    	for { set i 1 } { $i < $ctfInfo(predictZeroMax) } { incr i } {
+        	catch { $ctfInfo(graph) marker delete predictZero$i } 
+		}
+   	}
+	set ctfInfo(flagpredictZero) 0
+}
+#
+proc ctfInfoMarkerReset { } {
+	variable ctfInfo
+    for { set i 1 } { $i <= $ctfInfo(zeroMax) }  { incr i } {
+		if [ info exists ctfInfo(predictZero$i) ] {
+        	set ctfInfo(zero$i) $ctfInfo(predictZero$i)
+		} else {
+			puts "ctfInfo(zeroMax) is wrong at $i: $ctfInfo(zeroMax)"
+			break
+		}
+    }
+	ctfInfoMarkerSet 
+}
+
+
+#
+# Graph Update
+#
+
+proc ctfInfoGraphUpdate { } {
+	variable ctfInfo
+
+	ctfInfoGraphConfiguration
+	if { $ctfInfo(flagScatGraph) == 1 } {
+		ctfInfoScatteringLineCreate Scattering            $ctfInfo(graph) ctfInfo(R) ctfInfo(Scattering)
+	} else {
+		catch { $ctfInfo(graph)  element delete Scattering } 
+	}
+	if { $ctfInfo(flagScatGraphSubtraction) == 1 } {
+		catch { ctfInfoScatteringLineCreate ScatteringSubtraction $ctfInfo(graph) ctfInfo(R) ctfInfo(ScatteringSubtraction) }
+	} else {
+		catch { $ctfInfo(graph) element delete ScatteringSubtraction }
+	}
+	ctfInfoCTFLineCreate $ctfInfo(graph) 
+}
+
+#
+# ctfInfoScatteringLineCreate 
+#     Scattering Data Plotting
+#
+proc ctfInfoScatteringLineCreate { name g x y } {
+	upvar $x xx 
+	upvar $y yy
+    # Drawing Graph (Scattering)
+	catch { $g element delete $name } 
+   	$g element create $name -xdata $xx -ydata $yy
+    $g element configure $name -pen scatPen 
+}
+
+#
+# ctfInfoCTFLineCreate
+#    CTF Graph Create
+#      Elements:
+#        CTF
+#        CTFcore
+#        Noise
+#
+proc ctfInfoCTFLineCreate { g } {
+	variable ctfInfo
+
+	# CTF Calc
+	ctfInfoCTFCalculation 
+
+	# Graph Delete
+    catch { $g element delete CTF       } 
+    catch { $g element delete CTFcore   } 
+    catch { $g element delete Noise     } 
+
+	# Markder Unset
+	ctfInfoPredictedMarkerUnset 
+
+	# Signal + Noise 
+	if { $ctfInfo(flagCTFGraph) == 1 } { 
+		if { $ctfInfo(flagCTFPower) == 1 } {
+    		$g element create    CTF   -xdata $ctfInfo(R) -ydata $ctfInfo(CTFPower)
+    		$g element create    Noise -xdata $ctfInfo(R) -ydata $ctfInfo(CTFNoisePower)
+		} else { 
+    		$g element create    CTF   -xdata $ctfInfo(R) -ydata $ctfInfo(CTF)
+    		$g element create    Noise -xdata $ctfInfo(R) -ydata $ctfInfo(CTFNoise)
+		}
+    	$g element configure CTF   -pen ctfPen 
+    	$g element configure Noise -pen ctfPen 
+
+		ctfInfoPredictedMarkerSet 
+	}
+
+	# Signal Only
+	if { $ctfInfo(flagCTFcoreGraph) == 1 } {
+		if { $ctfInfo(flagCTFPower) } {
+    		$g element create    CTFcore -xdata $ctfInfo(R) -ydata $ctfInfo(CTFSignalPower)
+		} else {
+    		$g element create    CTFcore -xdata $ctfInfo(R) -ydata $ctfInfo(CTFSignal)
+		}
+    	$g element configure CTFcore -pen ctfPen 
+	}
+	if { $ctfInfo(flagThonRingOnCanvas) == 1 } {
+		ctfInfoPredictedMarkerOnCanvas 
+	}
+
+	# Configuration 
+	ctfInfoGraphConfiguration
+}
+
+#
+# ctfInfoGraphConfiguration
+#     Axis, Title, Logscale etc.
+#
+proc ctfInfoGraphConfiguration { } {
+	variable ctfInfo
+
+	set g $ctfInfo(graph)
+
+    $g      configure   -title "CTF($ctfInfo(filename))"
+    $g axis configure x -title "R" -loose yes -max $ctfInfo(Rmax) -hide no
+    $g axis configure y -title "Intensity" -loose yes -max $ctfInfo(Imax) -hide no
+    $g legend configure -position top -hide no
+    $g axis configure x -max $ctfInfo(Rmax)
+    $g axis configure x -min $ctfInfo(Rmin)
+    $g axis configure y -max $ctfInfo(Imax)
+    $g axis configure y -min $ctfInfo(Imin)
+	if { $ctfInfo(flagLogScale) == 1 } {
+		if { $ctfInfo(Imin) <= 0 } {
+			set ctfInfo(Imin) [ expr $ctfInfo(Imax)*1e-6 ]
+		}
+		$g axis configure y -logscale yes	
+	} else {
+		$g axis configure y -logscale no 
+	}
+	ctfInfoGraphPenCreate
+
+    Blt_ZoomStack    $g
+    Blt_Crosshairs   $g
+    Blt_ActiveLegend $g
+    Blt_ClosestPoint $g
+}
+
+# Pen Information
+#
+proc ctfInfoGraphPenCreate { } {
+	variable ctfInfo
+
+	set g $ctfInfo(graph)
+    catch { $g pen create scatPen } 
+    $g pen configure scatPen -pixels 0 -color blue
+    catch { $g pen create ctfPen } 
+    $g pen configure ctfPen -pixels  0 -color red
+}
+
+#
+# ctfInfoCTFInfomationSet 
+#
+proc ctfInfoCTFInfomationSet { } {
+	variable ctfInfo
+
+	# set 	
+	set ctfInfo(I)   $ctfInfo(Isignal)
+	set ctfInfo(SN)  [ expr double($ctfInfo(Inoise))/double($ctfInfo(Isignal))]
+	set ctfInfo(SN2) [ expr double($ctfInfo(Inoise2))/double($ctfInfo(Isignal))]
+
+	#
+    set size [ llength $ctfInfo(R) ]
+	ctfInfoSet kV      $ctfInfo(kV)
+	ctfInfoSet defocus $ctfInfo(defocus)
+	ctfInfoSet defocus2D0 $ctfInfo(defocus2D0)
+	ctfInfoSet defocus2D1 $ctfInfo(defocus2D1)
+	ctfInfoSet defocus0axis $ctfInfo(defocus0axis)
+	ctfInfoSet Cc      $ctfInfo(Cc)
+	ctfInfoSet dE      $ctfInfo(dV)
+	ctfInfoSet Cs      $ctfInfo(Cs)
+	ctfInfoSet Ai      $ctfInfo(Ai)
+	ctfInfoSet I       $ctfInfo(I)
+	ctfInfoSet Mag     $ctfInfo(Magnification)
+	ctfInfoSet AoverP  $ctfInfo(AoverP)
+	ctfInfoSet Mode    [ expr  1 + 32 + 64 ] 
+	switch -exact -- $ctfInfo(whichMTF) {
+		singleExp {
+			ctfInfoSet MTFMode 0 
+		}
+		Lorentz {
+			ctfInfoSet MTFMode 1
+		}
+		BothMul {
+			ctfInfoSet MTFMode 2 
+		}
+		Linear {
+			ctfInfoSet MTFMode 3 
+		}
+		BothSum {
+			ctfInfoSet MTFMode 4
+		}
+		Polynomial {
+			ctfInfoSet MTFMode 5
+		}
+		default {
+			puts "Not supported MTF mode: $ctfInfo(whichMTF)"
+		}
+	}	
+	ctfInfoSet MTF        $ctfInfo(MTF) 
+	ctfInfoSet MTF2       $ctfInfo(MTF2) 
+	ctfInfoSet MTF2Weight $ctfInfo(MTF2Weight) 
+	ctfInfoSet Noise      $ctfInfo(SN) 
+	ctfInfoSet Noise2     $ctfInfo(SN2) 
+	ctfInfoSet R          $size $ctfInfo(R) 
+	ctfInfoSet VibrationMode $ctfInfo(VibrationMode)
+	ctfInfoSet BofVibration  $ctfInfo(BofVibration)
+	ctfInfoSet flagVibration $ctfInfo(flagVibration)
+	ctfInfoSet Aliasing      $ctfInfo(flagAliasing) $ctfInfo(NyquistFrequency)
+	ctfInfoSet Sampling      $ctfInfo(flagSampling) $ctfInfo(NyquistFrequency)
+	ctfInfoSet MTFd2        $ctfInfo(MTFd2)
+	ctfInfoSet MTFd3        $ctfInfo(MTFd3)
+	ctfInfoSet MTFd4        $ctfInfo(MTFd4)
+	ctfInfoSet MTFd5        $ctfInfo(MTFd5)
+	ctfInfoSet MTFd6        $ctfInfo(MTFd6)
+
+	#	
+	ctfInfoMolecEnvSet
+}
+
+#
+# ctfInfoCTFCalculation
+#
+proc ctfInfoCTFCalculation {  } {
+	variable ctfInfo
+
+	#
+	#puts "ctfInfoCTFCalculation: Power: $ctfInfo(flagCTFPower)"
+
+	# Information Set
+	ctfInfoCTFInfomationSet
+
+	# Data Unset 
+	catch { unset ctfInfo(CTF) } 
+	catch { unset ctfInfo(CTFPower) }
+	catch { unset ctfInfo(CTFcore) } 
+	catch { unset ctfInfo(CTFcorePower) } 
+	catch { unset ctfInfo(CTFNoise) } 
+	catch { unset ctfInfo(CTFNoisePower) } 
+	catch { unset ctfInfo(CTFSignal) } 
+	catch { unset ctfInfo(CTFSignalPower) } 
+	catch { unset ctfInfo(ScatteringSubtraction) } 
+
+	# Data Set
+	set size [ llength $ctfInfo(R) ]
+	if { $ctfInfo(flagCTFPower) } {
+    	set ctfInfo(CTFPower)       [ ctfInfoCalc CTFPower       ] 
+    	set ctfInfo(CTFcorePower)   [ ctfInfoCalc CTFcorePower   ]
+    	set ctfInfo(CTFNoisePower)  [ ctfInfoCalc CTFNoisePower  ]
+    	set ctfInfo(CTFSignalPower) [ ctfInfoCalc CTFSignalPower ]
+	} else {
+    	set ctfInfo(CTF)            [ ctfInfoCalc CTF            ] 
+    	set ctfInfo(CTFcore)        [ ctfInfoCalc CTFcore        ]
+    	set ctfInfo(CTFNoise)       [ ctfInfoCalc CTFNoise       ]
+    	set ctfInfo(CTFSignal)      [ ctfInfoCalc CTFSignal      ]
+	}
+	for { set i 0 } { $i < $size } { incr i } {
+		set data  [ lindex $ctfInfo(Scattering) $i ]  
+		if { $ctfInfo(flagCTFPower) } {
+			set noise [ lindex $ctfInfo(CTFNoisePower) $i ]  
+		} else {
+			set noise [ lindex $ctfInfo(CTFNoise)      $i ]  
+		}
+		lappend ctfInfo(ScatteringSubtraction) [ expr $data - $noise ] 
+	}
+}
+
+#
+# Scattering Data
+#
+proc ctfInfoScatteringCalc { { filename __null__ } } {
+	variable ctfInfo
+	
+	#puts "ctfInfoScatteringCalc"
+	if { $filename == "__null__" } {
+		if [ info exists ctfInfo(filename) ] {
+        	set filename $ctfInfo(filename)
+		} else {
+			puts "no file for Scattring calc."
+			return
+		}
+	} 
+    set xy  [ mrcInfoGet $filename Spectrum2 ]
+
+	catch { unset ctfInfo(R) }
+	catch { unset ctfInfo(Scattering) } 
+	catch { unset ctfInfo(ScatteringRoot) }
+
+    foreach { x y } $xy {
+        lappend ctfInfo(R)               $x
+        lappend ctfInfo(Scattering)      $y
+        lappend ctfInfo(ScatteringRoot)  [ expr sqrt($y)]
+	}
+	set ctfInfo(NyquistFrequency) [ lindex $ctfInfo(R) end ] 
+}
+#
+#
+#
+proc ctfInfoListGet { } {
+	variable ctfInfo
+	return [ array get ctfInfo ]
+}
+#
+#
+#
+proc ctfInfoAppend { ctf } {
+	variable ctfInfo
+
+	set tmp [ array get ctfInfo	]
+	array set ctfInfo "$tmp $ctf"
+}
+#end of CTF namespace
+}
+

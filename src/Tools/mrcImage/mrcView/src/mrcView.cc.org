@@ -1,0 +1,240 @@
+/*
+# mrcView : $Revision$  
+# $Date$ 
+# Created by $Author$
+# Usage : mrcView
+# Attention
+#   $Loccker$
+#  	$State$ 
+#
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h> 
+#include <vtk.h>         
+#include <pdbFile.h>        
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+
+#define DEBUG
+#include "genUtil.h"
+#include "mrcImage.h"
+
+#define CONEHEIGHT           1.0
+#define CONERADIUS           0.5
+#define CONERESOLUTION       80
+#define CYLINDERHEIGHT       2.0
+#define CYLINDERRADIUS       0.2
+#define CYLINDERRESOLUTION   60
+
+
+
+/*
+Example:
+typedef struct lmrcViewInfo {
+	float a;
+	int   b;
+} lmrcViewInfo;
+
+typedef enum lmrcViewMode {
+	a=0,
+	b=1
+} lmrcViewMode;
+*/
+
+int
+main(int argc, char* argv[]) 
+{
+	mrcViewInfo info;
+	pdbFile pdb;
+
+	init0(&info);
+    	argCheck(&info, argc, argv);
+    	init1(&info);
+
+	DEBUGPRINT("Program Start\n");
+
+	pdbFileRead(info.fptInPdb, &pdb);
+
+	vtkRenderer *ren=vtkRenderer::New();
+	vtkRenderWindow *renWindow=vtkRenderWindow::New();
+	 renWindow->AddRenderer(ren);
+	 renWindow->SetSize(600,600);
+	 renWindow->StereoRenderOn();
+	 renWindow->SetStereoTypeToLeft();
+	vtkRenderWindowInteractor *iren=vtkRenderWindowInteractor::New();
+	  iren->SetRenderWindow(renWindow);
+	 
+	vtkLight *Light=vtkLight::New();
+	 Light->SetPosition(100,100,100);
+	 Light->SetFocalPoint(0,0,0);
+	 ren->AddLight(Light);
+	 /*
+	 vtkCamera *cam=vtkCamera::New();
+	  cam->SetClippingRange(100,800);
+	  cam->SetFocalPoint(0,0,0);
+	  cam->SetPsition(10,10,10);
+	  ren->AddCamera(cam);
+
+
+
+        vtkCubeSource *cube = vtkCubeSource::New();
+           cube->SetXLength(1.0);
+           cube->SetYLength(1.0);
+           cube->SetZLength(1.0);
+	vtkPolyDataMapper *cubeMapper=vtkPolyDataMapper::New();
+	 cubeMapper->SetInput(cube->GetOutput());
+	vtkActor *cubeActor=vtkActor::New();
+	 cubeActor->SetMapper(cubeMapper);
+	 cubeActor->GetProperty()->SetColor(1.0,0.5,0.3);
+	 cubeActor->SetPosition(10,0.7,0);
+	
+
+        vtkLineSource *xline = vtkLineSource::New();
+           xline->SetPoint1(0.0,0.0,0.0);
+           xline->SetPoint2(1.0,0.0,0.0);
+           xline->SetResolution(80);
+	vtkPolyDataMapper *xlineMapper=vtkPolyDataMapper::New();
+	 xlineMapper->SetInput(xline->GetOutput());
+	vtkActor *xlineActor=vtkActor::New();
+	 xlineActor->SetMapper(xlineMapper);
+	 xlineActor->GetProperty()->SetColor(0.0,0.0,1.0);
+
+        vtkLineSource *yline = vtkLineSource::New();
+           yline->SetPoint1(0.0,0.0,0.0);
+           yline->SetPoint2(0.0,1.0,0.0);
+           yline->SetResolution(1);
+	vtkPolyDataMapper *ylineMapper=vtkPolyDataMapper::New();
+	 ylineMapper->SetInput(yline->GetOutput());
+	vtkActor *ylineActor=vtkActor::New();
+	 ylineActor->SetMapper(ylineMapper);
+	 ylineActor->GetProperty()->SetColor(0.0,1.0,0.0);
+
+        vtkLineSource *zline = vtkLineSource::New();
+           zline->SetPoint1(0.0,0.0,0.0);
+           zline->SetPoint2(0.0,0.0,0.0);
+           zline->SetResolution(1);
+	vtkPolyDataMapper *zlineMapper=vtkPolyDataMapper::New();
+	 zlineMapper->SetInput(zline->GetOutput());
+	vtkActor *zlineActor=vtkActor::New();
+	 zlineActor->SetMapper(zlineMapper);
+	 zlineActor->GetProperty()->SetColor(1.0,0.0,0.0);
+	 */
+
+	vtkCylinderSource *xcylinder = vtkCylinderSource::New();
+	 xcylinder->SetHeight(CYLINDERHEIGHT);
+	 xcylinder->SetRadius(CYLINDERRADIUS);
+	 xcylinder->SetResolution(CYLINDERRESOLUTION);
+	 xcylinder->SetCenter(0.0,0.0,0.0);
+	vtkPolyDataMapper *xcylinderMapper=vtkPolyDataMapper::New();
+	 xcylinderMapper->SetInput(xcylinder->GetOutput());
+	vtkActor *xcylinderActor=vtkActor::New();
+	 xcylinderActor->SetMapper(xcylinderMapper);
+	 xcylinderActor->GetProperty()->SetColor(0.0,0.0,1.0);
+	 xcylinderActor->RotateZ(90.0);
+	 xcylinderActor->SetPosition(1.0,0.0,0.0);
+
+
+	vtkCylinderSource *ycylinder = vtkCylinderSource::New();
+	 ycylinder->SetHeight(CYLINDERHEIGHT);
+	 ycylinder->SetRadius(CYLINDERRADIUS);
+	 ycylinder->SetResolution(CYLINDERRESOLUTION);
+	 ycylinder->SetCenter(0.0,0.0,0.0);
+	vtkPolyDataMapper *ycylinderMapper=vtkPolyDataMapper::New();
+	 ycylinderMapper->SetInput(ycylinder->GetOutput());
+	vtkActor *ycylinderActor=vtkActor::New();
+	 ycylinderActor->SetMapper(ycylinderMapper);
+	 ycylinderActor->GetProperty()->SetColor(0.0,1.0,0.0);
+	 ycylinderActor->SetPosition(0.0,1.0,0.0);
+
+
+	vtkCylinderSource *zcylinder = vtkCylinderSource::New();
+	 zcylinder->SetHeight(CYLINDERHEIGHT);
+	 zcylinder->SetRadius(CYLINDERRADIUS);
+	 zcylinder->SetResolution(CYLINDERRESOLUTION);
+	 zcylinder->SetCenter(0.0,0.0,0.0);
+	vtkPolyDataMapper *zcylinderMapper=vtkPolyDataMapper::New();
+	 zcylinderMapper->SetInput(zcylinder->GetOutput());
+	vtkActor *zcylinderActor=vtkActor::New();
+	 zcylinderActor->SetMapper(zcylinderMapper);
+	 zcylinderActor->GetProperty()->SetColor(1.0,0.0,0.0);
+	 zcylinderActor->RotateX(90.0);
+	 zcylinderActor->SetPosition(0.0,0.0,1.0);
+
+
+	ren->AddActor(xcylinderActor);
+	ren->AddActor(ycylinderActor);
+	ren->AddActor(zcylinderActor);
+
+	
+	vtkConeSource *xcone=vtkConeSource::New();
+	 xcone->SetHeight(CONEHEIGHT);
+	 xcone->SetRadius(CONERADIUS);
+	 xcone->SetResolution(CONERESOLUTION);
+	vtkPolyDataMapper *xconeMapper=vtkPolyDataMapper::New();
+	 xconeMapper->SetInput(xcone->GetOutput());
+	vtkActor *xconeActor=vtkActor::New();
+	 xconeActor->SetMapper(xconeMapper);
+	 xconeActor->GetProperty()->SetColor(0.0,0.0,1.0);
+	 xconeActor->RotateZ(0.0);
+	 xconeActor->SetPosition(2.0,0.0,0.0);
+
+	vtkConeSource *ycone=vtkConeSource::New();
+	 ycone->SetHeight(CONEHEIGHT);
+	 ycone->SetRadius(CONERADIUS);
+	 ycone->SetResolution(CONERESOLUTION);
+	vtkPolyDataMapper *yconeMapper=vtkPolyDataMapper::New();
+	 yconeMapper->SetInput(ycone->GetOutput());
+	vtkActor *yconeActor=vtkActor::New();
+	 yconeActor->SetMapper(yconeMapper);
+	 yconeActor->GetProperty()->SetColor(0.0,1.0,0.0);
+	 yconeActor->RotateZ(90.0);
+	 yconeActor->SetPosition(0.0,2.0,0.0);
+
+	vtkConeSource *zcone=vtkConeSource::New();
+	 zcone->SetHeight(CONEHEIGHT);
+	 zcone->SetRadius(CONERADIUS);
+	 zcone->SetResolution(CONERESOLUTION);
+	vtkPolyDataMapper *zconeMapper=vtkPolyDataMapper::New();
+	 zconeMapper->SetInput(zcone->GetOutput());
+	vtkActor *zconeActor=vtkActor::New();
+	 zconeActor->SetMapper(zconeMapper);
+	 zconeActor->GetProperty()->SetColor(1.0,0.0,0.0);
+	 zconeActor->RotateY(-90.0);
+	 zconeActor->SetPosition(0.0,0.0,2.0);
+
+
+	ren->AddActor(xconeActor);
+	ren->AddActor(yconeActor);
+	ren->AddActor(zconeActor);
+
+
+	vtkSphereSource *sphere=vtkSphereSource::New();
+	 sphere->SetRadius(0.3);
+	 sphere->SetCenter(0.0,0.0,0.0);
+	 sphere->SetThetaResolution(30);
+	 sphere->SetPhiResolution(30);
+	vtkPolyDataMapper *sphereMapper=vtkPolyDataMapper::New();
+	 sphereMapper->SetInput(sphere->GetOutput());
+	vtkActor *sphereActor=vtkActor::New();
+	 sphereActor->SetMapper(sphereMapper);
+	 sphereActor->GetProperty()->SetColor(1.0,0.8,0.8);	 
+
+	ren->AddActor(sphereActor);
+
+
+
+       	ren->ResetCamera();
+	renWindow->Render();
+
+	iren->Start();
+
+	exit(EXIT_SUCCESS);
+}
+
+void
+additionalUsage()
+{
+	fprintf(stderr, "----- Additional Usage -----\n");
+}

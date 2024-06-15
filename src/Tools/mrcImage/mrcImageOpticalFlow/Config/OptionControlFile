@@ -1,0 +1,17 @@
+# OptionControlFile
+# FileFormat
+"-i1","-i[nput]1","Input","Essential","1","1","In1","inFile::mrcImage","NULL"
+"-i2","-i[nput]2","Input","Essential","1","1","In2","inFile::mrcImage","NULL"
+"-i3","-i[nput]3","Input","Optional","1","1","In3","inFile::mrcImage","NULL"
+"-o","-o[utput]","OutputDataFile","Optional","3","1","Vx","outFile::mrcImage","NULL","2","Vy","outFile::mrcImage","NULL","3","Vz","outFile::mrcImage","NULL"
+"-oF","-o[utput]F","OutputDataFile","Optional","4","1","OutFx","outFile::mrcImage","NULL","2","OutFy","outFile::mrcImage","NULL","3","OutFz","outFile::mrcImage","NULL","4","OutDi","outFile::mrcImage","NULL" 
+"-oSize","-o[utput]Size","Output:Chimera","Optional","1","1","Size","outFile::mrcImage","NULL"
+"-oCOMMAND","-o[utput]COMMAND","Output:Chimera","Optional","1","1","OutCOMMAND","outFile::ASCII","NULL"
+"-oBILD","-o[utput]BILD","Output:Chimera","Optional","1","1","OutBILD","outFile::ASCII","NULL"
+"-bg","-b[ack]g[round]","BG","Optional","1","1","BG","Real","3000"
+"-bildThresLow","-bildThresLow","bildThresLow","Optional","1","1","BildThresLow","Real","0.0"
+"-bildThresHigh","-bildThresHigh","bildThresHigh","Optional","1","1","BildThresHigh","Real","1.0"
+"-bildRangeLow","-bildRangeLow","bildRangeLow","Optional","1","1","BildRangeLow","Real","0.0"
+"-bildRangeHigh","-bildRangeHigh","bildRangeHigh","Optional","1","1","BildRangeHigh","Real","1.0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

@@ -1,0 +1,87 @@
+/home/people/tkys/Eos/bin/I386LINUX/mrcInfo -h 
+I686LINUX/Display2 -html 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -Zoom 4 
+I686LINUX/Display2 -html 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -Zoom 4 
+I686LINUX/Display2 -html 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -Inverse 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -Inverse 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -Inverse -display 1024x1024 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display 1024x1024+0+0 
+I686LINUX/Display2 -html 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display 1024x1024+0+0 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc 
+I686LINUX/Display2 -html 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -geometry 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -geometry 1024x1024 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -geometry 1024x1024+0+0 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -geometry 512x512+0+0 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -geometry 512x512+0+0 -display :.0.0 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -geometry 512x512+0+0 -display :0.0 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display pc18:0.0 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display 192.168.4.218:0.0 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display 192.168.4.218:0.0 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display pc18:1.0 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display pc18:1.0 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display pc18 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display pc18: 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display pc18:0.0 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display pc18:0.0 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display pc18:0.0 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display pc18:1.0 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display pc18:0.1 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display pc18:0.1 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display pc18:0.0 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display pc18:10.0 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display pc18:0.10 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display pc18:10 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display pc18:10 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display pc18:10 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display pc18:10.0 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display pc18:10.0 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display :10.0 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display :10.0 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display :0.0 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display :1.0 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display :0.0 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display :10.0 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display pc18:10.0 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display pc18:1.0 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display serv01:10.0 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display serv01:10.0 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display :10.0 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display :0.0 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/test.mrc -display pc18:0.0 
+I386LINUX/Display2 -html 
+I686LINUX/Display2 -html 
+I686LINUX/Display2 -html 
+I686LINUX/Display2 -html 
+I686LINUX/Display2 -html 
+I686LINUX/Display2 -html 
+I686LINUX/Display2 -html 
+I386LINUX/Display2 -html 
+I386LINUX/Display2 -html 
+I686LINUX/Display2 -html 
+/home/people/reoleo/Eos/bin/I686LINUX/Display2 
+/home/people/reoleo/Eos/bin/I686LINUX/Display2 
+I686LINUX/Display2 -html 
+/home/people/reoleo/Eos/bin/I686LINUX/Display2 
+I686LINUX/Display2 -html 
+/home/people/reoleo/Eos/bin/I686LINUX/Display2 
+/home/people/reoleo/Eos/bin/I686LINUX/Display2 
+X86LINUX64/Display2 -html 
+X86LINUX64/Display2 -html 
+/home/people/mine/Eos/bin/X86LINUX64/Display2 
+X86LINUX64/Display2 -html 
+X86LINUX64/Display2 -html 
+X86LINUX64/Display2 -html 
+I386LINUX/Display2 -html 
+<<<<<<< HEAD
+I686LINUX/Display2 -html 
+X86LINUX64/Display2 -html 
+X86LINUX64/Display2 -html 
+=======
+X86MAC64/Display2 -html 
+>>>>>>> origin/master

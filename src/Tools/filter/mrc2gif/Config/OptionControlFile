@@ -1,0 +1,11 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","inFile","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","outFile","outFile","NULL"
+"-H","-H[igh]","HighThreshold","Optional","1","1","High","Real","0"
+"-L","-L[ow]","LowThreshold","Optional","1","1","Low","Real","0"
+"-I","-I[nverse]","Inverse(Black is white)","Optional","0"
+"-z","-z[Section]","z-section","Optional","1","1","Z","Integer","0"
+"-e","-e[xtention]","SerialSection Format","Optional","1","1","format","String","%s.%04d"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode: \n\t\t\t0 (8bits), 1(16bits)\n\t\t\t","Optional","1","1","mode","Integer","0"

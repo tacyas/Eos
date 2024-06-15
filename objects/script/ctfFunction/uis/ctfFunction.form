@@ -1,0 +1,9 @@
+-F 4.3 1 1 20x3+10+15 +38+1 ' ' form
+  -M 1 1 20x10+10+5 +25+0 'Subform' subform
+    -P 1 0 49.5x10.6818+5+1.5 +13+0.5 'Pane' pane
+      -H 1  10.5x1+26+0 'License' 'displays license' $BOOTSTRAP/repos/license/License license
+      -H 1  6x1+40+0 'Help' 'display online help' $EOS/objects/xvroutine/ctfFunction/help/Overview.doc help
+      -Q 1 0 6x1+48+0 'Quit'
+    -E
+  -E
+-E

@@ -1,0 +1,5 @@
+SOURCE=\
+hf2000Init \
+hf2000LenzCurrent \
+hf2000SpecimenPosition \
+#LastSource

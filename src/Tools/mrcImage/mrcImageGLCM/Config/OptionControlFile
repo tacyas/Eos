@@ -1,0 +1,18 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input","Essential","1","1","In","inFile::mrcImage","NULL"
+"-o","-o[utput]","Output:GLImage","Optional","1","1","Out","outFile::mrcImage","NULL"
+"-O","-O[utput]","Output:Information","Optional","1","1","OutInfo","outFile::ASCII","stdout"
+"-e","-e[psilon]","SmallValueForLog","Optional","1","1","epsilon","Real","2.2e-16"
+"-thresHigh","-thres[hold]High","HighCut","Optional","1","1","thresHigh","Real","1.0"
+"-thresLow","-thres[hold]Low","LowCut","Optional","1","1","thresLow","Real","0.0"
+"-exceptValue","-exceptValue","Except Value","Optional","1","1","exceptValue","Real","0.0"
+"-range","-range","mean+-range*sd (LowCut-HighCut)","Optional","1","1","range","Real","2.0"
+"-nHist","-nHist","GrayLevel","Optional","1","1","nHist","Integer","8"
+"-offset","-offset","Distance","Optional","1","1","offset","Integer","1"
+"-angle","-angle","Angle:1-0, 2-45, 4-90, 8-135 for 2D, 2^13-1=8191 for 3D","Optional","1","1","angleMode","Integer","15"
+"-areaX","-areaX","","Optional","2","1","minAreaX","Real","0","1","maxAreaX","Real","1.0"
+"-areaY","-areaY","","Optional","2","1","minAreaY","Real","0","1","maxAreaY","Real","1.0"
+"-areaZ","-areaZ","","Optional","2","1","minAreaZ","Real","0","1","maxAreaZ","Real","1.0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

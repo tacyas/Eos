@@ -1,0 +1,4 @@
+OBJECTNAME = mrc2hdf
+EXTRA_LIB  = -lhdf5
+EXTRA_CCOPTS =
+EXTRA_INC =

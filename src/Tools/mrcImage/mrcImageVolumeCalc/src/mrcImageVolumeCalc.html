@@ -1,0 +1,33 @@
+<HTML>
+<HEAD>
+<TITLE>mrcImageVolumeCalc</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageVolumeCalc</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageVolumeCalc
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-o[utput]           Out                 (stdout    ).as(outFile             ) ] :Optional  :OutputDataFile
+    [-n[Molecule]        nMolecule           (1.0       ).as(Real                ) ] :Optional  :NumberOfMolecule
+    [-M[olecularWeight]  MolecularWeight     (1.0       ).as(Real                ) ] :Optional  :MolecularWeight
+    [-d[ensty]           Density             (1.35      ).as(Real                ) ] :Optional  :Density
+    [-D[elta]            Delta               (5.0       ).as(Real                ) ] :Optional  :Delta[A]
+    [-R[ange]            MinVol              (0.0       ).as(Real                ) 
+                         MaxVol              (200.0     ).as(Real                ) 
+                         DeltaVol            (10.0      ).as(Real                ) ] :Optional  :vol
+    [-I[nverse]                                                                    ] :Optional  :Inverse
+    [-format             Format              (ContourLevel(%3g): %g %lu).as(StringAll           ) ] :Optional  :Format
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+-format 
+ 1st double  # ContourLevel[%] 
+ 2nd double  # Contour[value]
+ 3rd int     # VolumeNumber [fromBlack]
+ 4th int     # VolumeNumber [fromWhite]  ; Default : omiited 
+ 5th double  # Volume[A^3]               ; Default : omitted 
+</PRE>
+</BODY>
+</HTML>

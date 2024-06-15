@@ -1,0 +1,25 @@
+<HTML>
+<BODY>
+<H1>mrcImage</H1><BR>
+<H3>in mrcImage.h</H3><BR>
+<PRE>
+typedef struct <A HREF="mrcImage.html">mrcImage </A>{ <BR>
+    <A HREF="mrcImageHeader.html">mrcImageHeader </A>         Header; <BR>
+    <A HREF="mrcImageParaTypeInteger.html">mrcImageParaTypeInteger </A>BytePerImage; <BR>
+    <A HREF="mrcImageParaTypeInteger.html">mrcImageParaTypeInteger </A>BytePerBand; <BR>
+    <A HREF="mrcImageParaTypeInteger.html">mrcImageParaTypeInteger </A>BandPerPixel; <BR>
+    <A HREF="mrcImageParaTypeInteger.html">mrcImageParaTypeInteger </A>PixelPerImage; <BR>
+    <A HREF="mrcStatusType.html">mrcStatusType </A>          status; <BR>
+    char*           Image; <BR>
+    unsigned char*  ImageCharImage; <BR>
+    unsigned short* ImageShortImage; <BR>
+    unsigned long*  ImageLongImage; <BR>
+    float*          ImageFloatImage; <BR>
+    double*         ImageDoubleImage; <BR>
+	mrcImageTailer*         Tailer;	 <BR>
+	mrcImageParaTypeInteger numTailer; <BR>
+	mrcImageParaTypeInteger flagByteSwap; <BR>
+} mrcImage; <BR>
+ 
+</PRE></HTML>
+</BODY>

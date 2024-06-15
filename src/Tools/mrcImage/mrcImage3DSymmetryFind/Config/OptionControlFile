@@ -1,0 +1,15 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: MRC(3D)","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","Output: SymmetryFindParameters","Optional","1","1","Out","outFile","stdout"
+"-a","-a[verage]","Output: SymmetryAverage","Optional","1","1","Avg","outFile","NULL"
+"-S","-S[paceGroupNumber]","SpaceGroupNumber","Optional","1","1","ISGN","Integer","0"
+"-RotMode","-Rot[ation]Mode","EulerMode","Optional","1","1","RotMode","String","XOYS"
+"-Rot1","-Rot1","[degree]","Optional","3","1","minRot1","Real","0.","2","maxRot1","Real","360.","3","dRot1","Real","1.0"
+"-Rot2","-Rot2","[degree]","Optional","3","1","minRot2","Real","-90.","2","maxRot2","Real","90.","3","dRot2","Real","1.0"
+"-dCos","-dCos","dCos","Optional","1","1","dCos","Integer","1"
+"-CorMode","-CorMode","CorrelationMode","Optional","1","1","corMode","Integer","16"
+"-OffsetMode","-OffsetMode","OffsetMode","Optional","1","1","OffsetMode","Integer","0"
+"-InterpolationMode","-InterpolationMode","InterpolationMode","Optional","1","1","InterpolationMode","Integer","2"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

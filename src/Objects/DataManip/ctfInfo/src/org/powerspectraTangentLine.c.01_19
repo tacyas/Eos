@@ -1,0 +1,195 @@
+/*
+# powerspectraTangentLine : $Revision$  
+# $Date$ 
+# Created by $Author$
+# Usage : powerspectraTangentLine 
+# Attention
+#   $Loccker$
+#  	$State$ 
+#
+*/
+/* $Log$ */
+static char __sccs_id[] = "%Z%lctfDetermination ver%I%; Date:%D% %Z%";
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include "./powerspectraTangentLine.h"
+#define DEBUG
+#include "genUtil.h"
+#include "Vector.h"
+#include "nr2.h"
+#include "Memory.h"
+
+typedef struct stepInfo{
+	float min;
+	float max;
+	float step;
+}stepInfo;
+
+typedef struct iterationInfo{
+	long  degree;
+	long  CutLowSize;
+	long  CutHighSize;
+	float Emin;
+	float Emax;
+}iterationInfo;
+	
+
+double __power(double x,int a)
+{
+	int i;
+	double y = 1.0;
+	
+	for(i=0 ; i<a ; i++){
+		y *= x;
+	}
+	return(y);
+}
+
+void
+__CoefficientDetermine(floatVector* spacing ,floatVector* Plog ,floatVector* tmpcoefficient ,stepInfo* sInfo,iterationInfo* iInfo)
+{
+	long i,j,k,l;
+	long Number[iInfo->degree+1];
+	long belowN;
+	long fewerN;
+	unsigned long n;
+	unsigned long sum = 1;
+	float coefficient[iInfo->degree+1];
+	float E;
+	floatVector* Tangent;
+
+	fprintf(stdout,"degree:%2ld\n",iInfo->degree);
+	
+	Tangent = floatVectorInit(NULL,spacing->size);
+	
+	iInfo-> Emax;
+	for(i=0;i<=iInfo->degree;i++){
+		Number[i] = ((long)sInfo[i].max - (long)sInfo[i].min )/ sInfo[i].step;
+		sum *= Number[i];
+		fprintf(stdout,"Number[%2ld]:%ld\n",i,Number[i]);
+	}
+	fprintf(stdout,"sum:%d\n",sum);
+	
+	for(n=0 ; n< sum; n++){	
+		E = 0.0;
+		for(j=0 ; j<=iInfo->degree ;j++){
+			fewerN = 1;
+			for(k=0 ; k<j ; k++){
+				fewerN *= Number[k]; 
+			}
+			belowN = fewerN * Number[j];
+			coefficient[j] =(long)((n % belowN)/fewerN)* sInfo[j].step + sInfo[j].min;
+		}
+		
+		for(i=iInfo->CutLowSize ; i<=iInfo->CutHighSize ; i++){
+			Tangent->data[i] = coefficient[0];
+			for(j=1 ; j<=iInfo->degree ; j++){
+				Tangent->data[i] += coefficient[j]*__power(spacing->data[i],j);
+			}
+			E += fabs(Tangent->data[i] - Plog->data[i]);
+			
+			if((Tangent->data[i] - Plog->data[i]) > 0 || Tangent->data[i] < 0 || E>iInfo->Emin){
+				E = iInfo->Emax;
+				break;
+			}
+		}
+		
+		if(E <= iInfo->Emin){
+			for(j=0 ; j<=iInfo->degree ; j++){
+				tmpcoefficient->data[j] = coefficient[j];
+				fprintf(stdout,"%2ld:%+10.3e ",j,tmpcoefficient->data[j]);
+			}
+			fprintf(stdout,"E=%10.3e Emin=%10.3e \n",E,iInfo->Emin);
+			iInfo->Emin = E;
+		}
+		//fprintf(stdout,"E=%10.3e Emin=%10.3e \n",E,iInfo->Emin);
+	}
+
+	fprintf(stdout,"result: ");
+	for(j=0 ; j<=iInfo->degree ; j++){
+		fprintf(stdout,"%2ld:%+10.3e ",j,tmpcoefficient->data[j]);
+	}
+	fprintf(stdout,"Emin=%10.3e\n\n",iInfo->Emin);
+}
+
+void
+TangentLine(floatVector* spacing, floatVector* scatter, floatVector* Tangent,ctfInfo* ini,lctfDetermineInfo* linfo,  long mode)
+{	
+	long i,j;
+	floatVector* tmpcoefficient;
+	float interval = 0.1;
+	float E;
+	float Pmax = 0.0;
+	float tmp;
+	long CutLowSize = 0;
+	long CutHighSize = 0;
+	floatVector* Plog;
+	stepInfo sInfo[linfo->degree+1];
+	iterationInfo iInfo;
+	
+	Plog = floatVectorInit(NULL,spacing->size);
+
+	for(i=0;i<=linfo->degree;i++){
+		sInfo[i].step = linfo->step;
+		sInfo[i].min = linfo->min;
+		sInfo[i].max = linfo->max;
+	}
+	iInfo.CutLowSize = 0;
+	iInfo.CutHighSize =0;
+	iInfo.Emax = 0.0;
+
+	tmpcoefficient = floatVectorInit(NULL,linfo->degree);
+	
+	for(i=0;i<spacing->size;i++){
+		Plog->data[i] = log10(scatter->data[i]);
+
+		if(Pmax < Plog->data[i]){
+			Pmax = Plog->data[i];
+		}
+		
+		if(spacing->data[i] < ini->CutLow){
+			iInfo.CutLowSize = i+1;
+		}
+		if(spacing->data[i] < ini->CutHigh){
+			iInfo.CutHighSize = i;
+		}
+
+		if((spacing->data[i] > ini->CutLow) && (spacing->data[i] < ini->CutHigh)){
+			iInfo.Emax += Plog->data[i];
+		}
+	}
+	iInfo.Emin = iInfo.Emax;
+	
+	iInfo.degree = linfo->degree;
+	iInfo.degree = 1;
+	fprintf(stdout,"Cutlow:%5.4f CutHigh:%5.4f\n\n",spacing->data[iInfo.CutLowSize],spacing->data[iInfo.CutHighSize]);
+	//fprintf(stdout,"test(before:1) Emin=%f Emax=%f High=%d Low=%d degree=%d\n",iInfo.Emin,iInfo.Emax,iInfo.CutHighSize,iInfo.CutLowSize,iInfo.degree);
+	__CoefficientDetermine(spacing,Plog,tmpcoefficient,sInfo,&iInfo);
+	//fprintf(stdout,"test(afetr:1) Emin=%f Emax=%f High=%d Low=%d degree=%d\n",iInfo.Emin,iInfo.Emax,iInfo.CutHighSize,iInfo.CutLowSize,iInfo.degree);
+
+	if(sInfo[0].min < (tmpcoefficient->data[0] - 10*sInfo[0].step)){
+		sInfo[0].min = tmpcoefficient->data[0] - 10*sInfo[0].step;
+	}
+	if(sInfo[0].max > (tmpcoefficient->data[0] + 10*sInfo[0].step)){
+		sInfo[0].max = tmpcoefficient->data[0] + 10*sInfo[0].step;
+	}
+	if(sInfo[1].min < (tmpcoefficient->data[1] - 10*sInfo[1].step)){
+		sInfo[1].min = tmpcoefficient->data[1] - 10*sInfo[1].step;
+	}
+	if(sInfo[1].max > (tmpcoefficient->data[1] + 10*sInfo[1].step)){
+		sInfo[1].max = tmpcoefficient->data[1] + 10*sInfo[1].step;
+	}
+	
+	iInfo.degree = 3;
+	__CoefficientDetermine(spacing,Plog,tmpcoefficient,sInfo,&iInfo);
+
+	for(i=iInfo.CutLowSize ; i<iInfo.CutHighSize ; i++){
+		Tangent->data[i] = tmpcoefficient->data[0];
+		for(j=1 ; j<=iInfo.degree ; j++){
+			Tangent->data[i] += tmpcoefficient->data[j] * __power(spacing->data[i],j);
+		}
+		fprintf(stdout,"%f %f %f\n",spacing->data[i],Plog->data[i],Tangent->data[i]);
+	}
+}
+

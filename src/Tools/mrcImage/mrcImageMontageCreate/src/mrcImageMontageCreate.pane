@@ -1,0 +1,28 @@
+-F 4.3 1 0 52x1+0+0 +0+0 'Cantata' cantata
+  -M 1 1 52x1+0+0 +1+0 ' ' subform
+    -P 1 0 52x1+0+1 +0+0 ' ' mrcImageMontageCreate
+      -D 1 0 9x1+0+0 'Options' _gui_options
+        -H 1  6x1+0+0 'License' 'license' $BOOTSTRAP/repos/license/License license
+        -E
+        -R 1 0 1 5x1+35+0 'Run' 'execute operation' $EOS/bin/mrcImageMontageCreate
+        -H 1  5x1+41+0 'Help' 'help page' $EOS/src/Tools/mrcImage/mrcImageMontageCreate/doc/mrcImageMontageCreate.doc help
+        -Q 1 0 5.25x1+47+0 'Close'
+        -I 1 0 1 1 0 1 -1x1+1+1.500000 ' ' 'In' 'InputDataFile' i
+        -O 1 0 1 1 0 1 -1x1+1+3.000000 ' ' 'Out' 'OutputDataFile' o
+        -i 1 0 1 0 0 -1x1+1+4.500000 0 0 10 0 0 'Nx' 'Nx: If this option does not set, the default value will be set' nx
+        -i 1 0 1 0 0 -1x1+1+6.000000 0 0 10 0 0 'Ny' 'Ny: If this option does not set, the value will be set automatically' ny
+        -i 1 0 1 0 0 -1x1+1+7.500000 0 0 10 0 0 'Width' 'Width: If this option does not set, the value will be set automatically' W
+        -i 1 0 1 0 0 -1x1+1+9.000000 0 0 10 0 0 'Height' 'Height: If this option does not set, the value will be set automatically' H
+        -f 1 0 1 0 0 -1x1+1+10.500000 0 0 2000.000000 0 0 0 'AvgWnd' 'AverageWindow for Pad' AW
+        -f 1 0 1 0 0 -1x1+1+12.000000 0 0 0.000000 0 0 0 'Value' '' V
+        -i 1 0 1 0 0 -1x1+1+13.500000 0 0 3 0 0 'PadMode' '' PM
+        -t 1 0 1 0 0 6x1+1+15 'EdgeAverage' '' EdgeAverage
+        -i 1 0 1 0 0 -1x1+1+16.500000 0 0 4 0 0 'EdgeAverageWindow' 'Definition of Edge' EdgeAverageWindow
+        -t 1 0 1 0 0 6x1+1+18 'NoAverage' '' NoAverage
+        -f 1 0 1 0 0 -1x1+1+19.500000 0 0 16383.000000 0 0 0 'Max' 'MaximumValue: If the pixel value is more than this max, the pixel value is assigned to the Value indicated by -V or -VMax.' Max
+        -f 1 0 1 0 0 -1x1+1+21.000000 0 0 16383.000000 0 0 0 'VMax' 'Attention: related to -Max ' VMax
+        -I 1 0 1 0 0 1 -1x1+1+22.500000 ' ' 'configFile' 'ConfigurationFile' c
+        -i 1 0 1 0 0 -1x1+1+24.000000 0 0 0 0 0 'mode' 'Mode' m
+    -E
+  -E
+-E

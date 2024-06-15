@@ -1,0 +1,64 @@
+                        Variable mappings
+ View  Rotation     Tilt  (+ incr.)      Mag       Comp      Dmag      Skew
+   1   rot    1   tilt   1              fixed      fixed    dmag   1   skew   1
+   2   rot    2   t  1+  3            mag    2     fixed    dmag   1   s  1+fix
+   3   rot    3   tilt   3            mag    3     fixed    dmag   3   s  1+fix
+   4   rot    4   t  3+  7            mag    4     fixed    dmag   3   s  1+fix
+   5   rot    5   t  3+  7            mag    5     fixed    dmag   3   s  1+fix
+   6   rot    6   t  3+  7            mag    6     fixed    dmag   3   s  1+fix
+   7   rot    7   tilt   7            mag    7     fixed    dmag   7   s  1+fix
+   8   rot    8   t  7+ 10            mag    8     fixed    dmag   7   s  1+fix
+   9   rot    9   t  7+ 10            mag    9     fixed    dmag   7   s  1+fix
+  10   rot   10   tilt  10            mag   10     fixed    dmag   7   s  1+fix
+  11   rot   11   t 10+ 15            mag   11     fixed    dmag   7     fixed 
+  12   rot   12   t 10+ 15            mag   12     fixed      fixed    s 21+fix
+  13   rot   13   t 10+ 15            mag   13     fixed      fixed    s 21+fix
+  14   rot   14   t 10+ 15            mag   14     fixed      fixed    s 21+fix
+  15   rot   15   tilt  15            mag   15     fixed      fixed    s 21+fix
+  16   rot   16   t 15+ 20            mag   16     fixed      fixed    s 21+fix
+  17   rot   17   t 15+ 20            mag   17     fixed      fixed    s 21+fix
+  18   rot   18   t 15+ 20            mag   18     fixed      fixed    s 21+fix
+  19   rot   19   t 15+ 20            mag   19     fixed    dmag  19   s 21+fix
+  20   rot   20   tilt  20            mag   20     fixed    dmag  19   s 21+fix
+  21   rot   21   t 20+ 26            mag   21     fixed    dmag  19   skew  21
+  22   rot   22   t 20+ 26            mag   22     fixed    dmag  19   s 21+ 31
+  23   rot   23   t 20+ 26            mag   23     fixed    dmag  19   s 21+ 31
+  24   rot   24   t 20+ 26            mag   24     fixed    dmag  19   s 21+ 31
+  25   rot   25   t 20+ 26            mag   25     fixed    dmag  19   s 21+ 31
+  26   rot   26   tilt  26            mag   26     fixed    dmag  19   s 21+ 31
+  27   rot   27   t 26+fix            mag   27     fixed    dmag  27   s 21+ 31
+  28   rot   28   t 26+fix            mag   28     fixed    dmag  27   s 21+ 31
+  29   rot   29   t 26+fix            mag   29     fixed    dmag  27   s 21+ 31
+  30   rot   30   t 26+fix            mag   30     fixed    dmag  27   s 21+ 31
+  31   rot   31   t 26+fix            mag   31     fixed    dmag  27   skew  31
+  32   rot   32     fixed             mag   32     fixed    dmag  27   s 31+ 41
+  33   rot   33   t 38+fix            mag   33     fixed    dmag  27   s 31+ 41
+  34   rot   34   t 38+fix            mag   34     fixed    dmag  27   s 31+ 41
+  35   rot   35   t 38+fix            mag   35     fixed    dmag  27   s 31+ 41
+  36   rot   36   t 38+fix            mag   36     fixed    dmag  36   s 31+ 41
+  37   rot   37   t 38+fix            mag   37     fixed    dmag  36   s 31+ 41
+  38   rot   38   tilt  38            mag   38     fixed    dmag  36   s 31+ 41
+  39   rot   39   t 38+ 43            mag   39     fixed    dmag  36   s 31+ 41
+  40   rot   40   t 38+ 43            mag   40     fixed    dmag  36   s 31+ 41
+  41   rot   41   t 38+ 43            mag   41     fixed    dmag  36   skew  41
+  42   rot   42   t 38+ 43            mag   42     fixed    dmag  36   s 41+ 51
+  43   rot   43   tilt  43            mag   43     fixed    dmag  36   s 41+ 51
+  44   rot   44   t 43+ 49            mag   44     fixed    dmag  44   s 41+ 51
+  45   rot   45   t 43+ 49            mag   45     fixed    dmag  44   s 41+ 51
+  46   rot   46   t 43+ 49            mag   46     fixed    dmag  44   s 41+ 51
+  47   rot   47   t 43+ 49            mag   47     fixed    dmag  44   s 41+ 51
+  48   rot   48   t 43+ 49            mag   48     fixed    dmag  44   s 41+ 51
+  49   rot   49   tilt  49            mag   49     fixed    dmag  44   s 41+ 51
+  50   rot   50   t 49+ 54            mag   50     fixed    dmag  44   s 41+ 51
+  51   rot   51   t 49+ 54            mag   51     fixed    dmag  44   skew  51
+  52   rot   52   t 49+ 54            mag   52     fixed    dmag  52   s 51+ 61
+  53   rot   53   t 49+ 54            mag   53     fixed    dmag  52   s 51+ 61
+  54   rot   54   tilt  54            mag   54     fixed    dmag  52   s 51+ 61
+  55   rot   55   t 54+ 58            mag   55     fixed    dmag  52   s 51+ 61
+  56   rot   56   t 54+ 58            mag   56     fixed    dmag  52   s 51+ 61
+  57   rot   57   t 54+ 58            mag   57     fixed    dmag  57   s 51+ 61
+  58   rot   58   tilt  58            mag   58     fixed    dmag  57   s 51+ 61
+  59   rot   59   t 58+ 61            mag   59     fixed    dmag  57   s 51+ 61
+  60   rot   60   t 58+ 61            mag   60     fixed    dmag  57   s 51+ 61
+  61   rot   61   tilt  61            mag   61     fixed    dmag  57   skew  61
+

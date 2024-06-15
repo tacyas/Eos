@@ -1,0 +1,7 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","In: InputList","Optional","1","1","In","inFileList","NULL"
+"-o","-o[utput]","Output: Variance Probability","Optional","1","1","Out","outFile","NULL"
+"-v","-v[arianceAnalysis]","Output: Variance Analysis","Optional","1","1","OutV","outFile","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

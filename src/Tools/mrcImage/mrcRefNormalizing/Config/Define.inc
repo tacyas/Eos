@@ -1,0 +1,4 @@
+OBJECTNAME = mrcRefNormalizing
+EXTRA_LIB  =
+EXTRA_CCOPTS =
+EXTRA_INC =

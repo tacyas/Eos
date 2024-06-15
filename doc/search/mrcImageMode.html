@@ -1,0 +1,38 @@
+<HTML>
+<BODY>
+<H1>mrcImageMode</H1><BR>
+<H3>in mrcImage.h</H3><BR>
+<PRE>
+#define  mrcStatusMask_ExitFailure  ((mrcStatusMask)0x80000000L) <BR>
+#define  mrcStatusMask_Warning      ((mrcStatusMask)0x40000000L) <BR>
+#define  mrcStatusMask_Information  ((mrcStatusMask)0x20000000L) <BR>
+#define  mrcStatusMask_Message      ((mrcStatusMask)0x10000000L) <BR>
+#define  mrcStatusMask_1B           ((mrcStatusMask)0x08000000L) <BR>
+#define  mrcStatusMask_1A           ((mrcStatusMask)0x04000000L) <BR>
+#define  mrcStatusMask_19           ((mrcStatusMask)0x02000000L) <BR>
+#define  mrcStatusMask_18           ((mrcStatusMask)0x01000000L) <BR>
+#define  mrcStatusMask_17           ((mrcStatusMask)0x00800000L) <BR>
+#define  mrcStatusMask_16           ((mrcStatusMask)0x00400000L) <BR>
+#define  mrcStatusMask_15           ((mrcStatusMask)0x00200000L) <BR>
+#define  mrcStatusMask_14           ((mrcStatusMask)0x00100000L) <BR>
+#define  mrcStatusMask_ReferMRCInfo ((mrcStatusMask)0x00080000L) <BR>
+#define  mrcStatusMask_Mode         ((mrcStatusMask)0x00040000L) <BR>
+#define  mrcStatusMask_ReferMemory  ((mrcStatusMask)0x00020000L) <BR>
+#define  mrcStatusMask_ReferFile    ((mrcStatusMask)0x00010000L) <BR>
+#define  MRC_Status_OK              ((mrcStatusType)0x00000000L) <BR>
+#define  MRC_FileCanNotOpened       ((mrcStatusType)0x00000000L|mrcStatusMask_ReferFile) <BR>
+#define  MRC_ImageHeaderCanNotRead  ((mrcStatusType)0x00000001L|mrcStatusMask_ReferFile) <BR>
+#define  MRC_ImageDataCanNotRead    ((mrcStatusType)0x00000002L|mrcStatusMask_ReferFile) <BR>
+#define  MRC_ImageHeaderCanNotWrite ((mrcStatusType)0x00000003L|mrcStatusMask_ReferFile) <BR>
+#define  MRC_ImageDataCanNotWrite   ((mrcStatusType)0x00000004L|mrcStatusMask_ReferFile) <BR>
+#define  MRC_FileCanNotClosed       ((mrcStatusType)0x00000005L|mrcStatusMask_ReferFile) <BR>
+#define  MRC_MemoryNotAllocate      ((mrcStatusType)0x00000000L|mrcStatusMask_ReferMemory) <BR>
+#define  MRC_ModeNotSupported       ((mrcStatusType)0x00000000L|mrcStatusMask_Mode) <BR>
+#define  MRC_ModeZNot1FFTMode       ((mrcStatusType)0x00000001L|mrcStatusMask_Mode) <BR>
+#define  MRC_SizeOfZero             ((mrcStatusType)0x00000000L|mrcStatusMask_ReferMRCInfo) <BR>
+#define MRC_HEADER (1024) <BR>
+#define MRC_TAILER (1024) <BR>
+typedef <A HREF="mrcImageParaTypeInteger.html">mrcImageParaTypeInteger </A>mrcImageMode; <BR>
+ 
+</PRE></HTML>
+</BODY>

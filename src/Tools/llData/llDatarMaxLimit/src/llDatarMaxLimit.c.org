@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>                  
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+#include "llData.h"
+#include "genUtil.h"
+
+extern void lllDataMaxLimit(llData* llIn, llDataParaTypeReal rMax, long mode);
+
+void
+main(int argc, char* argv[]) 
+{
+    llData   llIn;
+    llData   llInfo;
+	llDataParaTypeInteger status;
+    THIS_PROGRAM_INFO info;
+    int l;
+
+
+	init0(&info);
+    argCheck(&info, argc, argv);
+    init1(&info);
+    /* Data In */
+	llDataFileRead(info.fptIn, &llIn, &status);
+    /* rMax Limitation */
+    lllDataMaxLimit(&llIn, info.rMax, 0);
+    /* Data Out */
+	llDataFileWrite(info.fptOut, &llIn, &status);
+}
+
+void 
+lllDataMaxLimit(llData* llIn, llDataParaTypeReal rMax, long mode)
+{
+    int l, r;
+
+    for(l=0; l<llIn->llMax; l++) {
+    	for(r=0; r<llIn->LL[l].nR; r++) {
+            if(llIn->LL[l].data[r].RR < (fabs((double)llIn->LL[l].nn) - 2.0)/(2.0*PI*rMax)) {
+                llIn->LL[l].data[r].F   = 0.0;
+                llIn->LL[l].data[r].PHI = 0.0;
+                llIn->LL[l].data[r].Re  = 0.0;
+                llIn->LL[l].data[r].Im  = 0.0;
+            }
+    	}
+    }
+}
+
+

@@ -1,0 +1,66 @@
+#!/bin/sh
+
+rm -rf .cvsupdate*
+
+cvs -d ${EOS_CVSROOT} update | tee .cvsupdate
+grep '^? ' .cvsupdate >  .cvsupdateNew
+grep '^M ' .cvsupdate >> .cvsupdateMerge
+
+###
+# New Files
+###
+
+FILES=`sed -e s/"\? "// .cvsupdateNew`
+#echo $FILES
+
+
+# Directory Added
+rm -rf .cvsupdatedir
+for i in $FILES 
+do 
+	dir=`dirname $i`
+	base=`basename $i`
+	echo $dir >> .cvsupdatedir 
+done
+
+DIRS=`uniq .cvsupdatedir | sort`
+echo $DIRS
+
+for i in $DIRS
+do
+	cvs -d  ${EOS_CVSROOT} add $i	
+done
+
+# File Added
+echo ">>>> Add and Commit Step For Unknow Files <<<<"
+for i in $FILES
+do
+	echo $i
+	echo "Add? [y/n]"; read ans;
+	if [ $ans = y ] ; then
+		cvs -d  ${EOS_CVSROOT} add    $i
+		cvs -d  ${EOS_CVSROOT} commit $i
+	fi
+done
+
+###
+# Modified Files
+###
+FILES=`sed -e s/"M "// .cvsupdateMerge`
+
+echo ">>>> Merge Step For Modified Files <<<<"
+for i in $FILES
+do
+	echo "Merge:$i"
+	cvs -d  ${EOS_CVSROOT} diff $i
+	echo "Merge? [y|n]"; read ans;
+	if [ $ans = y ] ; then
+		cvs -d  ${EOS_CVSROOT} commit $i
+	else 
+		echo "Not commit: $i"
+	fi
+done 
+
+# Cleaning
+rm -rf .cvsupdate*
+

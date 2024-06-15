@@ -1,0 +1,412 @@
+/*
+# CommonLineCalculation : $Revision$  
+# $Date$ 
+# Created by $Author$
+# Usage : CommonLineCalculation
+# Attention
+#   $Loccker$
+#  	$State$ 
+#
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>                  
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+
+#define DEBUG
+#include "genUtil.h"
+#include "Matrix3D.h"
+#include "Memory.h"
+#include "String.h"
+
+#define WORDLEN 1024
+
+typedef struct lCommonLineCalculationInfo {
+	char** I1RotationalMode;
+	char** I2RotationalMode;
+	float* I1Angle1;
+	float* I1Angle2;
+	float* I1Angle3;
+	float* I2Angle1;
+	float* I2Angle2;
+	float* I2Angle3;
+	float* I1Angle;
+	float* I2Angle;
+	int    num;
+	int*   flag;
+} lCommonLineCalculationInfo;
+/*
+typedef enum lCommonLineCalculationMode {
+	a=0,
+	b=1
+} lCommonLineCalculationMode;
+*/
+
+void __CommonLineCalculation0(lCommonLineCalculationInfo* linfo, int mode);
+
+void __CommonLineCalculation1(lCommonLineCalculationInfo* linfo, int mode);
+
+void
+__ModeSelection(lCommonLineCalculationInfo* linfo, int mode);
+
+void
+__DataRead(lCommonLineCalculationInfo* linfo, FILE* fpt, int mode);
+
+int
+main(int argc, char* argv[]) 
+{
+	CommonLineCalculationInfo info;
+	lCommonLineCalculationInfo linfo;
+	int i;
+
+	init0(&info);
+    argCheck(&info, argc, argv);
+    init1(&info);
+
+	DEBUGPRINT("Program Start\n");
+
+	__DataRead(&linfo, info.fptIn, 0);
+
+	__ModeSelection(&linfo, info.mode);
+
+	for(i=0; i<linfo.num; i++){
+	
+		fprintf(info.fptOut,"%s %3.3f %3.3f %3.3f %s %3.3f %3.3f %3.3f > ",linfo.I1RotationalMode[i], linfo.I1Angle1[i]*DEGREE, 
+																		   linfo.I1Angle2[i]*DEGREE,  linfo.I1Angle3[i]*DEGREE, 
+																		   linfo.I2RotationalMode[i], linfo.I2Angle1[i]*DEGREE, 
+																		   linfo.I2Angle2[i]*DEGREE,  linfo.I2Angle3[i]*DEGREE);
+		if(linfo.flag[i] ==0){
+			fprintf(info.fptOut,"%f %f 1\n",linfo.I1Angle[i], linfo.I2Angle[i]);
+		}
+		else if(linfo.flag[i] == 1){
+			fprintf(info.fptOut,"%f %f z-rotation\n",linfo.I1Angle[i], linfo.I2Angle[i]);
+		}
+		else{
+			fprintf(info.fptOut,"flag error\n");
+			
+		}
+	}
+	
+	DEBUGPRINT("Program End\n");
+	exit(EXIT_SUCCESS);
+}
+
+void
+additionalUsage()
+{
+	fprintf(stderr, "\n");
+	fprintf(stderr, "----- mode -----\n");
+	fprintf(stderr, "-m : 0 : in 2003\n");
+	fprintf(stderr, "     1 : in 2004/07/22\n");
+}
+
+void
+__DataRead(lCommonLineCalculationInfo* linfo, FILE* fpt, int mode)
+{
+	int   i;
+	char* s;
+
+	fseek(fpt, 0L, SEEK_SET);
+	linfo->num = 0;
+	s = MemoryAllocate(char, WORDLEN, "in __DataRead");
+	while((stringGetFromFile(s, "", fpt, stdout, 3))!=NULL){
+		linfo->num++;
+	}
+
+	linfo->I1RotationalMode = MemoryAllocate(char*, linfo->num, "in __DataRead");
+	linfo->I2RotationalMode = MemoryAllocate(char*, linfo->num, "in __DataRead");
+	for(i=0; i<linfo->num; i++){
+		linfo->I1RotationalMode[i] = MemoryAllocate(char, WORDLEN, "in __DataRead");
+		linfo->I2RotationalMode[i] = MemoryAllocate(char, WORDLEN, "in __DataRead");
+	}
+	linfo->I1Angle1 = MemoryAllocate(float, linfo->num, "in __DataRead");
+	linfo->I1Angle2 = MemoryAllocate(float, linfo->num, "in __DataRead");
+	linfo->I1Angle3 = MemoryAllocate(float, linfo->num, "in __DataRead");
+	linfo->I2Angle1 = MemoryAllocate(float, linfo->num, "in __DataRead");
+	linfo->I2Angle2 = MemoryAllocate(float, linfo->num, "in __DataRead");
+	linfo->I2Angle3 = MemoryAllocate(float, linfo->num, "in __DataRead");
+	linfo->I1Angle  = MemoryAllocate(float, linfo->num, "in __DataRead");
+	linfo->I2Angle  = MemoryAllocate(float, linfo->num, "in __DataRead");
+	linfo->flag     = MemoryAllocate(int  , linfo->num, "in __DataRead");
+
+	fseek(fpt, 0L, SEEK_SET);
+	for(i=0; i<linfo->num; i++){
+		stringGetFromFile(s, "", fpt, stdout, 3);
+		stringCopy(linfo->I1RotationalMode[i], stringGetNthWord(s, 1, " ,\t"), 4);
+		linfo->I1Angle1[i] = (float)stringGetNthRealData(s, 2, " ,\t")*RADIAN;
+		linfo->I1Angle2[i] = (float)stringGetNthRealData(s, 3, " ,\t")*RADIAN;
+		linfo->I1Angle3[i] = (float)stringGetNthRealData(s, 4, " ,\t")*RADIAN;
+		stringCopy(linfo->I2RotationalMode[i], stringGetNthWord(s, 5, " ,\t"), 4);
+		linfo->I2Angle1[i] = (float)stringGetNthRealData(s, 6, " ,\t")*RADIAN;
+		linfo->I2Angle2[i] = (float)stringGetNthRealData(s, 7, " ,\t")*RADIAN;
+		linfo->I2Angle3[i] = (float)stringGetNthRealData(s, 8, " ,\t")*RADIAN;
+	}
+	free(s);
+}
+
+void
+__ModeSelection(lCommonLineCalculationInfo* linfo, int mode)
+{
+	switch(mode){
+		case 0 :{
+			__CommonLineCalculation0(linfo, 0);
+			break;
+		}
+		case 1 :{
+			__CommonLineCalculation1(linfo, 0);
+			break;
+		}
+	}
+}
+
+void
+__CommonLineCalculation0(lCommonLineCalculationInfo* linfo, int mode)
+{
+	int         i;
+	floatVector xv;
+	floatVector yv;
+	floatVector nv;
+	floatVector m1v;
+	floatVector m2v;
+	Matrix3D    Matrix1;
+	Matrix3D    Matrix2;
+
+	for(i=0; i<linfo->num; i++){
+		floatVectorInit(&nv, 4);
+		nv.data[0] = 0.0;
+		nv.data[1] = 0.0;
+		nv.data[2] = 1.0;
+		nv.data[3] = 1.0;
+	
+		floatVectorInit(&xv, 4);
+		xv.data[0] = 1.0;
+		xv.data[1] = 0.0;
+		xv.data[2] = 0.0;
+		xv.data[3] = 1.0;
+	
+		floatVectorInit(&yv, 4);
+		yv.data[0] = 0.0;
+		yv.data[1] = 1.0;
+		yv.data[2] = 0.0;
+		yv.data[3] = 1.0;
+
+		matrix3DRotationAntiSetFollowingEulerAngle(Matrix1,
+								linfo->I1RotationalMode[i],
+								linfo->I1Angle1[i],
+								linfo->I1Angle2[i],
+								linfo->I1Angle3[i],
+								MATRIX_3D_MODE_INITIALIZE);
+	
+		matrix3DMultiplyVector(&nv, Matrix1);
+		matrix3DMultiplyVector(&xv, Matrix1);
+		matrix3DMultiplyVector(&yv, Matrix1);
+
+	
+		matrix3DRotationSetFollowingEulerAngle(Matrix2,
+								linfo->I2RotationalMode[i],
+								linfo->I2Angle1[i],
+								linfo->I2Angle2[i],
+								linfo->I2Angle3[i],
+								MATRIX_3D_MODE_INITIALIZE);
+
+		matrix3DMultiplyVector(&nv, Matrix2);
+		matrix3DMultiplyVector(&xv, Matrix2);
+		matrix3DMultiplyVector(&yv, Matrix2);
+
+		floatVectorInit(&m1v, 4);
+		floatVectorInit(&m2v, 4);
+	
+		m1v.data[0] = -nv.data[1];
+		m1v.data[1] = nv.data[0];
+		m1v.data[2] = 0.0;
+		m1v.data[3] = 1.0;
+
+		m2v.data[0] = m1v.data[0]*xv.data[0]+m1v.data[1]*xv.data[1]+m1v.data[2]*xv.data[2];
+		m2v.data[1] = m1v.data[0]*yv.data[0]+m1v.data[1]*yv.data[1]+m1v.data[2]*yv.data[2];
+		m2v.data[2] = m1v.data[0]*nv.data[0]+m1v.data[1]*nv.data[1]+m1v.data[2]*nv.data[2];
+		m2v.data[3] = 1.0;
+
+		matrix3DRotationSetFollowingEulerAngle(Matrix1,
+								linfo->I1RotationalMode[i],
+								linfo->I1Angle1[i],
+								linfo->I1Angle2[i],
+								linfo->I1Angle3[i],
+								MATRIX_3D_MODE_INITIALIZE);
+	
+		matrix3DMultiplyVector(&m1v, Matrix1);
+		matrix3DMultiplyVector(&m2v, Matrix1);
+
+		linfo->I1Angle[i] = atan2(m1v.data[1],m1v.data[0])*DEGREE;
+		if(linfo->I1Angle[i] < 0){
+			linfo->I1Angle[i] += 360;
+		}
+		linfo->I2Angle[i] = atan2(m2v.data[1],m2v.data[0])*DEGREE;
+		if(linfo->I2Angle < 0){
+			linfo->I2Angle += 360;
+		}
+	}
+}
+
+void
+__CommonLineCalculation1(lCommonLineCalculationInfo* linfo, int mode)
+{
+	int    i;
+	//double t1xa, t1ya, t1xb, t1yb;
+	//double t2xa, t2ya, t2xb, t2yb;
+	double t3xa, t3ya, t3xb, t3yb;
+	double pt3xa, pt3ya;
+	double pt3xb, pt3yb;
+	double ppt3, ppt6;
+	double ft3xa, ft3ya;
+	double ft3xb, ft3yb;
+	double A, B, C, D, E, F, G, H, I, J, K, L;
+	double Xa, Ya, Xb, Yb;
+
+	double tt1xb, tt1yb;
+	double tt2xb, tt2yb;
+	double tt3xb, tt3yb;
+	double ptt1xb, ptt1yb;
+	double ptt2xb, ptt2yb;
+	double ptt3xb, ptt3yb;
+	double pptt1, pptt2, pptt3;
+	double ftt1xb, ftt1yb;
+	double ftt2xb, ftt2yb;
+	double ftt3xb, ftt3yb;
+
+	Matrix3D matrix1;
+	Matrix3D matrix2;
+
+	for(i=0; i<linfo->num; i++){
+		
+		matrix3DRotationSetFollowingEulerAngle(matrix1,
+											   linfo->I1RotationalMode[i],
+											   linfo->I1Angle1[i],
+											   linfo->I1Angle2[i],
+											   linfo->I1Angle3[i],
+											   MATRIX_3D_MODE_INITIALIZE);
+
+		matrix3DRotationSetFollowingEulerAngle(matrix2,
+											   linfo->I2RotationalMode[i],
+											   linfo->I2Angle1[i],
+											   linfo->I2Angle2[i],
+											   linfo->I2Angle3[i],
+											   MATRIX_3D_MODE_INITIALIZE);
+
+		A = matrix1[0][0];
+		B = matrix1[1][0];
+		E = matrix1[0][1];
+		F = matrix1[1][1];
+		I = matrix1[0][2];
+		J = matrix1[1][2];
+		C = matrix2[0][0];
+		D = matrix2[1][0];
+		G = matrix2[0][1];
+		H = matrix2[1][1];
+		K = matrix2[0][2];
+		L = matrix2[1][2];
+
+		//t1ya = ((K*H-G*L)*(A*G-C*E))-((D*G-C*H)*(K*E-G*I));
+		//t1xa = ((D*G-C*H)*(K*F-G*J))-((K*H-G*L)*(B*G-C*F));
+		//t2ya = ((C*L-D*K)*(K*E-G*I))-((K*H-G*L)*(C*I-A*K));
+		//t2xa = ((K*H-G*L)*(C*J-B*K))-((C*L-D*K)*(K*F-G*J));
+		t3ya = ((D*G-C*H)*(C*I-A*K))-((C*L-D*K)*(A*G-C*E));
+		t3xa = ((C*L-D*K)*(B*G-C*F))-((D*G-C*H)*(C*J-B*K));
+		
+		pt3xa = SQR(t3xa);
+		pt3ya = SQR(t3ya);
+
+		ppt3 = SQRT(pt3xa+pt3ya);
+
+		if(ppt3 == 0){
+			Xa = 1;
+			Ya = 0;
+			linfo->flag[i] = 1;
+		}
+		else{
+			ft3xa = t3xa/ppt3;
+			ft3ya = t3ya/ppt3;
+			if(ft3ya < 0){
+				Ya = -1*ft3ya;
+				Xa = -1*ft3xa;
+			}
+			else{
+				Ya = ft3ya;
+				Xa = ft3xa;
+			}
+			if(Xa == -1){
+				Xa *= -1;
+			}
+		}
+
+DEBUGPRINT2("(Xa, Ya) = (%f, %f)\n", Xa, Ya);
+
+		//t1xb = ((B*E-A*F)*(H*I-E*L))-((F*I-E*J)*(D*E-A*H));
+		//t1yb = ((F*I-E*J)*(C*E-A*G))-((B*E-A*F)*(G*I-E*K));
+		//t2xb = ((F*I-E*J)*(A*L-D*I))-((A*J-B*I)*(H*I-E*L));
+		//t2yb = ((A*J-B*I)*(G*I-E*K))-((F*I-E*J)*(A*K-C*I));
+		t3xb = ((A*J-B*I)*(D*E-A*H))-((B*E-A*F)*(A*L-D*I));
+		t3yb = ((B*E-A*F)*(A*K-C*I))-((A*J-B*I)*(C*E-A*G));
+
+		pt3xb = SQR(t3xb);
+		pt3yb = SQR(t3yb);
+
+		ppt6 = SQRT(pt3xb+pt3yb);
+
+		if(ppt6 == 0 && linfo->flag[i] == 1){
+			tt1yb = (A*G-C*E)/(D*G-C*H);
+			//tt2xb = (E*K-G*I)/(H*K-G*L);
+			//tt3xb = (C*I-A*K)/(C*L-B*K);
+			tt1xb = (A*H-D*E)/(C*H-D*G);
+			//tt2yb = (E*L-H*I)/(G*L-H*K);
+			//tt3yb = (D*I-A*L)/(D*K-C*L);
+
+			ptt1xb = SQR(tt1xb);
+			ptt1yb = SQR(tt1yb);
+
+			pptt1 = SQRT(ptt1xb+ptt1yb);
+
+			ftt1xb = tt1xb/pptt1;
+			ftt1yb = tt1yb/pptt1;
+
+			if(ftt1yb < 0){
+				Yb = -1*ftt1yb;
+				Xb = -1*ftt1xb;
+			}
+			else{
+				Yb = ftt1yb;
+				Xb = ftt1xb;
+			}
+			if(Xb == -1){
+				Xb *= -1;
+			}
+
+DEBUGPRINT2("(xb, yb) = (%f, %f) : z-rotation\n", ftt1xb, ftt1yb);		
+DEBUGPRINT2("(Xb, Yb) = (%f, %f) : z-rotation\n", Xb, Yb);		
+		}
+		else{
+			ft3xb = t3xb/ppt6;
+			ft3yb = t3yb/ppt6;
+			if(ft3yb < 0){
+				Yb = -1*ft3yb;
+				Xb = -1*ft3xb;
+			}
+			else{
+				Yb = ft3yb;
+				Xb = ft3xb;
+			}
+			if(Xa == -1){
+				Xa *= -1;
+			}
+		}
+
+DEBUGPRINT2("(Xb, Yb) = (%f, %f)\n\n", Xb, Yb);
+
+		linfo->I1Angle[i] = atan2(Ya, Xa);
+		linfo->I1Angle[i] *= DEGREE;
+		
+		linfo->I2Angle[i] = atan2(Yb, Xb);
+		linfo->I2Angle[i] *= DEGREE;
+	}
+}

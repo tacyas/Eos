@@ -1,0 +1,33 @@
+#!../Display3.HP
+## Environment Set 
+
+if [file exists Display3.wish ] {
+	lappend auto_path [ pwd ]
+	auto_mkindex [ pwd ] *.wish
+}
+
+if [info exists env(EOS_HOME)] {
+	set path $env(EOS_HOME)/bin/wish/Display3
+} else {
+	set path [ pwd ]
+}
+
+if [info exists env(EOS_HOME)] {
+	set libpath $env(EOS_HOME)/lib
+} else {
+	set libpath {}
+}
+
+#if ![file exists $path/Display3.wish] {
+#	tk_dialog .d "Error:" "Wrong Directory!" error 0 OK
+#	exit 0
+#}
+
+lappend auto_path $libpath
+lappend auto_path $path
+
+auto_mkindex $path    *.wish
+auto_mkindex $libpath *.wish
+
+## Main Program
+display3Init

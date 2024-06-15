@@ -1,0 +1,57 @@
+#ifndef CTF_INFO_H
+#define CTF_INFO_H
+
+#define ctfInfoModeWithAmplitudeContrast    0x0f
+#define ctfInfoModeWithIlluminationAngle    0x20
+#define ctfInfoModeWithEnergySpread         0x40
+
+typedef enum ctfInfoMode {
+	ctfInfoModePhaseCTFOnly   = 0,
+	ctfInfoModePhaseAndAmpCTF = 1 
+} ctfInfoMode;
+
+typedef struct ctfInfo {
+	float kV=0;      /* kV */
+	float defocus=0; /* A : Underfocus is plus, while overfocus is minus*/
+	float Cc=0; 
+	float dE=0; 
+	float Cs=0;      /* mm */
+	float Ain=0;     /* mrad : Illumination Angle */
+	long  flagWin=0; /* Windowing */ 
+	float CutLow=0;  /* Windowing: CutLow  A-1 */
+	float CutHigh=0; /* Windowing: CutHigh A-1 */
+	float I0=0;      /* Intensity */
+	float ratioOfAmpToPhase=0; /* The ratio of amp to phase */
+	float BofMTF=0;  /* exp(-B R) */
+
+	long  flagWhiteNoise=0;
+	float WhiteNoise=0; /* The ratio of signal to noise */
+
+	float MolcEnv=0; /* A*A */
+
+	float defocus2D[2];      /* A */
+	float defocus0axis;          /* radian : angle of the defocus2D[0]-axis */
+
+	long mode;
+} ctfInfo;
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+extern void ctfInfoSendByPVM(ctfInfo* info, int tid, long mode);
+extern void ctfInfoRecieveByPVM(ctfInfo* info, int tid, long mode);
+extern float ctfFunction(ctfInfo* info, float R, long mode);
+extern void  ctfFunctionPVMStart(ctfInfo* info, float R, int tid, long mode);
+extern float ctfFunctionPVMEnd(ctfInfo* info, float R, int tid, long mode);
+extern void  ctfFunctionPVMServer();
+extern float ctfEnvelopFunction(ctfInfo* info, float R, long mode);
+extern float ctfFunction2D(ctfInfo* info, float X, float Y, long mode);
+extern float wavelengthOfElectron(float E);
+extern float defocusDeterminationFromThonRing(ctfInfo* info, float R, long n, long mode);
+extern float ctfWeightForCorrection(ctfInfo* info, float R, long mode);
+
+#ifdef __cplusplus
+};
+#endif
+
+#endif

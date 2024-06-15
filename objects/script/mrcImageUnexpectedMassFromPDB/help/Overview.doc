@@ -1,0 +1,8 @@
+.onlineHelp EOS mrcImageUnexpectedMassFromPDB "Introduction to mrcImageUnexpectedMassFromPDB"
+.
+.section 1 "Introduction to mrcImageUnexpectedMassFromPDB"
+.
+.\" This is the help page associated with the Help button on
+.\" the toplevel window of mrcImageUnexpectedMassFromPDB
+If you are reading this text,
+you should report it as a bug :-)

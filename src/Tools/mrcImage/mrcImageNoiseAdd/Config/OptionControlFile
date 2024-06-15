@@ -1,0 +1,11 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-SD","-SD","SD of Image/Signal","Optional","1","1","SD","Real","1.0"
+"-NS","-NS","N/S: Attention:Noise to Signal ratio","Optional","1","1","NS","Real","1.0"
+"-SN","-SN","S/N: Signal to Noise ratio","Optional","1","1","SN","Real","1.0"
+"-H","-H","High threshold of signal","Optional","1","1","H","Real","1.0"
+"-L","-L","Low threshold of signal","Optional","1","1","L","Real","1.0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

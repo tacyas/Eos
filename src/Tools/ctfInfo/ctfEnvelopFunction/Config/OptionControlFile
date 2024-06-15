@@ -1,0 +1,13 @@
+# OptionControlFile
+# FileFormat
+"-o","-o[utput]","OutputDataFile","Optional","1","1","Out","outFile","stdout"
+"-Rmax","-Rmax","Rmax[/A]","Optional","1","1","Rmax","Real","0.1"
+"-dR","-dR","dR[/A]","Optional","1","1","dR","Real","0.0001"
+"-kV","-kV","AccVol[kV]","Optional","1","1","kV","Real","200"
+"-Cs","-Cs","Cs[mm]","Optional","1","1","Cs","Real","1.7"
+"-df","-df","Defocus[A]:under(+)","Essential","1","1","Defocus","Real","100000"
+"-A","-A","AmplitudeContrast/PhaseContrast","Optional","1","1","AoverP","Real","0.0"
+"-Ain","-Ain","IlluminationAperture[mrad]","Optional","1","1","Ain","Real","0.02"
+"-ctfMode","-ctfMode","CTFMode","Optional","1","1","ctfMode","Integer","32"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

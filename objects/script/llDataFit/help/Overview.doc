@@ -1,0 +1,8 @@
+.onlineHelp EOS llDataFit "Introduction to llDataFit"
+.
+.section 1 "Introduction to llDataFit"
+.
+.\" This is the help page associated with the Help button on
+.\" the toplevel window of llDataFit
+If you are reading this text,
+you should report it as a bug :-)

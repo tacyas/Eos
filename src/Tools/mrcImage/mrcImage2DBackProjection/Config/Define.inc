@@ -1,0 +1,4 @@
+OBJECTNAME = mrcImage2DBackProjection
+EXTRA_LIB  =
+EXTRA_CCOPTS =
+EXTRA_INC =

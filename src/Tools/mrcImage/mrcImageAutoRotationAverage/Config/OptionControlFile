@@ -1,0 +1,16 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: Ins","Essential","1","1","In","inFileList::mrcImage","stdin"
+"-r","-r[eferenc]","Input: Ref","Optional","1","1","Ref","inFile::mrcImage","NULL"
+"-o","-o[utput]","Output:Average","Essential","1","1","Out","outFile::mrcImage","NULL"
+"-range","-range","Mode","Optional","4","1","Min","Real","0.0","2","Max","Real","360.0","3","Delta","Real","5.0","4","Iter","Integer","2"
+"-iter","-iter","iteration for rotation","Optional","1","1","iter","Integer","2"
+"-M","-M[odeCorrelation]","Mode: Correlation","Optional","1","1","CorMode","Integer","16"
+"-Method","-Method[Correlation]","Method: Correlation","Optional","1","1","Method","Integer","0"
+"-Periodic","-Periodic","Periodic","Optional","0"
+"-maxIter","-maxIter[aration]","MaxIteration","Optional","1","1","maxIter","Integer","10"
+"-rmsd","-rmsd","rmsd","Optional","1","1","rmsd","Real","1e-2"
+"-log","-log","logFile","Optional","1","1","Log","outFile::ASCII","stdout"
+"-thres","-thres[hold]","threshold: Linear Correlation","Optional","1","1","Thres","Real","0.2"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

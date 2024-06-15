@@ -1,0 +1,35 @@
+/*
+# lJcalulation : $Revision$  
+# $Date$ 
+# Created by $Author$
+# Usage : lJcalulation 
+# Attention
+#   $Loccker$
+#  	$State$ 
+#
+*/
+/* $Log$ */
+
+#include "lmrcImageOrientationSearchBySimultaneousMinimization.h"
+
+int
+lJcalculation(lmrcImageOrientationSearchBySimultaneousMinimizationInfo* linfo, int mode)
+{
+	int    j;
+    float  ntheta, nphi;
+    float  dphi;
+
+    j = 0;
+	for(ntheta=THETAMIN; ntheta<=THETAMAX; ntheta+=linfo->dtheta){
+        if(ntheta == 0 || ntheta == THETAMAX){
+		    dphi = 2*M_PI;
+	    }
+	    else{
+		    dphi = linfo->dtheta/sin(ntheta);
+	    }
+		for(nphi=PHIMIN; nphi<PHIMAX; nphi+=dphi){
+	        j++;
+	    }
+    }
+	return(j);
+}

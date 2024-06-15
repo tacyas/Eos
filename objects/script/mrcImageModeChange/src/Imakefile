@@ -1,0 +1,19 @@
+#define DoNotAutoRecreate NO
+
+#include EOS_INCLUDE
+
+OBJECT_TYPE = script
+
+TOOLBOX_NAME = eos
+
+OBJECT_NAME = mrcImageModeChange
+
+BINARY_NAME = mrcImageModeChange
+
+INSTPGMFLAGS =
+
+SCRIPTS = \
+	mrcImageModeChange.ksh
+
+#define KKSH_DEF
+#include <Script.template>

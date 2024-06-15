@@ -1,0 +1,8 @@
+.onlineHelp EOS tiff2mrc "Introduction to tiff2mrc"
+.
+.section 1 "Introduction to tiff2mrc"
+.
+.\" This is the help page associated with the Help button on
+.\" the toplevel window of tiff2mrc
+If you are reading this text,
+you should report it as a bug :-)

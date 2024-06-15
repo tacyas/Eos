@@ -1,0 +1,14 @@
+<HTML>
+<BODY>
+<H1>mrcImageHeader</H1><BR>
+<H3>in mrcImage.h</H3><BR>
+<PRE>
+typedef union <A HREF="mrcImageHeader.html">mrcImageHeader </A>{ <BR>
+  unsigned char           All[MRC_HEADER]; <BR>
+  <A HREF="mrcImageParaTypeInteger.html">mrcImageParaTypeInteger </A>Int[MRC_HEADER/4]; <BR>
+  <A HREF="mrcImageParaTypeReal.html">mrcImageParaTypeReal </A>   Real[MRC_HEADER/4]; <BR>
+  <A HREF="_mrcImageHeader.html">_mrcImageHeader </A>        Cont; <BR>
+} mrcImageHeader; <BR>
+ 
+</PRE></HTML>
+</BODY>

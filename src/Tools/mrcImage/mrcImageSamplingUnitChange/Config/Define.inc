@@ -1,0 +1,4 @@
+OBJECTNAME = mrcImageSamplingUnitChange
+EXTRA_LIB  =
+EXTRA_CCOPTS =
+EXTRA_INC =

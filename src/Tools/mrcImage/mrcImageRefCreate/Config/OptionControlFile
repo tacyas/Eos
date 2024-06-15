@@ -1,0 +1,11 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-p","-p[osition]","Position of Center of model creation. Phi(degree) ,Omega(degree) ,Alpha(degree) \n:Omega and Alpha range must be around 0 or 180. ","Optional","3","1","iP","Real","0","2","iW","Real","0","3","iA","Real","0" 
+"-w","-w[idth]","Width of Phi(degree,plus minus) ,Omega(degree,plus minus) ,Alpha(degree,plus minus) ","Optional","3","1","Wp","Real","360","2","Ww","Real","10","3","Wa","Real","10"
+"-d","-d[elta]","Interval of model creation(degree) Phi(around Z axis),Omega(Y axis),Alpha(X axis)","Optional","3","1","Dp","Real","5","2","Dw","Real","5","3","Da","Real","5"
+"-x","-x","Data length of x in the outputfile.Default:Data length of x in the inputfile","Optional","1","1","Wx","Integer","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"
+

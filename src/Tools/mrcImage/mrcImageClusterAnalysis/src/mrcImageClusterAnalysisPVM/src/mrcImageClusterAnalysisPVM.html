@@ -1,0 +1,31 @@
+<HTML>
+<HEAD>
+<TITLE>mrcImageClusterAnalysisPVM</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageClusterAnalysisPVM</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageClusterAnalysisPVM
+Options:
+    [-I[nput array of file]In                  (stdin     )] :Essential :InputDataFiles
+    [-o[utput]           Out                 (stdout    )] :Optional  :OutputDataFile
+    [-O[utput]           ] :Optional  :Output: averaged images
+    [-N[umber of clusters]N                   (1         )] :Optional  :Number of clusters
+    [-Iter[ation]        ] :Optional  :IterationFlag
+    [-A[uto]R[otation]   AutoRotation        (72        )] :Optional  :AutoRotationFlag
+    [-A[uto]R[otation]iter[ation]AutoRotationIteration(2         )] :Optional  :AutoRotationIteration
+    [-A[uto]R[otation]MethodAutoRotationMethod  (0         )] :Optional  :Method for Correlation for Auto Rotation
+    [-c[onfig]           configFile          (NULL      )] :Optional  :ConfigurationFile
+    [-Mi[rrorimage]      ] :Optional  :Mirror Image is considered -m 2 only
+    [-M[odeForCorrelation]correlationMode     (0x00      )] :Optional  :Correlation Mode for AutoRotation
+    [-M[ax]P[rocess]     Maxprocess          (8         )] :Optional  :The maximum process number
+    [-m[ode]             mode                (2         )] :Optional  :Mode
+----- Additional Usage -----
+Distance between clusters:
+	 mode0: By Correlation
+	 mode1: By Euclid Distance
+	 mode2 (Default) : By Ward Method
+</PRE>
+</BODY>
+</HTML>

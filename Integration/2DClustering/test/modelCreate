@@ -1,0 +1,17 @@
+#!/bin/bash
+model=121p-shift
+
+for angle in 000 045 090 135 ; do
+	dst=$model-rot$angle
+	pdbRotation -i $model.pdb -o $dst.pdb -EA YOYS $angle 0 0 
+	pdb2mrc2d -i $dst.pdb -o $dst.mrc -d 2 2 -s -32 -32 -n 32 32 -sig 2   
+done
+
+for i in `ls -1 *.mrc`; do
+	echo $i
+	for angle in 000 030 060 090 120 150 180 210 240 270 ; do
+		dst=$i-rot$angle
+		mrcImageRotation -i $i -o $dst -a $angle -m 2
+		mrcImageNoiseAdd -i $dst -o $dst.roi -SN 1 
+	done	
+done

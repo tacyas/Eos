@@ -1,0 +1,85 @@
+<H4> Update Time 03/13/11---18:07:43 </H4>
+<HR>
+<A NAME="Information">
+<H2>Information from source codes</H2>
+</A>
+<PRE>
+../src/lAllCommonLineCalculation.c:
+
+../src/lAngularWeightCalculation.c:
+
+../src/lCommonLineCalculation.c:
+
+../src/lCommonLineDataSetInPlaneRotation.c:
+
+../src/lCommonLinesDataSet.c:
+
+../src/lDescartesIntoPolar.c:
+
+../src/lEvaluateCorrelationMapwithCommonLine.c:
+
+../src/lFETOrientationSearchByAnnealing.c:
+
+../src/lFETOrientationSearchByFeatureAlignment.c:
+
+../src/lFETOrientationSearchByFeatureAlignmentInitSet.c:
+
+../src/lFETOrientationSearchByFeatureAlignmentSphere.c:
+
+../src/lFETmapOrientationSearchBySimultaneousFitting.c:
+
+../src/lFETsmallMapSetCreate_forSimultaneousMinimization.c:
+
+../src/lInitialDataFileRead.c:
+
+../src/lJcalulation.c:
+
+../src/lLcalculation.c:
+
+../src/lPlaneRotationAngleSet.c:
+
+../src/lllDataSeparationInfoPrint.c:
+
+../src/lllDataSeparationInfoRead.c:
+
+../src/lllDataSeparationInfoSet.c:
+
+../src/lllDatarMaxLimitForSeparation.c:
+
+../src/lllExtract.c:
+
+../src/lllExtractCtfinfFileCreate.c:
+
+../src/lllExtractWithSeparation.c:
+
+../src/lllExtractdYEstimate.c:
+
+../src/lmrc2Dto3D.c:
+
+../src/lmrc2Dto3DSIRT.c:
+
+../src/lmrc3Dto2D.c:
+
+../src/lmrcImageFileListAndEulerAngleDataRead.c:
+
+../src/lmrcImageOneLineGet.c:
+
+../src/lmrcImageSinogramCorrelationAdditionalWeight.c:
+</PRE>
+<HR>
+<A NAME="include">
+<H2>transform.h</H2>
+</A>
+<PRE>
+/*
+# %M% %Y% %I%
+# The latest update : %G% at %U%
+#
+#%Z% transform.h ver %I%
+#%Z% Created by 
+#%Z%
+#%Z% Usage : transform.h 
+#%Z% Attention
+#%Z%
+*/
+</PRE>

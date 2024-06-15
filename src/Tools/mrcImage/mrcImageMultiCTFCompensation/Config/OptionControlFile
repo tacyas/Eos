@@ -1,0 +1,18 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: filename ...","Essential","1","1","In","inFileList","stdin"
+"-info2","-info2","InputFileList: the same order as the input: ctfinfo from Display2/ctfDisplay","Optional","1","1","CTF","inFileList","stdin"
+"-o","-o[utput]","OutputDataFile(average file)","Essential","1","1","Out","outFile","stdout"
+"-f","-f[ft]","OutputDataFile(averaged fft file)","Optional","1","1","fftOut","outFile","stdout"
+"-W","-W[hiteNoise]","","Optional","1","1","WhiteNoise","Real","1.0"
+"-WR","-W[hiteNoise]R[aising]","Weight:W*exp(WR*R)","Optional","1","1","WhiteNoiseRaising","Real","1.0"
+"-maxWR","-maxW[hiteNoise]R[aising]","max(W*exp(WR*R),maxWhiteNoise)","Optional","1","1","MaxWhiteNoise","Real","1.0"
+"-NdepWR","-Ndep[endent]W[hiteNoise]R[aising]","W*exp(WR*R)/sqrt(N)","Optional","1","1","NdependentWhiteNoise","Integer","1"
+"-SinWin","-SinWin","Windowing by sine function from Rmin[/A] to Rmax[/A]","Optional","2","1","SinWinRmin","Real","0.1","2","SinWinRmax","Real","1.0"
+"-MaxIter","-MaxIter[ation]","Max Iteration","Optional","1","1","MaxIter","Integer","10"
+"-ctfMode","-ctfMode","CTFMode: refer to mrcImageCTFObservation","Optional","1","1","CTFMode","Integer","1"
+"-solventMode","-solventMode","If solvent flatterning is used, NEED","Optional","1","1","solventMode","Real","0"
+"-solventSTD","-solventSTD","If solvent flatterning is used as mode=1, NEED ","Optional","1","1","solventSTD","Real","-1.0"
+"-log","-log[file]","Log File Name","Optional","1","1","Log","outFile","stderr"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

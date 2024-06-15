@@ -1,0 +1,4 @@
+OBJECTNAME = mrcImagePixelDataGet
+EXTRA_LIB  = $(LIBCUDA)
+EXTRA_CCOPTS =
+EXTRA_INC =

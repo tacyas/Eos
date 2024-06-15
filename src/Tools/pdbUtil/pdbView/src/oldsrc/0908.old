@@ -1,0 +1,625 @@
+/*
+# pdbView : $Revision$  
+# $Date$ 
+# Created by $Author$
+# Usage : pdbView
+# Attention
+#   $Loccker$
+#  	$State$ 
+#
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+              
+#include "eosAxisSource.hh"
+
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+
+#define DEBUG
+#include "genUtil.h"
+#include "pdbFile.h"
+
+
+
+/*
+Example:
+typedef struct lpdbViewInfo {
+	float a;
+	int   b;
+} lpdbViewInfo;
+
+typedef enum lpdbViewMode {
+	a=0,
+	b=1
+} lpdbViewMode;
+*/
+
+
+
+class eosRuler{
+  
+public:
+  
+  vtkAssembly* assembly;
+
+  vtkCylinderSource* rulerAxis;
+  vtkPolyDataMapper* rulerAxisMapper;
+  vtkActor* rulerAxisActor;
+  
+  vtkCylinderSource* ruler;
+  vtkPolyDataMapper* rulerMapper;
+  vtkActor* rulerActor;
+  
+  double division;
+  double scaleLength;
+  double scaleRadius;
+  int scaleFace;
+  
+  int divisionFace;
+  double divisionLength;
+  double divisionRadius;
+  
+  int divisionNumber;
+  
+  int mark;
+  double markLength;
+  double markRadius;
+  
+  vtkRenderer* ren;
+  
+private:
+  void reset();
+  
+  
+public:
+  eosRuler();
+  void SetScaleLength(double l);
+  void SetMark(int m);
+  void SetDivision(double d);
+  void Draw();
+  void Draw(vtkRenderer* renderer); 
+  
+};
+
+
+  eosRuler::eosRuler()
+  {
+
+    division=1;
+    scaleLength=10;
+    scaleRadius=0.1;
+    scaleFace=20;
+
+    divisionFace=20;
+    divisionLength=0.05;
+    divisionRadius=0.5;
+
+    mark=5;
+    markLength=0.05;
+    markRadius=0.8;
+
+    reset();
+
+  }
+
+
+  void eosRuler::reset()
+  {
+    divisionNumber = (int)(scaleLength / division);
+  }
+
+
+//Ikutu-me de Ookina cylinder wo show suruka?
+
+void eosRuler::SetMark(int m)
+{
+  mark = m;
+  reset();
+}
+
+//Scale no Length
+void eosRuler::SetScaleLength(double l)
+{
+  scaleLength = l;
+  reset();
+}
+
+//Memori no Kugiri-Size
+void eosRuler::SetDivision(double d)
+{
+  division = d;
+  reset();
+}
+
+  void eosRuler::Draw(vtkRenderer* renderer)
+{
+
+	ren = renderer;
+	Draw();
+
+}
+
+
+
+  void eosRuler::Draw()
+{ 
+ int i;
+
+ assembly = vtkAssembly::New();
+
+    //Cylinder
+    rulerAxis = vtkCylinderSource::New();
+    rulerAxis->SetHeight(scaleLength);
+    rulerAxis->SetRadius(scaleRadius);
+    rulerAxis->SetCenter(0,0,0);
+    rulerAxis->SetResolution(scaleFace);
+    rulerAxisMapper = vtkPolyDataMapper::New();
+    rulerAxisMapper->SetInput(rulerAxis->GetOutput());
+    rulerAxisActor = vtkActor::New();
+    rulerAxisActor->SetMapper(rulerAxisMapper);
+    
+    rulerAxisActor->GetProperty()->SetColor(0.8,0.4,0.6);
+    rulerAxisActor->RotateZ(90);
+    rulerAxisActor->SetPosition(scaleLength/2,0,0);
+    //axisTActor->SetPosition(0,0,0);
+
+
+    //ren->AddActor(rulerAxisActor);
+    
+    assembly->AddPart(rulerAxisActor);
+
+
+    for(i=0 ; i<=divisionNumber ; i++)
+      {
+
+    ruler = vtkCylinderSource::New();
+
+    if(i%mark==0){
+
+    ruler->SetHeight(markLength);
+    ruler->SetRadius(markRadius);
+
+    }
+    else{
+
+    ruler->SetHeight(divisionLength);
+    ruler->SetRadius(divisionRadius);
+
+    }
+
+
+    //rulerSpace->SetHeight(divisionLength);
+    //rulerSpace->SetRadius(divisionRadius);
+ 
+    ruler->SetCenter(0,0,0);
+    
+    ruler->SetResolution(divisionFace);
+    rulerMapper = vtkPolyDataMapper::New();
+    rulerMapper->SetInput(ruler->GetOutput());
+    rulerActor = vtkActor::New();
+    rulerActor->SetMapper(rulerMapper);
+    
+    rulerActor->GetProperty()->SetColor(0.3,0.5,0.7);
+    rulerActor->RotateZ(90);
+    rulerActor->SetPosition(i*division,0,0);
+ 
+    assembly->AddPart(rulerActor);
+   
+    //ren->AddActor(rulerActor);
+    
+    
+      }
+
+    assembly->SetOrigin(0,0,0);
+    assembly->RotateY(90);
+    assembly->SetPosition(5,5,5);
+    ren->AddActor(assembly);
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+int
+main(int argc, char* argv[]) 
+{
+  eosAxisSource axisClass;
+  eosAxisSource axisClass2;
+  
+  eosRuler ruler;
+  
+  
+  pdbViewInfo info;
+  pdbFile pdb;
+  
+  init0(&info);
+  argCheck(&info, argc, argv);
+  init1(&info);
+  
+  DEBUGPRINT("Program Start\n");
+  cout << "start C++\n";
+  pdbFileRead(info.fptIn, &pdb);
+  
+  vtkRenderer *ren = vtkRenderer::New();
+  vtkRenderWindow *renWindow = vtkRenderWindow::New();
+  renWindow->AddRenderer(ren);
+  vtkRenderWindowInteractor *iren = vtkRenderWindowInteractor::New();
+  iren->SetRenderWindow(renWindow);
+  
+  axisClass.Draw(ren);
+  
+  //axisClass2.SetScale(2);
+  axisClass2.SetLength(2);
+  axisClass2.Draw(ren);
+  
+  ruler.SetDivision(1.5);
+  ruler.SetScaleLength(15);
+  ruler.Draw(ren);
+  
+  //CreateMoleculeModel
+
+  double moleculeRadius = 1.6;
+
+  vtkSphereSource* molecule = vtkSphereSource::New();
+  molecule->SetRadius(moleculeRadius);
+
+
+    origin->SetCenter(0,0,0);
+    origin->SetRadius(originRadius);
+    originMapper = vtkPolyDataMapper::New();
+    originMapper->SetInput(origin->GetOutput());
+    originActor = vtkActor::New();
+    originActor->SetMapper(originMapper);
+    originActor->GetProperty()->SetColor(originColor);
+    assembly->AddPart(originActor);
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  //Create an actor and give it cone geometry
+  vtkConeSource *cone = vtkConeSource::New();
+  cone->SetResolution(30);
+  cone->SetHeight(5);
+  cone->SetRadius(3);
+  vtkPolyDataMapper *coneMapper = vtkPolyDataMapper::New();
+  coneMapper->SetInput(cone->GetOutput());
+  vtkActor *coneActor = vtkActor::New();
+  coneActor->SetMapper(coneMapper);
+  coneActor->GetProperty()->SetColor(1.0,0.0,0.0);
+  coneActor->SetPosition(0,5,0);
+  
+  //Mine Create
+  vtkConeSource *cone2 = vtkConeSource::New();
+  cone2->SetResolution(6);
+  cone2->SetHeight(2);
+  cone2->SetRadius(3);
+  vtkPolyDataMapper *coneMapper2=vtkPolyDataMapper::New();
+  coneMapper2->SetInput(cone2->GetOutput());
+  vtkActor *coneActor2 = vtkActor::New();
+  coneActor2->SetMapper(coneMapper2);
+  coneActor2->GetProperty()->SetColor(0.2,0.8,0.7);
+  
+  //Cube
+  vtkCubeSource *cube = vtkCubeSource::New();
+  cube->SetCenter(0,0,0);
+  cube->SetXLength(3);
+  cube->SetYLength(3);
+  cube->SetZLength(3);
+  //cube->SetBounds(0.0,0.5,0.0,0.3,0.0,0.2);
+  vtkPolyDataMapper *cubeMapper = vtkPolyDataMapper::New();
+  cubeMapper->SetInput(cube->GetOutput());
+  vtkActor *cubeActor = vtkActor::New();
+  cubeActor->SetMapper(cubeMapper);
+  cubeActor->GetProperty()->SetOpacity(0.5);
+  cubeActor->GetProperty()->SetColor(0.4,0.4,0.7);
+  
+  //LineX
+  vtkLineSource *lineX = vtkLineSource::New();
+  lineX->SetPoint1(0,0,0);
+  lineX->SetPoint2(5,0,0);
+  vtkPolyDataMapper *lineXMapper = vtkPolyDataMapper::New();
+  lineXMapper->SetInput(lineX->GetOutput());
+  vtkActor *lineXActor = vtkActor::New();
+  lineXActor->SetMapper(lineXMapper);
+  lineXActor->GetProperty()->SetColor(1.0,0,0);
+  
+
+    //LineY
+    vtkLineSource *lineY = vtkLineSource::New();
+    lineY->SetPoint1(0,0,0);
+    lineY->SetPoint2(0,5,0);
+    vtkPolyDataMapper *lineYMapper = vtkPolyDataMapper::New();
+    lineYMapper->SetInput(lineY->GetOutput());
+    vtkActor *lineYActor = vtkActor::New();
+    lineYActor->SetMapper(lineYMapper);
+    lineYActor->GetProperty()->SetColor(0,1.0,0);
+
+
+    //LineZ
+    vtkLineSource *lineZ = vtkLineSource::New();
+    lineZ->SetPoint1(0,0,0);
+    lineZ->SetPoint2(0,0,5);
+    vtkPolyDataMapper *lineZMapper = vtkPolyDataMapper::New();
+    lineZMapper->SetInput(lineZ->GetOutput());
+    vtkActor *lineZActor = vtkActor::New();
+    lineZActor->SetMapper(lineZMapper);
+    lineZActor->GetProperty()->SetColor(0,0,1.0);
+
+ 
+    /*
+
+    double division=1;
+    double scaleLength=10;
+    double scaleRadius=0.1;
+    int scaleFace=20;
+
+    int divisionFace=20;
+    double divisionLength=0.05;
+    double divisionRadius=0.5;
+
+    int divisionNumber;
+    divisionNumber = (int)(scaleLength / division);
+
+    int mark=5;
+    double markLength=0.05;
+    double markRadius=0.8;
+
+    int i;
+
+
+
+    //Cylinder
+    vtkCylinderSource *rulerAxis = vtkCylinderSource::New();
+    rulerAxis->SetHeight(scaleLength);
+    rulerAxis->SetRadius(scaleRadius);
+    rulerAxis->SetCenter(0,0,0);
+    rulerAxis->SetResolution(scaleFace);
+    vtkPolyDataMapper *rulerAxisMapper = vtkPolyDataMapper::New();
+    rulerAxisMapper->SetInput(rulerAxis->GetOutput());
+    vtkActor *rulerAxisActor = vtkActor::New();
+    rulerAxisActor->SetMapper(rulerAxisMapper);
+    
+    rulerAxisActor->GetProperty()->SetColor(0.8,0.4,0.6);
+    rulerAxisActor->RotateZ(90);
+    rulerAxisActor->SetPosition(scaleLength/2,0,0);
+    //axisTActor->SetPosition(0,0,0);
+
+
+    ren->AddActor(rulerAxisActor);
+    
+
+
+    for(i=0 ; i<=divisionNumber ; i++)
+      {
+
+    vtkCylinderSource *ruler = vtkCylinderSource::New();
+
+    if(i%mark==0){
+
+    ruler->SetHeight(markLength);
+    ruler->SetRadius(markRadius);
+
+    }
+    else{
+
+    ruler->SetHeight(divisionLength);
+    ruler->SetRadius(divisionRadius);
+
+    }
+
+
+    //rulerSpace->SetHeight(divisionLength);
+    //rulerSpace->SetRadius(divisionRadius);
+ 
+    ruler->SetCenter(0,0,0);
+    
+    ruler->SetResolution(divisionFace);
+    vtkPolyDataMapper *rulerMapper = vtkPolyDataMapper::New();
+    rulerMapper->SetInput(ruler->GetOutput());
+    vtkActor *rulerActor = vtkActor::New();
+    rulerActor->SetMapper(rulerMapper);
+    
+    rulerActor->GetProperty()->SetColor(0.3,0.5,0.7);
+    rulerActor->RotateZ(90);
+    rulerActor->SetPosition(i*division,0,0);
+    
+    ren->AddActor(rulerActor);
+    
+    
+      }
+    
+
+    */
+
+
+
+
+    /*
+
+    //arrowZ:TEST
+    vtkConeSource *arrowT = vtkConeSource::New();
+    arrowT->SetResolution(axisClass.arrowFace);
+
+    //arrowT->SetHeight(3);
+    //arrowT->SetRadius(1.5);
+
+    arrowT->SetHeight(axisClass.arrowLength.Z);
+    arrowT->SetRadius(axisClass.arrowRadius.Z);
+    vtkPolyDataMapper *arrowTMapper = vtkPolyDataMapper::New();
+    arrowTMapper->SetInput(arrowT->GetOutput());
+    vtkActor *arrowTActor = vtkActor::New();
+    arrowTActor->SetMapper(arrowTMapper);
+    arrowTActor->GetProperty()->SetColor(axisColor.Zcolor);
+    arrowTActor->RotateY(-90);
+    arrowTActor->SetPosition(0,0,axisClass.arrowPosition.Z);
+
+    */
+
+    //Grid
+    /*
+    int n;
+
+    n=3;
+    vtkAssembly* grid3D = vtkAssembly::New();
+    int i;
+    int j;
+
+    //X
+
+    for(i=-1*n;i<n;i++)
+      {
+
+	for(j=-1*n;j<n;j++)
+	  {
+
+	vtkLineSource* gridX = vtkLineSource::New();
+	gridX->SetPoint1(-1*n,0,0);
+	gridX->SetPoint2(n,0,0);
+	vtkPolyDataMapper *gridXMapper = vtkPolyDataMapper::New();
+	gridXMapper->SetInput(gridX->GetOutput());
+	vtkActor *gridXActor = vtkActor::New();
+	gridXActor->SetMapper(gridXMapper);
+	
+	gridXActor->SetPosition(0,j,i);
+	gridXActor->GetProperty()->SetColor(1.0,0.0,0.0);
+	grid3D->AddPart(gridXActor);
+
+	  }
+
+      }
+
+    //Y
+
+    for(i=-1*n;i<n;i++)
+      {
+
+	for(j=-1*n;j<n;j++)
+	  {
+
+	vtkLineSource* gridY = vtkLineSource::New();
+	gridY->SetPoint1(0,-1*n,0);
+	gridY->SetPoint2(0,n,0);
+	vtkPolyDataMapper *gridYMapper = vtkPolyDataMapper::New();
+	gridYMapper->SetInput(gridY->GetOutput());
+	vtkActor *gridYActor = vtkActor::New();
+	gridYActor->SetMapper(gridYMapper);
+	
+	gridYActor->SetPosition(i,0,j);
+	gridYActor->GetProperty()->SetColor(0.0,1.0,0.0);
+	grid3D->AddPart(gridYActor);
+
+	  }
+
+      }
+
+    //Z
+
+    for(i=-1*n;i<n;i++)
+      {
+
+	for(j=-1*n;j<n;j++)
+	  {
+
+	vtkLineSource* gridZ = vtkLineSource::New();
+	gridZ->SetPoint1(0,0,-1*n);
+	gridZ->SetPoint2(0,0,n);
+	vtkPolyDataMapper *gridZMapper = vtkPolyDataMapper::New();
+	gridZMapper->SetInput(gridZ->GetOutput());
+	vtkActor *gridZActor = vtkActor::New();
+	gridZActor->SetMapper(gridZMapper);
+	
+	gridZActor->SetPosition(i,j,0);
+	gridZActor->GetProperty()->SetColor(0.0,0.0,1.0);
+	grid3D->AddPart(gridZActor);
+
+	  }
+
+      }
+
+
+
+
+    
+    ren->AddActor(grid3D);
+    
+    
+    */
+
+
+
+
+
+    //MineDotted
+    //vtkPoints *point = vtkPoints::New();
+    //point->SetPoints(5,5,5);
+
+    //assign our actor to the renderer
+
+    //ren->AddActor(coneActor);
+    //ren->AddActor(coneActor2);
+    //ren->AddActor(pointActor);
+    //ren->AddActor(cubeActor);
+    ren->AddActor(lineXActor);
+    ren->AddActor(lineYActor);
+    ren->AddActor(lineZActor);
+    //ren->AddActor(axisActor);
+    //ren->AddActor(arrowActor);
+
+    //ren->AddActor(ruleActor);
+
+    ren->SetBackground(0,0,0);
+
+    ren->ResetCamera();
+
+    renWindow->SetSize(400,400);
+
+    //draw the resulting scene
+    renWindow->Render();
+
+    //Begin mouse interaction
+    iren->Start();
+
+
+    //mine
+    //vtkLine *line = vtkLine::New();
+    //float lineCoords[2][1];
+
+    //line->GetPointIds()->SetId(0,0);
+    //line->GetPointIds()->SetId(1,1);
+
+    //lineCoords[0][0]=.25;
+    //lineCoords[1][0]=.75;
+
+
+
+
+
+	exit(EXIT_SUCCESS);
+}
+
+void
+additionalUsage()
+{
+	fprintf(stderr, "----- Additional Usage -----\n");
+}

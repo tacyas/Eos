@@ -1,0 +1,9 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputFETDataFile","Optional","1","1","In","inFile","NULL"
+"-s","-s[elect]","selectFETfile","Optional","1","1","Sm","Integer","1"
+"-l","-l[ibrary]","SDlibraryFile","Essential","1","1","Libl","inFile","NULL"
+"-o","-o[utput]","OutputSDdataFile","Optional","1","1","Out","outFile","NULL"
+"-ow","-o[ut]w[eight]","OutputWeightdataFile","Optional","1","1","OW","outFile","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

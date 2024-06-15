@@ -1,0 +1,7 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: mrc","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","Output: Coord Set","Optional","1","1","Out","outFile","stdout"
+"-t","-t[hreshold]","Input: threshold","Optional","1","1","Threshold","Real","0.0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

@@ -1,0 +1,26 @@
+-F 4.3 1 0 52x1+0+0 +0+0 'Cantata' cantata
+  -M 1 1 52x1+0+0 +1+0 ' ' subform
+    -P 1 0 52x1+0+1 +0+0 ' ' commonLinesSearchByVoting
+      -D 1 0 9x1+0+0 'Options' _gui_options
+        -H 1  6x1+0+0 'License' 'license' $BOOTSTRAP/repos/license/License license
+        -E
+        -R 1 0 1 5x1+35+0 'Run' 'execute operation' $EOS/bin/commonLinesSearchByVoting
+        -H 1  5x1+41+0 'Help' 'help page' $EOS/src/Tools/rec3d/commonLinesSearchByVoting/doc/commonLinesSearchByVoting.doc help
+        -Q 1 0 5.25x1+47+0 'Close'
+        -I 1 0 1 0 0 1 -1x1+1+1.500000 ' ' 'In' 'InputCorrelationMapList' i
+        -I 1 0 1 0 0 1 -1x1+1+3.000000 ' ' 'InC' 'InputCommonLinesList' ic
+        -I 1 0 1 0 0 1 -1x1+1+4.500000 ' ' 'InCC' 'InputCorrectCommonLinesList' icc
+        -O 1 0 1 1 0 1 -1x1+1+6.000000 ' ' 'Out' 'OutputFilteredCommonLinesList' o
+        -O 1 0 1 0 0 1 -1x1+1+7.500000 ' ' 'OutA' 'OutputAllCommonLinesList' oa
+        -O 1 0 1 0 0 1 -1x1+1+9.000000 ' ' 'OutDR' 'OutputDetectingRate' odr
+        -O 1 0 1 0 0 1 -1x1+1+10.500000 ' ' 'OutDRA' 'OutputDetectingRateALL' odra
+        -O 1 0 1 0 0 1 -1x1+1+12.000000 ' ' 'OutPH' 'OutputPeaksHistgram' oph
+        -i 1 0 1 0 0 -1x1+1+13.500000 0 0 1 0 0 'en' 'EstimationNumber' en
+        -i 1 0 1 0 0 -1x1+1+15.000000 0 0 1 0 0 'th' 'ThresholdLevel' th
+        -t 1 0 1 0 0 6x1+1+16 'histgramCreate' 'HistgramCreateFlag' histgramCreate
+        -t 1 0 1 0 0 6x1+1+18 'extend' 'ExtendVotingFlag' extend
+        -I 1 0 1 0 0 1 -1x1+1+19.500000 ' ' 'configFile' 'ConfigurationFile' c
+        -i 1 0 1 0 0 -1x1+1+21.000000 0 0 0 0 0 'mode' 'Mode' m
+    -E
+  -E
+-E

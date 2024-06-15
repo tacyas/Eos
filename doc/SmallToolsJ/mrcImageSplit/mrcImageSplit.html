@@ -1,0 +1,439 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageSplit</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageSplit<br></h2></b></font>
+	<h4>分割</h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>オプション</th>
+				<th>必須項目/選択項目</th>
+				<th>説明</th>
+				<th>デフォルト</th>
+			</tr>
+			<tr>
+				<td>-i</td>
+				<td>必須</td>
+				<td>入力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-o</td>
+				<td>選択</td>
+				<td>出力ファイル設定</td>
+				<td>　</td>
+			</tr>
+			<tr>
+				<td>-s</td>
+				<td>選択</td>
+				<td>出力ファイルの拡張子を設定</td>
+				<td>123068969643184-256.splt</td>
+			</tr>
+			<tr>
+				<td>-H</td>
+				<td>選択</td>
+				<td>分割する高さを設定（単位：ピクセル）</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-W</td>
+				<td>選択</td>
+				<td>分割する幅を設定（単位：ピクセル）</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-S</td>
+				<td>選択</td>
+				<td>分割する奥行きを設定（単位：ピクセル）</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-HA</td>
+				<td>選択</td>
+				<td>分割する高さを設定（単位：Å）</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-WA</td>
+				<td>選択</td>
+				<td>分割する幅を設定（単位：Å）</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-SA</td>
+				<td>選択</td>
+				<td>分割する奥行きを設定（単位：Å）</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-h</td>
+				<td>選択</td>
+				<td>ヘルプを表示</td>
+				<td>　</td>
+			</tr>
+		</table>
+
+	<br>
+	<h4>******実行例******</h4>
+	
+<!-- 入力ファイル説明 -->
+
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="b120-2.png" border="0" alt="b120-2.png(6742 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-65.0178<br>
+				94.4699<br>
+				4.85274<br>
+				20.4635<br>
+				0.255794<br></p>
+			</td>
+		</tr>
+	</table>
+	
+<!-- 実行結果 -->
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-H------</font></caption><br>
+	<div>H=40で出力</div>
+	<table>
+		<tr>
+			<td><img src="outdata.000000010000.png" border="0" alt="outdata.000000010000.png(3884 byte)" width="80" height="40"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-60.5052<br>
+				88.9113<br>
+				4.68432<br>
+				20.0171<br>
+				0.369447<br></p>
+			</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td><img src="outdata.000000000000.png" border="0" alt="outdata.000000000000.png(3870 byte)" width="80" height="40"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-65.0178<br>
+				94.4699<br>
+				5.02116<br>
+				20.8991<br>
+				0.369447<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-W------</font></caption><br>
+	<div>H=40,W=40で出力</div>
+	<table>
+		<tr>
+			<td><img src="outdata-HW40.000000010000.png" border="0" alt="outdata-HW40.000000010000.png(2487 byte)" width="40" height="40"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-56.108<br>
+				79.9537<br>
+				5.73245<br>
+				20.5557<br>
+				0.513893<br></p>
+			</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td><img src="outdata-HW40.000100010000.png" border="0" alt="outdata-HW40.000100010000.png(2437 byte)" width="40" height="40"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-60.5052<br>
+				88.9113<br>
+				3.63618<br>
+				19.4071<br>
+				0.485178<br></p>
+			</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td><img src="outdata-HW40.000000000000.png" border="0" alt="outdata-HW40.000000000000.png(2449 byte)" width="40" height="40"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-59.8818<br>
+				88.8519<br>
+				3.69428<br>
+				20.0424<br>
+				0.501061<br></p>
+			</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td><img src="outdata-HW40.000100000000.png" border="0" alt="outdata-HW40.000100000000.png(2449 byte)" width="40" height="40"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-65.0178<br>
+				94.4699<br>
+				6.34805<br>
+				21.6407<br>
+				0.541018<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-HA------</font></caption><br>
+	<div>HA=40で出力</div>
+	<table>
+		<tr>
+			<td><img src="outdata-HA40.000000020000.png" border="0" alt="outdata-HA40.000000020000.png(2642 byte)" width="80" height="23"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-60.5052<br>
+				88.9113<br>
+				4.45005<br>
+				19.5295<br>
+				0.455284<br></p>
+			</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td><img src="outdata-HA40.000000010000.png" border="0" alt="outdata-HA40.000000010000.png(2708 byte)" width="80" height="23"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-59.881<br>
+				94.4699<br>
+				13.0565<br>
+				24.2533<br>
+				0.565408<br></p>
+			</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td><img src="outdata-HA40.000000000000.png" border="0" alt="outdata-HA40.000000000000.png(2681 byte)" width="80" height="23"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-65.0178<br>
+				45.8985<br>
+				-0.326575<br>
+				16.1106<br>
+				0.37558<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-WA------</font></caption><br>
+	<div>HA=40,WA=40で出力</div>
+	<table>
+		<tr>
+			<td><img src="outdata-HAWA40.000000000000.png" border="0" alt="outdata-HAWA40.000000000000.png(1473 byte)" width="23" height="23"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-43.9472<br>
+				43.0007<br>
+				-0.315484<br>
+				16.0449<br>
+				0.697603<br></p>
+			</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td><img src="outdata-HAWA40.000000010000.png" border="0" alt="outdata-HAWA40.000000010000.png(1473 byte)" width="23" height="23"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-59.8818<br>
+				60.6978<br>
+				0.473833<br>
+				18.1245<br>
+				0.788022<br></p>
+			</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td><img src="outdata-HAWA40.000000020000.png" border="0" alt="outdata-HAWA40.000000020000.png(1473 byte)" width="23" height="23"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-56.108<br>
+				55.7056<br>
+				0.381432<br>
+				17.5204<br>
+				0.761755<br></p>
+			</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td><img src="outdata-HAWA40.000100000000.png" border="0" alt="outdata-HAWA40.000100000000.png(1462 byte)" width="23" height="23"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-65.0178<br>
+				44.4292<br>
+				-1.28081<br>
+				15.1889<br>
+				0.660389<br></p>
+			</td>
+		</tr>
+		<table>
+		<tr>
+			<td><img src="outdata-HAWA40.000100010000.png" border="0" alt="outdata-HAWA40.000100010000.png(1473 byte)" width="23" height="23"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-45.4312<br>
+				94.4699<br>
+				26.971<br>
+				23.7758<br>
+				1.03373<br></p>
+			</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td><img src="outdata-HAWA40.000100020000.png" border="0" alt="outdata-HAWA40.000100020000.png(1473 byte)" width="23" height="23"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-43.1625<br>
+				88.9113<br>
+				15.0495<br>
+				21.2102<br>
+				0.922182<br></p>
+			</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td><img src="outdata-HAWA40.000200000000.png" border="0" alt="outdata-HAWA40.000200000000.png(1473 byte)" width="23" height="23"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-43.5284<br>
+				45.8985<br>
+				0.0016561<br>
+				16.6479<br>
+				0.72382<br></p>
+			</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td><img src="outdata-HAWA40.000200010000.png" border="0" alt="outdata-HAWA40.000200010000.png(1473 byte)" width="23" height="23"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-40.1097<br>
+				90.3544<br>
+				18.5055<br>
+				23.5247<br>
+				1.02282<br></p>
+			</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td><img src="outdata-HAWA40.000200020000.png" border="0" alt="outdata-HAWA40.000200020000.png(1466 byte)" width="23" height="23"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-60.5052<br>
+				60.1675<br>
+				0.125983<br>
+				16.9499<br>
+				0.73695<br></p>
+			</td>
+		</tr>
+	</table>
+
+
+</body>
+</html>

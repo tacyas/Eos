@@ -1,0 +1,453 @@
+#!../Display2.HP 
+
+# From Arguments
+proc display2SetVar {} {
+	global mainImage
+	global Roi
+	global thresHigh
+	global thresLow
+	global Inverse
+	global Zoom
+
+
+	debugPrint "display2SetVar Start"	
+	if [ info exists thresHigh ] {
+		set mainImage(thresHigh) $thresHigh
+	} 
+	if [ info exists thresLow ] {
+		set mainImage(thresLow) $thresLow
+	}
+	if [ info exists Inverse ] {
+		set mainImage(Inverse) Yes
+	}
+	if { [ info exists Zoom ] } {
+		set Roi(Zoom) $Zoom 
+	}
+	debugPrint "display2SetVar End"	
+}
+
+# Set
+proc display2InitVar {} {
+	global mousePressed
+	global Roi
+	global Point
+	global rectanglePoints
+	global linePoints
+	global splinePoints
+	global LayerLine
+	global Projection 
+	global ctfInfo 
+	global LogFile
+
+	global Desktop
+	global CommandPut
+	global mainImage
+	global overviewImage 
+	global UnitCell
+	global Section
+
+	global roiInfoWin
+
+	# Global Variables from Display2 
+	global fileNameIn
+	global LogFile
+	global thresHigh 
+	global thresLow
+	global Inverse
+	global Zoom 
+
+	
+	debugPrint "display2InitVar Start"	
+
+	set tcl_precision 17 
+
+	# Canvas Area Create
+	set Desktop(mainCanvasX) 1999
+	set Desktop(mainCanvasY) 1999 
+	set Desktop(overviewCanvasX) 128 
+	set Desktop(overviewCanvasY) 128 
+	set Desktop(sizeX) 128 
+	set Desktop(sizeY) 128
+	set Desktop(Cursor) "crosshair red"
+	set overviewImage(image)  No
+
+	set mainImage(image)  No
+	set mainImage(width)  $Desktop(mainCanvasX)
+	set mainImage(height) $Desktop(mainCanvasY)
+	set mainImage(z)      0
+	set mainImage(mode)   R 
+	set mainImage(lx) 	  0 
+	set mainImage(ly) 	  0
+	set mainImage(lz)	  0 
+	set mainImage(max)  1.0
+	set mainImage(min)  0.0
+	set mainImage(PSScale) 0.2
+
+	set mainImage(thresHigh) No
+	set mainImage(thresLow)  No
+	set mainImage(Inverse) No
+
+	set mainImage(Contrast) 2
+
+	set mainImage(region) No 
+	set mainImage(width)  No 
+	set mainImage(height) No 
+	set mainImage(flagLog) 0 
+	set mainImage(flagPow) 0 
+	set mainImage(HistNum) 256 
+
+	# mousePressed
+	set mousePressed(mode) 0 
+	set mousePressed(startx) 0
+	set mousePressed(starty) 0
+	set mousePressed(endx) 0
+	set mousePressed(endy) 0
+
+	# Roi
+	#set Roi(Canvas) $Desktop(mainCanvas).canvas
+	set Roi(CurrentObject)  0
+	set Roi(OKColor)      #118866
+	set Roi(SelectColor)  #0000ff
+	set Roi(LineWidth)    3
+	set Roi(CurrentColor) $Roi(OKColor) 
+	set Roi(Shape)        Rectangle
+	set Roi(ShapeList)    "Rectangle TiltRectangle Line Spline" 
+	set Roi(Shrink)       1
+	set Roi(MultiShape)   Off 
+	set Roi(MultiNumber)  Off 
+	set Roi(SizeLock)     Off 
+	set Roi(AngleLock)    Off 
+	set Roi(Analysis)     Off 
+	set Roi(Action)       Create
+	set Roi(ActionList)   "Create Select Move Resize Rotate"
+	set Roi(View)         off 
+	set Roi(Extract)      foreground 
+	set Roi(withScale) Off
+	set Roi(absTicks)  54.6
+	set Roi(numFormat) "-%04d.roi"
+
+	if { [ info exists fileNameIn ] } {
+		set Roi(MontageFile)     [ string trimright $fileNameIn ".mrc" ].mon 
+		set Roi(InformationFile) [ string trimright $fileNameIn ".mrc" ].roiinfo 
+		set Roi(ROIFile)         [ string trimright $fileNameIn ".mrc" ]$Roi(numFormat)
+		set Roi(ShrinkOriginalFile)      [ string trimright $fileNameIn ".shrink"].mrc 
+	} else {
+		set Roi(MontageFile)     No.mon 
+		set Roi(InformationFile) No.roiinfo 
+		set Roi(ROIFile)         No-%04d.roi
+	}	
+	set Roi(CurrentID) 0
+	set Roi(TotalN)    0
+	#
+	set Roi(Zoom)         1
+	set Roi(ZoomX)        1
+	set Roi(ZoomY)        1
+
+	#
+	set roiInfoWin(top)   .roiInfo
+	set roiInfoWin(class) RoiInfo 
+	#
+	set Point(x) 0
+	set Point(y) 0 
+	set Point(dat) 0
+	set Point(cx) 0
+	set Point(cy) 0 
+	set Point(cdat) 0
+	#
+	set rectanglePoints(width)  128.0
+	set rectanglePoints(height) 128.0
+	set rectanglePoints(angle)    0.0 
+	set rectanglePoints(x0)       0.0 
+	set rectanglePoints(y0)       0.0 
+	set rectanglePoints(x1)       0.0 
+	set rectanglePoints(y1)       0.0 
+	set rectanglePoints(x2)       0.0 
+	set rectanglePoints(y2)       0.0 
+	set rectanglePoints(x3)       0.0 
+	set rectanglePoints(y3)       0.0 
+	#
+	set splinePoints(Width) 80
+	#set splinePoints(N)      0
+
+	set LayerLine(flag) OFF
+	set LayerLine(pointRadius) 3 
+	
+	set Projection(flag)  OFF
+	set Projection(which) Y
+	set Projection(scale) 1 
+
+	set UnitCell(n) 0
+	set UnitCell(dimension) 2
+	set UnitCell(axis1,n) 5 
+	set UnitCell(axis2,n) 5 
+	set UnitCell(axis3,n) 0 
+	set UnitCell(axis1,x) 1 
+	set UnitCell(axis1,y) 0 
+	set UnitCell(axis1,z) 0 
+	set UnitCell(axis2,x) 0 
+	set UnitCell(axis2,y) 1 
+	set UnitCell(axis2,z) 0 
+	set UnitCell(axis3,x) 0 
+	set UnitCell(axis3,y) 0 
+	set UnitCell(axis3,z) 1 
+
+	set UnitCell(box,x) 5  
+	set UnitCell(box,y) 5 
+	set UnitCell(box,z) 0 
+
+	set UnitCell(alpha) 90 
+	set UnitCell(beta) 90 
+	set UnitCell(gamma) 90 
+
+    set Section(Initialize) 1
+    set Section(flag)  OFF 
+    set Section(which) Y
+    set Section(scale) 1 
+    set Section(scaleDelta) 0.1 
+    set Section(at)    0   
+    set Section(atDelta)   1   
+    set Section(mode)  normal 
+    set Section(Num)   0   
+    set Section(Current) -1  
+    set Section(Win,Title) "Section Information"
+
+
+	debugPrint "display2InitVar End"	
+}
+
+proc display2InitVarSet  { filename } {
+	debugPrint "display2InitVarSet Start"
+
+	if [ file isdirectory "~/.Eos/" ] {
+		debugPrint "Already dir ~/.Eos/"	
+	} else {
+		puts "~/.Eos/ is created as default dir."
+		file mkdir "~/.Eos"
+	}
+
+	debugPrint "$filename"
+	set fpt [ open $filename a ]
+
+	debugPrint "Set Start"
+puts $fpt {
+#
+# Default
+#
+
+# Precision
+set tcl_precision 17 
+
+# Canvas Area Create
+set Desktop(mainCanvasX) 1999
+set Desktop(mainCanvasY) 1999 
+set Desktop(overviewCanvasX) 128 
+set Desktop(overviewCanvasY) 128 
+set Desktop(sizeX) 128 
+set Desktop(sizeY) 128 
+set Desktop(Cursor) "crosshair red"
+
+# Image 
+set mainImage(PSScale)   0.2
+set mainImage(thresHigh) No
+set mainImage(thresLow)  No
+set mainImage(Inverse)   No
+set mainImage(Contrast)   2
+set mainImage(flagLog)    0 
+set mainImage(flagPow)    0 
+set mainImage(HistNum)  256 
+
+# Roi
+set Roi(OKColor)        #118866
+set Roi(SelectColor)    #0000ff
+set Roi(LineWidth)      3
+set Roi(CurrentColor)   $Roi(OKColor) 
+set Roi(Shape)          Rectangle
+set Roi(Shrink)         1
+set Roi(MultiShape)     Off 
+set Roi(MultiNumber)    Off 
+set Roi(SizeLock)       Off 
+set Roi(AngleLock)      Off 
+set Roi(Analysis)       Off 
+set Roi(View)           off 
+set Roi(Extract)        foreground 
+set Roi(withScale)      Off
+set Roi(absTicks)       54.6
+set Roi(numFormat)      "-%04d.roi"
+
+# Zooming
+set Roi(Zoom)         1
+set Roi(ZoomX)        1
+set Roi(ZoomY)        1
+
+# Point 
+set Point(x) 0
+set Point(y) 0 
+set Point(dat) 0
+set Point(cx) 0
+set Point(cy) 0 
+set Point(cdat) 0
+
+# Roi Rectangle
+set rectanglePoints(width)  128.0
+set rectanglePoints(height) 128.0
+set rectanglePoints(angle)    0.0 
+
+# spline
+set splinePoints(Width)       80
+
+# LayerLine
+set LayerLine(flag) OFF
+set LayerLine(pointRadius) 3 
+
+# Projection Line
+set Projection(flag)  OFF
+set Projection(which) Y
+set Projection(scale) 1 
+
+# Unit Cell
+set UnitCell(n) 0
+set UnitCell(dimension) 2
+set UnitCell(axis1,n) 5 
+set UnitCell(axis2,n) 5 
+set UnitCell(axis3,n) 0 
+set UnitCell(axis1,x) 1 
+set UnitCell(axis1,y) 0 
+set UnitCell(axis1,z) 0 
+set UnitCell(axis2,x) 0 
+set UnitCell(axis2,y) 1 
+set UnitCell(axis2,z) 0 
+set UnitCell(axis3,x) 0 
+set UnitCell(axis3,y) 0 
+set UnitCell(axis3,z) 1 
+
+set UnitCell(box,x) 5  
+set UnitCell(box,y) 5 
+set UnitCell(box,z) 0 
+
+set UnitCell(alpha) 90 
+set UnitCell(beta)  90 
+set UnitCell(gamma) 90 
+
+# Section
+set Section(flag)       OFF 
+set Section(which)        Y
+set Section(scale)        1 
+set Section(scaleDelta) 0.1 
+set Section(at)           0   
+set Section(atDelta)      1   
+set Section(mode)    normal 
+}
+	close $fpt
+	debugPrint "display2InitVarSet End"
+}
+
+
+
+proc diplay2CanvasInit { } {
+	global Desktop
+	global Roi
+	global mainImage 
+
+	debugPrint "display2CanvasInit Start"
+	debugPrint "main     $Desktop(mainCanvasX) $Desktop(mainCanvasY)"
+	debugPrint "overview $Desktop(overviewCanvasX) $Desktop(overviewCanvasY)"
+
+	Canvas .overview_canvas $Desktop(overviewCanvasX) $Desktop(overviewCanvasY) 
+	Canvas .zoom_canvas     $Desktop(overviewCanvasX) $Desktop(overviewCanvasY) 
+
+	scrolledCanvas .main_canvas  $Desktop(sizeX)  $Desktop(sizeY) [ list 0  0 $Desktop(mainCanvasX) $Desktop(mainCanvasY) ]
+
+	set Desktop(mainCanvas)      .main_canvas
+	set Desktop(overviewCanvas)  .overview_canvas
+	set Desktop(zoomCanvas)      .zoom_canvas
+
+	# mrcImage Set
+	set mainImage(mainCanvas)     .main_canvas
+	set mainImage(overviewCanvas) .overview_canvas
+	set mainImage(zoomCanvas)     .zoom_canvas
+
+	set Roi(Canvas) $Desktop(mainCanvas).canvas
+}
+ 
+proc display2Init {} {
+	global mousePressed
+	global Roi
+	global Point
+	global rectanglePoints
+	global linePoints
+	global splinePoints
+	global LayerLine
+	global Projection 
+	global ctfInfo 
+	global LogFile
+
+	global Desktop
+	global CommandPut
+	global mainImage
+	global overviewImage 
+	global UnitCell
+
+	global roiInfoWin
+
+	# Global Variables from Display2 
+	global fileNameIn
+	global LogFile
+	global thresHigh 
+	global thresLow
+	global Inverse
+	global Zoom 
+	
+	global defaultFile
+
+	# Initial Variables
+	display2InitVar 
+	debugPrint "display2InitVar End"
+
+	# Load variables from defaultFile
+	if [ info exists defaultFile ] {
+		debugPrint "Already Exist a variable, defaultFile"
+	} else {
+		set defaultFile "~/.Eos/Display2"
+	}
+	if [ file exists $defaultFile ] {
+		#
+		debugPrint "Load parameters from $defaultFile"	
+	} else {
+		# Create initial ~/.Eos/Display2 
+		display2InitVarSet $defaultFile
+	}
+	source $defaultFile
+
+	# from arguments
+	display2SetVar
+
+	# CanvasCreate
+	diplay2CanvasInit
+
+	display2MenuSet
+	display2MenuSet2
+	display2BindingSet .main_canvas.canvas
+	display2DesktopSet
+	display2ETCSet
+
+	#
+	#
+	#
+	if [ info exists fileNameIn ] {
+		fileOpen $fileNameIn
+	} else {
+		set fileNameIn ./
+		wm title . Display2
+	}
+
+	# ctfInfoInit  $fileNameIn 
+
+	if [ info exists LogFile ] {
+		set CommandPut(name) $LogFile  
+		set CommandPut(fpt) [ open  $CommandPut(name) a ]
+	} else {
+		set CommandPut(name) "~/.EosLogFile" 
+		set CommandPut(fpt) [ open  $CommandPut(name) a ]
+	}
+}
+

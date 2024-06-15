@@ -1,0 +1,10 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: mrcImageList","Optional","1","1","In","inFileList","NULL"
+"-i2","-i[nput]","Input: AngularDistributionList","Optional","1","1","In2","inFileList","NULL"
+"-o","-o[utput]","Output: Result obtained by fitting procedure","Optional","1","1","Out","outFile","stdout"
+"-O","-O[utput]","Output: Estimated scattering: add this value to input filename","Optional","1","1","Out2","String",".estimate"
+"-MolecEnv","-Molec[ular]Env[elope]","Input [A]: Spread : Assign molecular envelope as Gaussian","Optional","1","1","MolecEnv","Real","50"
+"-MolecEnv2","-Molec[ular]Env[elope]2","Input filename: Scattering Factor suggested by Table","Optional","1","1","MolecEnvFile","String","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

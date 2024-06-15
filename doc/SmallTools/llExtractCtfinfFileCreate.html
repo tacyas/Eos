@@ -1,0 +1,25 @@
+<HTML>
+<HEAD>
+<TITLE>llExtractCtfinfFileCreate</TITLE>
+</HEAD>
+<BODY>
+<H1>llExtractCtfinfFileCreate</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: llExtractCtfinfFileCreate
+Options:
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-FirstZero          FirstZero           (0.02      ).as(Real                ) ] :Optional  :FirstZeroPoint[1/A]
+    [-df                 Defocus             (27000     ).as(Real                ) ] :Optional  :Defocus[A]:under(+)
+    [-A                  AoverP              (0.05      ).as(Real                ) ] :Optional  :AmplitudeContrast/PhaseContrast
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+----- mode -----
+0: make CTFInformation file 1
+   (-df or -FirstZero) and -A
+1: make CTFInformation file 2
+   -df and -A
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,20 @@
+#!../I686LINUX/Visualmake
+
+if [catch {open "Makefile" r} file1] {
+	puts stderr "Cannot open Makefile : $file1 "
+} else {
+	while {[gets $file1 line] >=0} {
+		if {[string last "::" "$line"] !=-1} {
+			set suffix "[string trim "$line" "::"]"
+			button .[string tolower $suffix] -text $suffix -command { 
+				if { [ catch { eval [ exec make $suffix >> .make.log ] } fid ] }  {
+					puts "some error. \n$fid"
+				}
+			}
+			pack .[string tolower $suffix] -side top 
+		}	
+	}
+}
+	button .variable -text chVar -command { exec ./Variable.wish }
+	button .quit -text quit -command { exit }
+	pack .quit .variable -side bottom -side left

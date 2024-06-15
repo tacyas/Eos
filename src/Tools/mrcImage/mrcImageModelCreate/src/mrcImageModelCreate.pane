@@ -1,0 +1,37 @@
+-F 4.3 1 0 52x1+0+0 +0+0 'Cantata' cantata
+  -M 1 1 52x1+0+0 +1+0 ' ' subform
+    -P 1 0 52x1+0+1 +0+0 ' ' mrcImageModelCreate
+      -D 1 0 9x1+0+0 'Options' _gui_options
+        -H 1  6x1+0+0 'License' 'license' $BOOTSTRAP/repos/license/License license
+        -E
+        -R 1 0 1 5x1+35+0 'Run' 'execute operation' $EOS/bin/mrcImageModelCreate
+        -H 1  5x1+41+0 'Help' 'help page' $EOS/src/Tools/mrcImage/mrcImageModelCreate/doc/mrcImageModelCreate.doc help
+        -Q 1 0 5.25x1+47+0 'Close'
+        -O 1 0 1 1 0 1 -1x1+1+1.500000 ' ' 'Out' 'OutputDataFile' o
+        -I 1 0 1 0 0 1 -1x1+1+3.000000 ' ' 'In' 'InputDataFile' i
+        -i 1 0 1 0 0 -1x1+1+4.500000 0 0 70 0 0 'nx' 'Real length = nx * lx' nx
+        -i 1 0 1 0 0 -1x1+1+6.000000 0 0 70 0 0 'ny' 'Real length = ny * ly' ny
+        -i 1 0 1 0 0 -1x1+1+7.500000 0 0 100 0 0 'nz' 'Real lenght = nz * lz' nz
+        -i 1 0 1 0 0 -1x1+1+9.000000 0 0 1 0 0 'r' 'Radius[pixel]' r
+        -i 1 0 1 0 0 -1x1+1+10.500000 0 0 1 0 0 'l' 'Length[pixel]' l
+        -f 1 0 1 0 0 -1x1+1+12.000000 0 0 5.000000 0 0 0 'lx' 'Pixel Size[Angstrom]' lx
+        -f 1 0 1 0 0 -1x1+1+13.500000 0 0 5.000000 0 0 0 'ly' 'Pixel Size[Angstrom]' ly
+        -f 1 0 1 0 0 -1x1+1+15.000000 0 0 5.000000 0 0 0 'lz' 'Pixel Size[Angstrom]' lz
+        -f 1 0 1 0 0 -1x1+1+16.500000 0 0 150.000000 0 0 0 'radius' 'filament radius [A]' radius
+        -i 1 0 1 0 0 -1x1+1+18.000000 0 0 3 0 0 'nHelix' 'n-helix' n
+        -f 1 0 1 0 0 -1x1+1+19.500000 0 0 143.000000 0 0 0 'zPitch' 'pitch [A]' dz
+        -f 1 0 1 0 0 -1x1+1+21.000000 0 0 40.000000 0 0 0 'deltaPhi' 'rotation angle [degree]' dphi
+        -f 1 0 1 0 0 -1x1+1+22.500000 0 0 120.000000 0 0 0 'phiAngle' 'rotation angle in the same level [degree]' phi
+        -f 1 0 1 0 0 -1x1+1+24.000000 0 0 0.000000 0 0 0 'startZ' 'start z [A]' sz
+        -f 1 0 1 0 0 -1x1+1+25.500000 0 0 500.000000 0 0 0 'endZ' 'end z [A]' ez
+        -f 1 0 1 0 0 -1x1+1+27.000000 0 0 0.000000 0 0 0 'startPhi' 'start angle [degree]' sphi
+        -f 1 0 1 0 0 -1x1+1+28.500000 0 0 40.000000 0 0 0 'startPhi2' 'start angle 2 [degree]' sphi2
+        -i 1 0 1 0 0 -1x1+1+30.000000 0 0 0 0 0 'inMode' 'inMode' inMode
+        -i 1 0 1 0 0 -1x1+1+31.500000 0 0 9 0 0 'units' 'units number' units
+        -i 1 0 1 0 0 -1x1+1+33.000000 0 0 0 0 0 'fm' 'formation' fm
+        -I  1 0 0 1 0 1 -1x1+1+34 ' ' '0' 'min' value-range
+        -I 1 0 1 0 0 1 -1x1+1+36.000000 ' ' 'configFile' 'ConfigurationFile' c
+        -i 1 0 1 0 0 -1x1+1+37.500000 0 0 0 0 0 'mode' 'Mode' m
+    -E
+  -E
+-E

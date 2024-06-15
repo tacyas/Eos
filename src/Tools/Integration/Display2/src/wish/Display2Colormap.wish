@@ -1,0 +1,6 @@
+proc colormapChange { } {
+	global mainImage
+
+	$mainImage configure 
+}
+

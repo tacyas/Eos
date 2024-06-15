@@ -1,0 +1,14 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputList","Essential","1","1","In","inFileListNoOpen","NULL"
+"-A","-A[verage]","Output: Average","Optional","1","1","Avg","outFile","NULL"
+"-TrimmedA","-TrimmedA[verage]","Output: TrimmedAverage","Optional","1","1","TrimmedAvg","outFile","NULL"
+"-M","-M[edian]","Output: Median","Optional","1","1","Median","outFile","NULL"
+"-SN","-SN","Output: SN:=Average/SD","Optional","1","1","SN","outFile","NULL"
+"-t","-t","Output: t=:Average/SD/sqrt(n-2)","Optional","1","1","t","outFile","NULL"
+"-SE","-SE","Output: Standard Error","Optional","1","1","SE","outFile","NULL"
+"-SD","-SD","Output: Standard Deviation","Optional","1","1","SD","outFile","NULL"
+"-Var","-Var","Output: Variance","Optional","1","1","Var","outFile","NULL"
+"-Trimmed","-Trimmed","TrimmedRange::Real","Optional","1","1","TrimmedRange","Real","0.1"
+"-c","-c[onfigFile]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

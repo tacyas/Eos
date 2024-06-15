@@ -1,0 +1,24 @@
+<HTML>
+<HEAD>
+<TITLE>mrcImageNeuralNetParticleLearning</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageNeuralNetParticleLearning</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageNeuralNetParticleLearning
+Options:
+    [-i[nput]p[ositive]  InPositive          (NULL      ).as(inFileList          ) ] :Essential :Input: partile image list filename
+    [-i[nput]n[egative]  InNegative          (NULL      ).as(inFileList          ) ] :Essential :Input: background image list filename
+    [-o[utput]           Out                 (NULL      ).as(outFileList         ) ] :Essential :Output: Neural Net Parameters after Learning
+ 			FileNameOfWeightForTheBelowLayer NumOfCellOfThisLayer BiasOfThisLayer
+    [-B[ias0]            Bias                (1.0       ).as(Real                ) ] :Optional  :Bias: The value of the bias of the input layer
+    [-max[Counter]       MaxCounter          (10        ).as(Integer             ) ] :Optional  :MaxCounter
+    [-EPS                EPS                 (0.005     ).as(Real                ) ] :Optional  :Final Error
+    [-lambda             Lambda              (0.1       ).as(Real                ) ] :Optional  :step for backpropagation
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+</PRE>
+</BODY>
+</HTML>

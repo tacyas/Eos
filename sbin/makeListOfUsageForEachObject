@@ -1,0 +1,91 @@
+#!/usr/bin/sh
+
+callFile=$1
+toolFile=$2
+objectFile=$3
+tmpFileList0=.tmp0
+
+if [ -f $tmpFileList0 ] ; 
+then
+	rm $tmpFileList0
+fi
+
+echo "start"
+awk ' \
+	{  \
+		if($1!="") { \
+			objname=$1; \
+			name=sprintf("%s-object.html",objname); \
+			print "<H1> Declaration Source </H1>" > name; \
+			for(i=2; i<=NF; i++) { \
+				print $i "<BR>" >> name; \
+				print objname; \
+			} \
+		} \
+	} \
+' $objectFile >> $tmpFileList0
+
+echo "2nd Step"
+awk ' \
+	{  \
+		if($1!="") { \
+			objname=$1; \
+			name=sprintf("%s-call.html",objname); \
+			print "<H1> Related Object List </H1>" > name; \
+			for(i=2; i<=NF; i++) { \
+				print $i "<BR>" >> name; \
+				print objname; \
+			} \
+		} \
+	} \
+' $callFile >> $tmpFileList0
+
+echo "3rd Step"
+awk ' \
+	{ \
+		if($1!="") { \
+			objname=$1; \
+			name=sprintf("%s-tool.html",objname); \
+			print "<H1> Related Tool List </H1>" > name; \
+			for(i=2; i<=NF; i++) { \
+				print $i "<BR>" >> name; \
+				print objname; \
+			} \
+		} \
+	} \
+' $toolFile >> $tmpFileList0
+
+echo "Last Step"
+OBJLIST=`sort $tmpFileList0 | uniq`
+for name in $OBJLIST ; 
+do
+	echo $name
+	nameobj="${name}-object.html"
+	namecall="${name}-call.html"
+	nametool="${name}-tool.html"
+	filename="${name}.html"
+	echo "<HTML>"     >  $filename
+	echo "<BODY>"     >> $filename
+	if [ -f $nameobj ] ;
+	then
+		echo $nameobj
+		cat $nameobj >> $filename
+		rm  $nameobj
+	fi
+	if [ -f $namecall ] ;
+	then
+		echo $namecall
+		cat $namecall >> $filename
+		rm  $namecall
+	fi
+	if [ -f $nametool ] ;
+	then
+		echo $nametool
+		cat $nametool >> $filename
+		rm  $nametool
+	fi
+	echo "</BODY>"    >> $filename
+	echo "</HTML>"    >> $filename
+done
+
+rm $tmpFileList0

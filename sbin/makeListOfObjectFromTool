@@ -1,0 +1,28 @@
+#!/usr/bin/sh
+
+toolsDir=$1
+dstFile=$2
+
+rm -f .dependency
+rm -f $dstFile 
+
+currentDir=`pwd`
+cd $toolsDir
+FILES=`ls -1` 
+for name in $FILES; do
+	nm $name | awk -v Name=$name '$2=="T" {printf("%s \t%s\n", $3, Name)}' >> $currentDir/.dependency;
+done
+cd $currentDir
+sort .dependency | awk '\
+BEGIN {NAME=""} \
+{ \
+	if(NAME==$1) {\
+		printf("\t%s",$2);\
+	} else { \
+		if(NAME!="") { \
+			printf("\n"); \
+		} \
+		printf("%s\t%s",$1,$2); \
+		NAME=$1; \
+	} \
+}' >> $dstFile 

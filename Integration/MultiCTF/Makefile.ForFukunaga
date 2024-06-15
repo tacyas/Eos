@@ -1,0 +1,120 @@
+# CTF Compensation
+.SUFFIXES: .tif .mrc .prectf .fft .ctfinfo .ctf .low
+.SUFFIXES: .ctfref .ctfref-center .ctflst .ctfinfolst .ctffit-corinfo .ctffit .ctffitlst .mulctf .mulctf2
+
+-include FILELIST.inc
+-include CTFLIST.inc
+
+mrc:$(FILELIST:.tif=.mrc)
+prectf:$(FILELIST:.tif=.prectf)
+fft:$(FILELIST:.tif=.fft)
+ctfinfo:$(FILELIST:.tif=.ctfinfo)
+ctf:$(FILELIST:.tif=.ctf)
+low:$(FILELIST:.tif=.low)
+
+FILELIST::
+	rm -f FILELIST.inc
+	echo FILELIST=\\\\                       > FILELIST.inc 
+	ls -1 *.tif | sed -e s/\\.tif/.tif\\\\/ >> FILELIST.inc 
+	echo ""                                 >> FILELIST.inc
+
+
+ctfinfolst:$(CTFLIST:.ctflst=.ctfinfolst)
+ctffitlst:$(CTFLIST:.ctflst=.ctffitlst)
+ctffit:$(CTFLIST:.ctflst=.ctffit)
+mulctf:$(CTFLIST:.ctflst=.mulctf)
+
+CTFLIST::
+	rm -f CTFLIST.inc
+	echo CTFLIST=\\\\                              > CTFLIST.inc 
+	ls -1 *.ctflst | sed -e s/\\.ctflst/.ctflst\\\\/ >> CTFLIST.inc 
+	echo ""                                       >> CTFLIST.inc
+
+CCD=14.0
+SmoothingResolution=0.1
+SmoothingMode=4
+
+WindowingRangeIn=0.3
+WindowingRangeOut=0.2
+WindowingMode=18
+##
+#
+# Single CTF compenstaion 
+# 
+##
+
+.tif.mrc:
+	RESOLUTION=`tiffinfo $*.tif | awk ' /Resolution:/ { print 1/$$2*1e8 }'`; \
+	tiff2mrc -i $*.tif -o $*.mrc  -r $$RESOLUTION 
+
+.mrc.prectf:
+	ln -sf $*.mrc $*.prectf
+
+.prectf.fft:
+	mrcImageFFT -i $*.mrc -o $*.fft
+
+.fft.ctfinfo:
+	if [ ! -f $*.ctfinfo ] ; then  \
+		if [ -f default.ctfinfo ] ; then \
+			cp default.ctfinfo $*.ctfinfo ; \
+		fi ; \
+	fi 
+	ctfDisplay -i $*.fft -o $*.ctfinfo
+
+.ctfinfo.ctf:
+	mrcImageCTFCompensation -i $*.fft -o $*.ctf -info2 $*.ctfinfo -m 1
+
+.ctf.low:
+	mrcImageLowPassFilter -i $*.ctf -o $*.low -m $(SmoothingMode) -hvp $(SmoothingResolution)
+
+##
+#
+# Multi CTF Compenstaion
+#
+##
+
+.ctflst.ctfinfolst:
+	sed -e s/.ctf/.ctfinfo/ $*.ctflst > $*.ctfinfolst
+
+.ctfref.ctfref-center:
+	mrcImageWindowing -i $*.ctfref -o $*.ctfref-center0 -W $(WindowingRangeIn) $(WindowingRangeOut) $(WindowingRangeIn) $(WindowingRangeOut)  -m $(WindowingMode) 
+	mrcImageLowPassFilter  -i $*.ctfref-center0 -o $*.ctfref-center1 -m 4 -hvp 0.1  
+	mrcImageHighPassFilter -i $*.ctfref-center1 -o $*.ctfref-center  -m 2 -hvp 0.001 -w 0.001  
+
+.ctflst.ctffitlst:
+	sed -e s/.ctf/.ctffit/ $*.ctflst > $*.ctffitlst
+
+.ctfinfolst.ctffit:
+	# Preparation
+	make $*.ctfref-center 
+	make $*.ctffitlst
+	# Execution 
+	for i in `cat $*.ctflst`; do \
+		echo $$i; \
+		name=`basename $$i .ctf`; \
+		make REF=$*.ctfref-center $$name.ctffit-corinfo ; \
+		make REF=$*.ctfref-center $$name.ctffit ; \
+	done
+	touch $*.ctffit
+
+#
+#
+.ctf.ctffit-corinfo:
+	mrcImageAutoRotationCorrelation -i $*.ctf -O $*.ctffit-corinfo -r $(REF) -range -5 5 -n 10 -Iter 3 -m 18 -RefineMode 1 -Method 0 
+
+.ctffit-corinfo.ctffit:
+	XSHIFT=`awk '/Cor/ {print -1*$$10}' $*.ctffit-corinfo `; \
+	YSHIFT=`awk '/Cor/ {print -1*$$11}' $*.ctffit-corinfo `; \
+	ANGLE=`awk  '/Cor/ {print -1*$$8}' $*.ctffit-corinfo `; echo $$XSHIFT; echo $$YSHIFT; echo $$ANGLE; \
+	mrcImageMove -i $*.ctf -o $*.ctf-move -x $$XSHIFT -y $$YSHIFT ; \
+	mrcImageRotation -i $*.ctf-move -o $*.ctffit-prerefine -a $$ANGLE -m 2 -Periodic
+	mrcImageCorrelation -i $*.ctffit-prerefine -o $*.ctffit-cor -O $*.ctffit-cor2 -s $*.ctffit -r $(REF) -refine 0.2 2 2 -m 18 -M 0 
+
+.ctffit.mulctf:
+	mrcImageMultiCTFCompensation -i $*.ctffitlst -info2 $*.ctfinfolst -o $*.mulctf -MaxIter 2 -ctfMode 33 -W 1.0 -WR 0.2 -m 17 -MaxIter 2 -solventMode 0 -solventSTD -0.0  
+
+.ctffit.mulctf2:
+	mrcImageMultiCTFCompensation -i $*.ctffitlst -info2 $*.ctfinfolst -o $*.mulctf2 -MaxIter 2 -ctfMode 33 -W 1.0 -WR 0.2 -m 16 -MaxIter 2 
+
+#
+#

@@ -1,0 +1,16 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-s","-s[ignal position]","File to define position of signal","Essential","1","1","Signal","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-r","-r[ange]","Search range of shift.Default:Nx","Optional","1","1","range","Integer","0"
+"-d","-d[elta]","Spacing of molecule(Pixel).","Optional","1","1","delta","Real","1.0"
+"-T","-T[eperature]","Initial temperature.","Optional","1","1","temperature","Real","1.0"
+"-iter","-iter[ation]","Number of iteration before reducing temperature.","Optional","1","1","iter","Integer","1000"
+"-eps","-eps[ilon]","Temperature(T) reduced to (1-epsilon)T.","Optional","1","1","eps","Real","0.001"
+"-tol","-tol","Number to identify convergence","Optional","1","1","tol","Real","1e-2"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"
+"-M","-M[ode2]","Mode2","Optional","1","1","mode2","Integer","0"
+
+

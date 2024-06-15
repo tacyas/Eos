@@ -1,0 +1,17 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: PDB","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","Output: MRC","Essential","1","1","Out","outFile","NULL"
+"-N","-N","Input: Nx Ny [pixel]","Optional","2","1","Nx","Integer","2048","2","Ny","Integer","2048"
+"-d","-d","Input: dx dy [A]","Optional","2","1","dx","Real","1.72","2","dy","Real","1.72"
+"-Centre","-Centre","Input: CentreX CentreY [A]","Optional","3","1","cx","Real","0","2","cy","Real","0","3","cz","Real","0"
+"-n","-n","Input: nx ny for subimage [pixel]","Optional","2","1","nx","Integer","64","2","ny","Integer","64"
+"-kV","-kV","kV ","Optional","1","1","kV","Real","200."
+"-Cs","-Cs","Cs ","Optional","1","1","Cs","Real","1.7"
+"-df","-d[e]f[ocus]","Defocus [A] at z = 0","Optional","1","1","Defocus","Real","10000"
+"-A","-A[overP]","AoverP","Optional","1","1","AoverP","Real","0.07"
+"-Ain","-Ain","Beta: IlluminationAngle [mrad]","Optional","1","1","Ain","Real","0.2"
+"-ctfMode","-ctfMode","ctfMode","Optional","1","1","ctfMode","Integer","33"
+"-EA","-E[uler]A[ngle]","EulerAngle: [degree]","Optional","4","1","EulerAngle","String","XEYS","2","Rot1","Real","0","2","Rot2","Real","0","4","Rot3","Real","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

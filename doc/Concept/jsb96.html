@@ -1,0 +1,335 @@
+<BODY bgcolor="#ffffcc">
+<CENTER>
+<H1>
+Extensible and Object-oriented System (Eos) 
+Supplies a New Environment for Image 
+Analysis of Electron Micrographs of 
+Macromolecules
+</H1>
+
+<AUTHOR>
+Takuo Yasunaga and Takeyuki Wakabayashi <P>
+</AUTHOR>
+
+<EM>
+Department of Physics, School of Science, University of Tokyo
+7-3-1 Hongo, Bunkyo-ku, Tokyo, 113, JAPAN <P>
+</EM>
+
+---- Short Running ----<BR>
+Extensible system for macromolecular structure analysis
+
+</CENTER>
+
+<H2>ABSTRACT</H2>
+<STRONG>
+	To study macromolecular structure by electron microscopy, a highly 
+extensible and object-oriented system has been developed for image analysis.  
+This system is named 'Eos' (Extensible and object-oriented system).  The system 
+described here supplies an environment with four types of supports: (i) a group of 
+small tools for image analysis, (ii) tools for integration of small tools, such as 
+'Display2', (iii) tools for development, such as 'maketool', and (iv) object-oriented 
+libraries for development of new tools.  Using 'Eos', electron micrographs can be 
+analysed by small tools and integration tools.  Also, 'Eos' can be used to develop 
+new tools based on new ideas because development tool and object-oriented 
+libraries are provided.  The examples of implemented small tools for image 
+analysis include three-dimensional reconstruction of objects with helical 
+symmetry, cluster analysis and contour expression.
+</STRONG>
+<H2>INTRODUCTION</H2>
+	The function of macromolecules, such as protein and DNA, is attributable 
+to their structure.  X-ray crystallography and nuclear magnetic resonance 
+(NMR) are useful to elucidate their structure at atomic level.  In the field of 
+macromolecular structure research, electron microscopy also has helped to 
+elucidate structure at atomic level (Henderson et al., 1990) and single particle 
+structure of macromolecules (Frank & Randermacher, 1992; van Heel & Frank, 
+1981).  We have also studied the structure of actin filaments and thin filaments 
+(Wakabayashi et al., 1975), complexes of actin filaments and myosin 
+subfragment-1 (Toyoshima & Wakabayashi, 1985) and F1-ATPase structure 
+(Fujiyama et al., 1990).  To study the structure of individual molecules, electron 
+microscopy is better than X-ray diffraction or NMR, because two-dimensional 
+projections of specimens can be obtained directly.  Electron microscopy is in the 
+phase of technical development, and new ideas for image analysis should be tried 
+to obtain new structural information.  Therefore, we require an extensible 
+environment where we can test new ideas for image analysis easily and quickly.
+<P>	Some useful and powerful tools and packages such as FRODO (Jones, 
+1978; Jones, 1982), O (Jones, 1991) and X-plor (Bruger, 1992) have been supplied 
+for the study of structures using X-ray diffraction and NMR.  Many packages 
+such as SPIDER (Frank et al., 1981), Tools for MRC (Moore et al., 1970; DeRosier 
+and Moore, 1970; Wakabayashi et al., 1975; Amos and Klug, 1975), IMAGIC-5 
+(van Heel and Keegstra, 1981), SUPRIM (Stoops et al., 1991), and SEMPER 
+(Saxton et al., 1979) have been also developed for electron microscopy.  We have 
+developed tools required to analyse images of electron micrographs and have 
+recognised the importance of an environment suitable for developing new tools.
+<P>	Some packages for general image analysis have been also supplied in the 
+public domain.  The 'Khoros' system (Konstatinides & Rasure, 1994) is one of the 
+most powerful and extensible systems that can analyse multi-dimensional 
+images.  However, it is difficult to use it, because this system requires a 
+considerable commitment of resources and expertise.
+<P>	To overcome such difficulties, we have developed an extensible 
+environment following the methods used by the 'Khoros' system to achieve 
+extensibility.  Because the essence of extensibility achieved by 'Khoros' is 
+integration of small smart tools on 'cantata', a visual language, we constructed a 
+group of small tools and additional tools with which to integrate these together.  
+Furthermore, we constructed object-oriented libraries to improve extensibility 
+and productivity.
+<P>	Thus, the image analysis environment, which is named 'Eos' (Extensible 
+object-oriented system), has been developed.  At present, the system supplies 
+four types of support to analyse images and to develop new tools: (i) a group of 
+small tools for image analysis and three-dimensional reconstruction of objects 
+with helical symmetry, (ii) integration tools such as 'Display2' and examples of 
+'makefile', (iii) tools for development such as 'maketool', and (iv) object-oriented 
+libraries for development of new tools.  We describe the 'Eos' development 
+technique, how to use a group of image analysis tools, and how to develop new 
+analysis tools. 
+
+
+<H2>MATERIALS AND METHODS</H2>
+<P>	'Eos' system has been developed on UNIX workstations (HP9000/735, 
+Hewlett Packard and Domain series, Apollo Inc.).  'Eos' was written in the 
+ANSI-based C-language using an X-window interface.  Originally, graphical 
+tools such as 'Display2' have been developed on Apollo Domain series because 
+useful two-dimensional and three-dimensional graphical libraries were available.  
+X11R5, Xtoolkit, and Motif libraries must be installed on workstations to use 
+graphical tools, because the tools have been ported to X-Window system (X11R5) 
+with Motif widgets to achieve general portability.
+<P>	Manuals are supplied as plain texts and HTML-formatted texts and are 
+also available on a WWW server (html://tkyemghp.phys.s.u-tokyo.ac.jp/Eos).  
+Plain and HTML manuals of each tool can be also obtained by using '-h' and '-
+html' options, respectively.  Each of the tool manuals is almost completed, and 
+general manuals are now being prepared.
+
+<H2>RESULTS</H2>
+<H3>'Eos' system concept</H3>
+	Figure 1 shows the concept of 'Eos', the environment for image analysis 
+and tool development.  'Eos' supplies four types of support: (i) a group of small 
+tools for image analysis such as three-dimensional reconstruction of objects with 
+helical symmetry, (ii) tools for integration of small tools, such as 'Display2' and 
+examples of 'makefile', (iii) tools for development such as 'maketool', and (iv) a 
+group of objects, i.e., object-oriented libraries.  The two former supports are used 
+to analyse images of electron micrographs and two latter supports are used to 
+develop new tools.
+
+<H3>The group of small tools and integration tools</H2>
+	Using this group of small tools, 'Eos' users can analyse images of electron 
+micrographs.  'Eos' supplies more than fifty small tools, such as histogram 
+normalisation, median filter, low/high/band pass filtering, image correlation, 
+Fourier and Fourier-Bessel transform, calculating angular distribution in 
+Fourier space, printing images and contour maps, CTF correction. Cluster 
+analysis using the 'distance' array and three-dimensional reconstruction of 
+objects with helical symmetry can also be performed by combination of these 
+small tools. 
+<P> Figure 2 shows an example of a three-dimensional reconstruction of 
+objects with helical symmetry using 'Eos'.  Theories and fitting procedures for 
+three-dimensional reconstruction were developed according to DeRosier and 
+Moore (1970), Wakabayashi et al. (1975), and Amos and Klug (1975).  A flow 
+chart to obtain a three-dimensional image is shown in Fig. 2a.  This indicates 
+that the reconstruction is performed by a combination of small tools.  The 
+examples of 'Makefile' to integrate these small tools is also shown in Fig. 2b.  
+Using this 'Makefile', the three-dimensional reconstruction of a filament in Fig. 
+3a is achieved by simply entering 'make' from a keyboard.
+<P> Figure 3 shows the result of image analysis.  The three-dimensional 
+image shown in Fig. 3c was reconstituted from the projected and low pass filtered 
+image of an atomic model of actin filaments proposed by Lorenz et al. (1993).  
+The tools of 'Eos' were used to read atomic coordinates from the Protein Data 
+Bank, obtain the low pass filtered projected densities shown in Fig. 3a from 
+atomic coordinates and reconstituted three-dimensional densities.  In Fig. 3b 
+the contour maps of two horizontal sections at different z-coordinates are shown.  
+Because 'Eos' does not support volume rendering or solid modelling yet, the solid 
+model shown in Fig. 3c was produced by 'xds' supplied by NCSA.  To use such 
+tools, many file-format converters such as mrc2hdf (mrcImage format to HDF by 
+NCSA), mrc2viff (mrcImage format to Khoros format), mrc2tiff (mrcImage format 
+to TIFF format), are provided.
+<P> Cluster analysis is an important technique in single particle analysis to 
+determine orientation of particles (van Heel & Frank, 1981).  Using 'Eos', we 
+applied it to actin filaments.  Phase residuals (Wakabayashi et al., 1975; Amos 
+& Klug, 1975) were used as the 'distance' which provides the measurement of the 
+difference between images.  This approach was useful for structural analysis of 
+actin filaments, because the change of subdomain arrangement could be detected.  
+The tools for cluster analysis ("llFit", "clustShow", and "arrayClust") can be also 
+integrated into a 'makefile'.
+<P> Both examples show that the integration of small tools by a UNIX 'make' 
+tool is useful.  Updated data can be obtained at the required time.  Thus, we 
+propose an idea for using UNIX 'make' to concatenate or pipeline small tools into 
+one integrated tool, while 'make' is usually used to create executables from source 
+codes. 
+<P> Another integration tool supplied by 'Eos' is 'Display2'.  This tool is 
+suitable for interactive image analysis, e.g. to extract a region of interest. Image 
+analysis techniques which need an interactive process can be integrated with 
+'Display2', because this tool has the ability to evoke further small tools.
+
+<H3>Development tools and object-oriented libraries</H3>
+<P>	'Eos' supplies development tools such as 'maketool' and object-oriented 
+libraries to enable easy development and installation of new tools as shown in 
+Fig. 1. <P>
+<P>	The 'maketool', which is a shell program, produces a special directory 
+structure and prototypes of source codes.  If a new tool named 'tool' is required to 
+be developed, 'maketool' supplies prototypes of one header file (tool.h) and five 
+source files (tool.c, argCheck.c, usage.c, init.c, util.c).  Required values and 
+information can be introduced into source codes interactively by using 'maketool'.  
+The required information can be obtained from options of tools, a control file or 
+both, whereas the way to input required data is described in 'Makefile' as shown 
+in Fig. 2b.  One can concentrate on the coding of "tool.c", because it is not 
+necessary to modify most of the other source files such as "tool.h", "usage.c", 
+"argCheck.c", or "init.c" if 'maketool' is used.  This feature is also useful for 
+documentation. <P>
+<P>	Furthermore, the development procedures of new tools are supported by 
+object-oriented libraries.  Tools can be modified or developed in a short time, 
+because source-format is well-defined.  The detailed method for developing a 
+new tool is described in manuals.<P>
+<P>	Table 1 shows representative objects supported by 'Eos'.  Objects are 
+classified in three classes, i.e., 'General', 'DataManipulation', and 
+'DataExpression'.  Tools for analysis have been created with combining these 
+objects.  An 'mrcImage' object is important, because it is tightly related to image 
+data files of MRC format, i.e., CCP4 map format.  Because both tools for electron 
+microscopy by MRC and tools for X-ray crystallography by CCP4 can be applied to 
+the files with MRC-format, an 'mrcImage' object is useful for comparing three-
+dimensional images reconstituted from electron micrographs with atomic 
+structure obtained by X-ray crystallography.
+
+<H2>DISCUSSION</H2>
+<P>
+	The goal of this system, 'Eos', is to supply an extensible environment for 
+the image analysis of macromolecular structure.  The extensibility described 
+here suggests both easy integration of small tools in analysing images and easy 
+development of new tools.  We realised or implemented this extensibility by 
+supplying four types of supports as shown in Fig. 1.
+<P>
+	'Eos' supplies examples of 'makefile' for integration of small tools as 
+shown in Fig. 1 and 2b.  We are modifying 'Display2' so as to integrate new 
+small tools into 'Display2' using a control file to minimise necessary modification 
+of source codes.  When it is completed, 'Display2' will become more convenient.
+<P>
+	'Eos' supplies prototypes of source codes using 'maketool' and object-
+oriented libraries as shown in Fig. 1.  Easy and quick development of new tools 
+enabled us to rapidly increase the number of supported tools for image analysis in 
+our laboratory.  In the future, modification of development tools such as 
+'maketool' will be improved by adopting a visual dialogue. Object-oriented 
+libraries will be also improved by adding new functions and adopting the C++ 
+language.
+
+<H2>Acknowledgement</H2>
+	We thanks Drs K. Mitsuoka and S. Nagashima for useful discussions in 
+developing "Eos" system.  This work was supported by the grants: the Grant-in-
+Aid for Encouragement of Young Scientists and the grant from the JSPS 
+Fellowships for Japanese Junior Scientists to T.Y. and the Grant-in-Aid for 
+Specially Promoted Research from the Ministry of Education, Science and 
+Culture of Japan to T.W. and the grant from the Biodesign Program, RIKEN to 
+T.W. 
+
+<H2>REFERENCES</H2>
+Amos, L.A. and A. Klug. (1975) Three-dimensional Image Reconstruction of the 
+Contractile Tail of T4 Bacteriophage,  J. Mol. Biol., 99, 51-73.2. 
+
+Brunger, A.T. (1992) X-PLOR. Yale University Press, New Haven and London.
+
+DeRosier, D.J. and P.B. Moore. (1970) Reconstruction of Three-Dimensional 
+Images from Electron Micrographs of Structures with Helical Symmetry,  J. Mol. 
+Biol., 52, 355-369.
+
+Frank, J., Shimkin, B., and Dowse, H. (1981) Spider - A Modular Software 
+System for Electron Image Processing, Ultramicroscopy, 6, 343-358 
+
+Frank, J. and M. Randermacher. (1992) Three-dimensional Reconstruction of 
+Single Particles Negatively Stained or in Vitreous Ice,  Ultramicroscopy , 46, 
+241-262.
+
+Fujiyama, Y., K. Yokoyama, M. Yoshida, and T. Wakabayashi. (1990) Electron 
+Microscopy of the Reconstituted Complexes of the F1-ATPase with Various 
+Subunit Constitution Revealed the Location of the Gamma-subunit in the 
+Central Cavity of the Molecule.,  FEBS Lett., 271, 111-115.
+
+Henderson, R., J.M. Baldwin, T.A. Ceska, C.F. Zemlin, E. Beckmann, and K.H. 
+Downing. (1990) Model for the Structure of Bacteriorhodopsin Based on High-
+resolution Electron Cryo-microscopy,  J. Mol. Biol., 213, 899-929.
+
+Jones, T.A. (1978) A Graphics Model Building and Refinement System for 
+Macromolecules,  J. Appl. Cryst., 11, 268-272.8. 
+
+Jones, T.A. (1982) TOM: A Graphics Fitting Program for Macromolecules. In 
+Computational Crystallography. D. Sayre, editor. Clarensdon Press, Oxford. 303-
+317.
+
+Jones, T.A., Zou, J.Y., Cowan, S.W., and Kjeldgaard, M. (1991) Improved Methods 
+for Building Protein Models in Electron Density Maps and the Location of Errors 
+in These Models, Acta Crystalogr., A47, 110-119 
+
+Klug, A., F.H.C. Crick, and H.W. Wyckoff. (1958) Diffraction by Helical 
+Structures,  Acta Crystalogr., 11, 199-213.
+
+Konstantinides, K. and J. Rasure. (1994) The Khoros Software Development 
+Environment For Image and Signal Processing,  IEEE Trans. on Image 
+Processing, 3, 243-252.
+
+Lorenz, M., D. Popp, and K.C. Holmes. (1993) Refinement of the F-actin Model 
+against X-ray Fibre Diffraction Data by the Use of a directed mutation algorithm,  
+J. Mol. Biol., 234, 826-836.
+
+Moore, P.B., Huxley, H.E., and DeRosier, D.J. (1970) Three-dimensional 
+Reconstruction of F-Actin, Thin Filaments and Decorated Thin Filaments, 
+J.Mol.Biol., 50, 279-295
+
+Saxton, W.O., Pitt, T.J., and Horner, M. (1979) Digital Image Processing: The 
+Semper System, Ultramicroscopy, 4, 343-354
+
+Stoops, J.K., J. P. Schroeter, J. Bretaudiere, N.H. Olson, T.S. Baker, and D.K. 
+Strickland. (1991) Structural Studies of Human a2-Macroglobulin: Concordance 
+between Projected Vies Obtained by Negative-Stain and Cryo-electron 
+Microscopy,  J. Struct. Biol., 106, 172-178.
+
+Toyoshima, C. and T. Wakabayashi. (1985) Three-dimensional Image Analysis of 
+the Complex of Thin Filaments and Myosin Molecules from Skeletal Muscle.  V. 
+Assignment of Actin in the Actin-Tropomyosin-Myosin Subfragment-1 Complex,  
+J. Biochem., 97, 245-263.
+
+van Heel, M. and J. Frank. (1981) Use of Multivariate Statistics in Analysing the 
+Images of Biological Macromolecules,  Ultramicroscopy, 6, 187-194.
+
+van Heel, M. and Keegstra, W. (1981) IMAGIC: A Fast, Flexible and Friendly 
+Image Analysis Software System, Ultramicroscopy, 7, 113-130 
+
+Wakabayashi, T., H.E. Huxley, L.A. Amos, and A. Klug. (1975) Three-dimensional 
+Image Reconstruction of Actin-Tropomyosin Complex and Actin-Tropomyosin-
+Troponin T-Troponin I Complex,  J. Mol. Biol., 93, 477-497.
+
+
+
+
+
+
+<H2>Figure Legends</H2>
+
+Table 1 : This table shows representative objects supplied by 'Eos' system.  
+Three types of objects are shown.  
+
+Figure 1: The concept of 'Eos' system and four types of supports by 'Eos'.  Four 
+shadow squares show four types of supports, i.e., "Group of Small Tools", 
+"Integration Tools", "Development Tools", and "Group of Objects".  When images 
+are analysed, small tools are integrated using the integration tools.  Image 
+analysis techniques which need interactive processing can be integrated into 
+'Display2'.  When a new tool is developed, a group of prototype source codes is 
+supplied by a development tool, 'maketool'.  Also, the new tool can be developed 
+using a group of objects.  The detailed explanation of "Group of Objects" is 
+shown in Table 1.  
+
+Figure 2: Three-dimensional reconstruction of filaments with helical symmetry as 
+an example of 'Eos' usage.  a. The schematic diagram of the procedure of three-
+dimensional reconstruction of specimens with helical symmetry.  The left terms 
+boxed with rectangles indicate 'Eos' objects and the right ones indicate image 
+files with suffixes.  Tools expressed in italic such as 'fft2d ' are supplied by 'Eos' 
+system.  b. An example of makefile for a 'make' tool.  Using the UNIX 'make' 
+tool, each of the small tools is integrated.  Each of the data sets is assigned as an 
+object of a particular type according to a suffix.  By using this 'makefile', 
+updated data can be obtained at the required time.
+
+Figure 3: The results of image analysis using three-dimensional reconstruction of 
+specimens with helical symmetry.  a. A projected image of an actin filament, 
+which was produced from the atomic model of an actin filament (Lorenz et al., 
+1993).  This image of a filament is treated as a model of micrographs recorded in 
+an electron microscope so that the validity of the 'Eos' tools could be tested.  b. 
+Contour maps of horizontal sections at successive z-coordinates of a reconstructed 
+image of a model actin filament.  c. A reconstituted three-dimensional image of a 
+model actin filament.  A three-dimensional image (mrcImage) was transformed 
+into NCSA-hdf format by 'mrc2hdf' and then the image was displayed with 'xds' 
+supplied by NCSA.
+

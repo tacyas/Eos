@@ -1,0 +1,52 @@
+#include "eosStereoRenderer.hh"
+
+#include "vtkRenderWindowInteractor.h"
+#include "vtkProp3D.h"
+#include "vtkCellPicker.h"
+#include "vtkMath.h"
+
+#define DEBUG
+#include "genUtil.h"
+
+eosStereoRenderer::eosStereoRenderer()
+{
+	RenRight = vtkRenderer::New();
+	RenLeft  = vtkRenderer::New();
+}
+
+eosStereoRenderer::~eosStereoRenderer()
+{
+	RenRight->Delete();
+	RenLeft ->Delete();
+}
+
+eosStereoRenderer *eosStereoRenderer::New()
+{
+	return new eosStereoRenderer();	
+}
+
+void AddActor(vtkActor* actor)
+{
+	RenRight->AddActor(actor);
+	RenLeft ->AddActor(actor);
+	vtkRenderer::AddActor(actor);
+}
+
+void RemoveActor(vtkActor* actor)
+{
+	RenRight->RemoveActor(actor);
+	RenLeft ->RemoveActor(actor);
+	vtkRenderer::RemoveActor(actor);
+}
+
+vtkRenderer eosStereoRenderer::GetRightRenderer()
+{
+	return RenRight;
+}
+
+vtkRenderer eosStereoRenderer::GetLeftRenderer()
+{
+	return RenLeft;
+}
+
+

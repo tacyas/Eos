@@ -1,0 +1,27 @@
+<HTML>
+<HEAD>
+<TITLE>mrcImageToNAMDConstantForces</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageToNAMDConstantForces</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageToNAMDConstantForces
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :Input:MRC
+    [-ip[db]             InPDB               (NULL      ).as(inFile              ) ] :Essential :Input:PDB
+    [-o[utput]           Out                 (stdout    ).as(outFile             ) ] :Optional  :Output: PDB with Constant Force
+    [-w[eight]           Weight              (1.0       ).as(Real                ) ] :Optional  :Input: Weight for Constant Force
+    [-s[calingFactor]    ScalingFactor       (1.0       ).as(Real                ) ] :Optional  :Input: Scaling Factor for Constant Force
+    [-C[ontour]          Contour             (0.0       ).as(Real                ) ] :Optional  :Input: Contour[if density>Contour, force=0]
+    [-R[otatemode]       Rotate              (0         ).as(Integer             ) ] :Optional  :Input: RotateMode
+    [-RW[eight]          RWeight             (0.1       ).as(Real                ) ] :Optional  :Input: RotateWeight
+    [-S[eed]             Seed                (0.0       ).as(Real                ) ] :Optional  :Input: Seed
+    [-nowat[er]                                                                    ] :Optional  :No force for WAT (water residue) 
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+More Density is lower potential.
+</PRE>
+</BODY>
+</HTML>

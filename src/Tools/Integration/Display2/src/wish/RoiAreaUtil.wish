@@ -1,0 +1,262 @@
+#!/usr/local/bin/wish -f
+proc roiAreaFFT { } {
+
+}
+
+proc splineNearPoint { x y } {
+	global splinePoints
+	
+	set near 0
+	set nearDistance [ pointDistance2 $splinePoints(x0) $splinePoints(y0) \
+					                  $x                $y ]
+
+	for { set i 1 } { $i <= $splinePoints(N) } { incr i} {
+		set d [ pointDistance2 $splinePoints(x$i) $splinePoints(y$i) \
+							   $x                 $y ] 
+
+		if { $d < $nearDistance } {
+			set near $i
+			set nearDistance $d
+		}
+	}
+	set splinePoints(near) $near
+
+	return $splinePoints(near)
+}
+
+proc rectangleNearPoint { x y } {
+	global rectanglePoints
+	
+	set d0  [ pointDistance2 $rectanglePoints(x0) $rectanglePoints(y0) $x $y ]
+	set d1  [ pointDistance2 $rectanglePoints(x1) $rectanglePoints(y1) $x $y ]
+	set d2  [ pointDistance2 $rectanglePoints(x2) $rectanglePoints(y2) $x $y ]
+	set d3  [ pointDistance2 $rectanglePoints(x3) $rectanglePoints(y3) $x $y ]
+
+	if {        ($d0 <  $d1) && ($d0 <  $d2) && ($d0 <  $d3) } {
+		set rectanglePoints(near) 0
+	} elseif { ($d1 <= $d0) && ($d1 <  $d2) && ($d1 <  $d3) } {
+		set rectanglePoints(near) 1 
+	} elseif { ($d2 <= $d0) && ($d2 <= $d1) && ($d2 <  $d3) } {
+		set rectanglePoints(near) 2
+	} elseif { ($d3 <= $d0) && ($d3 <= $d1) && ($d3 <= $d2) } {
+		set rectanglePoints(near) 3
+	} else {
+		puts stderr "Something wrong !!!"
+	}
+	return $rectanglePoints(near)
+}
+
+proc lineNearPoint { x y } {
+	global linePoints
+
+	set d0  [ pointDistance2 $linePoints(x0) $linePoints(y0) $x $y ]
+	set d1  [ pointDistance2 $linePoints(x1) $linePoints(y1) $x $y ]
+
+	if { $d0 < $d1 } {
+		set linePoints(near) 0
+	} else {
+		set linePoints(near) 1
+	}
+	return $linePoints(near) 
+}
+
+proc pointDistance { x0 y0 x1 y1 } {
+	return [ expr sqrt([ pointDistance2 $x0 $y0 $x1 $y1 ]) ]
+}
+
+proc pointDistance2 { x0 y0 x1 y1 } {
+	return [ expr ($x0 - $x1)*($x0 - $x1) + ($y0 - $y1)*($y0 - $y1) ]
+}
+
+proc vectorAngle { x0 y0 x1 y1 } {
+	set x [ expr $x1 - $x0 ]
+	set y [ expr $y1 - $y0 ]
+	set l [ expr sqrt($x*$x+$y*$y) ]
+	if {$l==0} {
+		return 0
+	} else {
+		return [ expr 180*atan2($y/$l,$x/$l)/3.141592653589793238 ]
+	}
+}
+#
+# coordGet
+#
+proc coordGetInMainImageToReal { c mode xy } {
+	global mainImage
+	global Roi
+	
+	if [ info exists mainImage(region) ]  {
+		set height [ lindex $mainImage(region) 3 ]
+	} else {
+		set height [ lindex [ $c cget -scrollregion ] 3 ] 
+	}
+	switch $mode {
+		x {
+			set p [ expr ( [ $c canvasx $xy ] - int($Roi(Zoom)/2.0) )/ $Roi(Zoom) ]
+		}
+		y {
+			set p [ expr [ expr $height - [$c canvasy $xy] - 1  - int($Roi(Zoom)/2.0) ] / $Roi(Zoom) ] 
+		} 
+	}	
+	if [ info exists mainImage(mode) ]  {
+		switch $mainImage(mode) {
+			F {
+				switch $mode {
+					x {
+						set p [ expr $p - int($mainImage(width)/2.0) ]
+					}
+					y {
+						set p [ expr $p - int($mainImage(height)/2.0) ]
+					} 
+				}
+			}
+			R {
+			}
+		}
+	}
+	return $p
+}
+
+#
+# coordGetInMainImageToCanvas
+# 	c 	: Canvas
+# 	mode: x|y
+# 	xy 	: Real Coord
+proc coordGetInMainImageToCanvas { c mode xy } {
+	global mainImage
+	global Roi
+	
+	if [ info exists mainImage(mode) ]  {
+		switch $mainImage(mode) {
+			F {
+				switch $mode {
+					x {
+						set xy [ expr $xy + $mainImage(width)/2.0 ]
+					}
+					y {
+						set xy [ expr $xy + $mainImage(height)/2.0 ]
+					} 
+				}
+			}
+			R {
+			}
+		}
+	}
+
+	if [ info exists mainImage(region) ]  {
+		set height [ lindex $mainImage(region) 3 ]
+	} else {
+		set height [ lindex [ $c cget -scrollregion ] 3 ] 
+	}
+	switch $mode {
+		x {
+			set p [ expr $xy * $Roi(Zoom)]
+		}
+		y {
+			set p [ expr $height - $xy * $Roi(Zoom) - 1 ]
+		}
+	}
+	set p [ expr round($p) ]
+	return $p
+}
+#
+#
+#
+proc dataGetInMainImageToReal { c x y } {
+	global mainImage
+
+	if { $mainImage(image) == "No" } {
+		return 0
+	} else {
+		if { 0<=$x && $x<[lindex $mainImage(region) 2]   \
+		  && 0<=$y && $y<[lindex $mainImage(region) 3] } {
+			set data [ lindex [ $mainImage(image) get $x $y] 0]
+			if { $mainImage(thresHigh) == "No" } {
+				set max $mainImage(max)
+			} else {
+				set max $mainImage(thresHigh)
+			}
+			if { $mainImage(thresLow) == "No" } {
+				set min $mainImage(min)
+			} else {
+				set min $mainImage(thresLow)
+			}
+			set data [ expr $data/255.0*($max - $min) + $min ]
+			return $data
+		} else {
+			set data 0
+			return $data
+		}
+	}
+}
+#
+#
+#
+#
+proc dataGetInMainImageToCanvas { c x y } {
+	global mainImage
+
+	if { $mainImage(image) == "No" } {
+		return 0
+	} else {
+		if { 0<=$x && $x<[lindex $mainImage(region) 2]   \
+		  && 0<=$y && $y<[lindex $mainImage(region) 3] } {
+			set data [ lindex [ $mainImage(image) get $x $y] 0]
+			return $data 
+		} else {
+			set data 0
+			return $data
+		}
+	}
+}
+
+# pointSet 
+# 	c 	: Canvas widget
+# 	x 	: Screen Coord
+# 	y 	: Screen Coord
+proc pointSet { c x y } {
+	global Point
+	global mainImage
+
+	set Point(x)    [ coordGetInMainImageToReal $c x  $x ]
+	set Point(y)    [ coordGetInMainImageToReal $c y  $y ]
+	set Point(z)    $mainImage(z)
+	set Point(cx)   [ coordGetInMainImageToCanvas $c x $Point(x) ]
+	set Point(cy)   [ coordGetInMainImageToCanvas $c y $Point(y) ]
+	set Point(cz)    $mainImage(z)
+	if { $mainImage(image) == "No" } {
+		set dx 1
+		set dy 1
+		set dz 1
+	}
+	switch $mainImage(mode) {
+		R {
+			set dx $mainImage(lx)
+			set dy $mainImage(ly)
+			set dz $mainImage(lz)
+		}
+		F {
+			set dx [ expr 1.0/$mainImage(lx)/$mainImage(width) ]
+			set dy [ expr 1.0/$mainImage(ly)/$mainImage(height)]
+			set dz [ expr 1.0/$mainImage(lz)/$mainImage(nz)]
+		}
+	}
+	set Point(realx)    [ expr $Point(x)*$dx ]
+	set Point(realy)    [ expr $Point(y)*$dy ]
+	set Point(realz)    [ expr $Point(z)*$dz ]
+	set Point(r)        [ expr sqrt($Point(realx)*$Point(realx) \
+								  + $Point(realy)*$Point(realy) \
+								  + $Point(realz)*$Point(realz)) ]
+	set Point(R)        [ if { 0 <  $Point(r)     } { list [ expr 1/$Point(r) ]    } else { list oo } ]
+	set Point(realX)    [ if { 0 != $Point(realx) } { list [ expr 1/$Point(realx)] } else { list oo } ]
+	set Point(realY)    [ if { 0 != $Point(realy) } { list [ expr 1/$Point(realy)] } else { list oo } ]
+	set Point(realZ)    [ if { 0 != $Point(realz) } { list [ expr 1/$Point(realz)] } else { list oo } ]
+	set Point(dat)      [ dataGetInMainImageToReal   $c $Point(cx) $Point(cy) ]
+	for { set y -2 } { $y <= 2 } { incr y } {
+	for { set x -2 } { $x <= 2 } { incr x } {
+		set Point(dat,$x,$y)  [ dataGetInMainImageToReal  $c [ expr $Point(cx) + $x] [ expr $Point(cy) + $y] ] 
+	}
+	}
+	set Point(cdat)     [ dataGetInMainImageToCanvas $c $Point(cx) $Point(cy) ]
+}
+

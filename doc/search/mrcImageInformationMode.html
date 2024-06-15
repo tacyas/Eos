@@ -1,0 +1,47 @@
+<HTML>
+<BODY>
+<H1>mrcImageInformationMode</H1><BR>
+<H3>in mrcImage.h</H3><BR>
+<PRE>
+#define MRC_char_image	    	 ((mrcImageMode)0) <BR>
+#define	MRC_short_image	    	 ((mrcImageMode)1) <BR>
+#define	MRC_float_image	    	 ((mrcImageMode)2) <BR>
+#define	MRC_complex_short_ft     ((mrcImageMode)3) <BR>
+#define	MRC_complex_float_ft     ((mrcImageMode)4) <BR>
+#define	MRC_long_image	         ((mrcImageMode)101) <BR>
+#define	MRC_double_image	     ((mrcImageMode)102) <BR>
+#define	MRC_complex_long_ft      ((mrcImageMode)103) <BR>
+#define	MRC_complex_double_ft    ((mrcImageMode)104) <BR>
+#define	MRC_complex_short_fft    ((mrcImageMode)1003) <BR>
+#define	MRC_complex_float_fft    ((mrcImageMode)1004) <BR>
+#define	MRC_complex_long_fft     ((mrcImageMode)1103) <BR>
+#define	MRC_complex_double_fft   ((mrcImageMode)1104) <BR>
+#define MRC_NotSuppotedMode      ((mrcImageMode)0xffffffffL) <BR>
+#define mrcCharImage	    	 ((mrcImageMode)0) <BR>
+#define	mrcShortImage	    	 ((mrcImageMode)1) <BR>
+#define	mrcFloatImage	    	 ((mrcImageMode)2) <BR>
+#define	mrcComplexShortFT        ((mrcImageMode)3) <BR>
+#define	mrcComplexFloatFT        ((mrcImageMode)4) <BR>
+#define	mrcComplexFloatOneDimFT  ((mrcImageMode)5) <BR>
+#define	mrcLongImage	         ((mrcImageMode)101) <BR>
+#define	mrcDoubleImage	         ((mrcImageMode)102) <BR>
+#define	mrcComplexLongFT         ((mrcImageMode)103) <BR>
+#define	mrcComplexDoubleFT       ((mrcImageMode)104) <BR>
+#define	mrcComplexShortFFT       ((mrcImageMode)1003) <BR>
+#define	mrcComplexFloatFFT       ((mrcImageMode)1004) <BR>
+#define	mrcComplexLongFFT        ((mrcImageMode)1103) <BR>
+#define	mrcComplexDoubleFFT      ((mrcImageMode)1104) <BR>
+#define mrcNotSuppotedMode       ((mrcImageMode)0xffffffffL) <BR>
+#define MRC_MAX_LABEL_N   (10) <BR>
+#define MRC_MAX_LABEL_LEN (80) <BR>
+#define MRC_MAX_EXTRA     (29) <BR>
+#define  mrcImageTailerMode2DProjection 0 <BR>
+typedef enum <A HREF="mrcImageInformationMode.html">mrcImageInformationMode </A>{ <BR>
+	meanOfAll             = 0, <BR>
+    meanOfSphereSurface   = 1, <BR>
+    meanOfCylinderSurface = 2, <BR>
+    meanOfEdge            = 3  <BR>
+} mrcImageInformationMode; <BR>
+ 
+</PRE></HTML>
+</BODY>

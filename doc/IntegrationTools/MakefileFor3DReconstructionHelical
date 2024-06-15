@@ -1,0 +1,235 @@
+.SUFFIXES: .w12 .tiff \
+           .mrc .mrcps .cut .cutps .trp .trpps .pad .padps \
+           .fft .fftps \
+           .nea .far .llplt \
+           .avg .asnea .asfar .avgparam .avgplt .avgn .avgpltn .asplt\
+           .ltlg \
+           .mrc3d \
+           .avgc \
+           .ltlgc \
+           .mrc3dc \
+           .clstlst \
+           .vol .volc \
+           .hdf .hdfc \
+           .contour .contourc
+
+TRPPSFILES = $(CUTFILES:.cut=.trpps)
+FFTFILES   = $(CUTFILES:.cut=.fft)
+FFTPSFILES = $(CUTFILES:.cut=.fftps)
+NEAFILES   = $(CUTFILES:.cut=.nea)
+LLPLTFILES = $(CUTFILES:.cut=.llplt)
+AVGFILES   = $(CUTFILES:.cut=.avg)
+ASNEAFILES = $(CUTFILES:.cut=.asnea)
+ASPLTFILES = $(CUTFILES:.cut=.asplt)
+AVGPLTFILES= $(CUTFILES:.cut=.avgplt)
+AVGCFILES   = $(CUTFILES:.cut=.avgc)
+LTLGCFILES   = $(CUTFILES:.cut=.ltlgc)
+LTLGFILES   = $(CUTFILES:.cut=.ltlg)
+MRC3DFILES   = $(CUTFILES:.cut=.mrc3d)
+MRC3DCFILES   = $(CUTFILES:.cut=.mrc3dc)
+
+cut: $(CUTFILES)
+trpps: $(TRPPSFILES)
+fftps: $(FFTPSFILES)
+fft  : $(FFTFILES)
+nea  : $(NEAFILES)
+llplt: $(LLPLTFILES)
+asnea: $(ASNEAFILES)
+asplt: $(ASPLTFILES)
+ltlg: $(LTLGFILES)
+ltlgc: $(LTLGCFILES)
+mrc3d: $(MRC3DFILES)
+mrc3dc: $(MRC3DCFILES)
+avgc : $(AVGCFILES)
+avg  : $(AVGFILES)
+avgplt: $(AVGPLTFILES)
+clean:
+	rm *.trp *.nea *.far *.asnea *.asfar *ps *plt
+cleanfft:
+	rm *.fft
+cleanavg:
+	rm *.avg
+
+#
+#
+#(LENGTH_OF_EIKO_IMAGE)
+#(LENGTH_OF_TIFF_IMAGE)
+#(CUTIMAGE_SCALE)
+#(CUTIMAGE_ENLARGEMENT)
+#(TRPIMAGE_SCALE)
+#(TRPIMAGE_ENLARGEMENT)
+
+#
+#
+#
+PAD_HEIGHT=1024
+PAD_WIDTH=1024
+#
+#
+#
+FFTPS_HIGH=0.5
+FFTPS_LOW=0.1
+FFT_SCALE=1.0
+FFT_ENLARGEMENT=4
+#
+# Layer Line Extraction
+#
+LLEXTRACT_CTRL=../ctrl/llExtract.ctrl
+TRUE_PITCH=360.0
+#
+# Axis Search
+#
+LLAXIS_CTRL=../ctrl/llAxis.ctrl
+AS_XMIN=-20
+AS_XMAX=20
+AS_DX=0.1
+AS_OMIN=0.0
+AS_OMAX=0.0
+AS_DO=1.0
+AS_RESOLUTION=30.0
+
+#
+# CTF Compensation
+#
+LLCOMP_CTRL=../ctrl/llComp.ctrl
+SRMAX=100.0
+
+#
+# Fit and Average
+#
+LLFIT_CTRL=../ctrl/llfit.ctrl
+LLDATA_FIT_DELBR=
+LLDATA_FIT_RMIN=1.0
+LLDATA_FIT_RMAX=1.0
+LLDATA_FIT_DR=1.0
+LLDATA_FIT_PMIN=-180
+LLDATA_FIT_PMAX= 180
+LLDATA_FIT_DP=1.0
+LLDATA_FIT_ZMIN=-30
+LLDATA_FIT_ZMAX=30
+LLDATA_FIT_DZ=1.0
+
+#
+# Fourier-Bessel
+#
+LL2LTLG_TTILE=Test
+LL2LTLG_DELBR=
+LL2LTLG_LLLMAX=32
+LL2LTLG_BRMAX_INV=
+LL2LTLG_DELSR=5.0
+LL2LTLG_SRMAX=100.0
+
+#
+# Fourier
+#
+LTLG2MRC_CTRL=../ctrl/ltlg2mrc.ctrl
+
+# Volume Calculation
+MOLECULAR_WEIGHT=42300
+MOLECULAR_NUMBER=4
+MOLECULAR_DENSITY=1.35
+
+#######################################################################
+#
+# ROI (Region of Interest)
+#
+.w12.mrc:
+	eiko2mrc -i $*.w12 -o $*.mrc -M $(LENGTH_OF_EIKO_IMAGE) -m 1
+.tiff.mrc:
+	mrc2tiff -i $*.tiff -o $*.mrc -M $(LENGTH_OF_TIFF_IMAGE)
+# 
+#.mrc.cut:
+#	mrcImageROI -i $*.mrc -o $*.cut
+#
+
+.cut.cutps:
+	mrcImagePrint -i $*.cut -o $*.cutps -S $(CUTIMAGE_SCALE) -E $(CUTIMAGE_ENLARGEMENT)
+.cut.trp:
+	mrcImageTranspose -i $*.cut -o $*.trp
+.trp.trpps:
+	mrcImagePrint -i $*.trp -o $*.trpps -S $(TRPIMAGE_SCALE) -E $(TRPIMAGE_ENLARGEMENT)
+.trp.pad:
+	mrcImagePad -i $*.trp -o $*.pad -H $(PAD_HEIGHT) -W $(PAD_WIDTH) -m 1
+.fft.fftps:
+	mrcImagePrint -i $*.fft -o $*.fftps -H $(FFTPS_HIGH) -L $(FFTPS_LOW) -S $(FFT_SCALE) -I -E $(FFT_ENLARGEMENT)
+
+#
+# Layer Line Extract
+#
+.fft.nea:
+	llExtract -c $(LLEXTRACT_CTRL) -i $*.fft -1 $*.nea -2 $*.far
+(FFT_ENLARGEMENT)
+.nea.llplt:
+	llDataInfoNFForS $*.nea $*.far $*.llplt $(LLPLT00) $(LLPLT02) $(LLPLT04) $(LLPLT06) $(LLPLT09) $(LLPLT11) $(LLPLT13) $(LLPLT15) $(LLPLT17)  $(LLPLT28)
+
+#
+# IntraMolecule: Fit and Average
+#
+.nea.avg:
+	llDataAxisSearch -i1 $*.nea -i2 $*.far -o $*.avgparam -o1 $*.asnea -o2 $*.asfar -a $*.avg -t $(TRUE_PITCH) -l $(LLAXIS_CTRL) -x  $(AS_XMIN) $(AS_XMAX) $(AS_DX) -O $(AS_OMIN) $(AS_OMAX) $(AS_DO) -R $(AS_RESOLUTION)
+
+.nea.asnea:
+	llDataAxisSearch -i1 $*.nea -i2 $*.far -o $*.avgparam -o1 $*.asnea -o2 $*.asfar -a $*.avg -t $(TRUE_PITCH) -l $(LLAXIS_CTRL) -x  $(AS_XMIN) $(AS_XMAX) $(AS_DX) -O $(AS_OMIN) $(AS_OMAX) $(AS_DO)
+
+.asnea.asplt:
+	llDataInfoNFForS $*.asnea $*.asfar $*.asplt  $(LLPLT00) $(LLPLT02) $(LLPLT04) $(LLPLT06) $(LLPLT09) $(LLPLT11) $(LLPLT13) $(LLPLT15) $(LLPLT17) $(LLPLT28)
+
+# If you have no change to compensate CTF
+# CTF Compensation (Phase Only)
+#
+.avg.avgc:
+	llDataCTFCompensate -i $*.avg  -o $*.avgc  -t $(TRUE_PITCH) -I $(LLCOMP_CTRL)
+	llDatarMaxLimit     -i $*.avgc -o $*.avgcc -r $(SRMAX)
+	mv $*.avgcc $*.avgc
+.avg.avgplt:
+	llDataInfoForS $*.avg $*.avgplt   $(LLPLT00) $(LLPLT02) $(LLPLT04) $(LLPLT06) $(LLPLT09) $(LLPLT11) $(LLPLT13) $(LLPLT15) $(LLPLT17) $(LLPLT28)
+.avgn.avgpltn:
+	llDataInfoNormalForS $*.avgn $*.avgpltn  $(LLPLT00) $(LLPLT02) $(LLPLT04) $(LLPLT06) $(LLPLT09) $(LLPLT11) $(LLPLT13) $(LLPLT15) $(LLPLT17) $(LLPLT28)
+
+#
+# Intermolecule: Fit and Average
+#
+.clstlst.avg:
+	llDataAverage -M $*.avgmdl\
+                        -i $*.clstlst \
+                        -l $(LLFIT_CTRL) \
+                        -A $*.avg \
+                        -o $*.avgparam \
+                        -O $*.clstlst2 \
+                        -t $(TRUE_PITCH) \
+                        -d $(LLDATA_FIT_DELBR) \
+                        -r $(LLDATA_FIT_RMIN) $(LLDATA_FIT_RMAX) $(LLDATA_FIT_DR)   \
+                        -p $(LLDATA_FIT_PMIN) $(LLDATA_FIT_PMAX) $(LLDATA_FIT_DP)   \
+                        -z $(LLDATA_FIT_ZMIN) $(LLDATA_FIT_ZMAX) $(LLDATA_FIT_DZ)
+	rm $*.avgmdl
+	cp $*.avg $*.avgmdl
+	cat $*.avgparam
+	touch $*.avg
+	touch $*.clstlst
+#
+# Fourier Bessel Transform
+#
+.avg.ltlg:
+	$(HOME)/com/ll2ltlg -i $*.avg -o $*.ltlg -t $(LL2LTLG_TTILE) -D $(LL2LTLG_DELBR) -l $(LL2LTLG_LLLMAX) -R $(LL2LTLG_BRMAX_INV) -d $(LL2LTLG_DELSR) -r $(LL2LTLG_SRMAX)
+.avgc.ltlgc:
+	$(HOME)/com/ll2ltlg -i $*.avgc -o $*.ltlgc -t $(LL2LTLG_TTILE) -D $(LL2LTLG_DELBR) -l $(LL2LTLG_LLLMAX) -R $(LL2LTLG_BRMAX_INV) -d $(LL2LTLG_DELSR) -r $(LL2LTLG_SRMAX)
+#
+#
+#
+.ltlg.mrc3d:
+	ltlg2mrc -i $*.ltlg -o $*.mrc3d -c $(LTLG2MRC_CTRL) -C $(TRUE_PITCH)
+.ltlgc.mrc3dc:
+	ltlg2mrc -i $*.ltlgc -o $*.mrc3dc -c $(LTLG2MRC_CTRL) -C $(TRUE_PITCH)
+#
+#
+#
+.mrc3d.vol:
+	mrcImageVolumeCalc -i $*.mrc3d -o $*.vol -M $(MOLECULAR_WEIGHT) -n $(MOLECULAR_NUMBER) -d $(MOLECULAR_DENSITY)
+	cat $*.vol
+.mrc3dc.volc:
+	mrcImageVolumeCalc -i $*.mrc3dc -o $*.volc -M $(MOLECULAR_WEIGHT) -n $(MOLECULAR_NUMBER) -d $(MOLECULAR_DENSITY)
+	cat $*.volc
+.mrc3d.contour:
+	mrcImagePrint -i $*.mrc3d -o $*.contour -m 36 -C -20
+.mrc3dc.contourc:
+	mrcImagePrint -i $*.mrc3dc -o $*.contourc -m 36 -C -20

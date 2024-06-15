@@ -1,0 +1,14 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: ASCII","Optional","1","1","In","inFile","stdin"
+"-o","-o[utput]","Output: mrcImage","Optional","1","1","Out","outFile","stdout"
+"-nx","-nx","ImageSize: x","Essential","1","1","Nx","Integer","512"
+"-ny","-ny","ImageSize: y","Optional","1","1","Ny","Integer","512"
+"-nz","-nz","ImageSize: z","Optional","1","1","Nz","Integer","1"
+"-sx","-sx","FilterSize: x","Essential","1","1","Sx","Integer","3"
+"-sy","-sy","FilterSize: y","Optional","1","1","Sy","Integer","3"
+"-sz","-sz","FilterSize: z","Optional","1","1","Sz","Integer","1"
+"-v","-v[erbose]","Verbose","Optional","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-M","-M[ode]","Mode: Filter shape","Optional","1","1","Mode","Integer","0"
+"-m","-m[ode]","mode: output mrc","Optional","1","1","mode","Integer","2"

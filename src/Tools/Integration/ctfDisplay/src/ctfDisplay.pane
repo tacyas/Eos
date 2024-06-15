@@ -1,0 +1,21 @@
+-F 4.3 1 0 52x1+0+0 +0+0 'Cantata' cantata
+  -M 1 1 52x1+0+0 +1+0 ' ' subform
+    -P 1 0 52x1+0+1 +0+0 ' ' ctfDisplay
+      -D 1 0 9x1+0+0 'Options' _gui_options
+        -H 1  6x1+0+0 'License' 'license' $BOOTSTRAP/repos/license/License license
+        -E
+        -R 1 0 1 5x1+35+0 'Run' 'execute operation' $EOS/bin/ctfDisplay
+        -H 1  5x1+41+0 'Help' 'help page' $EOS/src/Tools/Integration/ctfDisplay/doc/ctfDisplay.doc help
+        -Q 1 0 5.25x1+47+0 'Close'
+        -I 1 0 1 0 0 1 -1x1+1+1.500000 ' ' 'inMRC' 'Input:MRC(FFT)' i
+        -I 1 0 1 0 0 1 -1x1+1+3.000000 ' ' 'outCTF' 'Input/Output: ctfinfo' o
+        -f 1 0 1 0 0 -1x1+1+4.500000 0 0 0.200000 0 0 0 'Rmax' 'Rmax [A-1] ' Rmax
+        -f 1 0 1 0 0 -1x1+1+6.000000 0 0 0.200000 0 0 0 'Imax' 'Intensity: min-max' Imax
+        -f 1 0 1 0 0 -1x1+1+7.500000 0 0 0.020000 0 0 0 'Imin' 'Intensity: min-max' Imin
+        -t 1 0 1 0 0 6x1+1+9 'AutoRange' 'Intensity: min-max' AutoRange
+        -t 1 0 1 0 0 6x1+1+10 'Log' 'Log of Intensity' Log
+        -I 1 0 1 0 0 1 -1x1+1+12.000000 ' ' 'configFile' 'ConfigurationFile' c
+        -i 1 0 1 0 0 -1x1+1+13.500000 0 0 0 0 0 'mode' 'Mode' m
+    -E
+  -E
+-E

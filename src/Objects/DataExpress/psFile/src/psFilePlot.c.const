@@ -1,0 +1,81 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#include "../inc/psFile.h"
+
+void
+psPlotSpaceSet(FILE* fpt, psPlotInfo pl, psParaTypeInteger mode)
+{
+    double mm;
+    long    x, xx, y;
+
+    fprintf(fpt, "save\n");
+    fprintf(fpt, "%f %f scale\n", pl.scaleX, pl.scaleY);
+    fprintf(fpt, "%f %f translate\n", pl.translateX, pl.translateY);
+}
+
+void
+psPlotSpaceRestore(FILE* fpt, psPlotInfo pl, psParaTypeInteger mode)
+{
+    fprintf(fpt, "restore\n");
+}
+
+void
+psPlotScale(FILE* fpt, psPlotInfo pl, psParaTypeInteger mode)
+{
+    psParaTypeReal x, y;
+
+    /* X Axis */
+    if(PS_PLOT_MODE_AXIS_X_AXIS_POS&mode) { /* 1: Up */
+        y = PS_PLOT_SCALE_X_AXIS_Y_POSITION_UP;
+    } else { /* 0 : Down */
+        y = PS_PLOT_SCALE_X_AXIS_Y_POSITION_DOWN;
+    }
+    fprintf(fpt, "%g %g moveto %g %g lineto stroke\n", 
+                    pl.minX, PS_PLOT_SCALE_X_AXIS_Y_POSITION,
+                    pl.maxX, PS_PLOT_SCALE_X_AXIS_Y_POSITION);
+        x = pl.centerX;
+        while(x<=pl.maxX) {
+            fprintf(fpt, "%g %g moveto %g %g rlineto stroke\n",
+                    x, PS_PLOT_SCALE_X_AXIS_Y_POSITION,
+                    0, PS_PLOT_SCALE_X_AXIS_LENGTH);
+            x += pl.dX;
+        }
+        x = pl.centerX;
+        while(pl.minX<=x) {
+            fprintf(fpt, "%g %g moveto %g %g rlineto stroke\n",
+                    x, PS_PLOT_SCALE_X_AXIS_Y_POSITION,
+                    0, PS_PLOT_SCALE_X_AXIS_LENGTH);
+            x -= pl.dX;
+        }
+
+    /* Y Axis */
+    fprintf(fpt, "%g %g moveto %g %g lineto stroke\n", 
+                pl.minX, PS_PLOT_SCALE_X_AXIS_Y_POSITION,
+                pl.maxX, PS_PLOT_SCALE_X_AXIS_Y_POSITION);
+    y = pl.centerY;
+    while(y<=pl.maxY) {
+        fprintf(fpt, "%g %g moveto %g %g rlineto stroke\n",
+                PS_PLOT_SCALE_Y_AXIS_X_POSITION, 
+                PS_PLOT_SCALE_Y_AXIS_LENGTH, 0);
+        x += pl.dX;
+    }
+    x = pl.centerX;
+    while(pl.minX<=x) {
+        fprintf(fpt, "%g %g moveto %g %g rlineto stroke\n",
+                x, PS_PLOT_SCALE_X_AXIS_Y_POSITION,
+                0, PS_PLOT_SCALE_X_AXIS_LENGTH);
+        x -= pl.dX;
+    }
+
+}
+
+void
+psPlot(FILE* fpt, psPlotInfo* pl, long mode)
+{
+    psPlotSpaceSet(fpt, *pl, mode);
+    psPlotScale(fpt, *pl, (mode&PS_PLOT_MODE_AXIS));
+
+    psPlotSpaceRestore(fpt, *pl, mode);
+}

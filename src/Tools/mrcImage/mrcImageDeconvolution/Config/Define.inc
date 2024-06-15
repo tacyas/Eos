@@ -1,0 +1,4 @@
+OBJECTNAME = mrcImageDeconvolution
+EXTRA_LIB  = $(LIBCUDA)
+EXTRA_CCOPTS =
+EXTRA_INC = $(INCCUDA)

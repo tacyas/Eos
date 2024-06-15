@@ -1,0 +1,13 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input[Array]","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","Output[Array]","Essential","1","1","Out","outFile","NULL"
+"-wx","-w[idth]x","WindowX[piX]","Optional","1","1","widthX","Real","1"
+"-wy","-w[idth]y","WindowY[pix]","Optional","1","1","widthY","Real","1"
+"-wz","-w[idth]z","WindowZ[pix]","Optional","1","1","widthZ","Real","1"
+"-ex","-e[dge]x","EdgeX[pix]","Optional","1","1","edgeX","Real","1"
+"-ey","-e[dge]y","EdgeY[pix]","Optional","1","1","edgeY","Real","1"
+"-ez","-e[dge]z","EdgeZ[pix]","Optional","1","1","edgeZ","Real","1"
+"-trim","-trim","trimmedAbnormalValue[0-0.5]","Optional","1","1","Trim","Real","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

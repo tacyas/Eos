@@ -1,0 +1,14 @@
+#define DoNotAutoRecreate NO
+
+#include EOS_INCLUDE
+
+OBJECT_TYPE = dir
+
+TOOLBOX_NAME = eos
+
+OBJECT_NAME =
+
+SUBDIRS = \
+	src
+
+#include <Dir.template>

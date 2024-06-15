@@ -1,0 +1,4 @@
+OBJECTNAME = mrcImage2DProjection
+EXTRA_LIB  =
+EXTRA_CCOPTS =
+EXTRA_INC =

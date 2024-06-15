@@ -1,0 +1,23 @@
+<HTML>
+<HEAD>
+<TITLE>mrcImageContourSurfaceCreate</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageContourSurfaceCreate</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageContourSurfaceCreate
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :Input: mrc
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :Output: mrc
+    [-C[ontour]          Contour             (0.0       ).as(Real                ) ] :Essential :Input: Contour Value
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+    -m 0 : SimpleMethod
+              When a point has contour surfaces between six voxels (Upper-Downward Right-Left For-Back) and the point,
+              the point is defined as ContourSurface
+              -C option are required 
+</PRE>
+</BODY>
+</HTML>

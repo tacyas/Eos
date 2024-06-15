@@ -1,0 +1,11 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-d","-d[ensity]","[M]: Density of Water","Optional","1","1","Density","Real","55.55555"
+"-r","-r[adius]","[A]: Radius of Water Volume: Sphere, Cylinder","Optional","1","1","Radius","Real","100."
+"-height","-height","[A]: Height of Water Volume : Cylinder","Optional","1","1","Height","Real","100."
+"-cube","-cube","[A]: Cube","Optional","3","1","X","Real","100.","2","Y","Real","100.","3","Z","Real","100."
+"-edge","-edge","layer number: Edge","Optional","1","1","Edge","Integer","3."
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

@@ -1,0 +1,10 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[output]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-r","-r[esolution]","Pixel size","Optional","1","1","r","Real","0.0"
+"-x","-x[length]","Pixel size along x axis(A).Default:No change","Optional","1","1","Lx","Real","0.0"
+"-y","-y[length]","Pixel size along y axis(A).Default:No change","Optional","1","1","Ly","Real","0.0"
+"-z","-z[length]","Pixel size along z axis(A).Default:No change","Optional","1","1","Lz","Real","0.0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

@@ -1,0 +1,11 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputFile","Essential","1","1","In","inFile","stdin"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","stdout"
+"-kV","-kV","AccVol[kV]","Optional","1","1","kV","Real","200"
+"-Cs","-Cs","Cs[mm]","Optional","1","1","Cs","Real","1.7"
+"-df","-df","Defocus[A]:under(+)","Essential","1","1","Defocus","Real","2.7"
+"-n1","-n1","Degree of zero point minimum","Optional","1","1","deg1","Integer","2"
+"-n2","-n2","Degree of zero point maximum","Optional","1","1","deg2","Integer","4"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

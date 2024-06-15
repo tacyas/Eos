@@ -1,0 +1,2 @@
+CLASSNAME=mrcImage
+CLASSNAME = mrcImage

@@ -1,0 +1,62 @@
+#!/usr/local/bin/bltwish
+#
+proc llDataPrintMenuSet {} {
+	global nFrame
+
+	frame .menu -relief raised -bd 2
+	
+	menubutton .menu.file -text "File" -menu .menu.file.m -underline 0
+	menubutton .menu.edit -text "Edit" -menu .menu.edit.m -underline 0
+	menubutton .menu.help -text "Help" -menu .menu.help.m -underline 0
+	button     .menu.prev -text "Prev" -command llDataPrintPrevGraphWatch
+	button     .menu.next -text "Next" -command llDataPrintNextGraphWatch
+
+	set m [ menu .menu.file.m ]
+	$m add com -label "Open" -command {}  
+	$m add com -label "New"  -command {} 
+	$m add com -label "Save(PS)" -command  { 
+		for { set i 0 } { $i <= $nFrame(max) } { incr i 1 } {
+			llDataPrintNextGraphWatch
+		}
+		llDataPrintSavePS 
+	} 
+
+	$m add separator
+	$m add com -label "Exit" -command { exit 0 } 
+	
+	set m [ menu .menu.edit.m ]
+	$m add com -label "Preference"  -command llDataPrintPreferenceWinCreate 
+	$m add com -label "Next"  -command llDataPrintNextGraphWatch
+	$m add com -label "Prev"  -command llDataPrintPrevGraphWatch
+
+	pack .menu.file .menu.edit .menu.prev .menu.next .menu.help \
+		-fill x \
+		-side left \
+		-expand true \
+		-ipadx 3 \
+		-ipady 3
+}
+
+proc llDataPrintPrevGraphWatch { } {
+	global nFrame 
+
+	set nFrame(old) $nFrame(current)
+	if { $nFrame(current) == 0 }  {
+		set nFrame(current) $nFrame(max)
+	} else {
+		set nFrame(current) [expr $nFrame(old) - 1 ]
+	}
+	llDataPrintDesktopSet 1
+}
+
+proc llDataPrintNextGraphWatch { } {
+	global nFrame 
+
+	set nFrame(old) $nFrame(current)
+	if { $nFrame(current) == $nFrame(max) }  {
+		set nFrame(current) 0 
+	} else {
+		set nFrame(current) [expr $nFrame(old) + 1 ]
+	}
+	llDataPrintDesktopSet 1
+}

@@ -1,0 +1,44 @@
+<HTML>
+<HEAD>
+<TITLE>pdbAtomSection</TITLE>
+</HEAD>
+<BODY>
+<H1>pdbAtomSection</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: pdbAtomSection
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-i[nput of ]f[lags] InFlags             (NULL      ).as(inFile              ) ] :Optional  :InputFlagsFile
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-dist[ance]         distance            (2.5       ).as(Real                ) ] :Optional  :DistanceOfSections
+    [-zmin[imum]         zmin                (0.0       ).as(Real                ) ] :Optional  :Minimum of Z
+    [-zmax[imum]         zmax                (90.0      ).as(Real                ) ] :Optional  :Maximum of Z
+    [-f[lag]m[ode]       flagMode            (13        ).as(Integer             ) ] :Optional  :flag mode
+    [-r[adius]           radius              (1.0       ).as(Real                ) ] :Optional  :radius of the circle
+    [-c[ircle]l[ine]w[idth]clinewidth          (0.1       ).as(Real                ) ] :Optional  :circle line width
+    [-p[eptide bond]l[ine]w[idth]plinewidth          (0.1       ).as(Real                ) ] :Optional  :peptide bond line width
+    [-fontsize           fontsize            (2.0       ).as(Real                ) ] :Optional  :font size
+    [-A[bsolute]S[caleofPSFile]scale               (1.0       ).as(Real                ) ] :Optional  :absolute scale of PS file (-AS 1 := 1 mm/A)
+    [-shiftx             shiftx              (0.0       ).as(Real                ) ] :Optional  :pdb Shift x [A]
+    [-shifty             shifty              (0.0       ).as(Real                ) ] :Optional  :pdb Shift y [A]
+    [-shiftz             shiftz              (0.0       ).as(Real                ) ] :Optional  :pdb Shift z [A]
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+
+
+
+format for Flags File
+one line of the file
+chainIdertifier&sequenceNumber(R123) FlagMode circleRedius circlelinewidth fontsize
+FlagMode
+     0: display nothing
+     1: one char amino acid name
+     2: three char amino acid name
+     4: chain identifier
+     8: sequence number
+    16: display any atom
+     default: 13 (display R123T)
+</PRE>
+</BODY>
+</HTML>

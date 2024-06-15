@@ -1,0 +1,26 @@
+<HTML>
+<HEAD>
+<TITLE>mrcImagePanoramaCreate</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImagePanoramaCreate</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImagePanoramaCreate
+Options:
+    [-I[nput]            In                  (stdin     ).as(inFileList          ) ] :Essential :Input:FileList[mrcImage x y z]
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :Output:mrcImage
+    [-o[utput]C[ount]    Count               (NULL      ).as(outFile             ) ] :Optional  :Output(Count):mrcImage
+    [-N                  Nx                  (0         ).as(Integer             ) 
+                         Ny                  (0         ).as(Integer             ) 
+                         Nz                  (0         ).as(Integer             ) ] :Optional  :Input:OutImageSize
+    [-M[ode]             InterpolationMode   (0         ).as(Integer             ) ] :Optional  :InterpolationMode
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+>>>InputFileList Format
+FileName OffsetX OffsetY OffsetZ
+.....
+</PRE>
+</BODY>
+</HTML>

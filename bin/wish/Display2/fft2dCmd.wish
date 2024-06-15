@@ -1,0 +1,13 @@
+proc fft2dCmd { } {
+	global fileNameIn
+	global fileNameOut
+	global CommandPut
+
+	set fileNameOut [ fileSave ]
+	if { $fileNameOut == {} } {
+		return
+	}
+	set cmd  [ list fft2d -i $fileNameIn -o $fileNameOut ]
+	puts $CommandPut(fpt) $cmd
+	eval exec $cmd
+}

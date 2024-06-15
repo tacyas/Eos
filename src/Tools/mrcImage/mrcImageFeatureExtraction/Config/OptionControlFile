@@ -1,0 +1,10 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-cr","-c[oOccurrence]r[adius]","Co-Occurrence radius","Optional","1","1","co_r","Integer","1"
+"-ct","-c[oOccurrence]t[heta]","Co-Occurrence theta","Optional","1","1","co_theta","Integer","0"
+"-rt","-r[unLength]t[heta]","RunLength theta","Optional","1","1","rl_theta","Integer","0"
+"-rd","-r[unLength]d[ev]","RunLength devision","Optional","1","1","rl_dev","Integer","4"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

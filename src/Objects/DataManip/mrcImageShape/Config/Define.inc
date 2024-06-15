@@ -1,0 +1,3 @@
+OBJECTNAME = mrcImageShape
+EXTRA_INC =
+EXTRA_CCOPTS =

@@ -1,0 +1,25 @@
+SOURCE=\
+DCDFile \
+IMAGIC \
+bildFile \
+bmpFile \
+ctfInfo \
+ctfforBayes \
+dmFile \
+dsn6File \
+emData \
+eosMATH \
+eosStarFile \
+khorosData \
+largeIP \
+llData \
+ltlgData \
+mapFile \
+mrcImage \
+mrcImageShape \
+pdbFile \
+rigakuImage \
+simulation \
+tgaFile \
+transform \
+#LastSource

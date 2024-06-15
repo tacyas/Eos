@@ -1,0 +1,67 @@
+#ifndef EOS_INTERACTOR_MY_STYLE_HH
+#define EOS_INTERACTOR_MY_STYLE_HH
+
+#include <vtkRenderWindowInteractor.h>
+#include <vtkInteractorStyle.h>
+#include <stdio.h>
+
+#include "vtkObjectFactory.h"
+#include "vtkCommand.h"
+
+//#include "eosStereoModeOn.hh"
+class eosStereoModeOn;
+
+class VTK_RENDERING_EXPORT eosInteractorMyStyle : public vtkInteractorStyle
+{
+public:
+  static eosInteractorMyStyle *New(const eosInteractorMyStyle& myStyle);
+  static eosInteractorMyStyle *New();
+  vtkTypeMacro(eosInteractorMyStyle, vtkInteractorStyle);
+
+  void UpdateInternalState(int ctrl, int shift,int X, int Y); 
+  void OnLeftButtonDown(int ctrl, int shift,int x, int y);
+  void OnLeftButtonUp(int ctrl, int shift,int x, int y);
+
+  void OnMouseMove(int ctrl, int shift, int x, int y);
+  virtual void OnChar   (int ctrl, int shift, char keycode, int repeatcount);
+
+  void SetInteractor(vtkRenderWindowInteractor *iren);
+  void SetAutoAdjustCameraClippingRange( int value );
+  void ResetCameraClippingRange(void);
+  void StartState(int);
+  void StopState(int);
+  void StartStereo(void);
+  void EndStereo(void);  
+  void SetStereoRenderWindows(vtkRenderer*,vtkRenderer*,vtkRenderWindowInteractor*);
+  void SetStereoWindow();
+  void SetStereoRenderWindows(vtkRenderer*,vtkRenderWindowInteractor*);
+  void OnTimer();
+  void SetStereoCamera(vtkCamera*,vtkCamera*,double,double);
+  void StereoCamera(int,int);
+
+  eosInteractorMyStyle();  
+  eosInteractorMyStyle(const eosInteractorMyStyle& myStyle);  
+  ~eosInteractorMyStyle();  
+
+protected:
+
+private:
+  void init(const eosInteractorMyStyle& myStyle);
+  static int StereoState;
+  vtkRenderer *Ren,*RenLeft,*RenRight;
+  vtkCamera  *Cam,*CamLeft,*CamRight,*cam;
+  vtkRenderWindowInteractor *rwi,*rwiStereo;
+
+  eosStereoModeOn *Ste;
+
+  //static const int  VTKIS_CAMERA = 0;
+  //static const int  VTKIS_ACTOR = 1;
+  static const char SPACE = ' ';  
+  static const int  VTKIS_STEREO = 8; 
+  static const int  SPACE_ON = 1;
+  static const int  SPACE_OFF = 0; 
+  static const int  STEREO_ON = 1;
+  static const int  STEREO_OFF = 0;
+};
+
+#endif

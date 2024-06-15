@@ -1,0 +1,3 @@
+OBJECTNAME = ctfforBayes
+EXTRA_INC =
+EXTRA_CCOPTS =

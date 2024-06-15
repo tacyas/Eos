@@ -1,0 +1,201 @@
+/bin/rm: `Makefile' を削除できません。: Permission denied
+/bin/cp: 通常のファイル `Makefile' を作成できません: Permission denied
+/bin/rm: `Makefile' を削除できません。: Permission denied
+/bin/cp: 通常のファイル `Makefile' を作成できません: Permission denied
+gcc: eosRuby.c: No such file or directory
+gcc: mrcImageRuby.c: No such file or directory
+make[1]: [libeosRuby.so] エラー 1 (無視されました)
+/home/people/risachan/Eos/include/mrcImage.h:110: Warning(801): Wrong class name (corrected to `MrcImageParaTypeIntegerCoord')
+/home/people/risachan/Eos/include/mrcImage.h:110: Warning(801): Wrong class name (corrected to `MrcImageParaTypeIntegerCoord')
+/home/people/risachan/Eos/include/mrcImage.h:116: Warning(801): Wrong class name (corrected to `MrcImageParaTypeRealCoord')
+/home/people/risachan/Eos/include/mrcImage.h:116: Warning(801): Wrong class name (corrected to `MrcImageParaTypeRealCoord')
+/home/people/risachan/Eos/include/mrcImage.h:176: Warning(801): Wrong class name _mrcImageHeader
+/home/people/risachan/Eos/include/mrcImage.h:176: Warning(801): Wrong class name _mrcImageHeader
+/home/people/risachan/Eos/include/mrcImage.h:200: Warning(801): Wrong class name (corrected to `MrcImageHeader')
+/home/people/risachan/Eos/include/mrcImage.h:200: Warning(801): Wrong class name (corrected to `MrcImageHeader')
+/home/people/risachan/Eos/include/mrcImage.h:213: Warning(801): Wrong constant name (corrected to `MrcImageTailerMode2DProjection')
+/home/people/risachan/Eos/include/mrcImage.h:217: Warning(801): Wrong class name _mrcImageTailer
+/home/people/risachan/Eos/include/mrcImage.h:217: Warning(801): Wrong class name _mrcImageTailer
+/home/people/risachan/Eos/include/mrcImage.h:228: Warning(801): Wrong class name (corrected to `MrcImageTailer')
+/home/people/risachan/Eos/include/mrcImage.h:228: Warning(801): Wrong class name (corrected to `MrcImageTailer')
+/home/people/risachan/Eos/include/mrcImage.h:238: Warning(801): Wrong class name (corrected to `MrcImage')
+/home/people/risachan/Eos/include/mrcImage.h:238: Warning(801): Wrong class name (corrected to `MrcImage')
+/home/people/risachan/Eos/include/mrcImage.h:256: Warning(801): Wrong class name (corrected to `MrcImageInformation')
+/home/people/risachan/Eos/include/mrcImage.h:256: Warning(801): Wrong class name (corrected to `MrcImageInformation')
+/home/people/risachan/Eos/include/mrcImage.h:283: Warning(801): Wrong constant name (corrected to `MeanOfAll')
+/home/people/risachan/Eos/include/mrcImage.h:284: Warning(801): Wrong constant name (corrected to `MeanOfSphereSurface')
+/home/people/risachan/Eos/include/mrcImage.h:285: Warning(801): Wrong constant name (corrected to `MeanOfCylinderSurface')
+/home/people/risachan/Eos/include/mrcImage.h:286: Warning(801): Wrong constant name (corrected to `MeanOfEdge')
+/home/people/risachan/Eos/include/mrcImage.h:287: Warning(801): Wrong constant name (corrected to `MeanOfCentre')
+/home/people/risachan/Eos/include/mrcImage.h:288: Warning(801): Wrong constant name (corrected to `MeanOfSparse')
+/home/people/risachan/Eos/include/mrcImage.h:290: Warning(801): Wrong constant name (corrected to `MeanOf2DEdgeY')
+/home/people/risachan/Eos/include/mrcImage.h:318: Warning(801): Wrong constant name (corrected to `MrcPixelRePart')
+/home/people/risachan/Eos/include/mrcImage.h:319: Warning(801): Wrong constant name (corrected to `MrcPixelImPart')
+/home/people/risachan/Eos/include/mrcImage.h:320: Warning(801): Wrong constant name (corrected to `MrcPixelMag')
+/home/people/risachan/Eos/include/mrcImage.h:321: Warning(801): Wrong constant name (corrected to `MrcPixelPow')
+/home/people/risachan/Eos/include/mrcImage.h:322: Warning(801): Wrong constant name (corrected to `MrcPixelLogMag')
+/home/people/risachan/Eos/include/mrcImage.h:323: Warning(801): Wrong constant name (corrected to `MrcPixelLogPow')
+/home/people/risachan/Eos/include/mrcImage.h:325: Warning(801): Wrong constant name (corrected to `MrcPixelPhase')
+/home/people/risachan/Eos/include/mrcImage.h:328: Warning(801): Wrong constant name (corrected to `MrcPixelHowNearest')
+/home/people/risachan/Eos/include/mrcImage.h:329: Warning(801): Wrong constant name (corrected to `MrcPixelHowLinear')
+/home/people/risachan/Eos/include/mrcImage.h:330: Warning(801): Wrong constant name (corrected to `MrcPixelHowCubicConv')
+/home/people/risachan/Eos/include/mrcImage.h:332: Warning(801): Wrong constant name (corrected to `MrcPixelHowPolySig')
+/home/people/risachan/Eos/include/mrcImage.h:337: Warning(801): Wrong class name (corrected to `LmrcImageSmoothingInfo')
+/home/people/risachan/Eos/include/mrcImage.h:337: Warning(801): Wrong class name (corrected to `LmrcImageSmoothingInfo')
+/home/people/risachan/Eos/include/mrcImage.h:344: Warning(801): Wrong class name (corrected to `LmrcImageCVEInfo')
+/home/people/risachan/Eos/include/mrcImage.h:344: Warning(801): Wrong class name (corrected to `LmrcImageCVEInfo')
+/home/people/risachan/Eos/include/mrcImage.h:350: Warning(801): Wrong class name (corrected to `LmrcImageTfunctionInfo')
+/home/people/risachan/Eos/include/mrcImage.h:350: Warning(801): Wrong class name (corrected to `LmrcImageTfunctionInfo')
+/home/people/risachan/Eos/include/mrcImage.h:356: Warning(801): Wrong class name (corrected to `LmrcImageHighlightInfo')
+/home/people/risachan/Eos/include/mrcImage.h:356: Warning(801): Wrong class name (corrected to `LmrcImageHighlightInfo')
+/home/people/risachan/Eos/include/mrcImage.h:363: Warning(801): Wrong class name (corrected to `LmrcImageLowPassFilterInfo')
+/home/people/risachan/Eos/include/mrcImage.h:363: Warning(801): Wrong class name (corrected to `LmrcImageLowPassFilterInfo')
+/home/people/risachan/Eos/include/mrcImage.h:369: Warning(801): Wrong class name (corrected to `LmrcImageHighPassFilterInfo')
+/home/people/risachan/Eos/include/mrcImage.h:369: Warning(801): Wrong class name (corrected to `LmrcImageHighPassFilterInfo')
+/home/people/risachan/Eos/include/mrcImage.h:377: Warning(801): Wrong class name (corrected to `LmrcImageBandPassFilterInfo')
+/home/people/risachan/Eos/include/mrcImage.h:377: Warning(801): Wrong class name (corrected to `LmrcImageBandPassFilterInfo')
+/home/people/risachan/Eos/include/mrcImage.h:408: Warning(801): Wrong constant name (corrected to `MrcFileWriteMode_InfoPrint')
+/home/people/risachan/Eos/include/mrcImage.h:409: Warning(801): Wrong constant name (corrected to `MrcFileWriteMode_NoCallForStatData')
+/home/people/risachan/Eos/include/mrcImage.h:458: Warning(801): Wrong constant name (corrected to `MrcImageDataSetModeCentre')
+/home/people/risachan/Eos/include/mrcImage.h:460: Warning(801): Wrong constant name (corrected to `MrcImageDataSetModeOrigin')
+/home/people/risachan/Eos/include/mrcImage.h:632: Warning(801): Wrong constant name (corrected to `LmrcImageMultiCTFCompensationSolventFlatteningModeDensityPeakIsSolvent')
+/home/people/risachan/Eos/include/mrcImage.h:634: Warning(801): Wrong constant name (corrected to `LmrcImageMultiCTFCompensationSolventFlatteningModeDefinedSTDIsSolvent')
+/home/people/risachan/Eos/include/mrcImage.h:636: Warning(801): Wrong class name (corrected to `LmrcImageMultiCTFCompensationInfo')
+/home/people/risachan/Eos/include/mrcImage.h:636: Warning(801): Wrong class name (corrected to `LmrcImageMultiCTFCompensationInfo')
+/home/people/risachan/Eos/include/mrcImage.h:669: Warning(801): Wrong class name (corrected to `LmrcImageCTFSNInfo')
+/home/people/risachan/Eos/include/mrcImage.h:669: Warning(801): Wrong class name (corrected to `LmrcImageCTFSNInfo')
+/home/people/risachan/Eos/include/mrcImage.h:682: Warning(801): Wrong class name (corrected to `MrcImageFourierPowerSpectrum')
+/home/people/risachan/Eos/include/mrcImage.h:682: Warning(801): Wrong class name (corrected to `MrcImageFourierPowerSpectrum')
+/home/people/risachan/Eos/include/mrcImage.h:688: Warning(801): Wrong class name (corrected to `LmrcImageFourierPowerSpectrumInfo')
+/home/people/risachan/Eos/include/mrcImage.h:688: Warning(801): Wrong class name (corrected to `LmrcImageFourierPowerSpectrumInfo')
+/home/people/risachan/Eos/include/pdbFile.h:53: Warning(801): Wrong constant name (corrected to `PdbRecordAtom')
+/home/people/risachan/Eos/include/pdbFile.h:54: Warning(801): Wrong constant name (corrected to `PdbRecordHeteroAtom')
+/home/people/risachan/Eos/include/pdbFile.h:55: Warning(801): Wrong constant name (corrected to `PdbRecordHelix')
+/home/people/risachan/Eos/include/pdbFile.h:56: Warning(801): Wrong constant name (corrected to `PdbRecordSheet')
+/home/people/risachan/Eos/include/pdbFile.h:57: Warning(801): Wrong constant name (corrected to `PdbRecordTurn')
+/home/people/risachan/Eos/include/pdbFile.h:58: Warning(801): Wrong constant name (corrected to `PdbRecordEnd')
+/home/people/risachan/Eos/include/pdbFile.h:67: Warning(801): Wrong class name (corrected to `ResidueName')
+/home/people/risachan/Eos/include/pdbFile.h:67: Warning(801): Wrong class name (corrected to `ResidueName')
+/home/people/risachan/Eos/include/pdbFile.h:72: Warning(801): Wrong class name (corrected to `PdbCoord')
+/home/people/risachan/Eos/include/pdbFile.h:72: Warning(801): Wrong class name (corrected to `PdbCoord')
+/home/people/risachan/Eos/include/pdbFile.h:90: Warning(801): Wrong class name (corrected to `PdbSecondaryStructureHelix')
+/home/people/risachan/Eos/include/pdbFile.h:90: Warning(801): Wrong class name (corrected to `PdbSecondaryStructureHelix')
+/home/people/risachan/Eos/include/pdbFile.h:109: Warning(801): Wrong class name (corrected to `PdbSecondaryStructureSheet')
+/home/people/risachan/Eos/include/pdbFile.h:109: Warning(801): Wrong class name (corrected to `PdbSecondaryStructureSheet')
+/home/people/risachan/Eos/include/pdbFile.h:142: Warning(801): Wrong class name (corrected to `PdbSecondaryStructureTurn')
+/home/people/risachan/Eos/include/pdbFile.h:142: Warning(801): Wrong class name (corrected to `PdbSecondaryStructureTurn')
+/home/people/risachan/Eos/include/pdbFile.h:159: Warning(801): Wrong class name (corrected to `PdbSecondaryStructureNo')
+/home/people/risachan/Eos/include/pdbFile.h:159: Warning(801): Wrong class name (corrected to `PdbSecondaryStructureNo')
+/home/people/risachan/Eos/include/pdbFile.h:177: Warning(801): Wrong constant name (corrected to `PdbFileSecondaryStructureModeNo')
+/home/people/risachan/Eos/include/pdbFile.h:178: Warning(801): Wrong constant name (corrected to `PdbFileSecondaryStructureModeHelix')
+/home/people/risachan/Eos/include/pdbFile.h:179: Warning(801): Wrong constant name (corrected to `PdbFileSecondaryStructureModeSheet')
+/home/people/risachan/Eos/include/pdbFile.h:181: Warning(801): Wrong constant name (corrected to `PdbFileSecondaryStructureModeTurn')
+/home/people/risachan/Eos/include/pdbFile.h:184: Warning(801): Wrong class name (corrected to `PdbFileSecondaryStructureRecord')
+/home/people/risachan/Eos/include/pdbFile.h:184: Warning(801): Wrong class name (corrected to `PdbFileSecondaryStructureRecord')
+/home/people/risachan/Eos/include/pdbFile.h:195: Warning(801): Wrong class name (corrected to `PdbFileSecondaryStructure')
+/home/people/risachan/Eos/include/pdbFile.h:195: Warning(801): Wrong class name (corrected to `PdbFileSecondaryStructure')
+/home/people/risachan/Eos/include/pdbFile.h:203: Warning(801): Wrong class name (corrected to `PdbRecord')
+/home/people/risachan/Eos/include/pdbFile.h:203: Warning(801): Wrong class name (corrected to `PdbRecord')
+/home/people/risachan/Eos/include/pdbFile.h:227: Warning(801): Wrong class name (corrected to `PdbFile')
+/home/people/risachan/Eos/include/pdbFile.h:227: Warning(801): Wrong class name (corrected to `PdbFile')
+/home/people/risachan/Eos/include/lmolvie.h:27: Warning(801): Wrong class name (corrected to `MolvieInfo')
+/home/people/risachan/Eos/include/lmolvie.h:27: Warning(801): Wrong class name (corrected to `MolvieInfo')
+/home/people/risachan/Eos/include/lmolvie.h:47: Warning(801): Wrong class name (corrected to `CameraInfo')
+/home/people/risachan/Eos/include/lmolvie.h:47: Warning(801): Wrong class name (corrected to `CameraInfo')
+/home/people/risachan/Eos/include/lmolvie.h:58: Warning(801): Wrong constant name (corrected to `None')
+/home/people/risachan/Eos/include/lmolvie.h:59: Warning(801): Wrong constant name (corrected to `Atom')
+/home/people/risachan/Eos/include/lmolvie.h:60: Warning(801): Wrong constant name (corrected to `Stick')
+/home/people/risachan/Eos/include/lmolvie.h:61: Warning(801): Wrong constant name (corrected to `Serial')
+/home/people/risachan/Eos/include/lmolvie.h:62: Warning(801): Wrong constant name (corrected to `Residue')
+/home/people/risachan/Eos/include/lmolvie.h:63: Warning(801): Wrong constant name (corrected to `Temp')
+/home/people/risachan/Eos/include/lmolvie.h:64: Warning(801): Wrong constant name (corrected to `Sticktemp')
+/home/people/risachan/Eos/include/lmolvie.h:66: Warning(801): Wrong constant name (corrected to `Stickresidue')
+/home/people/risachan/Eos/include/lmolvie.h:69: Warning(801): Wrong constant name (corrected to `Normal')
+/home/people/risachan/Eos/include/lmolvie.h:70: Warning(801): Wrong constant name (corrected to `Drive')
+/home/people/risachan/Eos/include/lmolvie.h:71: Warning(801): Wrong constant name (corrected to `Parallel')
+/home/people/risachan/Eos/include/lmolvie.h:72: Warning(801): Wrong constant name (corrected to `Surface')
+/home/people/risachan/Eos/include/lmolvie.h:73: Warning(801): Wrong constant name (corrected to `Multi')
+/home/people/risachan/Eos/include/lmolvie.h:75: Warning(801): Wrong constant name (corrected to `Coaster')
+/home/people/risachan/Eos/include/lmolvieProteinStatus.h:14: Warning(801): Wrong class name (corrected to `PdbCenter')
+/home/people/risachan/Eos/include/lmolvieProteinStatus.h:14: Warning(801): Wrong class name (corrected to `PdbCenter')
+/home/people/risachan/Eos/include/lmolvieProteinStatus.h:29: Warning(801): Wrong class name (corrected to `ElementSwitch')
+/home/people/risachan/Eos/include/lmolvieProteinStatus.h:29: Warning(801): Wrong class name (corrected to `ElementSwitch')
+In file included from molvieRuby_wrap.c:1892:
+/home/people/risachan/Eos/include/alsa.h:1:28: error: alsa/asoundlib.h: No such file or directory
+make[1]: [molvieRuby_wrap.o] エラー 1 (無視されました)
+In file included from molvieRuby_wrap.c:1892:
+/home/people/risachan/Eos/include/alsa.h:1:28: error: alsa/asoundlib.h: No such file or directory
+make[1]: [molvieRuby_wrap.o] エラー 1 (無視されました)
+LIBNAME:libeosRuby.a
+cd X86LINUX64; \
+	/bin/rm -f Makefile; \
+	/bin/cp ../../../../../Config/Template/ObjectsTemplate.Dir/src/ARCH/Makefile \
+		   Makefile ; pwd ; \
+	/usr/bin/make libeosRuby.a
+/net/fs08/workFS08/Eos/src/Objects/DataExpress/eosRuby/src/X86LINUX64
+make[1]: ディレクトリ `/net/fs08/workFS08/Eos/src/Objects/DataExpress/eosRuby/src/X86LINUX64' に入ります
+make[1]: `libeosRuby.a' は更新済みです
+make[1]: ディレクトリ `/net/fs08/workFS08/Eos/src/Objects/DataExpress/eosRuby/src/X86LINUX64' から出ます
+/net/fs08/workFS08/Eos/src/Objects/DataExpress/eosRuby/src/X86LINUX64
+make[1]: ディレクトリ `/net/fs08/workFS08/Eos/src/Objects/DataExpress/eosRuby/src/X86LINUX64' に入ります
+#### Compiled Objects
+Makefile Makefile.org eosRuby.c libeosRuby.a mrcImageRuby.c
+################
+make[1]: ディレクトリ `/net/fs08/workFS08/Eos/src/Objects/DataExpress/eosRuby/src/X86LINUX64' から出ます
+/home/people/risachan/Eos/lib/X86LINUX64
+/home/people/risachan/Eos/lib/
+if [ -d Swig ]; then \
+		cd Swig; \
+		if [ -f extconf.rb ] ; then \
+			swig -ruby -I/usr/include -I/home/people/risachan/Eos/include *.i ; \
+			ruby extconf.rb --with-Eos-include=/home/people/risachan/Eos/include  --with-Eos-lib=/home/people/risachan/Eos/lib/X86LINUX64 --with-EosUtil-lib=/home/people/risachan/Eos/util/X86LINUX64/lib --with-GL-lib=/usr/lib ; \
+			make ; \
+			make sitearchdir=/home/people/risachan/Eos/lib/X86LINUX64 install; \
+		fi ; \
+	fi  
+checking for main() in -lGL... yes
+checking for main() in -lGLU... yes
+checking for main() in -lglut... yes
+checking for main() in -ltcl8.4... yes
+checking for main() in -ltk8.4... yes
+checking for main() in -lBLT... yes
+checking for main() in -lasound... yes
+checking for main() in -lgif... yes
+checking for main() in -lfftw3f... yes
+checking for main() in -lnr... yes
+checking for main() in -lnl... yes
+checking for main() in -lnsl... yes
+checking for main() in -lEosObjects... yes
+creating Makefile
+make[1]: ディレクトリ `/net/fs08/workFS08/Eos/src/Objects/DataExpress/eosRuby/src/Swig' に入ります
+gcc -I. -I. -I/usr/lib/ruby/1.8/x86_64-linux -I. -I/home/people/risachan/Eos/include    -fPIC -fno-strict-aliasing -g -g -O2  -fPIC   -c molvieRuby_wrap.c
+gcc -shared -o molvieRuby.so test.o molvieRuby_wrap.o dummy.o -L. -L/usr/lib -L/usr/lib -L/home/people/risachan/Eos/util/X86LINUX64/lib -L/home/people/risachan/Eos/lib/X86LINUX64 -L. -Wl,-Bsymbolic-functions -rdynamic -Wl,-export-dynamic    -lruby1.8 -lEosObjects -lnsl -lnl -lnr -lfftw3f -lgif -lasound -lBLT -ltk8.4 -ltcl8.4 -lglut -lGLU -lGL  -lpthread -lrt -ldl -lcrypt -lm   -lc
+make[1]: ディレクトリ `/net/fs08/workFS08/Eos/src/Objects/DataExpress/eosRuby/src/Swig' から出ます
+make[1]: ディレクトリ `/net/fs08/workFS08/Eos/src/Objects/DataExpress/eosRuby/src/Swig' に入ります
+/usr/bin/install -c -m 0755 molvieRuby.so /home/people/risachan/Eos/lib/X86LINUX64
+make[1]: ディレクトリ `/net/fs08/workFS08/Eos/src/Objects/DataExpress/eosRuby/src/Swig' から出ます
+LIBNAME:libeosRuby.a
+OBJECTNAME:eosRuby
+Installing lib: libeosRuby.a
+LIBNAME:libeosRuby.a
+Link EosObjects
+#### Attention Uncompiled file ####
+########
+/usr/bin/ar r ../../../../../lib/X86LINUX64//libEosObjects.a
+Installing lib: libeosRuby.so
+LIBNAME:libeosRuby.so
+Link EosObjects
+#### Attention Uncompiled file ####
+########
+/bin/cp  ../../../../../lib/X86LINUX64//shared
+gcc -shared -L/home/people/risachan/Eos/util/X86LINUX64/lib/ruby/1.6/i686-linux  -o  ../../../../../lib/X86LINUX64//libEosObjects.so ../../../../../lib/X86LINUX64//shared/*.sharedo
+Ruby Install
+Gmolvie.rb
+keyboard_Func.rb
+molvieDisplay.rb
+molvie_ver.rb
+mouse_func.rb
+pdbFile.rb
+tk_sdl.rb
+windowSize.rb
+Installation has completed: libeosRuby.a

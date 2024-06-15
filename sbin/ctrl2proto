@@ -1,0 +1,97 @@
+#!/bin/sh
+#
+# %M% %Y% %I%
+#
+# The latest update : %G% at %U%
+#
+#%Z% ctrl2proto Function
+#%Z%
+#
+#%Z% Usage : ctrl2proto SourceFileName
+#
+#%Z% Attention
+#%Z%
+#%Z% Parameter: 
+#%Z%     Essential:
+#%Z%         SourceFileName
+#%Z% Optional:
+#%Z%
+
+usage()
+{
+	echo "Usage: ctrl2proto ClassName ToolName OptionCtrlFileName"
+}
+
+NameRead()
+{
+	ans="N"
+	while [ $ans != "Y" -a $ans != "y" ]
+	do
+		echo $1
+		read Name
+		echo "$Name is good ?"
+		read ans
+	done
+}
+# Store Flags
+FlagsCharacter="-"
+
+case $# in 
+	0)
+		;;
+	*)
+		while [ `echo $1 | cut -c1` = ${FlagsCharacter} ]
+		do
+			if [ `echo $1 | cut -c2` = "h" ] 
+			then
+				usage
+			else
+				parms="${parms} $1"
+				shift 
+			fi
+		done
+		;;
+esac
+
+case $# in
+	0) # No filename 
+		echo "Enter ClassName"
+		read ClassName
+		echo "Enter ToolName"
+		read ToolName
+		echo "Enter OptionCtrlFileName"
+		read OptionCtrlFile
+		;;
+	1) # No filename 
+		ClassName = $1
+		echo "Enter ToolName"
+		read ToolName
+		echo "Enter OptionCtrlFileName"
+		read OptionCtrlFile
+		;;
+	2) # 
+		ClassName=$1
+		ToolName=$2
+		echo "Enter OptionCtrlFileName"
+		read OptionCtrlFile
+		;;
+	3)
+		ClassName=$1
+		ToolName=$2
+		OptionCtrlFile=$3
+		;;
+	*) #
+		usage
+		;;
+esac
+#
+currentDir=`pwd`
+
+sourceFiles="usage header init argCheck util"
+
+for i in  $sourceFiles
+do
+	echo "creating $i"
+	$EOS_HOME/sbin/ctrl2$i $ClassName $ToolName $OptionCtrlFile
+done
+

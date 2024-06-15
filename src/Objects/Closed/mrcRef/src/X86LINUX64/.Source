@@ -1,0 +1,16 @@
+SRC = \
+mrcRefUtil.c \
+
+OBJ = \
+mrcRefUtil.o \
+
+REALOBJ = \
+X86LINUX64/mrcRefUtil.o \
+
+OBJDEBUG = \
+mrcRefUtil.debugo \
+
+REALOBJDEBUG = \
+X86LINUX64/mrcRefUtil.debugo \
+
+

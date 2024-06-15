@@ -1,0 +1,27 @@
+I:                         320
+Isignal:                   320
+defocus:                  9700
+AoverP:                    0.1
+Cs:                        0.6
+Cc:                        0.7
+dE:                          0
+Ai:                       0.04
+MTFMode:                     0
+MTF:                        18
+MTF2:                       38
+flagVibration:    4.90207e-270
+BofVibration:               11
+flagSN:                      0  
+SN:                    1.09687
+Inoise:                    351
+flagSN2:                     0  
+SN2:                   0.06875
+Inoise2:                    22
+MolcEnv:                    52
+flagMolcEnvTable:               0
+defocus2D:                   0               0
+defocus0axis:                0 
+kV:                          0
+flagWin:                     0  
+CutLow:                      0
+CutHigh:                     0

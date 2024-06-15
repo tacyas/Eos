@@ -1,0 +1,197 @@
+/*
+# %M% %Y% %I%
+# The latest update : %G% at %U%
+#
+#%Z% mrcFFTExpression ver %I%
+#%Z% Created by 
+#%Z%
+#%Z% Usage : mrcFFTExpression
+#%Z% Attention
+#%Z%
+*/
+static char __sccs_id[] = "%Z%mrcFFTExpression ver%I%; Date:%D% %Z%";
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>                  
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+
+#define DEBUG
+#include "genUtil.h"
+#include "mrcImage.h"
+
+/* prototype */
+void lmrcFFTExpression(mrcImage* img, mrcImage* fft, double th ,int mode);
+void
+lmrcFFTAmplitude(mrcImage* img, mrcImage* fft);
+void 
+lmrcFFTLogAmplitude(mrcImage* img, mrcImage* fft ,double data);
+void 
+lmrcFFTPower(mrcImage* img, mrcImage* fft);
+void 
+lmrcFFTLogPower(mrcImage* img, mrcImage* fft ,double data);
+void 
+lmrcFFTPhase(mrcImage* img, mrcImage* fft);
+
+
+
+
+void
+main(int argc, char* argv[]) 
+{
+ 
+	mrcFFTExpressionInfo info;
+
+/* variables */
+	mrcImage fft;
+	mrcImage img;
+/* input patameters ,file open */
+	init0(&info);
+	argCheck(&info, argc, argv);
+	init1(&info);
+
+/* begin */
+
+	DEBUGPRINT("Program Start\n");
+	mrcFileRead(&fft, info.In, "from Main Routine", 0);
+	lmrcFFTExpression(&img, &fft, info.Thres ,info.mode);
+	mrcFileWrite(&img, info.Out, "from Main Routine", 0);
+	exit(EXIT_SUCCESS);
+}
+
+void
+additionalUsage()
+{
+	fprintf(stderr, "----- mode -----\n");
+	fprintf(stderr, "0:Amplitude\n");
+	fprintf(stderr, "1:LogAmplitude\n");
+	fprintf(stderr, "2:Power\n");
+	fprintf(stderr, "3:LogPower\n");
+	fprintf(stderr, "4:Phase\n");
+}
+
+void
+lmrcFFTExpression(mrcImage* img, mrcImage* fft ,double th ,int mode) 
+{
+    img->Header = fft->Header;
+    img->HeaderMode = mrcFloatImage;
+    mrcInit(img, NULL);
+    switch(mode) {
+        case 0: {
+            lmrcFFTAmplitude(img, fft);
+            break;
+        }
+        case 1: {
+            lmrcFFTLogAmplitude(img, fft ,th);
+            break;
+        }
+        case 2: {
+            lmrcFFTPower(img, fft);
+            break;
+        }
+        case 3: {
+            lmrcFFTLogPower(img, fft ,th);
+            break;
+        }
+        case 4: {
+            lmrcFFTPhase(img, fft);
+            break;
+        }
+        default: {
+            fprintf(stderr, "Not Supported Mode: %d\n", mode);
+            exit(EXIT_FAILURE);
+        }
+    }
+	mrcStatDataSet(img, 0);
+}
+    
+void
+lmrcFFTAmplitude(mrcImage* img, mrcImage* fft)
+{
+    long ix, iy;
+    double data, re, im;
+
+    for(ix=0; ix<img->HeaderN.x; ix++) {
+        for(iy=0; iy<img->HeaderN.y; iy++) {
+            mrcPixelDataGet(fft, (mrcImageParaTypeReal)ix-img->HeaderN.x/2, (mrcImageParaTypeReal)iy-img->HeaderN.y/2, 0.0, &re, mrcPixelRePart, mrcPixelHowNearest);
+            mrcPixelDataGet(fft, (mrcImageParaTypeReal)ix-img->HeaderN.x/2, (mrcImageParaTypeReal)iy-img->HeaderN.y/2, 0.0, &im, mrcPixelImPart, mrcPixelHowNearest);
+            data = sqrt(re*re + im*im);
+            mrcPixelDataSet(img, (mrcImageParaTypeReal)ix, (mrcImageParaTypeReal)iy, 0.0, data, mrcPixelRePart);
+        }
+    }
+}
+
+void 
+lmrcFFTLogAmplitude(mrcImage* img, mrcImage* fft ,double th)
+{
+    long ix, iy;
+    double data, re, im;
+
+    for(ix=0; ix<img->HeaderN.x; ix++) {
+        for(iy=0; iy<img->HeaderN.y; iy++) {
+            mrcPixelDataGet(fft, (mrcImageParaTypeReal)ix-img->HeaderN.x/2, (mrcImageParaTypeReal)iy-img->HeaderN.y/2, 0.0, &re, mrcPixelRePart, mrcPixelHowNearest);
+            mrcPixelDataGet(fft, (mrcImageParaTypeReal)ix-img->HeaderN.x/2, (mrcImageParaTypeReal)iy-img->HeaderN.y/2, 0.0, &im, mrcPixelImPart, mrcPixelHowNearest);
+	    data=re*re + im*im;
+	    if (data < th){
+	      data = log10(th)/2.0;
+	    } else {
+	      data = log10(data)/2.0;
+	    }
+            mrcPixelDataSet(img, (mrcImageParaTypeReal)ix, (mrcImageParaTypeReal)iy, 0.0, data, mrcPixelRePart);
+        }
+    }
+}
+
+void 
+lmrcFFTPower(mrcImage* img, mrcImage* fft)
+{
+    long ix, iy;
+    double data, re, im;
+
+    for(ix=0; ix<img->HeaderN.x; ix++) {
+        for(iy=0; iy<img->HeaderN.y; iy++) {
+            mrcPixelDataGet(fft, (mrcImageParaTypeReal)ix-img->HeaderN.x/2, (mrcImageParaTypeReal)iy-img->HeaderN.y/2, 0.0, &re, mrcPixelRePart, mrcPixelHowNearest);
+            mrcPixelDataGet(fft, (mrcImageParaTypeReal)ix-img->HeaderN.x/2, (mrcImageParaTypeReal)iy-img->HeaderN.y/2, 0.0, &im, mrcPixelImPart, mrcPixelHowNearest);
+            data = re*re + im*im;
+            mrcPixelDataSet(img, (mrcImageParaTypeReal)ix, (mrcImageParaTypeReal)iy, 0.0, data, mrcPixelRePart);
+        }
+    }
+}
+
+void 
+lmrcFFTLogPower(mrcImage* img, mrcImage* fft ,double th)
+{
+    long ix, iy;
+    double data, re, im;
+
+    for(ix=0; ix<img->HeaderN.x; ix++) {
+        for(iy=0; iy<img->HeaderN.y; iy++) {
+            mrcPixelDataGet(fft, (mrcImageParaTypeReal)ix-img->HeaderN.x/2, (mrcImageParaTypeReal)iy-img->HeaderN.y/2, 0.0, &re, mrcPixelRePart, mrcPixelHowNearest);
+            mrcPixelDataGet(fft, (mrcImageParaTypeReal)ix-img->HeaderN.x/2, (mrcImageParaTypeReal)iy-img->HeaderN.y/2, 0.0, &im, mrcPixelImPart, mrcPixelHowNearest);
+	    data = re*re + im*im;
+	    if (data < th){
+	      data = log10(th);
+	    } else {
+	      data = log10(re*re + im*im);
+	    }	    
+            mrcPixelDataSet(img, (mrcImageParaTypeReal)ix, (mrcImageParaTypeReal)iy, 0.0, data, mrcPixelRePart);
+        }
+    }
+}
+void 
+lmrcFFTPhase(mrcImage* img, mrcImage* fft)
+{
+    long ix, iy;
+    double data, re, im;
+
+    for(ix=0; ix<img->HeaderN.x; ix++) {
+        for(iy=0; iy<img->HeaderN.y; iy++) {
+            mrcPixelDataGet(fft, (mrcImageParaTypeReal)ix-img->HeaderN.x/2, (mrcImageParaTypeReal)iy-img->HeaderN.y/2, 0.0, &re, mrcPixelRePart, mrcPixelHowNearest);
+            mrcPixelDataGet(fft, (mrcImageParaTypeReal)ix-img->HeaderN.x/2, (mrcImageParaTypeReal)iy-img->HeaderN.y/2, 0.0, &im, mrcPixelImPart, mrcPixelHowNearest);
+            data = atan2(im, re)/PI*180;
+            mrcPixelDataSet(img, (mrcImageParaTypeReal)ix, (mrcImageParaTypeReal)iy, 0.0, data, mrcPixelRePart);
+        }
+    }
+}
+

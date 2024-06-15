@@ -1,0 +1,23 @@
+<HTML>
+<HEAD>
+<TITLE>mrcFFTCTFCompensation</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcFFTCTFCompensation</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcFFTCTFCompensation
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-I[nputWeight]      CTFIn               (NULL      ).as(inFile              ) ] :Essential :InputWeightFile
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+>>> CTFWeigting File
+RR0 F0 : If R<RR0, Weight=0. If RR0<=R<RR1,  Weight={(RR1-R)*F0+(R-RR0)*F1}/(RR1-RR0), i.e., Linear Interpolation
+RR1 F1 : 
+...................................
+RRn Fn	: If RRn<=R, Fn
+</PRE>
+</BODY>
+</HTML>

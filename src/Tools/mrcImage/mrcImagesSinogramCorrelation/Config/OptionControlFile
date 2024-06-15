@@ -1,0 +1,21 @@
+# OptionControlFile
+# FileFormat
+"-I","-I[nputList]","InputDataFileList","Essential","1","1","In","inFileList","NULL"
+"-oH","-o[utput]H[eader]","OutputDataFileHeader","Optional","1","1","OutHeader","String","test"
+"-Rd","-R[sults]d[irectoryname]","output results directory name","Optional","1","1","Rd","String","Result"
+"-Nd","-N[ormalCorrelation]d[irectoryname]","directory name of output normalcorrelation in results directory","Optional","1","1","Nd","String","Normal"
+"-D1d","-D[erivation]1[DCorrelation]d[irectoryname]","directory name of output derivation1Dcorrelation in results directory","Optional","1","1","D1d","String","Derivation1D"
+"-D2d","-D[erivation]2[DCorrelation]d[irectoryname]","directory name of output derivation2Dcorrelation in results directory","Optional","1","1","D2d","String","Derivation2D"
+"-Ld","-L[engthCorrelation]d[irectoryname]","directory name of output lengthcorrelation in results directory","Optional","1","1","Ld","String","Length"
+
+"-CE","-C[orrelation]E[xtension]","output correlation file extension","Optional","1","1","CorrelationExtension","String","cor"
+"-LE","-L[ist]E[xtension]","output file list extension","Optional","1","1","ListExtension","String","list"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"
+"-Nm","-N[ormalCorrelation]m[ode]","","Optional","1","1","Nmode","Integer","0"
+"-D1m","-D[erivation]1[DCorrelation]m[ode]","","Optional","1","1","D1mode","Integer","0"
+"-D2m","-D[erivation]2[DCorrelation]m[ode]","","Optional","1","1","D2mode","Integer","0"
+"-Lm","-L[engthCorrelation]m[ode]","","Optional","1","1","Lmode","Integer","0"
+"-LTM", "-L[ength]T[hreshold]M[ode]","LengthThresholdMode","Optional","1","1","LengthThresholdMode","Integer","0"
+"-LTR","-L[ength]T[hreshold]M[ode]","LengthThresholdRatio","Optional","1","1","LengthThresholdRatio","Real","0.25"
+"-CM","-C[reate]M[ode]","CreateMode","Optional","1","1","CM","Integer","0"

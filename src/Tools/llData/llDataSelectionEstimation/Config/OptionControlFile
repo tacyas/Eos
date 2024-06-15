@@ -1,0 +1,10 @@
+# OptionControlFile
+# FileFormat
+"-i1","-i1[nput]","Input: N L","Essential","2","1","N1","Real","0","2","L1","Real","161"
+"-i2","-i2[nput]","Input: N L","Essential","2","1","N2","Real","14","2","L2","Real","12"
+"-tmax","-tmax","Input: tmax","Optional","1","1","tmax","Real","100"
+"-umax","-umax","Input: umax","Optional","1","1","umax","Real","200"
+"-r","-r[accept]","Input: acceptable residue","Optional","1","1","r","Real","0.1"
+"-o","-o[utput]","OutputDataFile","Optional","1","1","Out","outFile","stdout"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

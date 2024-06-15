@@ -1,0 +1,17 @@
+.SUFFIXES: .tif .mrc .fft .ctfinfo .ctf
+
+CCD=14.0
+
+.tif.mrc:
+	echo "Mag:"; read Mag; RESO=`echo ""| awk -v M=$$Mag 'BEGIN { print $(CCD)/M*10; }'`; \
+	echo "Resolution: $$RESO";  \
+	tiff2mrc -i $*.tif -o $*.mrc  -r $$RESO 
+
+.mrc.fft:
+	mrcImageFFT -i $*.mrc -o $*.fft
+
+.fft.ctfinfo:
+	ctfDisplay -i $*.fft -o $*.ctfinfo
+
+.ctfinfo.ctf:
+	mrcImageCTFCompensation -i $*.fft -o $*.ctf -info2 $*.ctfinfo -m 1

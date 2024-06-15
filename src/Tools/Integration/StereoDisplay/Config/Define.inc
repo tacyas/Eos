@@ -1,0 +1,4 @@
+OBJECTNAME = StereoDisplay
+EXTRA_LIB  = -lGL -lGLU -lglut 
+EXTRA_CCOPTS =
+EXTRA_INC =

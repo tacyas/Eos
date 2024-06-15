@@ -1,0 +1,253 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageCommonLineSearch</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageCommonLineSearch<br></h2></b></font>
+	<h4>コモンラインを調べる</h4>
+
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>オプション</th>
+				<th>必須項目/選択項目</th>
+				<th>NULL</th>
+				<th>デフォルト</th>
+			</tr>
+			<tr>
+				<td>-i</td>
+				<td>必須</td>
+				<td>入力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-r</td>
+				<td>必須</td>
+				<td>参照ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-dtheta</td>
+				<td>選択</td>
+				<td>ピクセルサイズを設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-o</td>
+				<td>選択</td>
+				<td>出力ファイル設定</td>
+				<td>stdout</td>
+			</tr>
+			<tr>
+				<td>-O</td>
+				<td>選択</td>
+				<td>出力ファイル２設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-M</td>
+				<td>選択</td>
+				<td>モード１（コモンライン探索モード）</td>
+				<td>1</td>
+			</tr>
+			<tr>
+				<td>-m</td>
+				<td>選択</td>
+				<td>モード２</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-h</td>
+				<td>選択</td>
+				<td>ヘルプを表示</td>
+				<td>　</td>
+			</tr>
+		</table>
+		
+<!-- モード詳細 -->
+
+	<br>
+	<br>
+	<caption><b>モード１の詳細</b></caption>
+	<table border="1">
+	<div align="left">
+		<tr>
+			<th>モード</th>
+			<th>説明</th>
+		</tr>
+		<tr>
+			<td>0</td>
+			<td>フーリエ空間</td>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>実空間</td>
+		</tr>
+	</div>
+	</table>
+
+	<br>
+	<br>
+	<caption><b>モード２の詳細</b></caption>
+	<table border="1">
+	<div align="left">
+		<tr>
+			<th>モード</th>
+			<th>説明</th>
+		</tr>
+		<tr>
+			<td>0</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td></td>
+		</tr>
+	</div>
+	</table>
+
+	<h4>******実行例******</h4>
+
+<!-- 入力ファイル説明 -->
+	
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="121p-1.png" border="0" alt="121p-1.png(1321 byte)" width="100" height="100"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				13<br>
+				0.155<br>
+				0.87657<br>
+				0.0087657<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<br>
+	<br>
+	<caption><font color="blue">------参照ファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="121p-2.png" border="0" alt="121p-2.png(1316 byte)" width="100" height="100"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				11<br>
+				0.155<br>
+				0.874514<br>
+				0.00874514<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<div>入力ファイルは参照ファイルの物体を45°傾けたものとなっている</div>
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-M（モード１）------</font></caption><br>
+	<div>モード１：０</div>
+	<div>モード２：０</div>
+	<table>
+		<tr>
+			<td><img src="outdata2-M0m0.png" border="0" alt="outdata2-M0m0.png(28919 byte)" width="211" height="211"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-0.959089<br>
+				1<br>
+				0.0408768<br>
+				0.411404<br>
+				0.00194978<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>モード２：１</div>
+	<table>
+		<tr>
+			<td><img src="outdata2-M0m1.png" border="0" alt="outdata2-M0m1.png(39407 byte)" width="211" height="211"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0.916889<br>
+				1<br>
+				0.969244<br>
+				0.0121819<br>
+				5.7734e-05<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<br>
+	<div>モード１：１</div>
+	<div>モード２：０</div>
+	<table>
+		<tr>
+			<td><img src="outdata2-M1m0.png" border="0" alt="outdata2-M1m0.png(18242 byte)" width="212" height="212"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-1<br>
+				1<br>
+				nan<br>
+				nan<br>
+				nan<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>モード２：１</div>
+	<table>
+		<tr>
+			<td><img src="outdata2-M1m1.png" border="0" alt="outdata2-M1m1.png(36644 byte)" width="212" height="212"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-0.2438<br>
+				1<br>
+				0.633036<br>
+				0.187172<br>
+				0.000882887<br></p>
+			</td>
+		</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

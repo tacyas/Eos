@@ -1,0 +1,9 @@
+-F 4.3 1 0 30x30+10+20 +0+0 ' ' form
+  -M 1 1 30x5+0+0 +20+0 ' ' subform
+    -P 1 0 50x15+0+0 +20+0 ' ' pane
+      -H 1  6x1+38+0 'Help' 'online help page' $DESIGN/help/menuform/Empty.doc help
+      -Q 1 0 6x1+45+0 'Quit'
+      -t 1 0 1 0 0 6x1+1+1 'Flag' 'flag' flag1
+    -E
+  -E
+-E

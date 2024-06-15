@@ -1,0 +1,34 @@
+<HTML>
+<HEAD>
+<TITLE>mrcImageLogicalOperation</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageLogicalOperation</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageLogicalOperation
+Options:
+    [-i[nput]1           In1                 (NULL      ).as(inFile::mrcImage    ) ] :Essential :Input: P
+    [-i[nput]2           In2                 (NULL      ).as(inFile::mrcImage    ) ] :Optional  :Input: Q
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+mode 0: AND(P*Q)
+mode 1: OR(P+Q)
+mode 2: ^(1-P)
+mode 3: XOR
+mode 4: XNOR
+mode 5: NAND
+mode 6: NOR
+mode 7: False
+mode 8: True
+mode 9: P
+mode 10: Q
+mode 11: IMP(^P+Q)   : Implication: P -> Q
+mode 12: NIMP(P*^Q)  : Not Implication: P -\-> Q
+mode 13: IIMP(P+^Q)  : Inverse Implication: Q -> P
+mode 14: NIIMP(^P*Q) : Not Inverse Implication: Q -\-> P
+</PRE>
+</BODY>
+</HTML>

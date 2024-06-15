@@ -1,0 +1,233 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title></title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageProjection<br></h2></b></font>
+	<h4></h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>オプション</th>
+				<th>必須項目/選択項目</th>
+				<th>NULL</th>
+				<th>デフォルト</th>
+			</tr>
+			<tr>
+				<td>-i</td>
+				<td>必須</td>
+				<td>入力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-o</td>
+				<td>必須</td>
+				<td>出力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-m</td>
+				<td>選択</td>
+				<td>モード</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-h</td>
+				<td>選択</td>
+				<td>ヘルプを表示</td>
+				<td>　</td>
+			</tr>
+		</table>
+
+<!-- モード詳細 -->
+
+	<br>
+	<br>
+	<caption><b>モードの詳細</b></caption>
+	<table border="1">
+	<div align="left">
+		<tr>
+			<th>モード</th>
+			<th>説明</th>
+		</tr>
+		<tr>
+			<td>0</td>
+			<td>ｘｙ面をｚ軸に沿って３D画像から２D画像にする</td>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>ｙｚ面をｘ軸に沿って３D画像から２D画像にする</td>
+		</tr>
+		<tr>
+			<td>2</td>
+			<td>ｘｚ面をｙ軸に沿って３D画像から２D画像にする</td>
+		</tr>
+		<tr>
+			<td>3</td>
+			<td>ｘｙ面をｙ軸に沿って３Dまたは２D画像から１D画像にする</td>
+		</tr>
+		<tr>
+			<td>4</td>
+			<td>ｘｙ面をｘ軸に沿って３Dまたは２D画像から１D画像にする</td>
+		</tr>
+		<tr>
+			<td>5</td>
+			<td>ｘｙ面をｚ軸に沿って３Dまたは２D画像から１D画像にする</td>
+		</tr>
+	</div>
+	</table>
+
+	<h4>******実行例******</h4>
+	
+<!-- 入力ファイル説明 -->
+	
+	<caption><font color="blue">------入力ファイルの詳細------</font></caption><br>
+	<div><img src="input-mrcInfo.png" border="0" alt="input-mrcInfo.png(10039 byte)" width="559" height="251"></div>
+	<table>
+		<tr>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				2<br>
+				0.00148981<br>
+				0.043511<br>
+				4.26578e-05<br></p>
+			</td>
+		</tr>
+	</table>
+
+<!-- 出力結果 -->
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-m------</font></caption><br>
+	<div>モード：０</div>
+	<table>
+		<tr>
+			<td><img src="outdata-m0.png" border="0" alt="outdata-m0.png(1322 byte)" width="100" height="102"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				13<br>
+				0.151961<br>
+				0.8682<br>
+				0.00859646<br></p>
+			</td>
+		</tr>
+	</table>	
+
+	<div>モード：１</div>
+	<table>
+		<tr>
+			<td><img src="outdata-m1.png" border="0" alt="outdata-m1.png(1326 byte)" width="102" height="102"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				14<br>
+				0.148981<br>
+				0.866363<br>
+				0.00849375<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<div>モード：２</div>
+	<table>
+		<tr>
+			<td><img src="outdata-m2.png" border="0" alt="outdata-m2.png(1333 byte)" width="102" height="100"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				13<br>
+				0.151961<br>
+				0.882646<br>
+				0.0087395<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<div>モード：３</div>
+	<table>
+		<tr>
+			<td><img src="outdata-m3.png" border="0" alt="outdata-m3.png(953 byte)" width="102" height="1"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				108<br>
+				15.1961<br>
+				31.2724<br>
+				3.09643<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<div>モード：４</div>
+	<table>
+		<tr>
+			<td><img src="outdata-m4.png" border="0" alt="outdata-m4.png(957 byte)" width="100" height="1"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				108<br>
+				15.5<br>
+				31.4097<br>
+				3.14097<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<div>モード：５</div>
+	<table>
+		<tr>
+			<td><img src="outdata-m5.png" border="0" alt="outdata-m5.png(956 byte)" width="100" height="1"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				117<br>
+				15.5<br>
+				32.2082<br>
+				3.22082<br></p>
+			</td>
+		</tr>
+	</table>
+
+
+
+</body>
+</html>

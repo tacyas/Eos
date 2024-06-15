@@ -1,0 +1,8 @@
+.onlineHelp EOS mrcImage2DProjection "Introduction to mrcImage2DProjection"
+.
+.section 1 "Introduction to mrcImage2DProjection"
+.
+.\" This is the help page associated with the Help button on
+.\" the toplevel window of mrcImage2DProjection
+If you are reading this text,
+you should report it as a bug :-)

@@ -1,0 +1,159 @@
+/*
+# %M% %Y% %I%
+# The latest update : %G% at %U%
+#
+#%Z% mrcMeanYlinePos ver %I%
+#%Z% Created by 
+#%Z%
+#%Z% Usage : mrcMeanYlinePos
+#%Z% Attention
+#%Z%
+*/
+static char __sccs_id[] = "%Z%mrcMeanYlinePos ver%I%; Date:%D% %Z%";
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>                  
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+#include "mrcImage.h"
+
+/* prototype */
+void llmrcImageCombolution(mrcImage* out ,mrcImage* in1,mrcImage* in2);
+void llmrcImageScroll(mrcImage* out ,mrcImage* in);
+
+void
+main(int argc, char* argv[]) 
+{
+	long status;
+	mrcMeanYlinePosInfo info;
+
+/* variables */
+	mrcImage inb;
+	mrcImage ins;
+	mrcImage out;
+	mrcImage outScrolled;
+	
+/* input parameters ,file open */
+	init0(&info);
+	argCheck(&info, argc, argv);
+	init1(&info);
+
+/* begin */
+	mrcFileRead(&inb,   info.InBase,  "in main",0);
+	mrcFileRead(&ins,   info.InShift,  "in main",0);
+	printf("Read\n");
+	llmrcImageCombolution(&out, &inb ,&ins);
+	printf("Comboluted\n");
+	llmrcImageScroll(&outScrolled,&out);
+	printf("Scrolled\n");
+	mrcFileWrite(&outScrolled ,info.Out ,"in main" ,0);
+	printf("Wrote\n");
+	exit(EXIT_SUCCESS);
+}
+
+void
+additionalUsage()
+{
+}
+
+void llmrcImageCombolution(mrcImage* out ,mrcImage* inb,mrcImage* ins)
+{
+/* variables */
+	int x,y,z;
+	double databRe,databIm,datasRe,datasIm,dataoRe,dataoIm;
+	mrcImage inbFrequencyArea;
+	mrcImage insFrequencyArea;
+	mrcImage outFrequencyArea;
+
+
+/* begin */
+
+	/* FFT */
+	printf("FFT Start\n");
+	lmrcImageFFT(&inbFrequencyArea,inb,0);
+	printf("FFT1 done\n");
+	lmrcImageFFT(&insFrequencyArea,ins,0);
+	printf("FFT2 done\n");
+
+	/* Out Header Creation */
+	outFrequencyArea.Header = inbFrequencyArea.Header;
+	mrcInit(&outFrequencyArea,NULL);
+	
+	z=0;   /* Plain Data Only */
+
+	/* Combolution */
+	for (y=(-outFrequencyArea.HeaderN.y/2) ;y<(outFrequencyArea.HeaderN.y/2) ;y++){
+		printf("%d ",y);
+		for (x=0 ;x<=(outFrequencyArea.HeaderN.x)/2 ;x++){
+			mrcPixelDataGet(&inbFrequencyArea,x,y,z,&databRe,mrcPixelRePart ,mrcPixelHowNearest); 
+			mrcPixelDataGet(&inbFrequencyArea,x,y,z,&databIm,mrcPixelImPart ,mrcPixelHowNearest); 
+			mrcPixelDataGet(&insFrequencyArea,x,y,z,&datasRe,mrcPixelRePart ,mrcPixelHowNearest); 
+			mrcPixelDataGet(&insFrequencyArea,x,y,z,&datasIm,mrcPixelImPart ,mrcPixelHowNearest); 
+			dataoRe = databRe*datasRe+databIm*datasIm;
+			dataoIm = databRe*datasIm-databIm*datasRe;
+		
+			mrcPixelDataSet(&outFrequencyArea,x,y,z,dataoRe ,mrcPixelRePart);
+		
+			mrcPixelDataSet(&outFrequencyArea,x,y,z,dataoIm ,mrcPixelImPart);
+		
+		}
+	}
+	/*(X,Y)=(0,0) => 0 */
+	
+	mrcPixelDataSet(&outFrequencyArea,0,0,z,0,mrcPixelRePart);
+	mrcPixelDataSet(&outFrequencyArea,0,0,z,0,mrcPixelImPart);
+	
+	mrcStatDataSet(&outFrequencyArea,0);
+	/* Reverse FFT */
+	lmrcImageFFT(out,&outFrequencyArea,0);  
+}
+void llmrcImageScroll(mrcImage* out ,mrcImage* in)
+{
+/* variables */
+	int x,y,z;
+	double data;
+
+	/* Out Header Creation */
+	out->Header = in->Header;
+	mrcInit(out,NULL);
+	
+	z=0;   /* Plain Data Only */
+
+/* Scroll */
+	/*lower left -> upper right */
+	for (y=0 ;y<(out->HeaderN.y/2) ;y++){
+		for (x=0 ;x<(out->HeaderN.x)/2 ;x++){
+			mrcPixelDataGet(in,x,y,z,&data,mrcPixelRePart ,mrcPixelHowNearest);
+			mrcPixelDataSet(out,x+(out->HeaderN.x/2),y+(out->HeaderN.y/2),z,data,mrcPixelRePart);
+		
+		}
+	}
+	/*lower right -> upper left */
+	for (y=0 ;y<(out->HeaderN.y/2) ;y++){
+		for (x=(out->HeaderN.x)/2 ;x<(out->HeaderN.x) ;x++){
+			mrcPixelDataGet(in,x,y,z,&data,mrcPixelRePart ,mrcPixelHowNearest);
+			mrcPixelDataSet(out,x-(out->HeaderN.x/2),y+(out->HeaderN.y/2),z,data,mrcPixelRePart);
+		
+		}
+	}
+	/*upper left -> lower right */
+	for (y=(out->HeaderN.y/2) ;y<(out->HeaderN.y) ;y++){
+		for (x=0 ;x<(out->HeaderN.x)/2 ;x++){
+			mrcPixelDataGet(in,x,y,z,&data,mrcPixelRePart ,mrcPixelHowNearest);
+			mrcPixelDataSet(out,x+(out->HeaderN.x/2),y-(out->HeaderN.y/2),z,data,mrcPixelRePart);
+		
+		}
+	}
+	/*upper right -> lower left */
+	for (y=(out->HeaderN.y/2) ;y<(out->HeaderN.y) ;y++){
+		for (x=(out->HeaderN.x/2) ;x<(out->HeaderN.x) ;x++){
+			mrcPixelDataGet(in,x,y,z,&data,mrcPixelRePart ,mrcPixelHowNearest);
+			mrcPixelDataSet(out,x-(out->HeaderN.x/2),y-(out->HeaderN.y/2),z,data,mrcPixelRePart);
+		
+		}
+	}
+	
+	mrcStatDataSet(out,0);
+  
+}

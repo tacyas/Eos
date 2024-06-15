@@ -1,0 +1,14 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input:mrcImage","Optional","1","1","In","inFile::mrcImage","NULL"
+"-t","-t[epmlate]","Template for InputFile ","Optional","1","1","Template","String","%d.roi"
+"-H","-H[ighForThres]","HighThres","Optional","1","1","ThresHigh","Real","0.0"
+"-L","-L[owForThres]","LowThres","Optional","1","1","ThresLow","Real","0.0"
+"-Zoom","-Zoom","Zoom for InputFile ","Optional","1","1","Zoom","Real","1.0"
+"-Inverse","-Inverse","Inverse (HighValue(dark)<->LowValue(bright)) for InputFile ","Optional","0"
+"-o","-o[utput]","OutputLogFile","Optional","1","1","Out","String",".EosLog"
+"-def","-def[ault]","OutputLogFile","Optional","1","1","Default","String","~/.Eos/Display2"
+"-display","-display","OutputLogFile","Optional","1","1","geometry","String",":0.0"
+"-geometry","-geometry","OutputLogFile","Optional","1","1","display","String","1024x1024+0+0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

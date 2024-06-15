@@ -1,0 +1,5 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode 0:Alignment is just. 1:Alignment is just.To display distance of max.2:No alignment 3:No alignment and alpha of reference is 180.","Optional","1","1","mode","Integer","0"

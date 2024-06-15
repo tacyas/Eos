@@ -1,0 +1,7 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode 0:Fourier translation  1:Create Fourier phase image","Optional","1","1","mode","Integer","0"
+"-p","-p[ower]","For mode 1 only: Use F/( |F|^p ) to create fourier phase image","Optional","1","1","Power","Real","1"

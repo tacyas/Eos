@@ -1,0 +1,294 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#define GLOBAL_DECLARATION       
+#include "../inc/config.h"
+#include "mrcImageIP2.h"
+#include "genUtil.h"
+
+extern void lpeakFileRead (FILE* fpt, mrcImage* peak, mrcMaskInfo* info);
+
+void
+main(int argc, char* argv[])
+{
+    mrcImage fft0;
+    mrcImage fft1;
+    mrcImage fft2;
+    mrcImage peak;
+    mrcMaskInfo info;
+
+    init0(&info);
+    argCheck(&info, argc, argv);
+    init1(&info);
+    mrcFileRead (&fft0, info.inFileName,  "from Main Routine", 0);
+    peak = fft0;
+    mrcInit(&peak, 0);
+    if(info.flagPeakInFile) {
+        lpeakFileRead(info.fptPeakIn, &peak, &info);
+        lmrcFFTFxG(&fft1, &fft0, &peak);
+    } else {
+        fft1 = fft0;
+    }
+    if(info.flagVector) {
+        lmrcMask(&fft2, &fft1, &info);
+    } else {
+        fft2 = fft1;
+    }
+
+    mrcFileWrite(&fft2, info.outFileName, "from Main Routine", 0);
+    if(info.flagPeakOutFile) {
+        mrcFileWrite(&peak, info.peakOutFileName, "from MainRoutine", 0);
+    }
+}
+
+extern long __inArea0(mrcImage* fft, long iv, Coord* vect);
+extern long __inArea1(mrcImage* fft, long iv1, long iv2, Coord* vect1, Coord* vect2, Coord* v);
+extern long __inArea(mrcImage* fft, long iX, long iY);
+extern void __mrcPixelDataSetRotateRectRegion(mrcImage* fft, Coord v, Coord r, double angle, double weight);
+
+void
+lpeakFileRead(FILE* fpt, mrcImage* fft1, mrcMaskInfo* info)
+{
+    int iv1, iv2;
+    mrcImageParaTypeReal iX, iY, iZ;
+    mrcImageParaTypeReal ix, iy, iz;
+    double re, im, weight;
+	Coord  v;
+	Coord  r;
+    mrcImageParaTypeReal maxx, maxy, maxz;
+    mrcImageParaTypeReal minx, miny, minz;
+    char s[GEN_UTIL_MAX_STRING_LENGTH];
+            
+    if(info->flagSize) {
+        r.x = info->size.x/2.0;
+        r.y = info->size.y/2.0;
+    } else if(info->flagRadius) {
+        r.x = info->radius.x;
+        r.y = info->radius.y;
+    } else {
+        fprintf(stderr, "Refer to Size or Radius, Something wrong!\n");
+    	exit(EXIT_FAILURE);
+    }
+    
+    /* Clearing */
+    weight = 0.0; iZ = iz = 0.0;
+    for(iX=-fft1->HeaderN.x/2; iX<fft1->HeaderN.x/2; iX++) {
+    	for(iY=-fft1->HeaderN.y/2; iY<fft1->HeaderN.y/2; iY++) {
+            mrcPixelDataSet(fft1, iX, iY, iZ, weight, mrcPixelRePart);
+            mrcPixelDataSet(fft1, iX, iY, iZ, weight, mrcPixelImPart);
+	   }
+    }
+
+    while(NULL!=getStringData(s, "", fpt, stdout, 1)) {
+        v.x = getNthRealData(s, 1, " \t,");;
+        v.y = getNthRealData(s, 2, " \t,");
+        weight = getNthRealData(s, 3, " \t,");
+        iZ = iz = 0.0;
+        if(!info->flagAngle) {
+	        for(ix=ceil(v.x-r.x); ix<=floor(v.x+r.x); ix++) {
+	            for(iy=ceil(v.y-r.y); iy<=floor(v.y+r.y); iy++) {
+                    if(rint(ix)>=0) {
+                	    mrcPixelDataSet(fft1, ix, iy, iz, weight, mrcPixelRePart);
+                    }
+	            }
+    	    }
+        } else {
+            __mrcPixelDataSetRotateRectRegion(fft1, v, r, info->angle, weight);
+        }
+    }
+}
+
+void
+lmrcMask(mrcImage* fft1, mrcImage* fft0, mrcMaskInfo* info)
+{
+    int iv1, iv2;
+    mrcImageParaTypeReal iX, iY, iZ;
+    mrcImageParaTypeReal ix, iy, iz;
+    double re, im, weight;
+	Coord  v;
+	Coord  r;
+    mrcImageParaTypeReal maxx, maxy, maxz;
+    mrcImageParaTypeReal minx, miny, minz;
+            
+    fft1->Header = fft0->Header;
+    mrcInit(fft1, NULL);
+
+    if(info->flagSize) {
+        r.x = info->size.x/2.0;
+        r.y = info->size.y/2.0;
+    } else if(info->flagRadius) {
+        r.x = info->radius.x;
+        r.y = info->radius.y;
+    } else {
+        fprintf(stderr, "Refer to Size or Radius, Something wrong!\n");
+    	exit(EXIT_FAILURE);
+    }
+    
+    /* Clearing */
+    weight = 0.0; iZ = iz = 0.0;
+    for(iX=-fft1->HeaderN.x/2; iX<fft1->HeaderN.x/2; iX++) {
+    	for(iY=-fft1->HeaderN.y/2; iY<fft1->HeaderN.y/2; iY++) {
+            mrcPixelDataSet(fft1, iX, iY, iZ, weight, mrcPixelRePart);
+            mrcPixelDataSet(fft1, iX, iY, iZ, weight, mrcPixelImPart);
+	   }
+    }
+
+    weight = 1.0;; iZ = iz = 0.0;
+    if(!info->flagAngle) {
+       for(iv1=0; __inArea0(fft1, iv1, &(info->v1)); iv1++) {
+	       	for(iv2=0; __inArea1(fft1, iv1, iv2, &(info->v1), &(info->v2), &v); iv2++) {
+	            for(ix=ceil(v.x-r.x); ix<=floor(v.x+r.x); ix++) {
+    	            for(iy=ceil(v.y-r.y); iy<=floor(v.y+r.y); iy++) {
+                        if(rint(ix)>=0) {
+                    	    mrcPixelDataSet(fft1, ix, iy, iz, weight, mrcPixelRePart);
+                        }
+	                }
+    	        }
+        	}
+	        for(iv2=0; __inArea1(fft1, -iv1, iv2, &(info->v1), &(info->v2), &v); iv2++) {
+	            for(ix=ceil(v.x-r.x); ix<=floor(v.x+r.x); ix++) {
+    	            for(iy=ceil(v.y-r.y); iy<=floor(v.y+r.y); iy++) {
+                        if(rint(ix)>=0) {
+                    	    mrcPixelDataSet(fft1, ix, iy, iz, weight, mrcPixelRePart);
+                        }
+	                }
+    	        }
+        	}
+        }
+	    for(iv1=0; __inArea0(fft1, iv1, &(info->v1)); iv1++) {
+	        for(iv2=0; __inArea1(fft1, iv1, -iv2, &(info->v1), &(info->v2), &v); iv2++) {
+	            for(ix=ceil(v.x-r.x); ix<=floor(v.x+r.x); ix++) {
+    	            for(iy=ceil(v.y-r.y); iy<=floor(v.y+r.y); iy++) {
+                        if(rint(ix)>=0) {
+                    	    mrcPixelDataSet(fft1, ix, iy, iz, weight, mrcPixelRePart);
+    	                }
+                    }
+    	        }
+        	}
+	        for(iv2=0; __inArea1(fft1, -iv1, -iv2, &(info->v1), &(info->v2), &v); iv2++) {
+	            for(ix=ceil(v.x-r.x); ix<=floor(v.x+r.x); ix++) {
+    	            for(iy=ceil(v.y-r.y); iy<=floor(v.y+r.y); iy++) {
+                        if(rint(ix)>=0) {
+                    	    mrcPixelDataSet(fft1, ix, iy, iz, weight, mrcPixelRePart);
+                        }
+	                }
+    	        }
+        	}
+    	}
+    } else {
+       for(iv1=0; __inArea0(fft1, iv1, &(info->v1)); iv1++) {
+	       	for(iv2=0; __inArea1(fft1, iv1, iv2, &(info->v1), &(info->v2), &v); iv2++) {
+                __mrcPixelDataSetRotateRectRegion(fft1, v, r, info->angle, weight);
+        	}
+	        for(iv2=0; __inArea1(fft1, -iv1, iv2, &(info->v1), &(info->v2), &v); iv2++) {
+                __mrcPixelDataSetRotateRectRegion(fft1, v, r, info->angle, weight);
+        	}
+        }
+	    for(iv1=0; __inArea0(fft1, iv1, &(info->v1)); iv1++) {
+	        for(iv2=0; __inArea1(fft1, iv1, -iv2, &(info->v1), &(info->v2), &v); iv2++) {
+                __mrcPixelDataSetRotateRectRegion(fft1, v, r, info->angle, weight);
+        	}
+	        for(iv2=0; __inArea1(fft1, -iv1, -iv2, &(info->v1), &(info->v2), &v); iv2++) {
+                __mrcPixelDataSetRotateRectRegion(fft1, v, r, info->angle, weight);
+        	}
+    	}
+    }
+    for(iX=0; iX<fft1->HeaderN.x/2; iX++) {
+    	for(iY=-fft1->HeaderN.y/2; iY<fft1->HeaderN.y/2; iY++) {
+	       	mrcPixelDataGet(fft0, iX, iY, iZ, &re, mrcPixelRePart, mrcPixelHowNearest);
+            mrcPixelDataGet(fft0, iX, iY, iZ, &im, mrcPixelImPart, mrcPixelHowNearest);
+            mrcPixelDataGet(fft1, iX, iY, iZ, &weight, mrcPixelRePart, mrcPixelHowNearest);
+#ifdef DEBUG
+            if(weight!=0 && weight!=1.0) fprintf(stderr, "(%g, %g, %g) = (%g, %g, %g)\n", iX, iY, iZ, re, im, weight);
+#endif
+            mrcPixelDataSet(fft1, iX, iY, iZ, re*weight, mrcPixelRePart);
+            mrcPixelDataSet(fft1, iX, iY, iZ, im*weight, mrcPixelImPart);
+	   }
+    }
+}
+
+long
+__inArea(mrcImage* fft, long iX, long iY)
+{
+	long nx, ny;
+    
+    nx = fft->HeaderN.x/2;
+    ny = fft->HeaderN.y/2;
+    
+    if(-nx<=iX && iX<nx && -ny<=iY && iY<ny) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+long
+__inArea0(mrcImage* fft, long iv, Coord* vect)
+{
+    Coord v;
+    long  nx, ny;
+    
+    v.x = iv*vect->x;
+    v.y = iv*vect->y;
+    nx = fft->HeaderN.x/2;
+    ny = fft->HeaderN.y/2;
+    
+ 	if(    -nx <= v.x && v.x < nx
+    	&& -ny <= v.y && v.y < ny) {
+        return 1;
+    } else {
+        return 0;
+    }
+
+} 
+long
+__inArea1(mrcImage* fft, long iv1, long iv2, Coord* vect1, Coord* vect2, Coord* v)
+{
+    long nx, ny;
+    
+    v->x = iv1*vect1->x + iv2*vect2->x;
+    v->y = iv1*vect1->y + iv2*vect2->y;
+    nx = fft->HeaderN.x/2;
+    ny = fft->HeaderN.y/2;
+    
+    if(    -nx <= v->x && v->x <= nx
+        && -ny <= v->y && v->y <  ny) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+void
+__mrcPixelDataSetRotateRectRegion(mrcImage* fft, Coord v, Coord r, double angle, double weight)
+{
+    mrcImageParaTypeReal iX, iY, iZ;
+    mrcImageParaTypeReal ix, iy, iz;
+
+    mrcImageParaTypeReal maxx, maxy, maxz;
+    mrcImageParaTypeReal minx, miny, minz;
+
+    minx = maxx = v.x;
+    miny = maxy = v.y;
+	for(ix=ceil(v.x-r.x); ix<=floor(v.x+r.x); ix+=2*r.x) {
+        for(iy=ceil(v.y-r.y); iy<=floor(v.y+r.y); iy+=2*r.y) {
+			iX = ix + (ix-v.x)*cos(angle) - (iy-v.y)*sin(angle);
+            iY = iy + (ix-v.x)*sin(angle) + (iy-v.y)*cos(angle);
+            if(minx>iX) minx = iX;
+            if(maxx<iX) maxx = iX;
+            if(miny>iY) miny = iY;
+            if(maxy<iY) maxy = iY;
+	    }
+    }
+    for(ix=minx; ix<=maxx; ix++) {
+        for(iy=miny; iy<=maxy; iy++) {
+			iX = ix + (ix-v.x)*cos(angle) + (iy-v.y)*sin(angle);
+            iY = iy - (ix-v.x)*sin(angle) + (iy-v.y)*cos(angle);
+            if(    ceil(v.x-r.x)<=iX && iX<=floor(v.x+r.x)
+                && ceil(v.y-r.y)<=iY && iY<=floor(v.y+r.y)) {
+                if(rint(ix)>=0) {
+                    mrcPixelDataSet(fft, ix, iy, iz, weight, mrcPixelRePart);
+                }
+            }
+        }
+    }
+}

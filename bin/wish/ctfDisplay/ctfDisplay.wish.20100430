@@ -1,0 +1,862 @@
+#!../I686LINUX/ctfDisplay
+#
+#
+# ctfDisplay
+#
+#
+set program ctfDisplay  
+
+##
+# library load
+if [ file exists $program.wish ] {
+   	lappend auto_path [ pwd ]
+   	auto_mkindex [ pwd ] *.wish
+}
+
+proc libraryLoad { program } {
+	global tcl_version
+	global env
+	global auto_path
+
+	## Environment Set
+	set CurrentDir [ pwd ]
+	#puts "CurrentDir: $CurrentDir"
+	
+	if [info exists env(EOS_HOME)] {
+	    set path $env(EOS_HOME)/bin/wish/$program
+	} else {
+	    set path [ pwd ]
+	}
+
+	if [info exists env(EOS_HOME)] {
+	    set libpath $env(EOS_HOME)/lib
+		lappend auto_path $libpath
+		auto_mkindex $libpath *.wish
+	} else {
+	    set libpath {}
+	}
+	lappend auto_path   $path
+	lappend auto_path $libpath
+	auto_mkindex $path  *.wish
+	auto_mkindex $libpath *.wish
+
+	#puts $libpath ; flush stdout
+	#puts $path    ; flush stdout
+	# Unless the shells are found,
+	if ![file exists $path/$program.wish] {
+	    tk_dialog .d "Error:" "Wrong Directory!" error 0 OK
+	    exit 0
+	}
+
+	# BLT Command Add
+	if { $tcl_version >= 8.0 } {
+	    catch { namespace import blt::* }
+	} else {
+	    catch { import add blt }
+	}
+	
+	if { [ info commands "namespace" ] == "namespace" } {
+	    if { $tcl_version >= 8.0 } {
+	        catch { namespace import -force blt::tile::* }
+	    } else {
+	        catch { import add blt::tile }
+	    }
+	} else {
+	    foreach cmd { button checkbutton radiobutton frame label scrollbar toplevel menubutton listbox } {
+	        if { [info command tile${cmd}] == "tile${cmd}" } {
+	            rename ${cmd} ""
+	            rename tile${cmd} ${cmd}
+	        }
+	    }
+	}
+}
+
+namespace eval CTF2D {
+	variable ctfInfo
+	variable fftPattern
+	namespace export  
+#
+#
+#
+proc Init { { mrc __null__ } } {
+	variable ctfInfo
+	global inMRC
+	global outCTF
+	global outPS
+	global Rmax
+	global Imax
+	global Imin
+	global flagLog
+
+	if { [ info exists inMRC ] } {
+		set ctfInfo(filename) $inMRC
+	} else {
+		if { $mrc == "__null__" } {
+			set ctfInfo(filename) ""
+		} else {
+			set ctfInfo(filename) $mrc 
+		}	
+	}
+
+	::CTF::Init "filename $ctfInfo(filename)" 
+	ctfInfoSync
+
+	if { [ info exists outCTF ] } {
+		set ctfInfo(.ctfinfo) $outCTF
+	} else {
+		set ctfInfo(.ctfinfo) [ file rootname $inMRC ].ctfinfo
+	}
+	if { [ info exists outPS ] } {
+		set ctfInfo(.ctfps) $outCTF
+	} else {
+		set ctfInfo(.ctfps)   [ file rootname $inMRC ].ctfps
+	}
+
+	if { [ info exists Rmax ] } {
+		set ctfInfo(Rmax) $Rmax
+	}		
+	if { [ info exists Imax ] } {
+		set ctfInfo(Imax) $Imax
+	}		
+	if { [ info exists Imin] } {
+		set ctfInfo(Imin) $Imin
+	}		
+	if { [ info exist flagLog ] } {
+		set ctfInfo(flagLogScale) $flagLog
+	}
+
+	set ctfInfo(numDivision) 12 
+
+	ctfInfoSync
+	::CTF::ctfInfoLoad $ctfInfo(.ctfinfo)
+
+	ScatteringCalc $ctfInfo(filename)
+
+    set ctfInfo(flagThonRingOnCanvas) 1
+}
+
+#
+#
+#
+proc ctfInfoSync { } {
+	variable ctfInfo
+	
+	set tmp [ array get ctfInfo ]
+	array set ctfInfo "[ ::CTF::ctfInfoListGet ] $tmp"
+	::CTF::ctfInfoAppend [ array get ctfInfo ]
+}
+
+proc ctfInfoUpload { } {
+	variable ctfInfo
+	
+	set tmp [ array get ::CTF::ctfInfo ]
+	array set ctfInfo "[ ::CTF::ctfInfoListGet ] $tmp"
+}
+#
+#
+#
+proc Win { { win __null__ }  { filename __null__ } { extension 2 } } {
+	variable ctfInfo
+
+	if { $win == "__null__" } {
+		set w ""
+	} else {
+		if [ catch { toplevel $win } ] {
+			raise $win
+			return
+		} else {
+			set w $win
+		}
+	}
+	SpectrumFrameCreate  $w.spectrum     top 
+	InfoFrameCreate      $w.information  right  
+	set f [ frame $w.graph ] 
+	GraphFrameCreate     $f.graph0    0  top 
+	GraphFrameCreate     $f.graph1    1  bottom 
+	pack $f.graph0 -side top    -expand true -fill both 
+	pack $f.graph1 -side bottom -expand true -fill both 
+
+	pack $w.information -side right -expand true 
+	pack $w.graph       -side right -expand true  -fill both 
+	pack $w.spectrum    -side left -expand true 
+
+	GraphUpdate
+}
+
+proc SpectrumFrameCreate { f side } {
+	variable ctfInfo
+	variable fftPattern
+	frame $f
+	
+	set fftPattern(width)  512
+	set fftPattern(height) 512
+
+	set fftPattern(canvas) $f.canvas 
+	scrolledCanvas $f.canvas $fftPattern(width) $fftPattern(height) [ list 0 0  [ expr 2*$fftPattern(width)] [expr  2*$fftPattern(height)] ] 
+	pack $f.canvas -side top -expand yes 
+
+	SpectrumPut $f.canvas $ctfInfo(filename)  
+
+}
+
+proc GraphFrameCreate { f which side } {
+	variable ctfInfo
+	frame $f
+
+	label $f.label -text "defocus-$which" 
+	set ctfInfo([subst $which],graph) [ graph $f.graph ]
+	#puts "graph: $ctfInfo($which,graph) $which"; flush stdout
+	#pack $f.label $f.graph -side top -expand true
+	pack $f.graph -side $side -expand true -fill both
+}
+
+proc InfoFrameCreate  { f side } {
+	variable ctfInfo
+
+	frame $f
+
+    # Scattering Information: Scattering/SubtractScattering
+    set cmd   "[ namespace code {GraphUpdate} ]"
+    set cmd2  "[ namespace code {GraphRedraw} ]"
+    set cmd3  "[ namespace code {SpectrumRedraw}]; [ namespace code {GraphRedraw} ]; "
+    set name  [ namespace current ]::
+
+    #
+    set ff [ frame $f.graph ]
+    checkbutton $ff.graph    -text "Scattering" -variable [subst $name]ctfInfo(flagScatGraph)            -command $cmd3
+    checkbutton $ff.graphsub -text "Subtract"   -variable [subst $name]ctfInfo(flagScatGraphSubtraction) -command $cmd
+    checkbutton $ff.log      -text "Log"        -variable [subst $name]ctfInfo(flagLogScale)             -command $cmd3
+    pack $ff.graph $ff.graphsub $ff.log -side left
+
+    # Scattering Graph Configure
+    set ff [ frame $f.graphConfig ]
+    CommandEntryWithUpDown $ff.intensity Imax 10 $cmd3 [subst $name]ctfInfo(Imax) [subst $name]ctfInfo(dImax) -width 6 
+    CommandEntryWithUpDown $ff.imin      Imin 10 $cmd3 [subst $name]ctfInfo(Imin) [subst $name]ctfInfo(dImin) -width 6 
+    CommandEntryWithUpDown $ff.brmax     Rmax 10 $cmd3 [subst $name]ctfInfo(Rmax) [subst $name]ctfInfo(dRmax) -width 6 
+    CommandEntryWithUpDown $ff.brmin     Rmin 10 $cmd  [subst $name]ctfInfo(Rmin) [subst $name]ctfInfo(dRmin) -width 6 
+    pack $ff.intensity $ff.imin $ff.brmax $ff.brmin -side top
+
+
+	# 
+	set ff [ frame $f.ctfConfig ]
+	label $ff.label -text "-------" 
+    CommandEntryWithUpDown $ff.defocus0 Defocus0 10 $cmd  [subst $name]ctfInfo(defocus2D0)   [subst $name]ctfInfo(ddefocus2D0)   -width 6 
+    CommandEntryWithUpDown $ff.defocus1 Defocus1 10 $cmd  [subst $name]ctfInfo(defocus2D1)   [subst $name]ctfInfo(ddefocus2D1)   -width 6 
+    CommandEntryWithUpDown $ff.axis     AxisFor0 10 $cmd2 [subst $name]ctfInfo(defocus0axis) [subst $name]ctfInfo(ddefocus0axis) -width 6 
+    CommandEntryWithUpDown $ff.aoverp   AoverP   10 $cmd  [subst $name]ctfInfo(AoverP)       [subst $name]ctfInfo(dAoverP)       -width 6 
+    CommandEntryWithUpDown $ff.isignal  Isignal  10 $cmd  [subst $name]ctfInfo(Isignal)      [subst $name]ctfInfo(dIsignal)      -width 6 
+    CommandEntryWithUpDown $ff.inoise   Inoise   10 $cmd  [subst $name]ctfInfo(Inoise)       [subst $name]ctfInfo(dInoise)       -width 6 
+    CommandEntryWithUpDown $ff.mtf      MTF      10 $cmd  [subst $name]ctfInfo(MTF)          [subst $name]ctfInfo(dMTF)          -width 6 
+    CommandEntryWithUpDown $ff.mtf2     MTF2     10 $cmd  [subst $name]ctfInfo(MTF2)         [subst $name]ctfInfo(dMTF2)         -width 6 
+
+	#button $ff.detail -text "Detail" -command "::CTF::ctfInfoCTFInfoFrameCreate $ff.ctf left"
+	pack $ff.label $ff.defocus0 $ff.defocus1 $ff.axis $ff.aoverp $ff.isignal $ff.inoise $ff.mtf $ff.mtf2 -side top 	
+
+    #
+    # File Frame
+    #
+    set ff  [ frame $f.file ]
+	set name [ namespace current ]::
+
+	label $ff.label -text "----------"
+    # Info
+    set fff [ frame $ff.saveInfo ]
+    button $fff.printInfo -text "Save" -command "[subst $name]ctfInfoSave"
+    CommandEntry $fff.printInfoEntry Info  5    "[subst $name]ctfInfoSave" -textvar [subst $name]ctfInfo(.ctfinfo)
+    pack $fff.printInfo   $fff.printInfoEntry -side left
+
+    # InfoLoad
+    set fff [ frame $ff.loadInfo ]
+    button $fff.loadInfo -text "Load" -command "[subst $name]ctfInfoLoad"
+    CommandEntry $fff.loadInfoEntry Info  5    "[subst $name]ctfInfoLoad"  -textvar [subst $name]ctfInfo(.ctfinfo)
+    pack $fff.loadInfo  $fff.loadInfoEntry -side left
+
+	pack $ff.label $ff.saveInfo $ff.loadInfo -side top
+
+
+	#
+	# CTF Frame2
+	#
+	set ff [ frame $f.ctfConfig2 ]	
+	
+	label $ff.label -text "---------"
+	set fff [ frame $ff.f1 ]	
+	CommandEntry $fff.kV      "kV kV     "  10 $cmd -textvar "[subst $name]ctfInfo(kV)"  -width 6
+	CommandEntry $fff.ai      "Ai mrad   "  10 $cmd -textvar "[subst $name]ctfInfo(Ai)"  -width 6
+	pack $fff.kV $fff.ai -side left 
+
+	set fff [ frame $ff.f2 ]	
+	CommandEntry $fff.numDiv  "nDivision "  10 $cmd -textvar "[subst $name]ctfInfo(numDivision)"  -width 6
+	pack $fff.numDiv -side left  
+
+	set fff [ frame $ff.f3 ]	
+	CommandEntry $fff.cs      "Cs mm     "  10 $cmd -textvar "[subst $name]ctfInfo(Cs)"  -width 6
+	CommandEntry $fff.cc      "Cc mm     "  10 $cmd -textvar "[subst $name]ctfInfo(Cc)"  -width 6
+	pack $fff.cs $fff.cc -side left
+	
+	set fff [frame $ff.f4 ]	
+	RadioButtonsCreateWithPackWithCommand $fff.which MTF $cmd left [subst $name]ctfInfo(whichMTF) singleExp Lorentz Linear Polynomial
+	pack $fff.which -side left
+
+	set fff [ frame $ff.f5 ] 
+	checkbutton  $fff.aliasing -text "Aliasing" -variable [subst $name]ctfInfo(flagAliasing) -command $cmd	
+	checkbutton  $fff.sampling -text "Sampling" -variable [subst $name]ctfInfo(flagSampling) -command $cmd
+	pack $fff.aliasing $fff.sampling  -side left 
+
+	pack $ff.label $ff.f1 $ff.f2 $ff.f3 $ff.f4 $ff.f5 -side top 
+	#
+	# File Frame 2
+	#
+
+    set ff  [ frame $f.file2 ]
+	# FFT
+    set fff [ frame $ff.loadFFT ]
+    button $fff.loadFFT -text "Load" -command "ScatteringCalc $ctfInfo(filename)" 
+    CommandEntry $fff.loadFFTEntry Data 5     "ScatteringCalc $ctfInfo(filename)" -textvar [subst $name]ctfInfo(filename)
+    pack $fff.loadFFT $fff.loadFFTEntry  -side left
+
+    #PS
+    set fff [ frame $ff.printPS ]
+    button $fff.printPS -text "Save" -command "[subst $name]ctfInfoSaveAsPS"
+    CommandEntry $fff.printPSEntry  Graph 5   "[subst $name]ctfInfoSaveAsPS" -textvar [subst $name]ctfInfo(.ctfps)
+    pack $fff.printPS $fff.printPSEntry  -side left
+
+    pack $ff.loadFFT $ff.printPS -side top
+
+	#
+
+    # Packing
+    pack \
+        $f.graph     \
+        $f.graphConfig  \
+        $f.ctfConfig  \
+        $f.file      \
+        $f.ctfConfig2  \
+        $f.file2      \
+        -side top -expand true
+    return $f
+}
+#
+#
+#
+proc SpectrumRedraw { } {
+	variable fftPattern 	
+	variable ctfInfo 
+
+	ctfInfoSync	
+		
+	SpectrumPut $fftPattern(canvas) $ctfInfo(filename)
+}
+
+proc SpectrumPut { c filename { mode 0 } } {
+	variable fftPattern 
+	variable ctfInfo
+
+	catch { image delete $fftPattern(image) }	
+
+	mrcInfoSet max  $ctfInfo(Imax)  
+	if { $ctfInfo(flagLogScale) == 1 } {
+		#puts log
+		mrcInfoSet log 
+	} else {
+		#puts mag
+		mrcInfoSet mag
+	}
+
+	mrcInfoSet min $ctfInfo(Imin)
+	mrcInfoSet max $ctfInfo(Imax)
+
+	set fftPattern(Nx)    [ mrcInfoGet $filename Nx ]	
+	set fftPattern(Ny)    [ mrcInfoGet $filename Ny ]	
+	set fftPattern(lx)    [ mrcInfoGet $filename Lengthx ]	
+	set fftPattern(ly)    [ mrcInfoGet $filename Lengthy ]	
+
+	set NyquistFreq       [ expr 1.0 / $fftPattern(lx) / 2.0 ]
+	set NyquistFreqY      [ expr 1.0 / $fftPattern(ly) / 2.0 ]
+	set dR                [ expr 1.0 /($fftPattern(lx)*$fftPattern(Nx)) ]
+	set dRY               [ expr 1.0 /($fftPattern(ly)*$fftPattern(Ny)) ]
+
+	#puts $NyquistFreq,$dR
+	if { $NyquistFreq < $ctfInfo(Rmax) } {
+		puts "Nyquist Freq < Rmax: Rmax -> Nyquist Freq"
+		set ctfInfo(Rmax) $NyquistFreq
+	}
+	set fftPattern(zoomx) [ expr ($fftPattern(width) /2.0) / ($ctfInfo(Rmax)/$dR) ]	
+	set fftPattern(zoomy) [ expr ($fftPattern(height)/2.0) / ($ctfInfo(Rmax)/$dR) ]	
+	set fftPattern(back)  [ image create photo -file $filename -format MRC -height 0 -width 0 -palette 8 ] 
+	set backimage         [ image create photo -palette 8 ]
+	#set w [ expr int($fftPattern(Nx)*$fftPattern(zoomx)) ]
+	#set h [ expr int($fftPattern(Ny)*$fftPattern(zoomy)) ]
+	#puts $fftPattern(width),$fftPattern(height)
+	#puts $w,$h,$fftPattern(Nx),$fftPattern(Ny),$fftPattern(zoomx),$fftPattern(zoomy)
+	if { 1 < $fftPattern(zoomx) } { 
+		set dx [ expr int($ctfInfo(Rmax) / $dR  ) ]
+		set dy [ expr int($ctfInfo(Rmax) / $dRY ) ] 
+		set sub [ expr int($fftPattern(zoomx) + 0.5 ) ]
+		#puts $dx,$dy
+		$backimage copy $fftPattern(back) \
+		  -from [ expr $fftPattern(Nx)/2 - $dx ] [ expr $fftPattern(Ny)/2 - $dy  ] \
+		    	[ expr $fftPattern(Nx)/2 + $dx ] [ expr $fftPattern(Ny)/2 + $dy  ] \
+				-to 0 0 [ expr $fftPattern(width) - 1 ] [ expr $fftPattern(height) - 1 ] \
+				-zoom $sub
+		set sub [expr 1.0/$sub ]
+	} else {
+		#puts "Sub Sampling"
+		set sub [ expr int( 1.0/$fftPattern(zoomx) + 0.5 ) ] 
+		set dx  [ expr int( $ctfInfo(Rmax) / $dR  ) ]
+		set dy  [ expr int( $ctfInfo(Rmax) / $dRY ) ] 
+		#puts $dx,$dy
+		$backimage copy $fftPattern(back) \
+		  -from [ expr $fftPattern(Nx)/2 - $dx ] [ expr $fftPattern(Ny)/2 - $dy  ] \
+		    	[ expr $fftPattern(Nx)/2 + $dx ] [ expr $fftPattern(Ny)/2 + $dy  ] \
+				-to 0 0 [ expr int(2.0*$dx/$sub) ] [ expr int(2.0*$dy/$sub) ] \
+				-subsample $sub 
+	}
+	set fftPattern(sub)     $sub
+	set fftPattern(centrex) [expr int($dx/$sub) ] 
+	set fftPattern(centrey) [expr int($dy/$sub) ]
+	set fftPattern(image) [ $c.canvas create image 0 0  -image $backimage -anchor nw ]
+}
+
+proc  PredictedMarkerOnCanvas {  c } {
+	variable fftPattern
+	variable ctfInfo
+	set sub   $fftPattern(sub) 
+	for { set j 0 } { $j < 2 } { incr j } { 
+		set angle [expr ($ctfInfo(defocus0axis) - $j * 90)/180.0*3.14159265  ] 
+		#puts $angle
+		for { set i 0 } { $i <  3 } { incr i } {
+			if [ info exists ctfInfo($j,predictZero$i) ] { 
+				set length [ expr ($ctfInfo($j,predictZero$i)*$fftPattern(lx)*$fftPattern(Nx))/$sub ]
+			} else {
+				set length 128
+			}
+			if [ info exists  fftPattern($j,line$i) ] {
+				$c.canvas delete $fftPattern($j,line$i)	
+			}
+			if [ info exists  fftPattern($j,line$i,tick) ] {
+				$c.canvas delete $fftPattern($j,line$i,tick)	
+			}
+			if [ info exists  fftPattern($j,line$i,char) ] {
+				$c.canvas delete $fftPattern($j,line$i,char)	
+			}
+			set fftPattern($j,line$i) [ $c.canvas create line \
+				$fftPattern(centrex) $fftPattern(centrey) \
+				[ expr  $length*cos($angle) + $fftPattern(centrex) ] \
+				[ expr -$length*sin($angle) + $fftPattern(centrey) ] \
+				-fill red -width 1 ]
+			set fftPattern($j,line$i,tick) [ $c.canvas create arc \
+				[ expr -$length + $fftPattern(centrex) ] \
+				[ expr -$length + $fftPattern(centrey) ] \
+				[ expr +$length + $fftPattern(centrex) ] \
+				[ expr +$length + $fftPattern(centrey) ] \
+				-style arc \
+				-start [expr $angle*180.0/3.1415926563 - 360.0/$ctfInfo(numDivision)/2.0 ] \
+				-extent [ expr 360.0/$ctfInfo(numDivision) ] \
+				-outline red  -width 1 ]
+		}	
+		if [ info exists  fftPattern($j,tag) ] {
+			$c.canvas delete $fftPattern($j,tag)	
+		}
+		set fftPattern($j,tag) [ $c.canvas create text \
+				[ expr  1.2*$length*cos($angle) + $fftPattern(centrex) ] \
+				[ expr -1.2*$length*sin($angle) + $fftPattern(centrey) ] \
+				-text $j -fill red ]
+	}
+}
+#
+#
+#
+proc GraphRedraw { } {
+	ctfInfoSync
+
+	ScatteringCalc
+	for { set i 0 } { $i < 2 } { incr i } {
+		#puts $i
+		GraphUpdate0 $i
+	}
+}
+
+proc GraphUpdate { } { 
+	ctfInfoSync
+
+	for { set i 0 } { $i < 2 } { incr i } {
+		#puts $i
+		GraphUpdate0 $i
+	}
+}
+
+proc GraphUpdate0 { which } {
+	variable ctfInfo
+	#puts "Graph Update"
+
+	GraphConfiguration $which 
+
+    if { $ctfInfo(flagScatGraph) == 1 } {
+        ScatteringLineCreate Scattering$which $ctfInfo($which,graph) ctfInfo($which,R) ctfInfo($which,Scattering) $which
+    } else {
+        catch { $ctfInfo($which,graph)  element delete Scattering$which }
+    }
+
+    if { $ctfInfo(flagScatGraphSubtraction) == 1 } {
+        catch { ScatteringLineCreate ScatteringSubtraction$which $ctfInfo($which,graph) ctfInfo($which,R) ctfInfo($which,ScatteringSubtraction) $which }
+    } else {
+        catch { $ctfInfo($which,graph) element delete ScatteringSubtraction$which }
+    }
+
+    CTFLineCreate $ctfInfo($which,graph) $which
+}
+# 
+# Thon Ring marker 
+#
+proc MarkerSet { which } {
+    variable ctfInfo
+
+    ctfInfoMarkerUnset
+    for { set i 1 } { $i <= $ctfInfo(zeroMax) }  { incr i } {
+        $ctfInfo([subst $which],graph) marker create line -name zero$which$i \
+                                        -coords { $ctfInfo([subst $which],zero$i)  0 \
+                                                  $ctfInfo([subst $which],zero$i)  1 }
+        $ctfInfo($which,graph) marker configure zero$which$i -dashes { 2 2 }
+    }
+}
+
+# Marker Unset
+proc MarkerUnset { which } {
+    variable ctfInfo
+
+    for { set i 1 } { $i <= $ctfInfo(zeroMax) }  { incr i } {
+        catch { $ctfInfo([subst $which],graph) marker delete zero$which$i  }
+    }
+}
+
+#
+#
+#
+proc PredictedThonRing { which } {
+    variable ctfInfo
+
+    set size [ llength $ctfInfo($which,R) ]
+    set dR   [ expr [lindex $ctfInfo($which,R) 1]-[lindex $ctfInfo($which,R) 0]]
+    set RMax [ lindex $ctfInfo($which,R) [expr $size-1] ]
+    set Zero [ ctfInfoGet Zero$which $RMax $ctfInfo(predictZeroMaxMax) $dR ]
+    set ctfInfo(predictZeroMax) [ expr [ llength $Zero ] / 3 ]
+
+    for { set i 0 } { $i < $ctfInfo(predictZeroMax) } { incr i } {
+        set ctfInfo($which,predictZero$i)     [ lindex $Zero [ expr 3*$i ] ]
+        set ctfInfo($which,predictZeroCTF$i)  [ expr   0.8*$ctfInfo(Imax) ]
+        set data  [ lindex $Zero [ expr 3*$i + 1 ] ]
+        set data1 [ lindex $Zero [ expr 3*$i + 2 ] ]
+        if { $ctfInfo(flagCTFPower) == 1 } {
+            set ctfInfo($which,predictZeroCTF$i) [ expr $data*$data + $data1*$data1 ]
+        } else {
+            set ctfInfo($which,predictZeroCTF$i) [ expr $data + $data1 ]
+        }
+    }
+    set ctfInfo($which,flagpredictThonRing) 1
+}
+
+#
+# PredictedMarker of ThonRing on graph
+#
+proc PredictedMarkerSet { which } {
+    variable ctfInfo
+
+    # Zero Point
+    PredictedThonRing $which
+
+    for { set i 0 } { $i < $ctfInfo(predictZeroMax) } { incr i } {
+        set ymax [ expr 1.2*$ctfInfo($which,predictZeroCTF$i) ]
+        $ctfInfo([subst $which],graph) marker create line -name predictZero$which$i -coords {
+            $ctfInfo($which,predictZero$i)  0 \
+            $ctfInfo($which,predictZero$i)  $ymax }
+    }
+    set ctfInfo($which,flagpredictZero) 1
+}
+
+#
+proc PredictedMarkerUnset { which } {
+    variable ctfInfo
+    if { $ctfInfo($which,flagpredictZero) == 1 } {
+        for { set i 1 } { $i < $ctfInfo(predictZeroMax) } { incr i } {
+            catch { $ctfInfo([subst $which],graph) marker delete predictZero$which$i }
+        }
+    }
+    set ctfInfo($which,flagpredictZero) 0
+}
+#
+proc MarkerReset { which } {
+    variable ctfInfo
+    for { set i 1 } { $i <= $ctfInfo(zeroMax) }  { incr i } {
+        if [ info exists ctfInfo(predictZero$i) ] {
+            set ctfInfo(zero$i) $ctfInfo(predictZero$i)
+        } else {
+            puts "ctfInfo(zeroMax) is wrong at $i: $ctfInfo(zeroMax)"
+            break
+        }
+    }
+    ctfInfoMarkerSet $which
+}
+
+proc ScatteringLineCreate { name g x y which } {
+	#puts $x,$y	
+    # Drawing Graph (Scattering)
+    catch { $g element delete $name }
+	if { $which == "0"} {
+    	upvar $x xx0
+    	upvar $y yy0
+    	$g element create $name -xdata $xx0 -ydata $yy0
+		#puts $xx0
+		#puts $yy0
+	} else {
+    	upvar $x xx1
+    	upvar $y yy1
+    	$g element create $name -xdata $xx1 -ydata $yy1
+		#puts $xx1
+		#puts $yy1
+	}	
+    $g element configure $name -pen scatPen$which 
+}
+
+#
+#
+#
+proc CTFLineCreate { g which } {
+    variable ctfInfo
+	variable fftPattern
+    # CTF Calc
+    CTFCalculation $which
+
+    # Graph Delete
+    catch { $g element delete CTF$which       }
+    catch { $g element delete CTFcore$which   }
+    catch { $g element delete Noise$which     }
+
+    # Markder Unset
+    catch { PredictedMarkerUnset $which }
+
+    # Signal + Noise
+    if { $ctfInfo(flagCTFGraph) == 1 } {
+        if { $ctfInfo(flagCTFPower) == 1 } {
+            $g element create    CTF$which   -xdata $ctfInfo([subst $which],R) -ydata $ctfInfo([subst $which],CTFPower)
+            $g element create    Noise$which -xdata $ctfInfo([subst $which],R) -ydata $ctfInfo([subst $which],CTFNoisePower)
+        } else {
+            $g element create    CTF$which   -xdata $ctfInfo([subst $which],R) -ydata $ctfInfo([subst $which],CTF)
+            $g element create    Noise$which -xdata $ctfInfo([subst $which],R) -ydata $ctfInfo([subst $which],CTFNoise)
+        }
+        $g element configure CTF$which   -pen ctfPen$which
+        $g element configure Noise$which -pen ctfPen$which
+
+        PredictedMarkerSet $which
+    }
+
+    # Signal Only
+    if { $ctfInfo(flagCTFcoreGraph) == 1 } {
+        if { $ctfInfo(flagCTFPower) } {
+            $g element create    CTFcore$which -xdata $ctfInfo([subst $which],R) -ydata $ctfInfo([subst $which],CTFSignalPower)
+        } else {
+            $g element create    CTFcore$which -xdata $ctfInfo([subst $which],R) -ydata $ctfInfo([subst $which],CTFSignal)
+        }
+        $g element configure CTFcore$which -pen ctfPen$which
+    }
+    if { $ctfInfo(flagThonRingOnCanvas) == 1 } {
+        PredictedMarkerOnCanvas $fftPattern(canvas) 
+    }
+
+    # Configuration
+    GraphConfiguration $which
+}
+
+
+proc GraphConfiguration { which } {
+    variable ctfInfo
+
+    set g $ctfInfo([subst $which],graph)
+
+    GraphPenCreate $which
+    #$g      configure   -title "CTF($ctfInfo(filename))"
+    $g axis configure x -title "R" -loose yes -max $ctfInfo(Rmax) -hide no
+    $g axis configure y -title "Intensity" -loose yes -max $ctfInfo(Imax) -hide no
+    $g legend configure -position top -hide no
+    $g axis configure x -max $ctfInfo(Rmax)
+    $g axis configure x -min $ctfInfo(Rmin)
+    $g axis configure y -max $ctfInfo(Imax)
+    $g axis configure y -min $ctfInfo(Imin)
+    if { $ctfInfo(flagLogScale) == 1 } {
+        if { $ctfInfo(Imin) <= 0 } {
+            set ctfInfo(Imin) [ expr $ctfInfo(Imax)*1e-6 ]
+        }
+        $g axis configure y -logscale yes
+    } else {
+        $g axis configure y -logscale no
+    }
+
+    Blt_ZoomStack    $g
+    Blt_Crosshairs   $g
+    Blt_ActiveLegend $g
+    Blt_ClosestPoint $g
+}
+
+#
+proc GraphPenCreate { which } {
+    variable ctfInfo
+
+    set g $ctfInfo([subst $which],graph)
+    catch { $g pen create scatPen$which }
+    $g pen configure scatPen$which -pixels 0 -color blue
+    catch { $g pen create ctfPen$which }
+    $g pen configure ctfPen$which -pixels  0 -color red
+}
+
+proc CTFInformationSet { } {
+	ctfInfoSync
+	::CTF::ctfInfoCTFInfomationSet 
+}
+
+proc CTFCalculation { which } {
+    variable ctfInfo
+
+    # Information Set
+    CTFInformationSet 
+
+    # Data Unset
+    catch { unset ctfInfo($which,CTF) }
+    catch { unset ctfInfo($which,CTFPower) }
+    catch { unset ctfInfo($which,CTFcore) }
+    catch { unset ctfInfo($which,CTFcorePower) }
+    catch { unset ctfInfo($which,CTFNoise) }
+    catch { unset ctfInfo($which,CTFNoisePower) }
+    catch { unset ctfInfo($which,CTFSignal) }
+    catch { unset ctfInfo($which,CTFSignalPower) }
+    catch { unset ctfInfo($which,ScatteringSubtraction) }
+
+    # Data Set
+    set size [ llength $ctfInfo($which,R) ]
+    if { $ctfInfo(flagCTFPower) } {
+        set ctfInfo($which,CTFPower)       [ ctfInfoCalc2D CTFPower       $which ]
+        set ctfInfo($which,CTFcorePower)   [ ctfInfoCalc2D CTFcorePower   $which ]
+        set ctfInfo($which,CTFNoisePower)  [ ctfInfoCalc2D CTFNoisePower  $which ]
+        set ctfInfo($which,CTFSignalPower) [ ctfInfoCalc2D CTFSignalPower $which ]
+    } else {
+        set ctfInfo($which,CTF)            [ ctfInfoCalc2D CTF            $which ]
+        set ctfInfo($which,CTFcore)        [ ctfInfoCalc2D CTFcore        $which ]
+        set ctfInfo($which,CTFNoise)       [ ctfInfoCalc2D CTFNoise       $whcih ]
+        set ctfInfo($which,CTFSignal)      [ ctfInfoCalc2D CTFSignal      $which ]
+    }
+    for { set i 0 } { $i < $size } { incr i } {
+        set data  [ lindex $ctfInfo($which,Scattering) $i ]
+        if { $ctfInfo(flagCTFPower) } {
+            set noise [ lindex $ctfInfo($which,CTFNoisePower) $i ]
+        } else {
+            set noise [ lindex $ctfInfo($which,CTFNoise)      $i ]
+        }
+        lappend ctfInfo($which,ScatteringSubtraction) [ expr $data - $noise ]
+    }
+}
+
+#
+# Scattering Data
+#
+proc ScatteringCalc { { filename __null__ } } {
+	variable ctfInfo
+	#puts "ScatteringCalc Start"
+	if { $filename == "__null__" } {
+		if [ info exists ctfInfo(filename) ] {
+			set filename $ctfInfo(filename)
+		} else {
+			puts "no file for Scattering calc."
+			return
+		}
+	}
+	set xy [ mrcInfoGet $filename Spectrum2DMag $ctfInfo(defocus0axis) $ctfInfo(numDivision) ]
+	#puts $xy
+	for { set i 0 }  { $i < $ctfInfo(numDivision) } { incr i } {
+		catch { unset ctfInfo(all,$i,R) }
+		catch { unset ctfInfo(all,$i,Scattering) }
+		catch { unset ctfInfo(all,$i,ScatteringRoot) }
+	}
+	set i 0
+	foreach { x y } $xy {
+		if {$x == "NULL" && $y == "NULL" } {
+			set ctfInfo($i,NyquistFrequency) [ lindex $ctfInfo(all,$i,R) end ]
+			incr i
+		} else {
+			lappend ctfInfo(all,$i,R)  $x 
+			lappend ctfInfo(all,$i,Scattering)  $y 
+			lappend ctfInfo(all,$i,ScatteringRoot)  [ expr sqrt($y) ]
+			#puts $i,$x,$y
+		}
+	}
+	#puts $ctfInfo(numDivision) 
+	#puts $ctfInfo(all,0,Scattering) 
+	#puts $ctfInfo(all,1,Scattering) 
+
+	set size [ llength $ctfInfo(all,0,R) ]
+	catch { unset ctfInfo(0,R) }
+	catch { unset ctfInfo(0,Scattering)  }
+	catch { unset ctfInfo(0,ScatteringRoot)  }
+	catch { unset ctfInfo(1,R) } 
+	catch { unset ctfInfo(1,Scattering)  }
+	catch { unset ctfInfo(1,ScatteringRoot) }
+
+	set index0 0
+	#set index1 1
+	set index1 [expr int ($ctfInfo(numDivision) / 4.0 +  0.5)]
+	#puts "Scattering CalcStep $index0, $index1" ; flush stdout
+	for { set i 0 } { $i < $size } { incr i } {
+		lappend ctfInfo(0,R)              [ lindex $ctfInfo(all,$index0,R) $i ]
+		lappend ctfInfo(0,Scattering)     [ lindex $ctfInfo(all,$index0,Scattering) $i ]
+		lappend ctfInfo(0,ScatteringRoot) [ lindex $ctfInfo(all,$index0,ScatteringRoot) $i ]
+		lappend ctfInfo(1,R)              [ lindex $ctfInfo(all,$index1,R) $i ]
+		lappend ctfInfo(1,Scattering)     [ lindex $ctfInfo(all,$index1,Scattering) $i ]
+		lappend ctfInfo(1,ScatteringRoot) [ lindex $ctfInfo(all,$index1,ScatteringRoot) $i ]
+	}
+	#puts $ctfInfo(all,0,Scattering) 
+	#puts $ctfInfo(0,Scattering) 
+	#puts $ctfInfo(all,3,Scattering) 
+	#puts $ctfInfo(1,Scattering) 
+	#puts "ScatteringCalc End" ; flush stdout
+}	
+
+proc ctfInfoSave { } {
+	variable ctfInfo
+
+	set ctfInfo(defocus) [expr ($ctfInfo(defocus2D0)+$ctfInfo(defocus2D1))/2.0 ]
+	::CTF::ctfInfoSave $ctfInfo(.ctfinfo) 
+}
+
+proc ctfInfoLoad { { filename __null__ } } {
+	variable ctfInfo
+
+	::CTF::ctfInfoLoad $ctfInfo(.ctfinfo) 	
+	ctfInfoUpload
+	if [ info exists ctfInfo(defocus2D0) ] {
+		puts "ctfInfoLoad"
+		puts $ctfInfo(.ctfinfo) 
+	} else {
+		set ctfInfo(defocus2D0) $ctfInfo(defocus)
+		set ctfInfo(defocus2D1) $ctfInfo(defocus)
+	}
+	GraphRedraw
+	SpectrumRedraw
+}
+
+
+#end of CTF2Dnamespace
+}
+
+#
+# Main
+#
+
+bind all <Control-KeyPress-c> { exit 0 }
+bind all <KeyPress-q>       { exit 0 }
+
+libraryLoad $program
+
+#catch [ namespace import ::CTF::ctfInfo* ] 
+
+global mainImage
+
+::CTF2D::Init
+::CTF2D::Win 

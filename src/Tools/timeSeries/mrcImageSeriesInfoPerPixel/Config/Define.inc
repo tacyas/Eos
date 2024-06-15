@@ -1,0 +1,4 @@
+OBJECTNAME = mrcImageSeriesInfoPerPixel
+EXTRA_LIB  =
+EXTRA_CCOPTS =
+EXTRA_INC =

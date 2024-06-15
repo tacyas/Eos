@@ -1,0 +1,22 @@
+#!/bin/bash
+echo $1
+
+EOS_HOSTDIR=$1
+echo $EOS_HOSTDIR
+
+if [ ! -d $EOS_HOME/hostdepend/$EOS_HOSTDIR/util/ ]; then
+	mkdir -p $EOS_HOME/hostdepend/$EOS_HOSTDIR/util/
+fi
+
+echo $EOS_HOME/util/
+cd $EOS_HOME/util/
+
+if [ ! -d ../hostdepend/$EOS_HOSTDIR/util/$EOS_HOSTDIR/ ] ; then
+if [ -d $EOS_HOSTDIR ]; then 
+	mv $EOS_HOSTDIR  $EOS_HOME/hostdepend/$EOS_HOSTDIR/util/
+fi
+fi
+
+if [ -d ../hostdepend/$EOS_HOSTDIR/util/$EOS_HOSTDIR/ ] ; then
+	ln -sf ../hostdepend/$EOS_HOSTDIR/util/$EOS_HOSTDIR/ .
+fi

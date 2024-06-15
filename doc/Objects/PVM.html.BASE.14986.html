@@ -1,0 +1,29 @@
+<H4> Update Time 02/15/11---08:11:39 </H4>
+<HR>
+<A NAME="Information">
+<H2>Information from source codes</H2>
+</A>
+<PRE>
+../src/pvmStart.c:
+</PRE>
+<HR>
+<A NAME="include">
+<H2>PVM.h</H2>
+</A>
+<PRE>
+#ifndef PVM_H
+#define PVM_H
+
+#ifdef PVM
+
+/* prototype begin */
+#include <stdio.h>
+#include <pvm3.h>
+extern int* pvmServerStart(char* cmd, char* argv[], FILE* fpt, int* nTask, int mode);
+extern void pvmServerStartError(int numTask, int* tids, int nTask);
+/* prototype end */
+
+#endif /* PVM */
+
+#endif /* PVM_H */
+</PRE>

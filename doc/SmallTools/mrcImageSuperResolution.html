@@ -1,0 +1,74 @@
+<HTML>
+<HEAD>
+<TITLE>mrcImageSuperResolution</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageSuperResolution</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageSuperResolution
+Options:
+    [-I[nput]            InOriginal          (NULL      ).as(inFile              ) ] :Essential :Input: Original 
+    [-i[nput]            InPrevious          (NULL      ).as(inFile              ) ] :Essential :Input: Previous 
+    [-i[nput]c[ounter]   FFTInCount          (NULL      ).as(inFile              ) ] :Optional  :Input: CounterforWeight FourierSpace 
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :Output: Next    
+    [-t[ime]             t                   (1         ).as(Integer             ) ] :Optional  :Number of time: Iteration(Real Space)
+    [-fromp[oint]1       x00                 (0         ).as(Integer             ) 
+                         y00                 (0         ).as(Integer             ) 
+                         z00                 (0         ).as(Integer             ) ] :Optional  :First value near origin of coordinates: x00[pixel] y00[pixel] z00[pixel] 
+    [-top[oint]1         x01                 (2         ).as(Integer             ) 
+                         y01                 (2         ).as(Integer             ) 
+                         z01                 (2         ).as(Integer             ) ] :Optional  :target value: x01[pixel] y01[pixel] z01[pixel] 
+    [-fromp[oint]2       x10                 (0         ).as(Integer             ) 
+                         y10                 (0         ).as(Integer             ) 
+                         z10                 (0         ).as(Integer             ) ] :Optional  :First value far from origin of coordinates: x10[pixel] y10[pixel] z10[pixel] 
+    [-top[oint]2         x11                 (0         ).as(Integer             ) 
+                         y11                 (0         ).as(Integer             ) 
+                         z11                 (0         ).as(Integer             ) ] :Optional  :target value: x11[pixel] y11[pixel] z11[pixel] 
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Essential :RealSpaceCalculating
+    [-LabelingMode       labelingmode        (0         ).as(Integer             ) ] :Optional  :LabelingMode
+    [-max[value]         max                 (800       ).as(Integer             ) ] :Optional  :Density Max value:Support Constraint() 
+    [-min[value]         min                 (200       ).as(Integer             ) ] :Optional  :Density Min value:Support Constraint() 
+    [-sh[ape]            shape               (0         ).as(Integer             ) ] :Optional  :Shape:0(Rectangule),1(Globe)
+    [-h[alf]v[alue]p[oint]hvp                 (0.0       ).as(Real                ) ] :Optional  :Half value point(/[A])
+    [-Inverse                                                                      ] :Optional  :Inverse
+    [-nM[olecule]        nMolecule           (1         ).as(Integer             ) ] :Optional  :Number of Molecule
+    [-M[olecularWeight]  MolecularWeight     (80000     ).as(Integer             ) ] :Optional  :MolecularWeight
+    [-D[ensity]          Density             (1.35      ).as(Real                ) ] :Optional  :Density(g/cm3)
+    [-counter            incounter           (3.0       ).as(Real                ) ] :Optional  :Counter(Fourier Space)
+    [-d[elta]Density     deltaDens           (100.0     ).as(Real                ) ] :Optional  :Delta (Convergence)
+    [-d[elta]Area        deltaArea           (100.0     ).as(Real                ) ] :Optional  :Area (Convergence)
+    [-sub[traction]      sub                 (0.2       ).as(Real                ) ] :Optional  :Subtraction(Convergence)
+    [-ratio              ratio               (0.3       ).as(Real                ) ] :Optional  :Ratio(Convergence)
+    [-t[ime]max          tmax                (1000      ).as(Integer             ) ] :Optional  :Time Max(Convergence)
+    [-w[eight]d[elta]    WeightDelta         (0.1       ).as(Real                ) ] :Optional  :WeightDelta(Fourier Space)
+    [-w[eight]m[ax]      WeightMax           (2         ).as(Integer             ) ] :Optional  :WeightMax(Fourier Space)
+    [-Subtraction                                                                  ] :Optional  :Subtraction(Real Space)
+----- Additional Usage -----
+-m Option
+     1 : AreaAndLocation
+     2 : Density
+     3 : AreaAndLocationandDensity
+    +4 : Convergence(Option)
+   +16 : NonnegativeMode(before RealSpaceConstraint)
+   +32 : Binarization(before RealSpaceConstraint)
+   +64 : Labeling
+  +128 : SixOrientation
+  +256 : LowpassfilterMode(-hvp is required)
+  +512 : CounterMode(-ic is required)
+-----------------------------------------------------
+-Inverse
+If high density means the location of protein, -Inverse is required for volume calculation.
+-wm and -wd
+weight = counter / (weightmax + counter)
+weightmax -> 0 (weightdelt by weightdelta) 
+-LabelinMode 
+     0 : TheLargestLabelingSearch 
+     1 : SomeVolumeLabelingSearch 
+-Subtraction
+Real Space Constraint for desolving edge problem
+
+</PRE>
+</BODY>
+</HTML>

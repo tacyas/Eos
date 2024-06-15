@@ -1,0 +1,3 @@
+ARM64MAC64/lmrc2png.o:lmrc2png.o
+ARM64MAC64/pngFileInit.o:pngFileInit.o
+ARM64MAC64/pngFileWrite.o:pngFileWrite.o

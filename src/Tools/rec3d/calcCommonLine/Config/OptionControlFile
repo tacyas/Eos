@@ -1,0 +1,8 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputEulerAnglesList","Optional","1","1","In","inFile","NULL"
+"-R1","-R[ot]1","Input: RotAngle1[degree]","Optional","4","1","EMode1","String","YOYS","2","Rot1_1","Real","0.0","3","Rot1_2","Real","0.0","4","Rot1_3","Real","0.0"
+"-R2","-R[ot]2","Input: RotAngle2[degree]","Optional","4","1","EMode2","String","YOYS","2","Rot2_1","Real","0.0","3","Rot2_2","Real","0.0","4","Rot2_3","Real","0.0"
+"-o","-o[utput]","Output:Degrees","Optional","1","1","Out","outFile","stdout"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

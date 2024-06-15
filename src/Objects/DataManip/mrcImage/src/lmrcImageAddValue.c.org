@@ -1,0 +1,34 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "eosCuda.h"
+#include "./lmrcImageAddValue.h"
+
+void 
+lmrcImageAddValue(mrcImage* out, mrcImage* in, float value, long mode)
+{
+	mrcImageParaTypeReal x, y, z;
+	double data;
+
+	if(IsImage(in, "in lmrcImageAddValue", 0)) {
+	  out->Header = in->Header;
+	  mrcInit(out, NULL);
+
+	  if(__eosCuda__) {
+	  	lmrcImageAddValueCuda(out, in, value, mode);
+	  } else { 
+	  	for(z=0; z<in->HeaderN.z; z++) {
+	    for(y=0; y<in->HeaderN.y; y++) {
+	    for(x=0; x<in->HeaderN.x; x++) {
+		    mrcPixelDataGet(in,  x, y, z, &data, mrcPixelRePart,mrcPixelHowNearest);
+		    mrcPixelDataSet(out, x, y, z, data+value, mrcPixelRePart);
+	    }
+	    }
+	    }
+	    mrcStatDataSet(out, 0);
+	  }
+	} else {
+		fprintf(stderr, "Not supported image mode: Not Image\n"); 
+		exit(EXIT_FAILURE);
+	}
+}
+

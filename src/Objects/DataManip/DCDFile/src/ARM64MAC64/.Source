@@ -1,0 +1,28 @@
+SRC = \
+dcd.cc \
+
+OBJ = \
+dcd.o  \
+
+SHAREDOBJ = \
+dcd.sharedo  \
+
+REALOBJ = \
+ARM64MAC64/dcd.o \
+
+REALSHAREDOBJ = \
+ARM64MAC64/dcd.sharedo \
+
+OBJDEBUG = \
+dcd.debugo  \
+
+REALOBJDEBUG = \
+ARM64MAC64/dcd.debugo \
+
+OBJCUDAGDB = \
+dcd.cudagdb.o  \
+
+REALOBJCUDAGDB = \
+ARM64MAC64/dcd.cudagdb.o \
+
+

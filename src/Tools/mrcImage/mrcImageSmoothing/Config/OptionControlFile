@@ -1,0 +1,14 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-sx","-sx","x of Kernel Size","Optional","1","1","sx","Real","3"
+"-sy","-sy","y of Kernel Size","Optional","1","1","sy","Real","3"
+"-sz","-sz","z of Kernel Size","Optional","1","1","sz","Real","3"
+"-r","-r","Radius of Kernel Size","Optional","1","1","r","Real","1"
+"-sigma","-sigma","Sigma for Lee-Sigma","Optional","1","1","sigma","Real","2.0"
+"-times","-times","Repeat time","Optional","1","1","times","Integer","1"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"
+"-M","-M[ode2]","Mode","Optional","1","1","mode2","Integer","0"
+"-verbose","-verbose","Verbose","Optional","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"

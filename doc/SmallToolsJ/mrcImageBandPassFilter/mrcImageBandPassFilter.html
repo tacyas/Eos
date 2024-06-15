@@ -1,0 +1,334 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageBandPassfilter</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageBandPassFilter<br></h2></b></font>
+	<h4>バンドパスフィルタ</h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>オプション</th>
+				<th>必須項目/選択項目</th>
+				<th>説明</th>
+				<th>デフォルト</th>
+			</tr>
+			<tr>
+				<td>-i</td>
+				<td>必須</td>
+				<td>入力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-o</td>
+				<td>必須</td>
+				<td>出力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-m</td>
+				<td>選択</td>
+				<td>モードを設定</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-hvl</td>
+				<td>選択</td>
+				<td>空間周波数の減衰が最大値の半分になる値の最小値を設定</td>
+				<td>1.0</td>
+			</tr>
+			<tr>
+				<td>-hvh</td>
+				<td>選択</td>
+				<td>空間周波数の減衰が最大値の半分になる値の最大値を設定</td>
+				<td>1.0</td>
+			</tr>
+			<tr>
+				<td>-wl</td>
+				<td>選択</td>
+				<td>空間周波数cos関数の幅の最小値を設定</td>
+				<td>1.0</td>
+			</tr>
+			<tr>
+				<td>-wh</td>
+				<td>選択</td>
+				<td>空間周波数cos関数の幅の最大値を設定</td>
+				<td>1.0</td>
+			</tr>
+			<tr>
+				<td>-h</td>
+				<td>選択</td>
+				<td>ヘルプを表示</td>
+				<td>　</td>
+			</tr>
+		</table>
+
+<!-- モード説明 -->
+
+	<br>
+	<br>
+	<caption><b>モードの詳細</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>モード</th>
+				<th>説明</th>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>ステップフィルタ・・・-hvl,-hvhを設定すること</td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td>cosフィルタ・・・-hvl,-hvh,-wl,-whを設定すること</td>
+			</tr>
+			<tr>
+				<td>3</td>
+				<td>expフィルタ・・・-hvl,-hvh,-wl,-whを設定すること</td>
+			</tr>
+		</table>
+
+	<h4>******実行例******</h4>
+	
+<!-- 入力ファイル説明 -->
+
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="b120.png" border="0" alt="b120.png(2730 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				65.5929<br>
+				5.45036<br>
+				12.3043<br>
+				0.153804<br></p>
+			</td>
+		</tr>
+	</table>
+
+<!-- モード別処理の様子 -->
+
+	<caption><font color="blue">------出力結果------</font></caption><br>
+	<div>モード：１</div>
+	<table>
+		<tr>
+			<td><img src="out-m1.png" border="0" alt="out-m1.png(962 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				0<br>
+				0<br>
+				0<br>
+				0<br></p>
+			</td>
+			<td>-hvl=0.1,-hvh=1に設定<br>
+				　　－－－－－－＞</td>
+			<td><img src="out-m1hvl0.1hvh1.png" border="0" alt="out-m1hvl0.1hvh1.png(5302 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-9.27378<br>
+				11.2069<br>
+				6.47488e-10<br>
+				1.17292<br>
+				0.0146615<br></p>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td>-hvl=0.01,-hvh=1に設定<br>
+				　　－－－－－－＞</td>
+			<td><img src="out-m1hvl0.01hvh1.png" border="0" alt="out-m1hvl0.01hvh1.png(4771 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-17.8289<br>
+				43.9539<br>
+				-3.21856e-08<br>
+				9.15145<br>
+				0.114393<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<br>
+	<br>
+	<div>モード：２</div>
+	<table>
+		<tr>
+			<td><img src="out-m2.png" border="0" alt="out-m2.png(962 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				0<br>
+				0<br>
+				0<br>
+				0<br></p>
+			</td>
+			<td>-hvl=0.1,-hvh=1,wl=0.1,wh=1に設定<br>
+				　　－－－－－－＞</td>
+			<td><img src="out-m2hvl0.1hvh1wl0.1wh1.png" border="0" alt="out-m2hvl0.1hvh1wl0.1wh1.png(3299 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-8.55029<br>
+				11.9492<br>
+				-1.90738e-09<br>
+				1.02755<br>
+				0.0128444<br></p>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td>-hvl=0.01,-hvh=1,wl=0.1,wh=1に設定<br>
+				　　－－－－－－＞</td>
+			<td><img src="out-m2hvl0.01hvh1wl0.1wh1.png" border="0" alt="out-m2hvl0.01hvh1wl0.1wh1.png(3859 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-9.64259<br>
+				42.7085<br>
+				1.88305<br>
+				6.86256<br>
+				0.085782<br></p>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td>-hvl=0.01,-hvh=1,wl=0.01,wh=1に設定<br>
+				　　－－－－－－＞</td>
+			<td><img src="out-m2hvl0.01hvh1wl0.01wh1.png" border="0" alt="out-m2hvl0.01hvh1wl0.01wh1.png(4912 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-17.8337<br>
+				41.3449<br>
+				4.46338e-09<br>
+				7.54313<br>
+				0.0942892<br></p>
+			</td>
+		</tr>
+	</table>
+		
+		
+	<br>
+	<br>
+	<div>モード：３</div>
+	<table>
+		<tr>
+			<td><img src="out-m3.png" border="0" alt="out-m3.png(3113 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-1.01675<br>
+				16.1198<br>
+				1.36259<br>
+				3.08067<br>
+				0.0385084<br></p>
+			</td>
+			<td>-hvl=0.1,-hvh=1,wl=0.1,wh=1に設定<br>
+				　　－－－－－－＞</td>
+			<td><img src="out-m3hvl0.1hvh1wl0.1wh1.png" border="0" alt="out-m3hvl0.1hvh1wl0.1wh1.png(3412 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-2.2918<br>
+				22.3145<br>
+				1.36259<br>
+				3.45298<br>
+				0.0431623<br></p>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td>-hvl=0.01,-hvh=1,wl=0.1,wh=1に設定<br>
+				　　－－－－－－＞</td>
+			<td><img src="out-m3hvl0.01hvh1wl0.1wh1.png" border="0" alt="out-m3hvl0.01hvh1wl0.1wh1.png(3366 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-4.20068<br>
+				40.5267<br>
+				2.54268<br>
+				6.40073<br>
+				0.0800091<br></p>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td>-hvl=0.01,-hvh=1,wl=0.01,wh=1に設定<br>
+				　　－－－－－－＞</td>
+			<td><img src="out-m3hvl0.01hvh1wl0.01wh1.png" border="0" alt="out-m3hvl0.01hvh1wl0.01wh1.png(4344 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-12.4598<br>
+				44.1885<br>
+				1.36259<br>
+				7.41429<br>
+				0.0926787<br></p>
+			</td>
+		</tr>
+	</table>
+
+
+</body>
+</html>

@@ -1,0 +1,4 @@
+OBJECTNAME = mrcImagestoRef
+EXTRA_LIB  =
+EXTRA_CCOPTS =
+EXTRA_INC =

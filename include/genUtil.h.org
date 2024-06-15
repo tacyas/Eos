@@ -1,0 +1,55 @@
+#ifndef GEN_UTIL_H 
+#define GEN_UTIL_H
+#include <math.h>
+/* genUtil.h
+*    Language:   C or CC(c++)
+*    Editor  :   tacyas.tkyemg.u_tokyo
+*    Date    :   1990-1992
+*    Modified:   1993
+*/
+#define GEN_UTIL_MAX_STRING_LENGTH  (1024)
+#define SQR(x)   ((x)*(x))
+#ifndef MAX
+#define MAX(x,y) ((x)>(y)?(x):(y))
+#endif
+#ifndef MIN
+#define MIN(x,y) ((x)<(y)?(x):(y))
+#endif
+
+#define PI M_PI
+#define DEGREE  (180.0/PI)
+#define RADIAN  (PI/180.0)
+#define PERCENT (100.0)
+#define NORMAL_PHASE(x) ((x)>(0)?(fmod(x,2*M_PI)):(fmod(x,2*M_PI)+2*M_PI))
+
+#define SSWITCH(x)  { char* __sswitch_tmp_=x; \
+					if(0==strcmp(__sswitch_tmp_, "")) { \
+						fprintf(stderr, "SSWITCH Error\n"); \
+						exit(EXIT_FAILURE); \
+					}
+#define SCASE(x)    else if(0==strcmp(x,__sswitch_tmp_))
+#define SDEFAULT    else
+#define SBREAK      ;
+#define SSWITCHEND  }
+#define IsOdd(x)    ((x)%2==1?1:0)
+#define IsEven(x)    ((x)%2==0?1:0)
+#ifdef DEBUG
+#define DEBUGPRINT(x) fprintf(stderr,x)
+#define DEBUGPRINT1(x,x1) fprintf(stderr,x,x1)
+#define DEBUGPRINT2(x,x1,x2) fprintf(stderr,x,x1,x2)
+#define DEBUGPRINT3(x,x1,x2,x3) fprintf(stderr,x,x1,x2,x3)
+#define DEBUGPRINT4(x,x1,x2,x3,x4) fprintf(stderr,x,x1,x2,x3,x4)
+#define DEBUGPRINT5(x,x1,x2,x3,x4,x5) fprintf(stderr,x,x1,x2,x3,x4,x5)
+#define DEBUGPRINT6(x,x1,x2,x3,x4,x5,x6) fprintf(stderr,x,x1,x2,x3,x4,x5,x6)
+#define DEBUGPRINT7(x,x1,x2,x3,x4,x5,x6,x7) fprintf(stderr,x,x1,x2,x3,x4,x5,x6,x7)
+#else
+#define DEBUGPRINT(x)
+#define DEBUGPRINT1(x,x1)
+#define DEBUGPRINT2(x,x1,x2)
+#define DEBUGPRINT3(x,x1,x2,x3)
+#define DEBUGPRINT4(x,x1,x2,x3,x4)
+#define DEBUGPRINT5(x,x1,x2,x3,x4,x5)
+#define DEBUGPRINT6(x,x1,x2,x3,x4,x5,x6)
+#define DEBUGPRINT7(x,x1,x2,x3,x4,x5,x6,x7)
+#endif
+#endif /* GEN_UTIL_H */

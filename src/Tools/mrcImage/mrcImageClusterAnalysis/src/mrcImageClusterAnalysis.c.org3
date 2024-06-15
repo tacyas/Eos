@@ -1,0 +1,640 @@
+/*
+# %M% %Y% %I%
+# The latest update : %G% at %U%
+#
+#%Z% mrcImageClusterAnalysis ver %I%
+#%Z% Created by Narita  
+#%Z% Modified by Tac for AutoRotationMode 
+#%Z%
+#%Z% Usage : mrcImageClusterAnalysis
+#%Z% Attention
+#%Z%
+*/
+static char __sccs_id[] = "%Z%mrcImageClusterAnalysis ver%I%; Date:%D% %Z%";
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>                  
+#include <values.h>                  
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+
+#define DEBUG
+#include "genUtil.h"
+#include "mrcImage.h"
+#include "nr2.h"
+#include "mrcRefUtil.h"
+#include "lmrcImageMultiplying.h"
+#include "lmrcImageCorrelation.h"
+
+/* prototypes */
+
+typedef enum lmrcImageClusterAnalysisMode {
+	lmrcImageClusterAnalysisModeCorrelation    = 0,
+	lmrcImageClusterAnalysisModeEuclidDistance = 1,
+	lmrcImageClusterAnalysisModeWardMethod     = 2
+} lmrcImageClusterAnalysisMode;
+
+char* lmrcImageClusterAnalysisModeMessage[] = {
+	"By Correlation",
+	"By Euclid Distance",
+	"By Ward Method (default)",
+	NULL
+};
+
+
+typedef struct lmrcImageClusterAnalysisInfo {
+	lmrcImageClusterAnalysisMode mode;          /* */
+	int flagIteration; /* */
+	int flagAutoRotation; 
+	char** filename;   /* filename */
+	int correlationMode; /* correlationMode */
+	mrcImage* averagedImage;
+	lmrcImageAutoRotationCorrelationInfo arInitial;
+
+	int flagPVM;
+
+	int flagLogIn;
+	FILE* fptLogIn;
+
+	int flagLog;
+	FILE* fptLog; /* */
+
+	/* Output */
+	float** Distance;
+
+} lmrcImageClusterAnalysisInfo;
+
+void lmrcImageClusterAnalysisInfoSet( lmrcImageClusterAnalysisInfo* linfo, mrcImageClusterAnalysisInfo info);
+void lmrcImageClusterAnalysis(int* group, mrcImage* in, int finalclusternum, int N, lmrcImageClusterAnalysisInfo* linfo);
+void lmrcImageClusterMerge(mrcImage* in1, mrcImage* in2, int* index, int* averagednum, int m, int n, int* N);
+float lmrcImageDistanceCalc(mrcImage* in1, mrcImage* in2, int mode);
+float lmrcImageDistanceCalcByWardMethod(mrcImage* in1, mrcImage* in2, int num1, int num2, int mode);
+
+float lmrcImageDistanceCalcWithAutoRotation(mrcImage* out, mrcImage* cor, mrcImage* in1, mrcImage* in2, lmrcImageAutoRotationCorrelationInfo* linfo, int lmode, int mode);
+float lmrcImageDistanceCalcByWardMethodWithAutoRotation(mrcImage* out, mrcImage* cor, mrcImage* in1, mrcImage* in2, int num1, int num2,  lmrcImageAutoRotationCorrelationInfo* linfo, int lmode, int mode);
+
+float lmrcImageClusterAnalysisByIteration(int* group, mrcImage* in, int clusternum, int N, int mode);
+
+void lmrcImageClusterAnalysisDistanceToLog(FILE* fpt, int n, int m, int prevM, int prevN, float distance);
+void lmrcImageClusterAnalysisDistanceFromLog(int* skip, float* distance, FILE* fpt);
+
+int
+main(int argc, char* argv[]) 
+{
+/* variables */
+	mrcImageClusterAnalysisInfo  info;
+	lmrcImageClusterAnalysisInfo linfo;
+	long i;
+	mrcImage* in;
+	int* group; /* Group Index */
+
+/* input patameters ,file open */
+	init0(&info);
+	argCheck(&info, argc, argv);
+	init1(&info);
+
+/* begin */
+	DEBUGPRINT("Program Start\n");
+	if (NULL==(in=(mrcImage *)malloc(sizeof(mrcImage)*info.flagIn) )){
+	  fprintf(stderr, "Enough memory is not available!\n");
+	  exit(EXIT_FAILURE);
+	}
+	group = ivector(0,info.flagIn-1);
+	for (i=0; i<info.flagIn; i++){
+	  mrcFileRead(&in[i], info.In[i], "in main file", 0);
+	}
+
+/* Cluster Analysis */
+	lmrcImageClusterAnalysisInfoSet(&linfo, info);
+	lmrcImageClusterAnalysis(group, in, info.flagIn, info.N, &linfo);
+
+/* Output Data */
+	for (i=0; i<info.flagIn; i++){
+	  fprintf(info.fptOut, "%s %d\n",info.In[i], group[i]);
+	}
+	if(info.Output) {
+		char s[1024];
+		for(i=0; i<info.flagIn; i++) {
+			sprintf(s, "%s.avg", info.In[i]);
+			mrcFileWrite(&(linfo.averagedImage[i]), s, "in main", 0);
+		}
+	}
+	exit(EXIT_SUCCESS);
+}
+
+void
+additionalUsage()
+{
+	int i;
+	fprintf(stderr, "----- Additional Usage -----\n");
+	fprintf(stderr, "Distance between clusters: mode\n");
+	i=0;
+	while(1) {
+		if(NULL!=lmrcImageClusterAnalysisModeMessage[i]) {
+			fprintf(stderr, "\tmode %d: %s\n", i, lmrcImageClusterAnalysisModeMessage[i]);
+		} else {
+			break;
+		}
+		i++;
+	}
+}
+
+void lmrcImageClusterAnalysisInfoSet(
+	lmrcImageClusterAnalysisInfo* linfo, 
+	mrcImageClusterAnalysisInfo info)
+{
+	linfo->mode          = info.mode;
+	linfo->flagIteration = info.Iteration;
+	linfo->filename      = info.In;
+	linfo->flagAutoRotation = info.flagAutoRotation;
+	linfo->arInitial.nRot   = info.AutoRotation;
+	linfo->arInitial.Method = info.AutoRotationMethod;
+	linfo->arInitial.iter   = info.AutoRotationIteration;
+	linfo->correlationMode  = info.correlationMode;
+	linfo->flagPVM          = info.pvm;
+	linfo->flagLogIn        = info.flagLogIn;
+	linfo->fptLogIn         = info.fptLogIn;
+	linfo->flagLog          = info.flagLog;
+	linfo->fptLog           = info.fptLog;
+}
+
+void
+lmrcImageClusterAnalysisDistanceToLog(FILE* fpt, int n, int m, int prevM, int prevN, float distance)
+{
+	fprintf(fpt, "%10d %10d %10d %10d %15.6g\n", n, m, prevM, prevN, distance);
+	fflush(fpt);
+}
+
+
+void
+lmrcImageClusterAnalysisDistanceFromLog(int* skip, float* distance, FILE* fpt)
+{
+
+}
+
+void 
+lmrcImageClusterAnalysis(
+	int* group,                         /* Output: Group Index */
+	mrcImage* in,                       /* Input:  Images  */
+	int N,                              /* Input:  Number of Images */ 
+	int finalclusternum,                /* Input:  FinalClusterNum */
+	lmrcImageClusterAnalysisInfo* linfo /* Input:  Information of ClusterAnalysis */)
+{
+  float** distance;             /* Distance Array */
+  int* index;                   /* the least index of averaged images in each cluster */
+  int* averagednum;             /* the number of averaged images in each cluster */
+  int i, n,m,minn,minm,clusternum;
+  int prevN;
+  int prevM;
+  float min,F;
+  mrcImage* cluster;
+  mrcImageParaTypeRealCoord offset;
+  mrcImage out;
+  mrcImage cor;
+  mrcImage minOut;
+  mrcImage minCor;
+  int flagSkip;
+
+  minn       = minm = 0;
+  clusternum = N; /* the current number of clusters */
+  prevN      = N; /* previous N */
+  prevM      = N; /* previous M */
+
+  /* Initial Stage */	
+  distance    = matrix(0, N-1, 0, N-1);
+  index       = ivector(0, N-1);
+  averagednum = ivector(0, N-1);
+  if(NULL==(cluster= (mrcImage *)malloc(sizeof(mrcImage)*N) )){
+    fprintf(stderr, "Enough memory is not available!\n");
+    exit(EXIT_FAILURE);
+  } else {
+  	linfo->averagedImage = cluster;
+	linfo->Distance      = distance;
+  }
+
+  offset.x = offset.y = offset.z =0;
+  for (i=0; i<N; i++) {
+    index[i]       = i;
+    averagednum[i] = 1;
+    group[i]       = i;
+    cluster[i].Header = in[0].Header;
+    mrcInit(&cluster[i],0);
+    lmrcImageCopy(&cluster[i], &in[i], offset);
+  }
+
+  if(linfo->flagAutoRotation) {	
+  	minOut.Header = cluster[0].Header;
+  	minCor.Header = cluster[0].Header;
+	mrcInit(&minOut, NULL);
+	mrcInit(&minCor, NULL);
+  }
+
+  /* Cluster Analysis */
+  /* 
+  	Calculation of distance[n][m] 
+	  0 <=     n < clusternum
+      0 <= m < n
+              n\m 0 1 2 3 ...-1 cluseternum
+              0   - - - - ... - -
+	          1   * - - - ... - - 
+	          2   * * - - ... - -
+	          3   * * * - ... - -
+	          .   * * * * ... - -
+	          .   * * * * ... - -
+	          .   * * * * ... - - 
+     clusternum   * * * * ... * -  
+  */
+
+  while (finalclusternum<clusternum) {
+    min=MAXFLOAT;
+    for (n=0; n<clusternum; n++) {
+      for (m=0; m<n; m++) {
+	  	if(linfo->flagAutoRotation) { /* Saving the calculation steps */
+	  		if( clusternum != N                /* At the first step (N==clusternum), we cannot skip */
+			 && index[n]   != index[prevM]          
+		 	 && index[m]   != index[prevM]
+			 && min <= distance[n][m]) {      
+			 	flagSkip = 1;
+			} else {
+				flagSkip = 0;
+			}
+		} else {
+			flagSkip = 0;
+		}
+		/* Calc distance[n][m] */
+		if(flagSkip) { 
+			DEBUGPRINT4("skip:   n: %d m: %d prevM: %d prevN: %d\n", n, m, prevM, prevN);
+			DEBUGPRINT4("index:  n: %d m: %d prevM: %d prevN: %d\n", index[n], index[m], index[prevM], index[prevN]);
+			/* Skip because of no need of calculation */
+		} else {
+			DEBUGPRINT4("noskip: n: %d m: %d prevM: %d prevN: %d\n", n, m, prevM, prevN);
+			DEBUGPRINT4("index:  n: %d m: %d prevM: %d prevN: %d\n", index[n], index[m], index[prevM], index[prevN]);
+		  	switch(linfo->mode) {
+				case lmrcImageClusterAnalysisModeCorrelation:
+				case lmrcImageClusterAnalysisModeEuclidDistance: {
+				  if(linfo->flagAutoRotation) {
+				  	distance[n][m] = lmrcImageDistanceCalcWithAutoRotation(&out, &cor, 
+									  &cluster[index[n]], &cluster[index[m]], 
+					    			  &(linfo->arInitial), linfo->correlationMode, linfo->mode);
+				  } else {
+			  	    distance[n][m] = lmrcImageDistanceCalc(&cluster[index[n]], &cluster[index[m]], linfo->mode);
+				  }
+				  break;
+				}
+				case lmrcImageClusterAnalysisModeWardMethod: {
+				  if(linfo->flagAutoRotation) {
+				  	distance[n][m] = lmrcImageDistanceCalcByWardMethodWithAutoRotation(&out, &cor,
+					                   &cluster[index[n]],    &cluster[index[m]], 
+					                   averagednum[index[n]], averagednum[index[m]], 
+									   &(linfo->arInitial), linfo->correlationMode, linfo->mode);
+				  } else {
+		            distance[n][m] = lmrcImageDistanceCalcByWardMethod(
+									   &cluster[index[n]], &cluster[index[m]], 
+				                       averagednum[index[n]], averagednum[index[m]], 
+				                       linfo->mode);
+				  }
+				  break;
+				}
+				default: {
+				  fprintf(stderr, "Not supported mode: %d\n", linfo->mode);
+				  exit(EXIT_FAILURE);
+				  break;
+				}
+		   	}
+
+		} 
+
+		/* Evaluate Distance betweeen cluster[index[n]] and cluster[index[m]] */
+		if(distance[n][m]<min) { 
+			min  = distance[n][m];
+		    minn = n;
+		    minm = m;
+			if(linfo->flagAutoRotation) {
+				mrcImageFree(&minCor, "in lmrcImageClusterAnalysis");
+				mrcImageFree(&minOut, "in lmrcImageClusterAnalysis");
+			  	minCor = cor;
+			  	minOut = out;
+			} 
+		} else {
+			if(linfo->flagAutoRotation && !flagSkip) {
+				mrcImageFree(&cor, "in lmrcImageClusterAnalysis");
+				mrcImageFree(&out, "in lmrcImageClusterAnalysis");
+			}
+		}	
+		lmrcImageClusterAnalysisDistanceToLog(linfo->fptLog, n, m, prevN, prevM, distance[n][m]); 
+      }
+    } /* End: Calc Distance */
+
+	/* Check For Debuging */
+	for(n=0; n<clusternum; n++) {
+	for(m=0; m<n; m++) {
+		DEBUGPRINT1("%6.2f ", distance[n][m]);
+	}
+		DEBUGPRINT("\n");
+	}
+    DEBUGPRINT3("index[minm] %d index[minn] %d min %g\n",index[minm], index[minn], min);
+    DEBUGPRINT2("minm        %d minn        %d \n",minm, minn);
+
+    /* 
+		cluster[index[minm]] : change
+		cluster[index[minn]] : no change
+		index[0:clusternum-1]
+		index[minm]
+		index[minn]
+		averagednum
+    */
+	if(linfo->flagAutoRotation) {
+    	lmrcImageClusterMerge(&cluster[index[minm]], &minOut,               index, averagednum, minm, minn, &clusternum);
+	} else {
+    	lmrcImageClusterMerge(&cluster[index[minm]], &cluster[index[minn]], index, averagednum, minm, minn, &clusternum);
+	}
+	DEBUGPRINT("after\n");
+    DEBUGPRINT3("index[minm] %d index[minn] %d min %g\n",index[minm], index[minn], min);
+
+    /*
+    distance[n][m]
+              n\m 0 1 2 3 ...-1 cluseternum
+              0   - - - - ... - -
+	          1   * - - - ... - - 
+	          2   * * - - ... - -
+	          3   * * * - ... - -
+	          .   * * * * ... - -
+	       minm   * * * * ... - -
+	          .   * * * * ... - - 
+	       minn   * * * * ... - - 
+	          .   * * * * ... - - 
+     clusternum   * * * * ... * -  
+
+    group[n]: the number of the group including the nth-image  
+      ~                                         ~
+	0<= n < N
+    */
+
+	/* Grouping : group[minm] <- group[minn] */
+    for (n=0; n<N; n++){
+      if (group[n] == minn) {
+	    group[n] = minm;         /* assignment of the new number of group */
+      } else if (group[n] > minn){
+	    group[n] = group[n] - 1; /* decrement of the number of group      */
+      }
+    }
+
+	prevM = minm; /* Always, minm < minn.  So prevM<prevN */ 
+	prevN = minn;
+	if(linfo->flagAutoRotation) {
+    	for (n=0; n<clusternum; n++) {
+      		for (m=0; m<n; m++) {
+				if(m<prevN) {
+					if(n<prevN) {
+						distance[n][m] = distance[n  ][m  ];
+					} else if(prevN<=n){
+						distance[n][m] = distance[n+1][m  ];
+					}
+				} else if(prevN<=m){
+					if(n<prevN) {
+						fprintf(stderr, "Something wrong: n<m.  Always, m<n\n");
+					} else if(prevN<=n) {
+						distance[n][m] = distance[n+1][m+1];
+					}
+				}
+			}
+		}
+	}
+    DEBUGPRINT("After distance change\n");
+    for(n=0; n<clusternum; n++) {
+    for(m=0; m<n; m++) {
+		DEBUGPRINT1("%6.2f ", distance[n][m]);
+    }
+		DEBUGPRINT("\n");
+    }
+  } /* while end */
+	
+  for (n=0; n<N; n++){
+    if (linfo->flagIteration){
+      fprintf(stderr, "n %d group %d \n", n, group[n]);
+    } else {
+      fprintf(stderr, "n %d group %d \n", n, group[n]);
+    }
+  }
+  if (linfo->flagIteration){
+  	F = lmrcImageClusterAnalysisByIteration(group, in, finalclusternum, N, linfo->mode);
+    for (n=0; n<N; n++){
+      fprintf(stderr, "%d %d \n",n,group[n]);
+    }
+    fprintf(stdout,"F= %g\n",F);
+  }
+}
+
+/*
+lmrcImageClusterMerge
+	in1: index[m] -> an averaged image of a new cluster: 
+	in2: index[n] -> no change
+	index:
+	averagednum: the number of averaged images in each cluster
+	m: The nearest pair of particles 
+	n:                        -> the index to be neglected 
+	N: Current cluster number -> N - 1
+*/
+void lmrcImageClusterMerge(mrcImage* in1, mrcImage* in2, int* index, int* averagednum, int m, int n, int* N)
+{
+  int io,ii;
+  mrcImage in1mul,in2mul;
+  float avrm,avrn;
+  mrcImageParaTypeRealCoord offset;
+
+  /* Averaging of cluster index[m] and index[n] */
+  avrm = (float)averagednum[index[m]] / (averagednum[index[m]] + averagednum[index[n]]);
+  avrn = (float)averagednum[index[n]] / (averagednum[index[m]] + averagednum[index[n]]);
+  lmrcImageMultiplying(&in1mul, in1, avrm, in1->HeaderMode);
+  lmrcImageMultiplying(&in2mul, in2, avrn, in2->HeaderMode);
+  llmrcImageAdd(&in1mul, &in2mul);
+
+  /* Set a new averaged image of a new cluster */
+  offset.x = offset.y = offset.z =0 ;
+  lmrcImageCopy(in1, &in1mul, offset);
+
+  /* Set the number of averaged images */
+  averagednum[index[m]] += averagednum[index[n]];
+
+  /* 
+    cluster index change : 
+		ii<n:  io == ii
+		n <ii: io == ii - 1
+  */ 
+  io=0;
+  for (ii=0; ii<*N; ii++) {
+    if (ii != n) {
+      index[io] = index[ii];
+      io++;
+    }
+  }
+  *N = *N - 1;
+
+  /* cleaning */
+  mrcImageFree(&in1mul,"");
+  mrcImageFree(&in2mul,"");
+}
+
+float 
+lmrcImageDistanceCalcWithAutoRotation(mrcImage* out, mrcImage* cor, mrcImage* in1, mrcImage* in2, lmrcImageAutoRotationCorrelationInfo* linfo, int lmode, int mode)
+{
+	double distance;
+	switch(mode) {
+		case 0: {
+			lmrcImageAutoRotationCorrelation(out, cor, in1, in2, linfo, lmode); 
+			distance = -linfo->max;
+			break;
+		}
+		case 1: {
+			lmrcImageAutoRotationCorrelation(out, cor, in1, in2, linfo, lmode); 
+			distance = linfo->EuclidDistance;
+			break;
+		}
+		case 2: {
+			lmrcImageAutoRotationCorrelation(out, cor, in1, in2, linfo, lmode); 
+			distance = SQR(linfo->EuclidDistance);
+			break;
+		}
+		default: {
+			fprintf(stderr, "Not supported mode in  lmrcImageDistanceCalcWithAutoRotation: %d\n", mode);
+			exit(EXIT_FAILURE);
+			break;
+		}
+	}
+	return distance;
+}
+
+float 
+lmrcImageDistanceCalc(mrcImage* in1, mrcImage* in2, int mode)
+{
+  double data,data1,data2;
+  int x,y,z;
+  
+  switch (mode) {
+  	case 0: {
+    	data = -lmrcImageCorrelationinSpace(in1, in2, 0);
+    	break;
+	}
+  	case 1: {
+		data = lmrcImageEuclidDistanceCalc(in1, in2, 1);
+		break;
+	}
+  	case 2: {
+		data = lmrcImageEuclidDistanceCalc(in1, in2, 0);
+    	break;
+	}
+	default: {
+		fprintf(stderr, "Not supported mode in  lmrcImageDistanceCalcWithAutoRotation: %d\n", mode);
+		exit(EXIT_FAILURE);
+		break;
+	}
+  }
+  return data;
+}
+
+float 
+lmrcImageDistanceCalcByWardMethodWithAutoRotation(mrcImage* out, mrcImage* cor, mrcImage* in1, mrcImage* in2, int num1, int num2, lmrcImageAutoRotationCorrelationInfo* linfo, int lmode, int mode)
+{
+	double distance;
+
+	lmrcImageAutoRotationCorrelation(out, cor, in1, in2, linfo, lmode); 
+	distance = SQR(linfo->EuclidDistance)*(num1*num2)/(num1+num2);
+	return distance;
+}
+
+float 
+lmrcImageDistanceCalcByWardMethod(mrcImage* in1, mrcImage* in2, int num1, int num2, int mode)
+{
+  double data,data1,data2;
+  int x,y,z;
+  data  = lmrcImageEuclidDistanceCalc(in1, in2, 0);
+  data *= ((float)(num1*num2)/(num1+num2));
+  return(data);
+}
+
+float lmrcImageClusterAnalysisByIteration(int* group, mrcImage* in, int clusternum, int N, int mode)
+{
+  mrcImage* center;
+  int n,m;
+  float distancesum,distance,olddistancesum,distancemin,F;
+  int* groupnum;
+  mrcImageParaTypeRealCoord dum;
+  mrcImage tmpimage;
+  double clustervar;
+  mrcImage centerofclusters;
+
+  if ( ( center = (mrcImage *)malloc(sizeof(mrcImage)*clusternum) ) == NULL){
+    fprintf(stderr, "Enough memory is not available!\n");
+    exit(EXIT_FAILURE);
+  }
+  groupnum = ivector(0,clusternum-1);
+  dum.x = dum.y = dum.z =0;
+
+  distancesum=1;
+  olddistancesum=0;
+  for (n=0; n<clusternum; n++){
+    center[n].Header = in[0].Header;
+    mrcInit(&center[n],0);
+  }
+    
+  while (distancesum != olddistancesum){
+    olddistancesum=distancesum;
+    distancesum=0;
+    for (n=0; n<clusternum; n++){
+      mrcImageFree(&center[n],"");
+      center[n].Header = in[0].Header;
+      mrcInit(&center[n],0);
+      groupnum[n]=0;
+    }
+    for (n=0; n<N; n++){
+      llmrcImageAdd(&center[group[n]],&in[n]);
+      groupnum[group[n]] ++;
+    }
+    for (n=0; n<clusternum; n++){
+      lmrcImageMultiplying(&tmpimage, &center[n], 1.0/groupnum[n], center[n].HeaderMode);
+      lmrcImageCopy(&center[n], &tmpimage, dum);
+      mrcImageFree(&tmpimage, "");
+    }
+    for (n=0; n<N; n++){
+      distancemin = 1e+16;
+      for (m=0; m<clusternum; m++){
+	distance = lmrcImageDistanceCalc(&in[n], &center[m], mode);
+	if (distance < distancemin){
+	  distancemin = distance;	  
+	  group[n] = m;
+	}
+      }
+      distancesum += distancemin;
+    }
+  }
+
+  /* F-value */
+  centerofclusters.Header = center[0].Header;
+  mrcInit(&centerofclusters,0);
+  for (n=0; n<clusternum; n++){
+    llmrcImageAdd(&centerofclusters, &center[n]);
+  }
+  lmrcImageMultiplying(&tmpimage, &centerofclusters, 1.0/clusternum, centerofclusters.HeaderMode);
+  lmrcImageCopy(&centerofclusters, &tmpimage, dum);
+  mrcImageFree(&tmpimage, "");
+  clustervar=0;
+  for (n=0; n<clusternum; n++){
+    clustervar += lmrcImageDistanceCalc(&centerofclusters, &center[n], 2);
+  }
+  clustervar /= clusternum;
+  if (mode != 2){
+    distancesum = 0;
+    for (n=0; n<N; n++){
+      distancesum += lmrcImageDistanceCalc(&in[n], &center[group[n]], 2);
+    }
+  }
+  distancesum/=N;
+  if (distancesum > 0){
+    F=clustervar/distancesum;
+    F=sqrt(F);
+  } else {
+    F=0;
+  }
+  return(F);
+}

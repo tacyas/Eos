@@ -1,0 +1,12 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-ZXY","-ZXY","ZXY*pdb: rotz(rotz)rotx(rotx)roty(roty) ","Optional","3","1","ZXYrotx","Real","0.0","2","ZXYroty","Real","0.0","3","ZXYrotz","Real","0.0"
+"-ZYX","-ZYX","ZYX*pdb: rotz(rotz)roty(roty)rotx(rotx) ","Optional","3","1","ZYXrotx","Real","0.0","2","ZYXroty","Real","0.0","3","ZYXrotz","Real","0.0"
+"-YXZ","-YXZ","YXZ*pdb: roty(roty)rotx(rotx)rotz(rotz) ","Optional","3","1","YXZrotx","Real","0.0","2","YXZroty","Real","0.0","3","YXZrotz","Real","0.0"
+"-XYZ","-XYZ","XYZ*pdb: rotx(rotx)roty(roty)rotz(rotz) ","Optional","3","1","XYZrotx","Real","0.0","2","XYZroty","Real","0.0","3","XYZrotz","Real","0.0"
+"-EA","-E[uler]A[ngle]","EA*pdb: EA=rot(rot3)rot(rot2)rot(rot1) ","Optional","4","1","RotMode","String","YOYS","2","Rot1","Real","0.0","3","Rot2","Real","0.0","4","Rot3","Real","0.0"
+"-cuda","-cuda","UseCuda","Optional","1","1","cudaDeviceID","Integer","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

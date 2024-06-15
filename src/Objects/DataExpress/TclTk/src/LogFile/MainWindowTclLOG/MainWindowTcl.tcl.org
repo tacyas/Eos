@@ -1,0 +1,110 @@
+package require vtk
+package require vtkinteraction
+package require vtktesting
+
+proc bye {} {
+    vtkCommand DeleteAllObjects
+    exit
+}
+
+proc windowLayoutSet { } {
+	puts "windowLayoutSet"
+
+	set f [ frame .mainMenu ] 
+
+	menubotton $f.file -text "File" -underline 0 -menu $m.file.m
+	menubotton $f.menu -text "Menu" -underline 0 -menu $m.menu.m
+	
+	set m [ menu $f.file.m ]
+	$m add command -label "Open" -command {
+	    renWin Render
+	}
+	$m add command -label "Quit" -command {
+	   vtkCommand DeleteAllObjects
+	   exit
+	}
+
+	set m [ menu $f.menu.m ]
+	$m add command -label "stereo" -command {
+	  myi OnButtonFromWindow "StereoMode"
+	}
+	
+	$m add command -label "RotateOn" -command {
+	    iren SetRenderWindow renWin
+	    iren AddObserver UserEvent {wm deiconify .vtkInteract}
+	    iren Initialize
+	    iren Enable
+	}
+	
+	$m add command -label "RotateOff" -command {
+	    iren Disable
+	    #wait 3
+	    #iren Enable 
+	    iren SetInteractorStyle vtkInteractorStyleTrackball
+		iren Enable
+	}
+
+	pack .mainMenu.file .mainMenu.menu -side left 
+
+    set f [ frame  .params ]
+	button $f.quit -text "Quit" -command bye
+	
+}
+
+	#windowLayoutSet	
+	wm title . TclWindow
+
+    vtkCylinderSource cylinder
+     cylinder SetResolution 8
+    
+    vtkPolyDataMapper cylinderMapper
+     cylinderMapper SetInput [cylinder GetOutput]
+    vtkActor cylinderActor
+     cylinderActor SetMapper cylinderMapper
+
+    vtkCamera cam
+	 cam SetFocalPoint 0 0 0
+	 cam SetPosition 0 0 10
+	 cam SetEyeAngle 10.0
+
+	vtkLight light
+	 light SetFocalPoint 0.21406 1.5 0
+	 light SetPosition 8.3761 4.94858 4.1250
+
+    vtkRenderer ren
+     ren SetActiveCamera cam
+     ren AddLight light
+     ren AddActor cylinderActor
+
+    vtkRenderWindow renWin
+     renWin AddRenderer ren
+
+    eosInteractorMyStyle myi
+    #vtkInteractorStyleJoystickCamera myi
+    vtkRenderWindowInteractor iren
+    iren SetRenderWindow renWin
+    iren SetInteractorStyle myi
+	#iren Initialize
+    myi SetRenderWindowDatas ren iren
+    myi SetTclWindowInterp 
+	
+    eval [cylinderActor GetProperty] SetColor $tomato 
+     cylinderActor RotateX  30.0
+     cylinderActor RotateY -45.0
+     cylinderActor SetPosition 0.0 0.0 0.0
+
+    #ren SetBackground 0.1 0.2 0.4
+
+    set vtkw [ vtkTkRenderWidget .ren -width 300 -height 300 -rw renWin ]
+	windowLayoutSet 
+	pack   .mainMenu $vtkw .params -side top -fill both -expand yes
+
+    BindTkRenderWidget $vtkw    
+	#bind_tk_render_widget $vtkw
+
+    [ren GetActiveCamera] Zoom 1 
+
+	wm protocol . WM_DELETE_WINDOW bye 
+	
+	tkwait window .
+

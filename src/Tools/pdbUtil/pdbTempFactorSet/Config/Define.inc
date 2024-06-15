@@ -1,0 +1,4 @@
+OBJECTNAME = pdbTempFactorSet
+EXTRA_LIB  =
+EXTRA_CCOPTS =
+EXTRA_INC =

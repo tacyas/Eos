@@ -1,0 +1,9 @@
+# OptionControlFile
+# FileFormat
+"-r","-r[peak]","Input: rpeak [A]","Essential","1","1","r","Real","220"
+"-R","-R[peak]","Input: Rpeak [pixel]","Essential","1","1","R","Real","24"
+"-xstep","-xstep","Input: xstep [A]","Essential","1","1","xstep","Real","7"
+"-W","-W[idth]","Input: Width [pixel]","Essential","1","1","Width","Real","500"
+"-o","-o[utput]","OutputDataFile","Optional","1","1","Out","outFile","stdout"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

@@ -1,0 +1,12 @@
+#!../Display2.HP 
+proc display2DesktopSet {} {
+	pack .main_canvas \
+		 -side left -fill both -expand true
+	pack .menu.file .menu.seqfile .menu.edit .menu.window .menu.roi .menu.operation \
+		 .menu.info .menu.help  .menu.exit \
+		 -fill y -side top -expand true -ipadx 3 -ipady 3 
+	pack .overview_canvas .menu \
+		 -side top -fill both  -expand true
+
+	tk_menuBar .menu .menu.file .menu.window .menu.roi .menu.help
+}

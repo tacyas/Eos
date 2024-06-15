@@ -1,0 +1,20 @@
+#
+#
+#
+proc llDataPrintInit { } {
+	global inFileName
+	global outFileName
+	global nFrame 
+
+	wm title  	. $inFileName
+	wm protocol . WM_DELETE_WINDOW "Delete Window"
+
+	# Graph Frame Initial Setting 
+	set nFrame(current) 0
+	set nFrame(old) 	0
+	set nFrame(max) 	0
+	set nFrame(row)    	4
+	set nFrame(column) 	2
+	set nFrame(psrow)    4
+	set nFrame(pscolumn) 2
+}

@@ -1,0 +1,9 @@
+proc CommandEntry { name label width command args } {
+	frame $name
+	label $name.label -text $label -width -anchor w
+	eval { entry $name.entry -relief sunken } $args
+	pack $name.label -side left
+	pack $name.entry -side right -fill x -expand true
+	bind $name.entry <Return> $command
+	return $name.entry
+}

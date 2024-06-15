@@ -1,0 +1,181 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>                  
+#define GLOBAL_DECLARATION
+
+#include "../inc/config.h"
+#include "Memory.h"
+#include "mrcImage.h"
+#include "tiffio.h"
+
+void
+main(int argc, char* argv[]) 
+{
+    mrcImage mrc;
+	TIFF *tiff;
+    THIS_PROGRAM\
+Info info;
+
+	init0(&info);
+    argCheck(&info, argc, argv);
+    init1(&info);
+
+	mrcFileRead(&mrc, info.inFile, "in main routine", 0);
+	tiff = TIFFOpen(info.outFile, "w");
+	if(tiff != NULL) {
+		lmrc2tiff(&mrc, tiff, info.mode);
+	} else {
+		fprintf(stderr, "Cannot open tiff file (%s).\n", info.inFileName);
+		exit(EXIT_FAILURE);
+	}	
+}
+
+void
+lmrc2tiff(mrcImage* mrc, TIFF* tiff, long mode)
+{
+	unsigned short samplesPerPixel;
+	unsigned short bitsPerSample;
+	unsigned short bytesPerSample;
+	unsigned short planarConfiguration;
+	unsigned short photometric;
+	unsigned short matte;
+	unsigned short bytesPerRow;
+	unsigned short resUnit, resTag;
+	unsigned long  w, h, row, col;
+	float ox, oy, xres, yres;
+	unsigned char*  tiffBuffer;
+	double data;
+
+	matte=0;
+
+	bytesPerRow = TIFFScanlineSize(tiff);
+	TIFFGetField(tiff, TIFFTAG_PHOTOMETRIC, &photometric);
+	switch(photometric) {
+		case 0 /*PHOTOMERIC_MINISBLACK*/:
+		case 1 /*PHOTOMERIC_MINISWHITE*/:
+			break;
+		default: {
+			TIFFError("ltiff2mrc", "Cannot handle %d photometric", photometric);
+			exit(EXIT_FAILURE);
+			break;
+		}
+	}
+	TIFFGetFieldDefaulted(tiff, TIFFTAG_BITSPERSAMPLE, &bitsPerSample);
+	switch(bitsPerSample) {
+		case  8:
+		case 16:
+			bytesPerSample = bitsPerSample/8;
+			break;
+		default: {
+			TIFFError("ltiff2mrc", "Can not handle %d-bit/sample image", bitsPerSample);
+			exit(EXIT_FAILURE);
+			break;
+		}
+	}
+	TIFFGetFieldDefaulted(tiff, TIFFTAG_SAMPLESPERPIXEL, &samplesPerPixel);
+	switch(samplesPerPixel) {
+		case 1:
+			break;
+		default:
+			TIFFError("ltiff2mrc", "Can not handle %d-sample/pixel image", samplesPerPixel);
+			exit(EXIT_FAILURE);
+			break;
+	}
+	TIFFGetField(tiff, TIFFTAG_PLANARCONFIG, &planarConfiguration);
+
+	TIFFGetField(tiff, TIFFTAG_MATTEING, &matte);
+
+	TIFFGetField(tiff, TIFFTAG_IMAGEWIDTH, &w);
+	TIFFGetField(tiff, TIFFTAG_IMAGELENGTH, &h);
+	if(!TIFFGetField(tiff, TIFFTAG_XPOSITION, &ox)) {
+		ox = 0;
+	}
+	if(!TIFFGetField(tiff, TIFFTAG_YPOSITION, &oy)) {
+		oy = 0;
+	}
+	if(!TIFFGetField(tiff, TIFFTAG_RESOLUTIONUNIT, &resUnit)) {
+		resTag = RESUNIT_NONE;
+	}
+
+
+	mrc->HeaderN.x = w;
+	mrc->HeaderN.y = h;
+	mrc->HeaderN.z = 1;
+	switch(bitsPerSample) {
+		case  8:
+			mrc->HeaderMode = mrcCharImage;
+			break;
+		case 16:
+			mrc->HeaderMode = mrcShortImage;
+			break;
+		default:
+			TIFFError("ltiff2mrc", "Can not handle %d-bit/sample image", bitsPerSample);
+			exit(EXIT_FAILURE);
+	}
+
+    switch(mode) {
+        case 0: {
+            break;
+        }
+        case 1: {
+			mrc->HeaderMode = mrcFloatImage;
+            break;
+        }
+        default: {
+            fprintf(stderr, "Not supported mode : %ld\n", mode);
+            exit(EXIT_FAILURE);
+            break;
+        }
+    }
+
+	mrcInit(mrc, NULL);
+	tiffBuffer = (unsigned char*)memoryAllocate(sizeof(unsigned char)*bytesPerRow, "in ltiff2mrc");
+	switch(bitsPerSample) {
+		case 8: {
+			for(row=0; row < h; row++) {
+				if(TIFFReadScanline(tiff, tiffBuffer, row, 0)<0) {
+					break;
+				}
+				for(col=0; col < w; col++) {
+					data = (double)*((unsigned char*)(tiffBuffer+col));
+					mrcPixelDataSet(mrc, col, row, 1, data, mrcPixelMag);
+				}
+			}
+			break;
+		}
+		case 16: {
+			for(row=0; row < h; row++) {
+				if(TIFFReadScanline(tiff, tiffBuffer, row, 0)<0) {
+					break;
+				}
+				for(col=0; col < w; col++) {
+					data = (double)*((unsigned short*)(tiffBuffer+col*bytesPerSample));
+					mrcPixelDataSet(mrc, (float)col, (float)row, 0, data, mrcPixelRePart);
+				}
+			}
+			break;
+		}
+	}
+    switch(mode) {
+        case 0: {
+            break;
+        }
+        case 1: {
+			for(row=0; row < h; row++) {
+				for(col=0; col < w; col++) {
+					mrcPixelDataGet(mrc, (float)col, (float)row, 0, &data, mrcPixelRePart, mrcPixelHowNearest);
+                    data = log10(65535.0/data);
+					mrcPixelDataSet(mrc, (float)col, (float)row, 0, data, mrcPixelRePart);
+				}
+            }
+            break;
+        }
+        default: {
+            fprintf(stderr, "Not supported mode : %ld\n", mode);
+            exit(EXIT_FAILURE);
+            break;
+        }
+    }
+	mrcStatDataSet(mrc, 0);
+}

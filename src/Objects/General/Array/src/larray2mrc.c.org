@@ -1,0 +1,103 @@
+/*
+# array2mrc : $Revision$  
+# $Date$ 
+# Created by $Author$
+# Usage : array2mrc
+# Attention
+#   $Loccker$
+#  	$State$ 
+#
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>                  
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+
+#define DEBUG
+#include "genUtil.h"
+#include "Array.h"
+#include "mrcImage.h"
+
+typedef struct larray2mrcInfo {
+	int   mrcMode;
+	mrcImageParaTypeReal mrcLength;
+	Array array;
+} larray2mrcInfo;
+
+/*
+typedef enum larray2mrcMode {
+	a=0,
+	b=1
+} larray2mrcMode;
+*/
+
+void
+larray2mrc(larray2mrcInfo* linfo, char* filename, int mode);
+
+int
+main(int argc, char* argv[]) 
+{
+	array2mrcInfo  info;
+	larray2mrcInfo linfo;
+
+	init0(&info);
+    argCheck(&info, argc, argv);
+    init1(&info);
+
+	linfo.mrcMode   = info.mm;
+	linfo.mrcLength = info.lm;
+
+	DEBUGPRINT("Program Start\n");
+		
+	arrayReadFromFile(info.fptIn, &linfo.array, "in main");
+	if(linfo.array.dim != 2){
+		fprintf(stderr, "This dimension can not use this program !!\n");
+		exit(1);
+	}
+	larray2mrc(&linfo, info.Out, info.mode);
+	
+	DEBUGPRINT("Program End\n");
+	exit(EXIT_SUCCESS);
+}
+
+void
+additionalUsage()
+{
+	fprintf(stderr, "----- Additional Usage -----\n");
+}
+
+void
+larray2mrc(larray2mrcInfo* linfo, char* filename, int mode)
+{
+	int i, j;
+	mrcImage mrc;
+
+	mrc.HeaderMode = linfo->mrcMode;
+	switch(linfo->array.dim){
+		case 1 :
+			mrc.HeaderLength.x = linfo->mrcLength;
+			mrc.HeaderN.x = (int)linfo->array.n[0];
+		break;
+		case 2 :
+			mrc.HeaderLength.x = mrc.HeaderLength.y = linfo->mrcLength;
+			mrc.HeaderN.x = (int)linfo->array.n[0];
+			mrc.HeaderN.y = (int)linfo->array.n[1];
+		break;
+		case 3 :
+			mrc.HeaderLength.x = mrc.HeaderLength.y = mrc.HeaderLength.z = linfo->mrcLength;
+			mrc.HeaderN.x = (int)linfo->array.n[0];
+			mrc.HeaderN.y = (int)linfo->array.n[1];
+			mrc.HeaderN.z = (int)linfo->array.n[2];
+		break;
+	}	
+	mrcInit(&mrc, NULL);
+
+	for(i=0; i<linfo->array.n[1]; i++){
+	for(j=0; j<linfo->array.n[0]; j++){
+		mrcPixelDataSet(&mrc, j, i, 0, linfo->array.A[j+i*linfo->array.n[0]], mrcPixelRePart);
+	}
+	}
+	mrcFileWrite(&mrc, filename, "in larray2mrc", 0);
+}

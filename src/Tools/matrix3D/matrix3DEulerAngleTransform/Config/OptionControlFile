@@ -1,0 +1,8 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nputlist]","InputDataFileList","Essential","1","1","In","inFileListNoOpen","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-R","-R[otationalMode]","RotationalMode","Optional","1","1","RotationalMode","String","ZONS"
+"-M","-M[ultiplyEulerAngle]","M * input","Optional","4","1","RotMode","String","ZONS","2","Rot1","Real","0.0","3","Rot2","Real","0.0","4","Rot3","Real","0.0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageSectionGet</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageSectionGet<br></h2></b></font>
+	<h4>指定したｚ座標の切断面を出力</h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>オプション</th>
+				<th>必須項目/選択項目</th>
+				<th>説明</th>
+				<th>デフォルト</th>
+			</tr>
+			<tr>
+				<td>-i</td>
+				<td>必須</td>
+				<td>入力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-o</td>
+				<td>必須</td>
+				<td>出力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-z</td>
+				<td>選択</td>
+				<td>ｚ軸の切断する座標を設定</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-m</td>
+				<td>選択</td>
+				<td>モード</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-h</td>
+				<td>選択</td>
+				<td>ヘルプを表示</td>
+				<td>　</td>
+			</tr>
+		</table>
+
+<!-- モード説明 -->
+
+	<br>
+	<br>
+	<caption><b>モードの詳細</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>モード</th>
+				<th>説明</th>
+			</tr>
+			<tr>
+				<td>0</td>
+				<td>出力したファイルは入力ファイルのコピーとなる</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>出力したファイルは入力ファイルと連動する<br>
+				（ポインタのような働きをする。入力ファイルに変化があれば、出力ファイルにも同じ変化が現れる）</td>
+			</tr>
+		</table>
+
+	<h4>******実行例******</h4>
+	
+<!-- 入力ファイル説明 -->
+
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<div>
+	ｘｙ平面を正面とした画像<br>
+	<img src="121p.in2.png" border="0" alt="121p.in2.png(10030 byte)" width="100" height="100"><br>
+	ｙｚ平面を正面とした画像<br>
+	<img src="121p.in1.png" border="0" alt="121p.in1.png(5639 byte)" width="100" height="100"><br>
+	入力ファイルのデータ<br>
+	
+	
+	<img src="121p.out.png" border="0" alt="121p.out.png(9577 byte)" width="647" height="237"><br>
+	上記から、ファイルがｘ軸＝１００、ｙ軸＝１００、ｚ軸＝１００の３Ｄ構造であることがわかる</div>
+	
+<!-- 出力ファイル -->
+	
+	<br>
+	<br>
+	<caption><font color="blue">------出力ファイルの結果画像------</font></caption><br>
+	<div>オプション -z=1に設定</div>
+	<table>
+		<tr>
+			<td><img src="121p.z1.png" border="0" alt="121p.z1.png(1080 byte)" width="100" height="100"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				1<br>
+				0.003<br>
+				0.05469<br>
+				0.0005469<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	
+	<div>オプション -z=10に設定</div>
+	<table>
+		<tr>
+			<td><img src="121p.z10.png" border="0" alt="121p.z10.png(1150 byte)" width="100" height="100"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				1<br>
+				0.0059<br>
+				0.0765845<br>
+				0.000765845<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<div>オプション -z=30に設定</div>
+	<table>
+		<tr>
+			<td><img src="121p.z30.png" border="0" alt="121p.z30.png(1002 byte)" width="100" height="100"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				1<br>
+				0.0005<br>
+				0.0223551<br>
+				0.000223551<br></p>
+			</td>
+		</tr>
+	</table>
+	
+</body>
+</html>

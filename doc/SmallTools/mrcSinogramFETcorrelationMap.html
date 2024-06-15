@@ -1,0 +1,32 @@
+<HTML>
+<HEAD>
+<TITLE>mrcSinogramFETcorrelationMap</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcSinogramFETcorrelationMap</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcSinogramFETcorrelationMap
+Options:
+    [-i[nput]1           In1                 (NULL      ).as(inFile              ) ] :Essential :InputSinogramFETFile1
+    [-i[nput]2           In2                 (NULL      ).as(inFile              ) ] :Essential :InputSinogramFETFile2
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-w[eight]           Weight              (NULL      ).as(inFile              ) ] :Optional  :WeightDataFile mrcFormat
+    [-s[tandard]d[eviation]SD                  (NULL      ).as(inFile              ) ] :Optional  :readSDfileForNormalize
+    [-n[orm]m[ode]       NM                  (0         ).as(Integer             ) ] :Optional  :normalizemode
+    [-c[alc]mode         CMode               (0         ).as(Integer             ) ] :Optional  :calculateMode
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+mode 0 : default, normal distance correlation
+mode 1 : average of counter pixel presents same line
+
+-nm : 0 : normalize free (prenormalized input data)
+      1 : normalize implementation
+
+-cmode : 0 : distance calculation
+         1 : difference product 
+
+</PRE>
+</BODY>
+</HTML>

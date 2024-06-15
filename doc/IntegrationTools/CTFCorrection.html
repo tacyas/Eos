@@ -1,0 +1,49 @@
+<HTML>
+<HEAD>
+<TITLE> CTF Correction </TITLE>
+</HEAD>
+<BODY BGCOLOR="ffffcc">
+<H1> CTF Correction </H1>
+<H2> CTF Correction Protocol </H2>
+<UL>
+	<A HREF="#OneImageCTFCorrection">One Image CTF Correction </A>
+</UL>
+<HR>
+<A NAME="OneImageCTFCorrection">
+<H3> One Image CTF Correction </H3>
+</A>
+<H4> General Information </H4>
+<OL>
+	<LI> Obtain mrcImage-formatted file <UL>
+		<LI> from Leafscan (TIFF-formated file) <OL>
+			<LI> <A HREF="/Eos/SmallTools/tiff2mrc.html">tiff2mrc </A>
+		</OL>
+		<LI> from Eikonics (Eikonics-formatted file) <OL>
+			<LI> <A HREF="/Eos/SmallTools/eiko2mrc.html">eiko2mrc </A>
+		</OL>
+	</UL>
+	<LI> Check mrcImage-formatted file <UL>
+		<LI> <A HREF="/Eos/SmallTools/mrcInfo.html">mrcInfo</A>
+		<LI> <A HREF="/Eos/SmallTools/mrcImageInfo.html">mrcImageInfo</A>
+		<LI> <A HREF="/Eos/SmallTools/Display2.html">Display2</A>
+		<LI> <A HREF="/Eos/SmallTools/mrcImagePrint.html">mrcImagePrint</A>
+	</UL>
+	<LI> Fourier Transform <UL>
+		<LI> <A HREF="/Eos/SmallTools/fft2d.html"> fft2d </A>
+	</UL>
+	<LI> Check Fourier-Space and determine defocus <UL>
+		<LI> <A HREF="/Eos/SmallTools/mrcFFTInfo.html">mrcFFTInfo</A>
+	</UL>
+	<LI> Compensate CTF function
+	<LI> Check CTF-compensated file <UL>
+		<LI> Display2
+		<LI> mrcImagePrint 
+		<LI> mrc2tiff
+	</UL>
+</OL>
+<H4> How to integrate the above tools</H4>
+<UL>
+	<LI> <A HREF="MakefileForOneImageCTFCorrection">Examples of Makefile </A>
+</UL>
+</BODY>
+</HTML>

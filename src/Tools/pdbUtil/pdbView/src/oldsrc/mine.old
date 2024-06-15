@@ -1,0 +1,181 @@
+    double moleculeRadius = 1.6;
+    float x,y,z;
+    int resolution = 4;
+    vtkAssembly* moleData = vtkAssembly::New();
+
+    pdbFileTop(ppdb);
+    while(1){
+       if(pdbFileIsCA(ppdb)){
+	 pdbFileCoordGet(ppdb, &x, &y, &z);
+	 vtkSphereSource* molecule = vtkSphereSource::New();
+	 molecule->SetRadius(moleculeRadius);
+	 molecule->SetThetaResolution(resolution);
+	 molecule->SetPhiResolution(resolution);
+	 molecule->SetCenter(0,0,0);
+	 vtkPolyDataMapper* moleculeMapper = vtkPolyDataMapper::New();
+	 moleculeMapper->SetInput(molecule->GetOutput());
+	 vtkActor* moleculeActor= vtkActor::New();
+	 moleculeActor->SetMapper(moleculeMapper);
+	 moleculeActor->SetPosition(x,y,z);
+	 moleculeActor->GetProperty()->SetColor(0.5,0.5,0.5);
+	 moleData->AddPart(moleculeActor);
+       }
+       /*
+       else {
+	 pdbFileCoordGet(ppdb, &x, &y, &z);
+	 vtkSphereSource* molecule = vtkSphereSource::New();
+	 molecule->SetRadius(moleculeRadius/2);
+	 molecule->SetThetaResolution(3);
+	 molecule->SetPhiResolution(3);
+	 molecule->SetCenter(0,0,0);
+	 vtkPolyDataMapper* moleculeMapper = vtkPolyDataMapper::New();
+	 moleculeMapper->SetInput(molecule->GetOutput());
+	 vtkActor* moleculeActor= vtkActor::New();
+	 moleculeActor->SetMapper(moleculeMapper);
+	 moleculeActor->SetPosition(x,y,z);
+	 moleculeActor->GetProperty()->SetColor(0.6,0.7,0.8);
+	 moleData->AddPart(moleculeActor);     
+	 }
+
+       */
+       if(pdbFileEnd(ppdb)){
+	 break;
+       } else {
+	 pdbFileNext(ppdb);
+       }
+  }
+  
+  ren->AddActor(moleData);  
+
+
+
+  /*
+
+    double moleculeRadius = 0.8;
+    float x,y,z;
+    vtkAssembly* moleData = vtkAssembly::New();
+
+    pdbFileTop(ppdb);
+    while(1){
+       if(pdbFileIsAtom(ppdb)){
+	 pdbFileCoordGet(ppdb, &x, &y, &z);
+	 vtkLineSource* molecule = vtkLineSource::New();
+	 //molecule->SetRadius(moleculeRadius);
+
+	 molecule->SetResolution(1);
+
+	 molecule->SetPoint1(0,0.1,0);
+	 molecule->SetPoint2(0,-0.1,0);
+
+	 vtkPolyDataMapper* moleculeMapper = vtkPolyDataMapper::New();
+	 moleculeMapper->SetInput(molecule->GetOutput());
+	 vtkActor* moleculeActor= vtkActor::New();
+	 moleculeActor->SetMapper(moleculeMapper);
+	 moleculeActor->SetPosition(x,y,z);
+	 moleculeActor->GetProperty()->SetColor(0.5,0.5,0.5);
+	 moleData->AddPart(moleculeActor);
+
+
+       }
+       if(pdbFileEnd(ppdb)){
+	 break;
+       } else {
+	 pdbFileNext(ppdb);
+       }
+  }
+  
+  ren->AddActor(moleData);  
+
+
+  */
+
+
+
+  //Create an actor and give it cone geometry
+  vtkConeSource *cone = vtkConeSource::New();
+  cone->SetResolution(30);
+  cone->SetHeight(5);
+  cone->SetRadius(3);
+  vtkPolyDataMapper *coneMapper = vtkPolyDataMapper::New();
+  coneMapper->SetInput(cone->GetOutput());
+  vtkActor *coneActor = vtkActor::New();
+  coneActor->SetMapper(coneMapper);
+  coneActor->GetProperty()->SetColor(1.0,0.0,0.0);
+  coneActor->SetPosition(0,5,0);
+  
+  //Mine Create
+  vtkConeSource *cone2 = vtkConeSource::New();
+  cone2->SetResolution(6);
+  cone2->SetHeight(2);
+  cone2->SetRadius(3);
+  vtkPolyDataMapper *coneMapper2=vtkPolyDataMapper::New();
+  coneMapper2->SetInput(cone2->GetOutput());
+  vtkActor *coneActor2 = vtkActor::New();
+  coneActor2->SetMapper(coneMapper2);
+  coneActor2->GetProperty()->SetColor(0.2,0.8,0.7);
+  
+  //Cube
+  vtkCubeSource *cube = vtkCubeSource::New();
+  cube->SetCenter(0,0,0);
+  cube->SetXLength(5);
+  cube->SetYLength(5);
+  cube->SetZLength(5);
+  //cube->SetBounds(0.0,0.5,0.0,0.3,0.0,0.2);
+  vtkPolyDataMapper *cubeMapper = vtkPolyDataMapper::New();
+  cubeMapper->SetInput(cube->GetOutput());
+  vtkActor *cubeActor = vtkActor::New();
+  cubeActor->SetMapper(cubeMapper);
+  cubeActor->GetProperty()->SetOpacity(0.5);
+  cubeActor->GetProperty()->SetColor(0.4,0.4,0.7);
+  
+  //LineX
+  vtkLineSource *lineX = vtkLineSource::New();
+  lineX->SetPoint1(0,0,0);
+  lineX->SetPoint2(5,0,0);
+  vtkPolyDataMapper *lineXMapper = vtkPolyDataMapper::New();
+  lineXMapper->SetInput(lineX->GetOutput());
+  vtkActor *lineXActor = vtkActor::New();
+  lineXActor->SetMapper(lineXMapper);
+  lineXActor->GetProperty()->SetColor(1.0,0,0);
+  
+
+    //LineY
+    vtkLineSource *lineY = vtkLineSource::New();
+    lineY->SetPoint1(0,0,0);
+    lineY->SetPoint2(0,5,0);
+    vtkPolyDataMapper *lineYMapper = vtkPolyDataMapper::New();
+    lineYMapper->SetInput(lineY->GetOutput());
+    vtkActor *lineYActor = vtkActor::New();
+    lineYActor->SetMapper(lineYMapper);
+    lineYActor->GetProperty()->SetColor(0,1.0,0);
+
+
+    //LineZ
+    vtkLineSource *lineZ = vtkLineSource::New();
+    lineZ->SetPoint1(0,0,0);
+    lineZ->SetPoint2(0,0,5);
+    vtkPolyDataMapper *lineZMapper = vtkPolyDataMapper::New();
+    lineZMapper->SetInput(lineZ->GetOutput());
+    vtkActor *lineZActor = vtkActor::New();
+    lineZActor->SetMapper(lineZMapper);
+    lineZActor->GetProperty()->SetColor(0,0,1.0);
+
+
+
+    /*
+    //GridTest
+
+    vtkImageGridSource* grid = vtkImageGridSource::New();
+    grid->SetGridSpacing(1,1,0);
+    grid->SetGridOrigin(0,0,0);
+    grid->SetDataExtent(0,255,0,255,0,0);
+    // vtkPolyDataMapper* gridMapper = vtkPolyDataMapper::New();
+    vtkImageActor* gridActor = vtkImageActor::New();
+    //gridMapper->SetInput(grid->GetOutput());
+
+    //gridActor->SetMapper(gridMapper);
+gridActor->SetInput(grid->GetOutput());
+
+    ren->AddActor2D(gridActor);
+
+    */

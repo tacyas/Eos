@@ -1,0 +1,80 @@
+#ifndef MRC_SYNMETRY_H
+#define MRC_SYNMETRY_H
+
+#include "mrcImage2.h"
+
+#define OPTION_FLAG      '-'
+#define OPTION_FLAG_POS  (0)
+#define OPTION_POS       (1)
+#define FILENAME_LENGTH  (1024)
+#define DEFAULT_MODE     (1)
+#define MAX_LEVEL        (100)
+
+#define MAX(x,y)  (((x)>(y))?(x):(y))
+#define MIN(x,y)  (((x)<(y))?(x):(y))
+#define PI        (3.141592653589793238)
+
+typedef enum mrcSynmetryMode {
+    mrcSynmetryNo = 0,
+    mrcSynmetryP2 = 1,
+    mrcSynmetryP3 = 2
+} mrcSynmetryMode;
+
+typedef struct mrcSynmetry {
+    mrcSynmetryMode mode;
+    char            string[FILENAME_LENGTH];
+} mrcSynmetry;
+
+typedef struct Coord {
+    float x;
+    float y;
+} Coord;
+
+typedef struct mrcSynmetryInfo {
+    char inFileName[FILENAME_LENGTH];
+    FILE* fptIn;
+    long flagInFile;
+    char outFileName[FILENAME_LENGTH];
+    FILE* fptOut;
+    long flagOutFile;
+    char resFileName[FILENAME_LENGTH];
+    FILE* fptRes;
+    long flagResFile;
+    mrcSynmetryMode mode;
+    Coord v1;
+    Coord v2;
+    long flagVector;
+    Coord start;
+    Coord end;
+    Coord d;
+    Coord  min;
+    double minValue;
+    double* PhaseResidue;
+    double* Normal;
+} mrcSynmetryInfo;
+
+
+/* Synmetry Mode */
+#define SYNMETRY_NUM  3
+
+#ifdef GLOBAL_DECLARATION
+mrcSynmetry Synmetry[SYNMETRY_NUM] = {
+    {mrcSynmetryP2, "P2"},
+    {mrcSynmetryP3, "P3"},
+    {mrcSynmetryNo, ""  }
+};
+#else
+extern mrcSynmetry Synmetry[SYNMETRY_NUM];
+#endif
+
+extern void lmrcSynmetry(mrcImage* fft1, mrcImage* fft0, mrcSynmetryInfo* info);
+extern void outputSynmetry(mrcSynmetryInfo* info);
+
+extern void argCheck(mrcSynmetryInfo* info, int argc, char* argv[]);
+                          
+extern void init0(mrcSynmetryInfo* info);
+extern void init1(mrcSynmetryInfo* info);
+                  
+extern void usage(char* thisProgram);
+
+#endif /* MRC_SYNMETRY_H */

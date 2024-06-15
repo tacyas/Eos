@@ -1,0 +1,13 @@
+# OptionControlFile
+# FileFormat
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile::mrcImage","NULL"
+"-r","-r[eference]","Input: Reference Header","Optional","1","1","Ref","inFile::mrcImage","NULL"
+"-Nx","-Nx[Number of x]","Nx:Default Nx of inputfile","Optional","1","1","Nx","Integer","0"
+"-Ny","-Ny[Number of y]","Ny:Default Ny of inputfile","Optional","1","1","Ny","Integer","0"
+"-Nz","-Nz[Number of z]","Nz:Default Nz of inputfile","Optional","1","1","Nz","Integer","0"
+"-v","-v[alue]","Value of pixel","Optional","1","1","Value","Real","0.0"
+"-d","-d[elta]","Pixel size","Optional","1","1","d","Real","0.0"
+"-M","-M[ode]","ImageMode: 0 char 1 short 2 Float","Optional","1","1","Mode","Integer","2"
+"-Def","-Def[ault]","DefaultFixedValueSet","Optional","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile::ASCII","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

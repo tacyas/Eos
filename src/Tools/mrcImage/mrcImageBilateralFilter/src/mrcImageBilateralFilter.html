@@ -1,0 +1,40 @@
+<HTML>
+<HEAD>
+<TITLE>mrcImageBilateralFilter</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageBilateralFilter</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageBilateralFilter
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-s[igma]D[ensity]   SigmaDensity        (2.0       ).as(Real                ) ] :Optional  :SigmaDensity
+    [-k[ernal]T[type]D[ensity]KernelTypeDensity   (0         ).as(Integer             ) ] :Optional  :KernelTypeForDensity
+    [-s[igma]S[pace]     SigmaSpace          (1.0       ).as(Real                ) ] :Optional  :SigmaSpace
+    [-s[igma]S[pace]3    SigmaSpaceX         (1.0       ).as(Real                ) 
+                         SigmaSpaceY         (1.0       ).as(Real                ) 
+                         SigmaSpaceZ         (1.0       ).as(Real                ) ] :Optional  :SigmaSpace(3D)
+    [-k[ernel]T[ype]S[pace]KernelTypeSpace     (0         ).as(Integer             ) ] :Optional  :KernelTypeForSpace
+    [-k[ernel]S[ize]     KernelSize          (5         ).as(Integer             ) ] :Optional  :KernelSize
+    [-k[ernel]S[ize]3    KernelSizeX         (5         ).as(Integer             ) 
+                         KernelSizeY         (5         ).as(Integer             ) 
+                         KernelSizeZ         (5         ).as(Integer             ) ] :Optional  :KernelSize(3D)
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+Bilateral Filter
+    by Tomashi and Manduchi
+    C. Tomasi and R. Manduchi, Bilateral Filtering for Gray and Color Images, Proceedings of the 1998 IEEE International Conference on Computer Vision, Bombay, India
+ fi = Sigma_j(W(i,j)*Ij)/ Sigma_j(Wj)   
+   ,where W(i,j)=W_x(xi,xj)*W_I(Ii,Ij)    
+------- linfo.mode : 0 
+                 W_x(xi,xj) = exp(-|xi-xj|^2/2 sigmaSpace^2  )
+                 W_I(Ii,Ij) = exp(-|Ii-Ij|^2/2 sigmaDensity^2)
+------- linfo.mode : 1 
+                 W_x(xi,xj) = 1/(1+|xi-xj|^2/sigmaSpace^2  )   
+                 W_I(Ii,Ij) = 1/(1+|Ii-Ij|^2/sigmaDensity^2)   
+</PRE>
+</BODY>
+</HTML>

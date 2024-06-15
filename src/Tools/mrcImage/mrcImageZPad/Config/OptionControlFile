@@ -1,0 +1,14 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-r","-r[max]","rmax = height of z window * 0.5 .","Optional","1","1","r","Real","0"
+"-w","-w[idth]","Width of slope. For mode 1. Usually w>=3 is good enough. ","Optional","1","1","w","Real","1"
+"-v","-v[alue]","Value of out of threshold.","Optional","1","1","v","Real","0"
+"-Nx","-Nx","Number of x.Default is inputfile.","Optional","1","1","Nx","Integer","0"
+"-Ny","-Ny","Number of y.Default is inputfile.","Optional","1","1","Ny","Integer","0"
+"-Nz","-Nz","Number of z.Default is inputfile.","Optional","1","1","Nz","Integer","0"
+"-Floating","-Floating","Floating","Optional","0"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"
+

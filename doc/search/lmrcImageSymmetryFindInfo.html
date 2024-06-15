@@ -1,0 +1,38 @@
+<HTML>
+<BODY>
+<H1>lmrcImageSymmetryFindInfo</H1><BR>
+<H3>in lmrcImageSymmetryFind.h</H3><BR>
+<PRE>
+typedef struct <A HREF="lmrcImageSymmetryFindInfo.html">lmrcImageSymmetryFindInfo </A>{ <BR>
+	double dr; <BR>
+	double dtheta; <BR>
+	double threshold1; <BR>
+	double threshold2; <BR>
+	int    maxNfold; <BR>
+	lmrcImageSymmetryFindCentreType centreMode; <BR>
+	lmrcImageDeterminationOfPolarAxisByAssumingNfoldInfo centreInfo; <BR>
+	lmrcImageSymmetryFindSubtractionType subtractionMode;  <BR>
+	int       flagImages; <BR>
+	mrcImage  Image; <BR>
+	mrcImage* Images; <BR>
+	int       flagBacks; <BR>
+	mrcImage  Back; <BR>
+	mrcImage* Backs; <BR>
+	floatVector Value; <BR>
+	floatVector Point; <BR>
+	int         Symmetry; <BR>
+	FILE*    fptOut; <BR>
+	int      flagCorrelation; <BR>
+	mrcImage correlation; <BR>
+	int      flagFourier; <BR>
+	mrcImage  fourier; <BR>
+	int      flagTmap; <BR>
+	mrcImage tmap; <BR>
+	int      flagAvg; <BR>
+	mrcImage avg; <BR>
+	char*    avgName; <BR>
+	DescartesCoord centre; <BR>
+} lmrcImageSymmetryFindInfo; <BR>
+ 
+</PRE></HTML>
+</BODY>

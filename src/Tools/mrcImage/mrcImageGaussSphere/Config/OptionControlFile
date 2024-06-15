@@ -1,0 +1,16 @@
+# OptionControlFile
+# FileFormat
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-EA","-E[uler]A[ngle]","Input: Gauss Sphere: Rotation","Optional","4","1","EA","String","YOYS","2","Rot1","Real","0.0","3","Rot2","Real","0.0","4","Rot3","Real","0.0"
+"-centre","-centre","Input: Gauss Sphere: Centre","Optional","3","1","ShiftX","Real","0.0","2","ShiftY","Real","0.0","3","ShiftZ","Real","0.0"
+"-sigmax","-sigmax","sigmax[A]","Optional","1","1","sigmax","Real","10"
+"-sigmay","-sigmay","sigmay[A]","Optional","1","1","sigmay","Real","20"
+"-sigmaz","-sigmaz","sigmaz[A]","Optional","1","1","sigmaz","Real","30"
+"-sigma_range","-sigma_range","x times","Optional","1","1","sigma_range","Real","3"
+"-weight","-weight","weight","Optional","1","1","weight","Real","10"
+"-size","-size","Pixel Size[A]","Optional","1","1","size","Real","5"
+"-W","-W[idth]","Width[A]","Optional","1","1","Width","Real","0"
+"-H","-H[ight]","Height[A]","Optional","1","1","Height","Real","0"
+"-S","-S[ection]","Section[A]","Optional","1","1","Section","Real","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","2"

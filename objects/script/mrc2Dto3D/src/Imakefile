@@ -1,0 +1,19 @@
+#define DoNotAutoRecreate NO
+
+#include EOS_INCLUDE
+
+OBJECT_TYPE = script
+
+TOOLBOX_NAME = eos
+
+OBJECT_NAME = mrc2Dto3D
+
+BINARY_NAME = mrc2Dto3D
+
+INSTPGMFLAGS =
+
+SCRIPTS = \
+	mrc2Dto3D.ksh
+
+#define KKSH_DEF
+#include <Script.template>

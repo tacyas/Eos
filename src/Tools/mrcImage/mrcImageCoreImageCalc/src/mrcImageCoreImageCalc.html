@@ -1,0 +1,36 @@
+<HTML>
+<HEAD>
+<TITLE>mrcImageCoreImageCalc</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageCoreImageCalc</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageCoreImageCalc
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :Input: Pretreated Core-loss Image
+    [-e[neryg]l[oss]     EL                  (180       ).as(Real                ) ] :Essential :Input: EnergyLoss
+    [-bg[List]           BG                  (NULL      ).as(inFileList          ) ] :Essential :Input: Bg File List
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :Output: Core-Loss Image
+    [-O[utputBG]         OutBG               (NULL      ).as(outFile             ) ] :Optional  :Output: BG-Image
+    [-Chi[sq]            OutChi              (NULL      ).as(outFile             ) ] :Optional  :Output: Chi-Image
+    [-initial[Value]     A1                  (5040      ).as(Real                ) 
+                         A2                  (500       ).as(Real                ) 
+                         A3                  (-12       ).as(Real                ) ] :Optional  :Input: A1 + A2*EELS^A3
+    [-limitA3            LimitA3Min          (-16       ).as(Real                ) 
+                         LimitA3Max          (-5        ).as(Real                ) ] :Optional  :Input: limit A3
+    [-baseEELS           BaseEELS            (160.0     ).as(Real                ) ] :Optional  :Input: BaseEELS as 1.0
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+>>> BGFile List 
+FileName1 EEL
+FileName2 EEL
+AAA       160
+BBB       170
+>>> Mode 
+Mode 0: Multi Window Method 
+        Need more than three pre- and post- edge images to calculate background
+</PRE>
+</BODY>
+</HTML>

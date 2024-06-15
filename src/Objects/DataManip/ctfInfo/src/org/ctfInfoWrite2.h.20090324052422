@@ -1,0 +1,34 @@
+/*
+# ctfInfoWrite2.h : $Revision$  
+# $Date$ 
+# Created by $Author$
+# Usage : ctfInfoWrite2.h 
+# Attention
+#   $Loccker$
+#  	$State$ 
+#
+*/
+/* $Log$ */
+#ifndef CTF_INFO_WRITE2_H
+#define CTF_INFO_WRITE2_H
+
+#include "mrcImage.h"
+#include "ctfInfo.h"
+//#include "./powerspectraTangentLine.h"
+
+typedef struct lctfDetermineInfo {
+	int    degree;
+	double step;
+	double max;
+	double min;
+	float  firstRingDefocus;
+	float  IntensityMin;
+	float  IntensityMax;
+	float* noise;
+} lctfDetermineInfo;
+
+/*prototype begin*/
+extern void ctfInfoWrite2(FILE* fpt,lctfDetermineInfo linfo, char* head);
+/*prototype end*/
+
+#endif/*CTF_INFO_WRITE2_H*/

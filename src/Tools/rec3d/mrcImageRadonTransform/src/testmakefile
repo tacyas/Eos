@@ -1,0 +1,175 @@
+###### Thick Filaments Model Check
+###### 1997-05-14 Syuhei Hashiba
+
+.SUFFIXES: .gus .gusfld .mdl3d .mdl3dfld .proj .cry .roi .fft .fftps .pad \
+    		.mdl3dcyl .mdl3dcylps .mdl3dholps \
+           .add .addfld .addholps \
+           .nea .far .llplt .llprint .neafarps \
+           .avg .avgps .asnea .asfar .avgparam .avgplt .avgn .avgpltn .asplt\
+           .ltlg .ltlgLow \
+           .avgc .avgcLow .avgcps \
+           .ltlgc \
+           .mrc3d .mrc3dLow \
+           .fld .fldLow \
+           .clstlst \
+		   .deflst \
+           .vol .volc \
+		   .map .mapc \
+		   .projgif .projcgif \
+           .hdf .hdfc \
+           .contour .contourc \
+           .reproj
+
+GUS = \
+		model1.gus \
+		model2.gus \
+		model3.gus
+
+gus:$(GUS)
+gusfld:  $(GUS:.gus=.gusfld)
+mdl3d:   $(GUS:.gus=.mdl3d)
+mdl3dfld:$(GUS:.gus=.mdl3dfld)
+mdl3dcyl:$(GUS:.gus=.mdl3dcyl)
+mdl3dcylps:$(GUS:.gus=.mdl3dcylps)
+mdl3dholps:$(GUS:.gus=.mdl3dholps)
+proj :   $(GUS:.gus=.proj)
+cry  :   $(GUS:.gus=.cry)
+roi  :   $(GUS:.gus=.roi)
+fft  :   $(GUS:.gus=.fft)
+fftps:   $(GUS:.gus=.fftps)
+pad  :   $(GUS:.gus=.pad)
+nea  :   $(GUS:.gus=.nea)
+trpps:   $(GUS:.gus=.trpps)
+llplt:   $(GUS:.gus=.llplt)
+llprint: $(GUS:.gus=.llprint)
+asnea:   $(GUS:.gus=.asnea)
+asplt:   $(GUS:.gus=.asplt)
+ltlg :   $(GUS:.gus=.ltlg)
+mrc3d:   $(GUS:.gus=.mrc3d)
+fld  :   $(GUS:.gus=.fld)
+vol  :   $(GUS:.gus=.vol)
+avg  :   $(GUS:.gus=.avg)
+avgc :   $(GUS:.gus=.avgc)
+map  :   $(GUS:.gus=.map)
+hdf  :   $(GUS:.gus=.hdf)
+projgif :$(GUS:.gus=.projgif)
+projcgif:$(GUS:.gus=.projcgif)
+avgplt:  $(GUS:.gus=.avgplt)
+reproj:  $(GUS:.gus=.reproj)
+
+model1.gus:
+	mrcImageGaussSphere -o model1.gus -sigmax 30 -sigmay 30 -sigmaz 30 -weight 100 -sigma_range 3 -size 5 -m 2
+model2.gus:
+	mrcImageGaussSphere -o model2.gus -sigmax 10 -sigmay 20 -sigmaz 30 -weight 100 -sigma_range 3 -size 5 -m 2
+model3.gus:
+	mrcImageGaussSphere -o model3.gus -sigmax 30 -sigmay 30 -sigmaz 30 -weight 100 -sigma_range 3 -size 5 -m 2
+.gus.gusfld:
+	mrc2fld -i $*.gus -o $*.gusfld -m 2
+model1.mdl3d:
+	mrcImageModelCreate -i model1.gus -o model1.mdl3d -nx 100 -ny 100 -nz 87 -lx 5 -ly 5 -lz 5 -radius 150 -n 3 -dz 145 -dphi 40 -phi 120 -sz 0 -ez 435 -sphi 0 -inMode 0 -m 1 -fm 0 
+model2.mdl3d:
+	mrcImageModelCreate -i model2.gus -o model2.mdl3d -nx 101 -ny 101 -nz 87 -lx 5 -ly 5 -lz 5 -radius 150 -n 3 -dz 145 -dphi 40 -phi 120 -sz 0 -ez 435 -sphi 40 -inMode 0 -m 1 -fm 0 
+model3.mdl3d:
+	mrcImageModelCreate -i model3.gus -o model3.mdl3d -nx 100 -ny 100 -nz 87 -lx 5 -ly 5 -lz 5 -radius 150 -n 3 -dz 145 -dphi 40 -phi 120 -sz 0 -ez 435 -sphi 0 -inMode 0 -m 1 -fm 2 
+
+model1+2.add:
+	mrcImageAdd -i1 model1.mdl3d -i2 model2.mdl3d -o model1+2.add
+model1+2.addfld:
+	mrc2fld -i $*.add -o $*.addfld -m 2
+model1+2.addholps:
+	mrcImagePrint -i $*.add -o $*.addholps -m 50 -AS 0.3 -C 40 50 60 70
+	
+.mdl3d.mdl3dfld:
+	mrc2fld -i $*.mdl3d -o $*.mdl3dfld -m 2
+.mdl3d.mdl3dcyl:
+	mrcImageCylinderSection -i $*.mdl3d -o $*.mdl3dcyl -zmax 300 -rmax 250
+.mdl3dcyl.mdl3dcylps:
+	mrcImagePrint -i $*.mdl3dcyl -o $*.mdl3dcylps -m 50 -AS 0.4 -C 10 30 50 70 90 
+.mdl3d.mdl3dholps:
+	mrcImagePrint -i $*.mdl3d -o $*.mdl3dholps -m 50 -AS 0.3 -z 23 35 -C 40 50 60 70 
+.mdl3d.proj:
+	mrcImageProjection -i $*.mdl3d -o $*.proj
+.proj.cry:
+	mrcImageCrystalCreate -i $*.proj -o $*.cry -ny 12
+.cry.pad:
+	mrcImagePad -i $*.cry -o $*.pad -W 1000 -m 1
+.pad.fft:
+	mrcImageFFT -i $*.pad -o $*.fft 
+.fft.fftps:
+	mrcImagePrint -i $*.fft -o $*.fftps -AS 800 -E 5 -m 17 -I
+	mrcImagePrint -i $*.fft -o $*.fftps2 -AS 800 -E 2.5 -m 17 -I
+
+.fft.nea:
+	llExtract -c $*.ctrl -i $*.fft -1 $*.nea -2 $*.far
+	llDataPrint -i2 $*.nea $*.far -o $*.neafarps -Rmax 0.02
+.nea.avg:
+	llDataAxisSearch -i1 $*.nea -i2 $*.far -o $*.avgparam -o1 $*.asnea -o2 $*.asfar -a $*.avg  -l llaxis.llinfo -c llaxis.ctrl
+	llDataPrint -i $*.avg -o $*.avgps -Rmax 0.02
+.avg.avgc:
+	llDataCTFCompensate -i $*.avg -o $*.avgc -I model1.ctfinf -t 435
+.avgc.ltlg:
+	llDataWeightSet -i $*.avgc -o $*.tmpavgc -l 3d.llinfo
+	ll2ltlg -i $*.tmpavgc -o $*.ltlg -t $*.ltlg -D 5000 -l 16 -R 5 -d 5 -r 250
+.ltlg.mrc3d:
+	ltlg2mrc -i $*.ltlg -o $*.mrc3d -c ltlg2mrc.ctrl -C 435
+.mrc3d.fld:
+	mrc2fld -i $*.mrc3d -o $*.fld
+
+.avg.avgcLow:
+	llDataCTFCompensate -i $*.avg -o $*.avgcLow -I model1.ctfinfLow -t 435
+.avgcLow.ltlgLow:
+	llDataWeightSet -i $*.avgcLow -o $*.tmpavgc -l 3d.llinfoLow
+	ll2ltlg -i $*.tmpavgc -o $*.ltlgLow -t $*.ltlgLow -D 5000 -l 16 -R 5 -d 5 -r 250
+.ltlgLow.mrc3dLow:
+	ltlg2mrc -i $*.ltlgLow -o $*.mrc3dLow -c ltlg2mrc.ctrl -C 435
+.mrc3dLow.fldLow:
+	mrc2fld -i $*.mrc3dLow -o $*.fldLow
+
+.mrc3d.reproj:
+	mrcImageProjection -i $*.mrc3d -o $*.reproj
+##################################################################
+# Protein Volume Cliculation 
+##################################################################
+
+# Volume Calculation
+MOLECULAR_WEIGHT=520000
+MOLECULAR_NUMBER=9
+MOLECULAR_DENSITY=1.35
+
+.mrc3d.vol:
+	mrcImageVolumeCalc -i $*.mrc3d -o $*.vol -M $(MOLECULAR_WEIGHT) -n $(MOLECULAR_NUMBER) -d $(MOLECULAR_DENSITY) -I
+	cat $*.vol
+
+.mrc3dc.volc:
+	mrcImageVolumeCalc -i $*.mrc3dc -o $*.volc -M $(MOLECULAR_WEIGHT) -n $(MOLECULAR_NUMBER) -d $(MOLECULAR_DENSITY) -I
+	cat $*.volc
+
+.mrc3d.contour:
+	mrcImagePrint -i $*.mrc3d -o $*.contour -m 34 -AS 0.2 -Centre -C 10 30 50 70 90
+
+.mrc3dc.contourc:
+	#mrcImagePrint -i $*.mrc3dc -o $*.contourc -m 34 -AS 0.2 -Section x -C 10 30 50 70 90
+	#mrcImagePrint -i $*.mrc3dc -o $*.contourc -m 34 -AS 0.4 -C 10 30 50 70 90
+	mrcImagePrint -i $*.mrc3dc -o $*.contourc -m 34 -AS 0.2 -Centre -C 10 30 50 70 90
+
+##################################################################
+# mrc3d to FRODO Data
+##################################################################
+
+.mrc3dc.mapc:
+	mrc2map -i $*.mrc3dc -o $*.mapc -m 1
+
+##################################################################
+# mrc to gif  
+##################################################################
+
+.projc.projcgif:
+	mrc2gif -i $*.projc -o $*.projcgif
+
+##################################################################
+# xds file
+##################################################################
+.mrc3d.hdf:
+	mrc2hdf -i $*.mrc3d -o $*.hdf 
+.mrc3dc.hdfc:
+	mrc2hdf -i $*.mrc3dc -o $*.hdfc 

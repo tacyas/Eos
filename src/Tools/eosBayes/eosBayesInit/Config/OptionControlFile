@@ -1,0 +1,7 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input:Control","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","Output:Bayes","Essential","1","1","Out","outFile","NULL"
+"-n","-n[um]","Integer","Essential","2","1","numDistribution","Integer","3","2","numLikelihood","Integer","3"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

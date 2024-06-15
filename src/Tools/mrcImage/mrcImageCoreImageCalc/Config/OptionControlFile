@@ -1,0 +1,13 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: Pretreated Core-loss Image","Essential","1","1","In","inFile","NULL"
+"-el","-e[neryg]l[oss]","Input: EnergyLoss","Essential","1","1","EL","Real","180"
+"-bg","-bg[List]","Input: Bg File List","Essential","1","1","BG","inFileList","NULL"
+"-o","-o[utput]","Output: Core-Loss Image","Essential","1","1","Out","outFile","NULL"
+"-O","-O[utputBG]","Output: BG-Image","Optional","1","1","OutBG","outFile","NULL"
+"-Chi","-Chi[sq]","Output: Chi-Image","Optional","1","1","OutChi","outFile","NULL"
+"-initial","-initial[Value]","Input: A1 + A2*EELS^A3","Optional","3","1","A1","Real","5040","2","A2","Real","500","3","A3","Real","-12"
+"-limitA3","-limitA3","Input: limit A3","Optional","2","1","LimitA3Min","Real","-16","2","LimitA3Max","Real","-5"
+"-baseEELS","-baseEELS","Input: BaseEELS as 1.0","Optional","1","1","BaseEELS","Real","160.0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

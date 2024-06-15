@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageSamplingUnitChange</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageSamplingUnitChange<br></h2></b></font>
+	<h4></h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>オプション</th>
+				<th>必須項目/選択項目</th>
+				<th>説明</th>
+				<th>デフォルト</th>
+			</tr>
+			<tr>
+				<td>-i</td>
+				<td>必須</td>
+				<td>入力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-o</td>
+				<td>必須</td>
+				<td>出力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-S</td>
+				<td>選択</td>
+				<td>ピクセル幅を設定</td>
+				<td>Sx=0.0 Sy=0.0 Sz=0.0</td>
+			</tr>
+			<tr>
+				<td>-m</td>
+				<td>選択</td>
+				<td>モードを設定</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-h</td>
+				<td>選択</td>
+				<td>ヘルプを表示</td>
+				<td>　</td>
+			</tr>
+			</div>
+		</table>
+		<br>
+
+<!-- モード説明 -->
+
+	<br>
+	<caption><b>モードの詳細</b></caption>
+	<table border="1">
+		<div align="left">
+			<tr>
+				<th>モード</th>
+				<th>説明</th>
+			</tr>
+			<tr>
+				<td>0</td>
+				<td>最近似法</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>線形法</td>
+			</tr>
+		</div>
+	</table>
+
+	<br>	
+	<h4>******実行例******</h4>
+
+<!-- 入力ファイル説明 -->
+
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="b120-2.png" border="0" alt="b120-2.png(6742 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-65.0178<br>
+				94.4699<br>
+				4.85274<br>
+				20.4635<br>
+				0.255794<br></p>
+			</td>
+		</tr>
+	</table>
+
+<!-- 実行結果 -->
+
+	<caption><font color="blue">------オプション　-S------</font></caption><br>
+	<div>フォーム：０</div>
+	<table>
+		<tr>
+			<td><img src="outdata-S.png" border="0" alt="outdata-S.png(10561 byte)" width="137" height="137"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-65.0178<br>
+				94.4699<br>
+				4.87208<br>
+				20.5321<br>
+				0.149869<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<div>オプション　-m=1の場合</div>
+	<table>
+		<tr>
+			<td><img src="outdata-Sm1.png" border="0" alt="outdata-Sm1.png(17446 byte)" width="137" height="137"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-50.9402<br>
+				84.9007<br>
+				4.90934<br>
+				16.5109<br>
+				0.120517<br></p>
+			</td>
+		</tr>
+	</table>
+
+
+
+
+
+
+
+
+</body>
+</html>

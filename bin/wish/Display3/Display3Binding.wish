@@ -1,0 +1,101 @@
+#!../Display3.HP 
+proc display3BindingSet { c } {
+
+	bind . <Any-FocusIn> {
+		if {("%d" == "NotifyVirtual") && ("%m"=="NotifyNormal")} {
+			focus .menu
+		}
+	}
+	
+	
+	bind $c <ButtonPress-2> {
+		switch $Roi(Action) {
+			Create {
+				tk_popup .menu.roi.m  %X %Y
+			}
+			default {
+				tk_popup .menu.edit.m %X %Y
+			}
+		}
+	}
+	
+	
+	bind $c <ButtonPress-1> {
+		global Point
+	
+		pointSet %W %x %y
+	
+		switch $Roi(Action) {
+			Create {
+				roiAreaCreateStart %W $Point(x) $Point(y)
+			}
+			Move {
+				roiAreaMoveStart   %W $Point(x) $Point(y)
+			}
+			Resize {
+				roiAreaResizeStart %W $Point(x) $Point(y)
+			}
+			Rotate {
+				roiAreaRotateStart %W $Point(x) $Point(y)
+			}
+		}
+	}
+	
+	bind $c <Enter> {
+	
+	}
+	
+	bind $c <Leave> {
+	
+	}
+	
+	bind $c <Motion> {
+		global Point
+	
+		pointSet %W %x %y
+	
+		switch $Roi(Action) {
+			Create {
+				roiAreaCreateMotion %W $Point(x) $Point(y)
+			}
+			Move {
+				roiAreaMoveMotion %W $Point(x) $Point(y)
+			}
+			Resize {
+				roiAreaResizeMotion %W $Point(x) $Point(y)
+			}
+			Rotate {
+				roiAreaRotateMotion %W $Point(x) $Point(y)
+			}
+		}
+	}
+	
+	bind $c <ButtonRelease-1> {
+		global Point
+		
+		pointSet %W %x %y
+	
+		switch $Roi(Action) {
+			Create {
+				roiAreaCreateEnd %W $Point(x) $Point(y)
+				switch $Roi(Shape) {
+					Spline {
+						set Roi(Actin) Create
+					}
+					default {
+						set Roi(Action) Move
+					}
+				}
+			}
+			Move {
+				roiAreaMoveEnd   %W $Point(x) $Point(y)
+			}
+			Resize {
+				roiAreaResizeEnd %W $Point(x) $Point(y)
+			}
+			Rotate {
+				roiAreaRotateEnd %W $Point(x) $Point(y)
+			}
+		}
+	}
+}

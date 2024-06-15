@@ -1,0 +1,11 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: PDB","Essential","1","1","In","inFile","NULL"
+"-idcd","-i[nput]dcd","Input: DCD","Optional","1","1","InDCD","inFile","NULL"
+"-step","-step","Input: step in DCD","Optional","1","1","Step","Integer","0"
+"-o","-o[utput]","OutputDataFile","Optional","1","1","Out","outFile","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-DM","-D[isplay]M[ode]","Mode","Optional","1","1","DisplayMode","Integer","0"
+"-AM","-A[tom]M[ode]","Mode","Optional","1","1","AtomMode","Integer","1"
+"-CM","-C[olor]M[ode]","Mode","Optional","1","1","ColorMode","Integer","2"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

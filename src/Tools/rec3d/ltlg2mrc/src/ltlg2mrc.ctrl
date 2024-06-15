@@ -1,0 +1,12 @@
+test.ltlg              	InputFileName(char[72])                   : ltlg-data filename to input
+ActinModel 				Title(char[60])                           : New title : Main title of ltlg is kept as Title1
+Y                      Y|N(char[1])                              : This parameter is not used in this tool. But you must prepare it for compatibility.
+5                    deltaX[A](if Y)||deltaY[A](if N)(F10.5)   : You need not care for deltaX or deltaY in this tool because deltaX = deltaY. You had better care for that for compatibility.
+764.4 150.0             C[A]rMax[A](2F7.0)                        : C[A]: Spacing of the 1st layer line in real space ; rMax: Maximum of radial elements.
+0.0                    phiStart[degree](F7.0)                    : phi at Z = 0
+0.0 365.0 5            zMin[A],zMax[A],deltaz[A](3F7.0)          : z-section parameters for(z=zMin; z<zMax; z+=deltaz)
+0.5                     Weight(2?F7.0)                            : Weight of the 0th layer line
+
+-9999.0                ACUT(2?F7.0)                              : IF(ACUT>Density[x][y]) Density[x][y]= 0.0
+0.0 20.0               Mean,Sigma(2F7.0)                         : Mean : Mean of hrzData?; Sigma : Standard Deviation of hrzData?
+test.mrc3d             OutputFile                                : hrz-data filename to output

@@ -1,0 +1,27 @@
+<HTML>
+<BODY>
+<H1>pdbRecord</H1><BR>
+<H3>in pdbFile.h</H3><BR>
+<PRE>
+struct <A HREF="pdbRecord.html">pdbRecord </A>{ <BR>
+  <A HREF="pdbFileParaTypeCharacter.html">pdbFileParaTypeCharacter </A>FullRecord[PDB_FILE_RECORD_FULL_LENGTH+1]; <BR>
+  <A HREF="pdbFileParaTypeCharacter.html">pdbFileParaTypeCharacter </A>Record[PDB_FILE_RECORD_LENGTH+1]; <BR>
+  <A HREF="pdbFileParaTypeInteger.html">pdbFileParaTypeInteger </A>  AtomSerialNumber; <BR>
+  <A HREF="pdbFileParaTypeCharacter.html">pdbFileParaTypeCharacter </A>AtomName[PDB_FILE_ATOM_NAME_LENGTH+1]; <BR>
+  <A HREF="pdbFileParaTypeCharacter.html">pdbFileParaTypeCharacter </A>LocationIndicator; <BR>
+  <A HREF="pdbFileParaTypeCharacter.html">pdbFileParaTypeCharacter </A>ResidueName[PDB_FILE_RESIDUE_LENGTH+1]; <BR>
+  <A HREF="pdbFileParaTypeCharacter.html">pdbFileParaTypeCharacter </A>ChainIdentifier; <BR>
+  <A HREF="pdbFileParaTypeInteger.html">pdbFileParaTypeInteger </A>  ResidueSequenceNumber; <BR>
+  <A HREF="pdbFileParaTypeCharacter.html">pdbFileParaTypeCharacter </A>InsertionCode; <BR>
+  <A HREF="pdbCoord.html">pdbCoord </A>                Coord; <BR>
+  <A HREF="pdbFileParaTypeReal.html">pdbFileParaTypeReal </A>     Occupancy; <BR>
+  <A HREF="pdbFileParaTypeReal.html">pdbFileParaTypeReal </A>     TemperatureFactor; <BR>
+  <A HREF="pdbFileParaTypeInteger.html">pdbFileParaTypeInteger </A>  FootnoteNumber; <BR>
+  <A HREF="pdbFileParaTypeCharacter.html">pdbFileParaTypeCharacter </A>Footnote[PDB_FILE_FOOTNOTE_LENGTH+1]; <BR>
+  pdbRecord*               top; <BR>
+  pdbRecord*               prev; <BR>
+  pdbRecord*               next; <BR>
+}; <BR>
+ 
+</PRE></HTML>
+</BODY>

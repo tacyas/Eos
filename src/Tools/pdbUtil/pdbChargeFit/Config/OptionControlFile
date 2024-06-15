@@ -1,0 +1,14 @@
+# OptionControlFile
+# FileFormat
+"-if","-i[nput]f[ixed pdb]","InputFixedPdbFile","Essential","1","1","InFix","inFile","NULL"
+"-im","-i[nput]m[oved pdb]","InputMovedPdbFile","Essential","1","1","InMove","inFile","NULL"
+"-o","-o[utput]","OutputTextFile","Essential","1","1","OutTxt","outFile","NULL"
+"-s","-s[ymmetry of helix(degree/A)]","default: 13/28","Optional","1","1","symmetry","Real","0.47096"
+"-zmin","-zmin","minimum z","Optional","1","1","zmin","Real","-28"
+"-zmax","-zmax","maximum z","Optional","1","1","zmax","Real","28"
+"-zDel","-zDel[ta]","delta z","Optional","1","1","zDel","Real","1"
+"-mind","-mind[istance]","set atoms distance to mind","Optional","1","1","mind","Real","1"
+"-maxd","-maxd[istance]","ignore atoms distance","Optional","1","1","maxd","Real","5"
+"-a[xis]","-a[xis coordinate]","(x, y)","Optional","2","1","axisX","Real","70","2","axisY","Real","70"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

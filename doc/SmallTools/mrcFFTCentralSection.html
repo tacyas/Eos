@@ -1,0 +1,27 @@
+<HTML>
+<HEAD>
+<TITLE>mrcFFTCentralSection</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcFFTCentralSection</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcFFTCentralSection
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile::mrcImage    ) ] :Essential :Input: mrc(3D)
+    [-t[emplate]         Template            (NULL      ).as(inFile::mrcImage    ) ] :Optional  :Input: mrcFFT(2D)
+    [-o[utput]           Out                 (NULL      ).as(outFile::mrcImage   ) ] :Essential :Output: mrcFFT(2D)
+    [-o[utput]I[mage]    OutImage            (NULL      ).as(outFile::mrcImage   ) ] :Optional  :Output: mrcImage(2D)
+    [-E[uler]A[ngle]     EAMode              (YOYS      ).as(String              ) 
+                         Rot1                (0.0       ).as(Real                ) 
+                         Rot2                (0.0       ).as(Real                ) 
+                         Rot3                (0.0       ).as(Real                ) ] :Optional  :EulerAngle
+    [-trans[late]        TransX              (0.0       ).as(Real                ) 
+                         TransY              (0.0       ).as(Real                ) ] :Optional  :Traslation(2D)
+    [-InterpMode         InterpMode          (0         ).as(Integer             ) ] :Optional  :Interpolation Mode
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+-t[emplate] : If not set, the size of out (Nx, Ny) is set as the size of in (Nx, Ny).</PRE>
+</BODY>
+</HTML>

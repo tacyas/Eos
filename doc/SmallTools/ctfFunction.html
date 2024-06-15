@@ -1,0 +1,32 @@
+<HTML>
+<HEAD>
+<TITLE>ctfFunction</TITLE>
+</HEAD>
+<BODY>
+<H1>ctfFunction</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: ctfFunction
+Options:
+    [-o[utput]           Out                 (stdout    ).as(outFile             ) ] :Optional  :OutputDataFile
+    [-Rmax               Rmax                (0.1       ).as(Real                ) ] :Optional  :Rmax[/A]
+    [-dR                 dR                  (0.0001    ).as(Real                ) ] :Optional  :dR[/A]
+    [-kV                 kV                  (200       ).as(Real                ) ] :Optional  :AccVol[kV]
+    [-Cs                 Cs                  (2.1       ).as(Real                ) ] :Optional  :Cs[mm]
+    [-df                 Defocus             (27000     ).as(Real                ) ] :Essential :Defocus[A]:under(+)
+    [-A                  AoverP              (0.0       ).as(Real                ) ] :Optional  :AmplitudeContrast/PhaseContrast
+    [-Ain                Ain                 (0.02      ).as(Real                ) ] :Optional  :IlluminationAperture[mrad]
+    [-ctfMode            ctfMode             (32        ).as(Integer             ) ] :Optional  :CTFMode
+    [-pvm                pvm                 (0         ).as(Integer             ) ] :Optional  :PVM: MultiProcessor
+    [-pvmList            pvmList             (stdin     ).as(inFile              ) ] :Optional  :PVM Host List: MultiProcessor
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+>>>> ctfMode <<<< 
+ 0: Phase CTF 
+ 1: PhaseCTF + ratio*AmpCTF 
+ 32: EnvFromAillumination*()
+>>>> mode <<<< 
+No action
+</PRE>
+</BODY>
+</HTML>

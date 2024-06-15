@@ -1,0 +1,5 @@
+decoder.c
+gifFileInit.c
+gifFileWrite.c
+gifcompr.c
+gifencod.c

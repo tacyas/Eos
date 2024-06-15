@@ -1,0 +1,164 @@
+/*
+# %M% %Y% %I%
+# The latest update : %G% at %U%
+#
+#%Z% mrcImageVolumeCalc ver %I%
+#%Z% Created by 
+#%Z%
+#%Z% Usage : mrcImageVolumeCalc
+#%Z% Attention
+#%Z%
+*/
+static char __sccs_id[] = "%Z%mrcImageVolumeCalc ver%I%; Date:%D% %Z%";
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>                  
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+
+#undef DEBUG
+#include "genUtil.h"
+#include "Memory.h"
+#include "mrcImage.h"
+#include "nr2.h"
+
+typedef struct lmrcImageVolumeCalcInfo {
+	/* Input */
+	int    flagRange;
+	double MinVol;
+	double MaxVol;
+	double DeltaVol;
+
+	char*  format;
+
+	/* Input/Output */
+	int     nContour;
+
+	/* Output */
+	double* ContourLevel;
+	double* Contour;
+	int*    VoxelNumber;
+} lmrcImageVolumeCalcInfo;
+
+
+extern void lmrcImageVolumeCalcPrepare(lmrcImageVolumeCalcInfo* linfo, mrcImageVolumeCalcInfo info, int mode);
+extern void lmrcImageVolumeCalc(mrcImage* mrc, lmrcImageVolumeCalcInfo* linfo, int mode);
+extern void lmrcImageVolumeCalcPrint(FILE* fpt, lmrcImageVolumeCalcInfo* linfo, int mode);
+
+int
+main(int argc, char* argv[]) 
+{
+	mrcImage img;
+	mrcImageVolumeCalcInfo   info;
+	lmrcImageVolumeCalcInfo linfo;
+
+	init0(&info);
+    argCheck(&info, argc, argv);
+    init1(&info);
+
+	DEBUGPRINT("Program Start\n");
+	lmrcImageVolumeCalcPrepare(&linfo, info, mode);
+	mrcFileRead(&img, info.In, "in main", 0);
+	DEBUGPRINT3("%f,%f,%f ", img.HeaderLength.x, img.HeaderLength.y, img.HeaderLength.z);
+
+	lmrcImageVolumeCalc(&img, &linfo, info.mode);
+
+	lmrcImageVolumeCalcPrint(info.fptOut, &linfo, info.mode);
+	exit(EXIT_SUCCESS);
+}
+
+void
+additionalUsage()
+{
+	fprintf(stderr, "----- Additional Usage -----\n");
+}
+
+void
+lmrcImageVolumeCalcPrepare(lmrcImageVolumeCalcInfo* linfo, mrcImageVolumeCalcInfo info, int mode)
+{
+	if(info.flagMinVol&&info.flagMaxVol&&info.flagDeltaVol) {
+		int len;
+		len = strlen(info.Format);
+		len+= 2;
+		linfo->format = (char*)memoryAllocate(sizeof(char)*len, "in main");
+		strncpy(linfo->format, info.Format, len);
+		strcat(linfo->format, "\n");
+	}
+}
+
+void
+lmrcImageVolumeCalcPrint(FILE* fpt, lmrcImageVolumeCalcInfo* linfo,  int mode)
+{
+	for(i= 	
+}
+
+
+void
+lmrcImageVolumeCalc(mrcImage* mrc, lmrcImageVolumeCalcInfo* linfo, int mode)
+{
+    mrcImageParaTypeReal x, y, z;
+    float* data;
+    double tmpdata, vol, scal;
+    int i;
+    unsigned long n, k, level;;
+	double min, max, delta;
+	int     nContour;
+	double* contour;
+	int*    contourVoxel;
+
+	char* format;
+
+    DEBUGPRINT("a ");
+    n = mrc->HeaderN.x*mrc->HeaderN.y*mrc->HeaderN.z;
+    data = (float*)memoryAllocate(sizeof(float) * (n + 1), "in lmrcImageVolumeCalc");
+    i = 1;
+    for(x=0; x<mrc->HeaderN.x; x++) {
+        for(y=0; y<mrc->HeaderN.y; y++) {
+            for(z=0; z<mrc->HeaderN.z; z++) {
+                mrcPixelDataGet(mrc, x, y, z, &(tmpdata), mrcPixelMag, mrcPixelHowNearest);
+                data[i] = tmpdata;
+                i++;
+            }
+        }
+    }
+    if(info->flagDelta) {
+        mrc->HeaderLength.x = info->Delta;
+        mrc->HeaderLength.y = info->Delta;
+        mrc->HeaderLength.z = info->Delta;
+    }
+
+	if(info->flagMinVol && info->flagMaxVol && info->flagDeltaVol) {
+		min   = info->MinVol/100.0;
+		max   = info->MaxVol/100.0;
+		delta = info->DeltaVol/100.0;
+	} else {
+		min   = 0;
+		max   = 2.0;
+		delta = 0.1;
+	}
+	i = 0;
+    for(scal=max; scal>=min; scal-=delta) {
+		i++;
+	}
+
+    DEBUGPRINT("b ");
+    vol = mrc->HeaderLength.x*mrc->HeaderLength.y*mrc->HeaderLength.z;
+    DEBUGPRINT3("%f,%f,%f ", mrc->HeaderLength.x, mrc->HeaderLength.y, mrc->HeaderLength.z);
+    level = ((double)info->nMolecule)*info->MolecularWeight/info->Density*10.0/6.02;
+
+    for(scal=max; scal>=min; scal-=delta) {
+        if(0==info->Inverse) {
+            k = (unsigned int)((double)level)*scal/vol;
+        } else {
+            k = n - (unsigned int)((double)level)*scal/vol;
+       	} 
+
+		fprintf(info->fptOut, info->Format, scal*100.0, nrselect(k, n, data), k);
+		fprintf(stderr,       info->Format, scal*100.0, nrselect(k, n, data), k);
+    }
+    
+    DEBUGPRINT("c ");
+
+}
+

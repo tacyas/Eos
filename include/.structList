@@ -1,0 +1,2034 @@
+FileName:::: lmrcFFTInfo.h
+
+typedef struct mrcFSInfo {
+	double F00;	
+	double Max;
+	double MaxExceptForF00;
+} mrcFSInfo;
+
+/* struct end */
+FileName:::: lmrcImageBinalization.h
+
+typedef struct lmrcImageBinalizationInfo {
+	double thresHold;	
+	double value;	
+	int flagNear;
+	double near; /* pixel unit */	
+}lmrcImageBinalizationInfo;
+
+/* struct end */
+FileName:::: lmrcImageCTFDetermination.h
+typedef struct lmrcImageCTFDeterminationInfo {
+	ctfInfo val;
+	ctfInfo min;
+	ctfInfo max;
+	ctfInfo del;
+	mrcImageParaTypeReal Rmax;
+	mrcImageParaTypeReal Rmin;
+	mrcImage Dif;
+	double minResidual;
+	double minDef;
+	double minRatio;
+	FILE*   Out;
+	int flagOutF;
+	mrcImage resFFT;
+} lmrcImageCTFDeterminationInfo;
+
+typedef struct lmrcImageCTFDeterminationInfoMode {
+	long FilterType;
+	long WeightType;
+	long SumType;
+	long CTFInfoType;
+} lmrcImageCTFDeterminationInfoMode;
+
+typedef struct lmrcImageCTFDeterminationInfoRef {
+	FILE* fptIn;
+	char* In;
+	FILE* fptRef;
+	char* Ref;
+	FILE* fptOut;
+	char* Out;
+	char MrcOut[100];
+	mrcImage* in;
+	mrcImage* out;
+	long Width;
+	float PixelSize;
+	float truePitch;
+	float firstDf;
+	float withinDf;
+	float firstAoverP;
+	float withinAoverP;
+	mrcImageParaTypeReal maxiter;
+	mrcImageParaTypeReal iter;
+} lmrcImageCTFDeterminationInfoRef;
+
+/* struct end */
+FileName:::: lmrcImageCentre.h
+
+typedef struct lmrcImageCenterOfMass {
+  float x;
+  float y;
+  float z;
+} lmrcImageCenterOfMass;
+
+/* struct end */
+FileName:::: lmrcImageCommonLine.h
+
+typedef enum lmrcImageCommonLineMode {
+	lmrcImageCommonLineModeImageCenterIsGC = 1
+} lmrcImageCommonLineMode;
+
+
+typedef enum lmrcImageCommonLineSearchMode {
+	lmrcImageCommonLineSearchModeFourierSpace = 0,
+	lmrcImageCommonLineSearchModeRealSpace = 1 
+} lmrcImageCommonLineSearchMode;
+
+typedef struct lmrcImageCommonLineInfo {
+	/* Input */
+	double dtheta;
+	lmrcImageCommonLineSearchMode searchMode; 
+	/* Output */
+	double optimumThetaIn;
+	double optimumThetaRef;
+	double optimumCor; 
+} lmrcImageCommonLineInfo;
+
+/* struct end */
+FileName:::: lmrcImageConnection.h
+typedef struct lmrcImageConnectionInfo {
+	long mode;
+} lmrcImageConnectionInfo;
+/* struct end */
+FileName:::: lmrcImageContourSurface.h
+typedef struct lmrcImageContourSurfaceInfo {
+	mrcImageParaTypeReal Contour;
+} lmrcImageContourSurfaceInfo;
+
+typedef enum lmrcImageContourSurfaceMode {
+	lmrcImageContourSurfaceModeSimple=0
+} lmrcImageContourSurfaceMode;
+/* struct end */
+FileName:::: lmrcImageCorrelation.h
+typedef struct lmrcImageAutoRotationCorrelationInfo {
+	int iter; /* iteration */
+	int nRot; /* Rotation */  
+	int Method;
+	float max;
+	float maxTheta;
+	mrcImageParaTypeRealCoord maxP;
+	mrcImageInformation corInfo;
+	lmrcImageSSDAInfo SSDAInfo;
+	float EuclidDistance; 
+	float LinearCorrelation;
+
+	/* Restriction Rotation Area */
+	int   flagRestrictionArea;
+	float thetaMin;
+	float thetaMax;
+
+	int   flagXshiftOnly;
+} lmrcImageAutoRotationCorrelationInfo;
+
+typedef struct lmrcImageCorrelationRefinementInfo {
+	mrcImageParaTypeRealCoord shift; 
+	mrcImageParaTypeRealCoord step; 
+	mrcImageParaTypeRealCoord range; 
+	mrcImageInformation corInfo;
+	int mode;
+} lmrcImageCorrelationRefinementInfo;
+
+/* struct end */
+FileName:::: lmrcImageCrystalCreate.h
+typedef struct lmrcImageCrystalCreateInfo {
+	long nx;
+	long ny;
+	long nz;
+} lmrcImageCrystalCreateInfo;
+/* struct end */
+FileName:::: lmrcImageDensity.h
+typedef struct lmrcImageDensityInfoInfo {
+	floatVector percentageVolume;
+	mrcImageParaTypeRealCoord centreOfGravity;
+	mrcImageParaTypeRealCoord centreOfGravitySD;
+	mrcImageParaTypeRealCoord max;
+	mrcImageParaTypeRealCoord maxSD;
+	double                    deltaVolume; 
+	mrcImage in;
+} lmrcImageDensityInfoInfo;
+
+typedef enum lmrcImageDensityInfoMode {
+	mrcImageDensityInfoPercentageVolume  =1,
+	mrcImageDensityInfoCentreOfGravity   =2,
+	mrcImageDensityInfoMax               =4,
+	mrcImageDensityInfoCentreOfGravitySD =8,
+	mrcImageDensityInfoMaxSD             =16
+} lmrcImageDensityInfoMode;
+
+typedef struct lmrcImageDensityChangeEsitmationInfo0 {
+	mrcImageParaTypeRealCoord change;
+	mrcImageParaTypeRealCoord changeSD;
+	double                    delta;
+	double                    deltaSD;
+	double                    deltaXY;
+	double                    deltaXYSD;
+} lmrcImageDensityChangeEstimationInfo0;
+
+typedef struct lmrcImageDensityChangeEsitmationInfo {
+	lmrcImageDensityChangeEstimationInfo0 CG;
+	lmrcImageDensityChangeEstimationInfo0 Max;
+	mrcImage in1;
+	mrcImage in2;
+} lmrcImageDensityChangeEstimationInfo;
+
+typedef enum lmrcImageDensityChangeEstimationMode {
+	mrcImageDensityChangeEstimationCentreOfGravity   =2,
+	mrcImageDensityChangeEstimationMax               =4,
+	mrcImageDensityChangeEstimationCentreOfGravitySD =8,
+	mrcImageDensityChangeEstimationMaxSD             =16
+} lmrcImageDensityChageEstimationMode;
+
+/* struct end */
+FileName:::: lmrcImageDensityNormalizationByImage.h
+typedef struct lmrcImageDenstiyNormalizationByImageInfo {
+  /* Input */
+  double sigma;
+
+  /* Region Information */
+  int flagCylinder;	
+  float centerx, centery;
+  float minr, maxr;
+  /* Fitting Mode */
+  int fitMode;
+  float tstBGMin;
+  float tstBGMax;
+  float tstBGDelta;
+
+  /* Output */
+  float a;
+  float b;
+  float sigma_a;
+  float sigma_b;
+  float chi2;
+  float q;
+  float r;
+
+  float refBG;
+  float tstBG;
+  float	chi2Signal;
+  float chi2BG;
+  int nData;
+  float* testData;
+  float* refData; 
+} lmrcImageDensityNormalizationByImageInfo;
+
+
+/*
+   minimization of (in1 - (a+b*in2))^2
+   out = a + b*in2
+*/
+
+typedef enum lmrcImageDensityNormalizationByImageMode {
+  lmrcImageDensityNormalizationByImageModeSigma   = 1,
+  lmrcImageDensityNormalizationByImageModeStdout  = 2,
+  lmrcImageDensityNormalizationByImageModeReverse = 4,
+  lmrcImageDensityNormalizationByImageModeRobust  = 8
+} lmrcImageDensityNormalizationByImageMode; 
+
+typedef enum lmrcImageDensityNormalizationByImageFitMode {
+  lmrcImageDensityNormalizationByImageFitModeSingleLine = 0,
+  lmrcImageDensityNormalizationByImageFitModeSingleLineWithBackground = 1 
+} lmrcImageDensityNormalizationByImageFitMode;
+
+/* struct end */
+FileName:::: lmrcImageEdgeAverage.h
+typedef struct lmrcImageEdgeAverageInfo {
+	/* In */
+	mrcImageParaTypeInteger devide; 
+	mrcImageParaTypeInteger width;
+	/* Out */
+	mrcImageParaTypeReal*   avg[4];
+	mrcImageParaTypeReal*   count[4];
+} lmrcImageEdgeAverageInfo;
+/* struct end */
+FileName:::: lmrcImageFilterCreate.h
+typedef enum lmrcImageFilterCreateMode {
+	lmrcImageFilterModeSquare=0,
+	lmrcImageFilterModeCircle=1
+} lmrcImageFilterCreateMode;
+
+typedef struct lmrcImageFilterCreateInfo {
+	mrcImageParaTypeInteger    np;
+	mrcImageParaTypeRealCoord* p;
+	mrcImageParaTypeReal*      weight;
+
+	mrcImageParaTypeIntegerCoord N;
+
+	mrcImageParaTypeIntegerCoord Size;
+
+	lmrcImageFilterCreateMode shape;
+	long                      outputMode;
+} lmrcImageFilterCreateInfo;
+/* struct end */
+FileName:::: lmrcImageFirstNoiseReductionByRelaxation.h
+typedef struct lmrcImageNoiseReductionByRelaxationInfo {
+  /* input */
+  /* OR Output */
+  double SD;
+  double datamax;
+  double datamin;
+  long classNumber;
+  int ddimx; 
+  int ddimy;
+  int ddimz;
+} lmrcImageNoiseReductionByRelaxationInfo;
+
+typedef enum lmrcImageNoiseReductionByRelaxationMode {
+  lmrcImageNoiseReductionByRelaxationModeSigma = 1,
+} lmrcImageNoiseReductionByRelaxationMode; 
+/* struct end */
+FileName:::: lmrcImageMasking.h
+typedef enum lmrcImageMaskingInfoShape {
+	lmrcImageMaskingInfoShapeCircle=0,
+	lmrcImageMaskingInfoSquare=0
+} lmrcImageMaskingInfoShape;
+
+typedef struct lmrcImageMaskingInfo {
+        mrcImageParaTypeRealCoord n;
+        mrcImageParaTypeRealCoord c;
+       	lmrcImageMaskingInfoShape 	 shape;
+        long mode;
+} lmrcImageMaskingInfo;
+/* struct end */
+FileName:::: lmrcImageModelCreate.h
+typedef struct _lmrcImageModelCreateMode1Info {
+	float radius;
+	float nHelix;
+	float zPitch;
+	float phiAngle;
+	float deltaPhi;
+	float startZ;
+	float endZ;
+	float startPhi;
+	int     flagIn;
+	mrcImage*  in;
+	mrcImageDataSetMode inMode;
+	int 	fm;
+	int 	units;
+} _lmrcImageModelCreateMode1Info;
+/* struct end */
+FileName:::: lmrcImageMontage.h
+typedef struct lmrcImageMontageInfo {
+	lmrcImagePadMode PadMode;
+	lmrcImagePadInfo PadInfo;
+	int nx;
+	int ny;
+	int                  flagMaxValue;
+	mrcImageParaTypeReal MaxValue;	
+	int                  flagValueAssignedToMax;
+	mrcImageParaTypeReal ValueAssignedToMax;	
+
+	int flagEdgeAverage;
+	int EdgeAverageWindow;
+	int flagNoAverage;
+} lmrcImageMontageInfo;
+/* struct end */
+FileName:::: lmrcImageMove.h
+typedef enum lmrcImageMoveMode {
+	lmrcImageMoveModePixelUnit=0
+} lmrcImageMoveMode;
+/* struct end */
+FileName:::: lmrcImageNormalizing.h
+typedef float lmrcImageNormalizingParaTypeReal;
+typedef enum lmrcImageNormalizingMode {
+	lmrcImageNormalizingModeDoubleExponential=0,
+	lmrcImageNormalizingModeMinMax=1,
+	lmrcImageNormalizingModeUsingContour=2,
+	lmrcImageNormalizingModeUsingContourWithSolventFlattening=3,
+	lmrcImageNormalizingModeNoEstimation=4
+} lmrcImageNormalizingMode ;
+
+typedef struct lmrcImageNormalizingInfo {
+	lmrcImageNormalizingParaTypeReal A;
+	lmrcImageNormalizingParaTypeReal B; /* A x + B */
+	lmrcImageNormalizingParaTypeReal ContourMin;
+	lmrcImageNormalizingParaTypeReal ContourMax;
+	lmrcImageNormalizingParaTypeReal ContourSolvent;
+	lmrcImageNormalizingMode Mode;
+} lmrcImageNormalizingInfo;
+/* struct end */
+FileName:::: lmrcImagePad.h
+typedef struct lmrcImagePadInfo {
+	mrcImageParaTypeInteger Width;
+	mrcImageParaTypeInteger Height;
+	mrcImageParaTypeReal Value;
+	mrcImageParaTypeReal AWSize;
+	mrcImageParaTypeReal AWMin;
+	mrcImageParaTypeReal AWMax;
+} lmrcImagePadInfo;
+
+typedef enum lmrcImagePadMode {
+	lmrcImagePadModeAverage                   = 0,
+	lmrcImagePadModeAveragedYAxis             = 1,
+	lmrcImagePadModeDynamicAveragedYAxis      = 2,
+	lmrcImagePadModeAveragedEdge              = 3,
+	lmrcImagePadModeBottomLeft                = 4,
+	lmrcImagePadModeCenterWithoutAveraging    = 5,
+	lmrcImagePadModeBottomLeftWithoutAveraging= 6,
+	lmrcImagePadModeAveragedOutsideCircle     = 7,
+	lmrcImagePadModeAveragedOutsideRing       = 8, 
+	lmrcImagePadModeByValue                   = 9 
+} lmrcImagePadMode;
+/* struct end */
+FileName:::: lmrcImagePrint.h
+typedef struct mrcImagePSFilePrintInfo  {
+	mrcImageParaTypeReal scale;
+	mrcImageParaTypeReal contourLineColorChange;
+	mrcImageParaTypeReal contourLineWidthStart;
+	mrcImageParaTypeReal contourLineWidthStep;
+	long centre; /* 0: bottom right or 1:centre */	
+	char whichSection; /* [x|y|z] */	
+	double untwistAngle; /* untwist Image */
+	psImageInfo psInfo;
+	mrcImageParaTypeReal circleRadius;
+} mrcImagePSFilePrintInfo;
+/* struct end */
+FileName:::: lmrcImageProjection.h
+typedef struct lmrcImageProjectionInfo{
+	long mode;
+	} lmrcImageProjectionInfo;
+/* struct end */
+FileName:::: lmrcImageROI2D.h
+typedef enum lmrcImageROIShape {
+    Rect   =0,
+    Rect2  =1,
+    Circle =2,
+	Line   =3
+} lmrcImageROIShape;
+
+typedef struct lmrcImageSingleROIInfo {
+    char* FileName;
+    lmrcImageROIShape Shape;
+    float centerx;     /* For All Shape */
+    float centery;     
+    float blx;         /* For Rect, Rect2, Circle */
+    float bly;
+    float brx;
+    float bry;
+    float trx;
+    float try;
+    float tlx;
+    float tly;
+	float startx;      /* For Line */
+	float starty;
+	float endx; 
+	float endy;
+
+	/* For Post Modification */
+    int flagWidth;     /* For Rect, Rect2, Circle, Line */
+    float width;
+    int flagHeight;    /* For Rect, Rect2, Circle */
+    float height; 
+
+    float radius;
+    int mode;
+
+	int flagRotation;
+	float angle;
+
+	int flagMagnifiedWidth;
+	float magnifiedWidth;
+
+	int flagMagnifiedHeight;
+	float magnifiedHeight;
+
+	/* For Layer Line Information */
+	int flagLayerLine;
+	float truePitch;
+	float Ly;
+	float dY;
+} lmrcImageSingleROIInfo;
+
+typedef struct lmrcImageROIsInfo {
+    lmrcImageSingleROIInfo* ROI;
+    int                numROI;
+} lmrcImageROIsInfo;
+/* struct end */
+FileName:::: lmrcImageROI3D.h
+typedef struct lmrcImageROI3DInfo {
+	mrcImageParaTypeReal z1;
+	mrcImageParaTypeReal z2;
+	int flagz; /* This is a dummy parameter the current version for the future */ 
+	int flagx;
+	mrcImageParaTypeReal x1;
+	mrcImageParaTypeReal x2;
+	int flagy;
+	mrcImageParaTypeReal y1;
+	mrcImageParaTypeReal y2;
+} lmrcImageROI3DInfo;
+/* struct end */
+FileName:::: lmrcImageRadialDistribution.h
+typedef struct lmrcImageRadialDistributionInfo {
+	float Cx;
+	float Cy;
+	int flagAverage;
+} lmrcImageRadialDistributionInfo;
+/* struct end */
+FileName:::: lmrcImageSSDA.h
+typedef struct lmrcImageSSDAInfo {
+	double Threshold; 	/* Threshold Level */
+	double Error; 		/* Sum of residual differences at (x, y)*/
+	mrcImageParaTypeRealCoord p; 		/* Lower Right Point Coordinate on Partial Image on the Input Image */
+	mrcImageParaTypeRealCoord optimump; /* Optimum Point */
+	mrcImageParaTypeRealCoord smin;     /* Search Area: Bottom Right */
+	mrcImageParaTypeRealCoord smax; 	/* Search Area: Top Left */
+	mrcImageParaTypeRealCoord predict;  /* Predictive Point */
+	mrcImageParaTypeInteger n; 			/* Addition Times at (x, y)*/
+} lmrcImageSSDAInfo;
+
+/* struct end */
+FileName:::: lmrcImageSamplingUnitChange.h
+typedef struct lmrcImageSamplingUnitChangeInfo {
+	mrcImageParaTypeRealCoord    L;
+	mrcImageParaTypeIntegerCoord N;
+	mrcImageParaTypeInteger      SamplingMethodMode;
+} lmrcImageSamplingUnitChangeInfo;
+/* struct end */
+FileName:::: lmrcImageSecondNoiseReductionByRelaxation.h
+typedef enum lmrcImageSecondNoiseReductionByRelaxationDijStyleMode1 {
+  lmrcImageSecondNoiseReductionByRelaxationDijStyleMode1SavitzyGolay = 1
+} lmrcImageSecondNoiseReductionByRelaxationDijStyleMode1;
+  
+typedef enum lmrcImageSecondNoiseReductionByRelaxationDijStyleMode2 {
+  lmrcImageSecondNoiseReductionByRelaxationDijStyleMode2Rectangle = 1,
+  lmrcImageSecondNoiseReductionByRelaxationDijStyleMode2Circle = 2
+} lmrcImageSecondNoiseReductionByRelaxationDijStyleMode2;
+
+typedef enum lmrcImageSecondNoiseReductionByRelaxationDijStyleMode3 {
+  lmrcImageSecondNoiseReductionByRelaxationDijStyleMode3FiveTimesFive = 1,
+  lmrcImageSecondNoiseReductionByRelaxationDijStyleMode3SevenTimesSeven = 2
+} lmrcImageSecondNoiseReductionByRelaxationDijStyleMode3;
+/* struct end */
+FileName:::: lmrcImageSinogram.h
+typedef struct lmrcImageSinogramInfo {
+	double dphi;
+	int correlationMode;
+} lmrcImageSinogramInfo;
+/* struct end */
+FileName:::: lmrcImageSolventFlattening.h
+typedef struct lmrcImageSolventFlatteningInfo {
+	double density;
+	long flagdensity;
+} lmrcImageSolventFlatteningInfo;
+/* struct end */
+FileName:::: lmrcImageSphere.h
+typedef struct lmrcImageSphereInfo {
+		float size;
+		float r;
+		float w;
+		long mode;
+}lmrcImageSphereInfo;
+/* struct end */
+FileName:::: lmrcImageSymmetryFind.h
+typedef enum lmrcImageSymmetryFindCheckType {
+	lmrcImageSymmetryFindCheckTypeCheckByAdd=1,
+	lmrcImageSymmetryFindCheckTypeCheckByCorrelation=2,
+	lmrcImageSymmetryFindCheckTypeCheckByFourier=4,
+	lmrcImageSymmetryFindCheckTypeCheckByTTest=8,
+	lmrcImageSymmetryFindCheckTypeCheckBySRP=16
+} lmrcImageSymmetryFindCheckType;
+
+typedef enum lmrcImageSymmetryFindCentreType {
+	lmrcImageSymmetryFindCheckTypeCentreGC       = 0,
+	lmrcImageSymmetryFindCheckTypeCentreSymmetry = 1 
+} lmrcImageSymmetryFindCentreType;
+
+typedef enum lmrcImageSymmetryFindSubtractionType {
+	lmrcImageSymmetryFindCheckTypeNoSubtraction   = 0,
+	lmrcImageSymmetryFindCheckTypeMeanSubtraction = 1,
+	lmrcImageSymmetryFindCheckTypeMinSubtraction  = 2 
+} lmrcImageSymmetryFindSubtractionType;
+
+typedef struct lmrcImageSymmetryFindInfo {
+	double dr;
+	double dtheta;
+	double threshold1;
+	double threshold2;
+	int    maxNfold;
+
+	/* Centre */
+	lmrcImageSymmetryFindCentreType centreMode;
+	lmrcImageDeterminationOfPolarAxisByAssumingNfoldInfo centreInfo;
+
+	lmrcImageSymmetryFindSubtractionType subtractionMode; /* Subtraction Mode */
+	int       flagImages;
+	mrcImage  Image;
+	mrcImage* Images;
+	int       flagBacks;
+	mrcImage  Back;
+	mrcImage* Backs;
+	
+	floatVector Value;
+	floatVector Point;
+	int         Symmetry;
+
+	FILE*    fptOut;
+
+	int      flagCorrelation;
+	mrcImage correlation;
+
+	int      flagFourier;
+	mrcImage  fourier;
+
+	int      flagTmap;
+	mrcImage tmap;
+
+	int      flagAvg;
+	mrcImage avg;
+	char*    avgName;
+	DescartesCoord centre;
+} lmrcImageSymmetryFindInfo;
+
+/* struct end */
+FileName:::: lmrcImageTransformDescartesIntoPolar.h
+typedef struct lmrcImageDeterminationOfPolarAxisByAssumingNfoldInfo {
+	int nFold;
+	double minx;
+	double maxx;
+	double delx;
+	double miny;
+	double maxy;
+	double dely;
+	double minz;
+	double maxz;
+	double delz;
+	double delPHI;
+} lmrcImageDeterminationOfPolarAxisByAssumingNfoldInfo;
+
+typedef struct lmrcImageTransformDescartesIntoPolarInfo {
+	double dr;        /* Angstrom */ 
+	double dphi;      /* Radian */
+	double dtheta;    /* Radian */ 
+	int    flagImageCentreIsGravityCentre;
+	int    flagDescartesIntoPolarInfo; 
+	int    flagrWeight; 
+
+	/* RotationalSymmetry */
+	int    flagRotationalSymmetry;
+	int    nRotationalSymmetry;
+	lmrcImageDeterminationOfPolarAxisByAssumingNfoldInfo axisInfo;
+
+	int    flagCentre;
+	mrcImageParaTypeRealCoord Centre;
+}  lmrcImageTransformDescartesIntoPolarInfo;
+
+/* struct end */
+FileName:::: lmrcImageWindowing.h
+typedef struct lmrcImageWindowingInfo {
+	long  flagWy;
+	float Wy;
+
+	long flagWx;
+	float Wx;
+
+} lmrcImageWindowingInfo;
+/* struct end */
+FileName:::: lmrcImagesStatDataGet.h
+typedef struct lmrcImagesStatDataGetInfo {
+	int      numImage;
+
+	int 	 flagAvg;
+	mrcImage Avg;
+	int 	 flagSQRAvg;
+	mrcImage SQRAvg;
+	int      flagVar;
+	mrcImage Var;
+	int      flagSD;
+	mrcImage SD;
+	int      flagSN;
+	mrcImage SN;
+	int      flagSE;
+	mrcImage SE;
+	int      flagt;
+	mrcImage t;
+} lmrcImagesStatDataGetInfo;
+/* struct end */
+FileName:::: mrcRefUtil.h
+typedef double mrcRefDegCoordinate; 
+
+typedef struct {
+  mrcRefDegCoordinate ip;
+  mrcRefDegCoordinate iw;
+  mrcRefDegCoordinate ia;
+  mrcRefDegCoordinate dp;
+  mrcRefDegCoordinate dw;
+  mrcRefDegCoordinate da;
+  mrcRefDegCoordinate wp;
+  mrcRefDegCoordinate ww;
+  mrcRefDegCoordinate wa;
+} mrcRefHeader;
+
+typedef struct {
+  mrcRefDegCoordinate ip;
+  mrcRefDegCoordinate iw;
+  mrcRefDegCoordinate ia;
+  mrcRefDegCoordinate dp;
+  mrcRefDegCoordinate dw;
+  mrcRefDegCoordinate da;
+  mrcRefDegCoordinate wp;
+  mrcRefDegCoordinate ww;
+  mrcRefDegCoordinate wa;
+  int mode;
+} mrcRefCorHeader;
+
+#define mrcRefHeaderNumber 9;
+
+typedef struct {
+  mrcRefDegCoordinate ip;
+  mrcRefDegCoordinate iw;
+  mrcRefDegCoordinate ia;
+  mrcRefDegCoordinate dp;
+  mrcRefDegCoordinate dw;
+  mrcRefDegCoordinate da;
+  mrcRefDegCoordinate wp;
+  mrcRefDegCoordinate ww;
+  mrcRefDegCoordinate wa;
+  double sy;
+  double ey;
+  double refsize;
+  int inverse;
+} mrcpwzCorHeader;
+
+/* struct end */
+FileName:::: lmrcFFTInfo.h
+
+typedef struct mrcFSInfo {
+	double F00;	
+	double Max;
+	double MaxExceptForF00;
+} mrcFSInfo;
+
+FileName:::: lmrcImageBinalization.h
+
+typedef struct lmrcImageBinalizationInfo {
+	double thresHold;	
+	double value;	
+	int flagNear;
+	double near; /* pixel unit */	
+}lmrcImageBinalizationInfo;
+
+FileName:::: lmrcImageCTFDetermination.h
+typedef struct lmrcImageCTFDeterminationInfo {
+	ctfInfo val;
+	ctfInfo min;
+	ctfInfo max;
+	ctfInfo del;
+	mrcImageParaTypeReal Rmax;
+	mrcImageParaTypeReal Rmin;
+	mrcImage Dif;
+	double minResidual;
+	double minDef;
+	double minRatio;
+	FILE*   Out;
+	int flagOutF;
+	mrcImage resFFT;
+} lmrcImageCTFDeterminationInfo;
+
+typedef struct lmrcImageCTFDeterminationInfoMode {
+	long FilterType;
+	long WeightType;
+	long SumType;
+	long CTFInfoType;
+} lmrcImageCTFDeterminationInfoMode;
+
+typedef struct lmrcImageCTFDeterminationInfoRef {
+	FILE* fptIn;
+	char* In;
+	FILE* fptRef;
+	char* Ref;
+	FILE* fptOut;
+	char* Out;
+	char MrcOut[100];
+	mrcImage* in;
+	mrcImage* out;
+	long Width;
+	float PixelSize;
+	float truePitch;
+	float firstDf;
+	float withinDf;
+	float firstAoverP;
+	float withinAoverP;
+	mrcImageParaTypeReal maxiter;
+	mrcImageParaTypeReal iter;
+} lmrcImageCTFDeterminationInfoRef;
+
+FileName:::: lmrcImageCentre.h
+
+typedef struct lmrcImageCenterOfMass {
+  float x;
+  float y;
+  float z;
+} lmrcImageCenterOfMass;
+
+FileName:::: lmrcImageCommonLine.h
+
+typedef enum lmrcImageCommonLineMode {
+	lmrcImageCommonLineModeImageCenterIsGC = 1
+} lmrcImageCommonLineMode;
+
+
+typedef enum lmrcImageCommonLineSearchMode {
+	lmrcImageCommonLineSearchModeFourierSpace = 0,
+	lmrcImageCommonLineSearchModeRealSpace = 1 
+} lmrcImageCommonLineSearchMode;
+
+typedef struct lmrcImageCommonLineInfo {
+	/* Input */
+	double dtheta;
+	lmrcImageCommonLineSearchMode searchMode; 
+	/* Output */
+	double optimumThetaIn;
+	double optimumThetaRef;
+	double optimumCor; 
+} lmrcImageCommonLineInfo;
+
+FileName:::: lmrcImageConnection.h
+typedef struct lmrcImageConnectionInfo {
+	long mode;
+} lmrcImageConnectionInfo;
+FileName:::: lmrcImageContourSurface.h
+typedef struct lmrcImageContourSurfaceInfo {
+	mrcImageParaTypeReal Contour;
+} lmrcImageContourSurfaceInfo;
+
+typedef enum lmrcImageContourSurfaceMode {
+	lmrcImageContourSurfaceModeSimple=0
+} lmrcImageContourSurfaceMode;
+FileName:::: lmrcImageCorrelation.h
+typedef struct lmrcImageAutoRotationCorrelationInfo {
+	int iter; /* iteration */
+	int nRot; /* Rotation */  
+	int Method;
+	float max;
+	float maxTheta;
+	mrcImageParaTypeRealCoord maxP;
+	mrcImageInformation corInfo;
+	lmrcImageSSDAInfo SSDAInfo;
+	float EuclidDistance; 
+	float LinearCorrelation;
+
+	/* Restriction Rotation Area */
+	int   flagRestrictionArea;
+	float thetaMin;
+	float thetaMax;
+
+	int   flagXshiftOnly;
+} lmrcImageAutoRotationCorrelationInfo;
+
+typedef struct lmrcImageCorrelationRefinementInfo {
+	mrcImageParaTypeRealCoord shift; 
+	mrcImageParaTypeRealCoord step; 
+	mrcImageParaTypeRealCoord range; 
+	mrcImageInformation corInfo;
+	int mode;
+} lmrcImageCorrelationRefinementInfo;
+
+FileName:::: lmrcImageCrystalCreate.h
+typedef struct lmrcImageCrystalCreateInfo {
+	long nx;
+	long ny;
+	long nz;
+} lmrcImageCrystalCreateInfo;
+FileName:::: lmrcImageDensity.h
+typedef struct lmrcImageDensityInfoInfo {
+	floatVector percentageVolume;
+	mrcImageParaTypeRealCoord centreOfGravity;
+	mrcImageParaTypeRealCoord centreOfGravitySD;
+	mrcImageParaTypeRealCoord max;
+	mrcImageParaTypeRealCoord maxSD;
+	double                    deltaVolume; 
+	mrcImage in;
+} lmrcImageDensityInfoInfo;
+
+typedef enum lmrcImageDensityInfoMode {
+	mrcImageDensityInfoPercentageVolume  =1,
+	mrcImageDensityInfoCentreOfGravity   =2,
+	mrcImageDensityInfoMax               =4,
+	mrcImageDensityInfoCentreOfGravitySD =8,
+	mrcImageDensityInfoMaxSD             =16
+} lmrcImageDensityInfoMode;
+
+typedef struct lmrcImageDensityChangeEsitmationInfo0 {
+	mrcImageParaTypeRealCoord change;
+	mrcImageParaTypeRealCoord changeSD;
+	double                    delta;
+	double                    deltaSD;
+	double                    deltaXY;
+	double                    deltaXYSD;
+} lmrcImageDensityChangeEstimationInfo0;
+
+typedef struct lmrcImageDensityChangeEsitmationInfo {
+	lmrcImageDensityChangeEstimationInfo0 CG;
+	lmrcImageDensityChangeEstimationInfo0 Max;
+	mrcImage in1;
+	mrcImage in2;
+} lmrcImageDensityChangeEstimationInfo;
+
+typedef enum lmrcImageDensityChangeEstimationMode {
+	mrcImageDensityChangeEstimationCentreOfGravity   =2,
+	mrcImageDensityChangeEstimationMax               =4,
+	mrcImageDensityChangeEstimationCentreOfGravitySD =8,
+	mrcImageDensityChangeEstimationMaxSD             =16
+} lmrcImageDensityChageEstimationMode;
+
+FileName:::: lmrcImageDensityNormalizationByImage.h
+typedef struct lmrcImageDenstiyNormalizationByImageInfo {
+  /* Input */
+  double sigma;
+
+  /* Region Information */
+  int flagCylinder;	
+  float centerx, centery;
+  float minr, maxr;
+  /* Fitting Mode */
+  int fitMode;
+  float tstBGMin;
+  float tstBGMax;
+  float tstBGDelta;
+
+  /* Output */
+  float a;
+  float b;
+  float sigma_a;
+  float sigma_b;
+  float chi2;
+  float q;
+  float r;
+
+  float refBG;
+  float tstBG;
+  float	chi2Signal;
+  float chi2BG;
+  int nData;
+  float* testData;
+  float* refData; 
+} lmrcImageDensityNormalizationByImageInfo;
+
+
+/*
+   minimization of (in1 - (a+b*in2))^2
+   out = a + b*in2
+*/
+
+typedef enum lmrcImageDensityNormalizationByImageMode {
+  lmrcImageDensityNormalizationByImageModeSigma   = 1,
+  lmrcImageDensityNormalizationByImageModeStdout  = 2,
+  lmrcImageDensityNormalizationByImageModeReverse = 4,
+  lmrcImageDensityNormalizationByImageModeRobust  = 8
+} lmrcImageDensityNormalizationByImageMode; 
+
+typedef enum lmrcImageDensityNormalizationByImageFitMode {
+  lmrcImageDensityNormalizationByImageFitModeSingleLine = 0,
+  lmrcImageDensityNormalizationByImageFitModeSingleLineWithBackground = 1 
+} lmrcImageDensityNormalizationByImageFitMode;
+
+FileName:::: lmrcImageEdgeAverage.h
+typedef struct lmrcImageEdgeAverageInfo {
+	/* In */
+	mrcImageParaTypeInteger devide; 
+	mrcImageParaTypeInteger width;
+	/* Out */
+	mrcImageParaTypeReal*   avg[4];
+	mrcImageParaTypeReal*   count[4];
+} lmrcImageEdgeAverageInfo;
+FileName:::: lmrcImageFilterCreate.h
+typedef enum lmrcImageFilterCreateMode {
+	lmrcImageFilterModeSquare=0,
+	lmrcImageFilterModeCircle=1
+} lmrcImageFilterCreateMode;
+
+typedef struct lmrcImageFilterCreateInfo {
+	mrcImageParaTypeInteger    np;
+	mrcImageParaTypeRealCoord* p;
+	mrcImageParaTypeReal*      weight;
+
+	mrcImageParaTypeIntegerCoord N;
+
+	mrcImageParaTypeIntegerCoord Size;
+
+	lmrcImageFilterCreateMode shape;
+	long                      outputMode;
+} lmrcImageFilterCreateInfo;
+FileName:::: lmrcImageFirstNoiseReductionByRelaxation.h
+typedef struct lmrcImageNoiseReductionByRelaxationInfo {
+  /* input */
+  /* OR Output */
+  double SD;
+  double datamax;
+  double datamin;
+  long classNumber;
+  int ddimx; 
+  int ddimy;
+  int ddimz;
+} lmrcImageNoiseReductionByRelaxationInfo;
+
+typedef enum lmrcImageNoiseReductionByRelaxationMode {
+  lmrcImageNoiseReductionByRelaxationModeSigma = 1,
+} lmrcImageNoiseReductionByRelaxationMode; 
+FileName:::: lmrcImageMasking.h
+typedef enum lmrcImageMaskingInfoShape {
+	lmrcImageMaskingInfoShapeCircle=0,
+	lmrcImageMaskingInfoSquare=0
+} lmrcImageMaskingInfoShape;
+
+typedef struct lmrcImageMaskingInfo {
+        mrcImageParaTypeRealCoord n;
+        mrcImageParaTypeRealCoord c;
+       	lmrcImageMaskingInfoShape 	 shape;
+        long mode;
+} lmrcImageMaskingInfo;
+FileName:::: lmrcImageModelCreate.h
+typedef struct _lmrcImageModelCreateMode1Info {
+	float radius;
+	float nHelix;
+	float zPitch;
+	float phiAngle;
+	float deltaPhi;
+	float startZ;
+	float endZ;
+	float startPhi;
+	int     flagIn;
+	mrcImage*  in;
+	mrcImageDataSetMode inMode;
+	int 	fm;
+	int 	units;
+} _lmrcImageModelCreateMode1Info;
+FileName:::: lmrcImageMontage.h
+typedef struct lmrcImageMontageInfo {
+	lmrcImagePadMode PadMode;
+	lmrcImagePadInfo PadInfo;
+	int nx;
+	int ny;
+	int                  flagMaxValue;
+	mrcImageParaTypeReal MaxValue;	
+	int                  flagValueAssignedToMax;
+	mrcImageParaTypeReal ValueAssignedToMax;	
+
+	int flagEdgeAverage;
+	int EdgeAverageWindow;
+	int flagNoAverage;
+} lmrcImageMontageInfo;
+FileName:::: lmrcImageMove.h
+typedef enum lmrcImageMoveMode {
+	lmrcImageMoveModePixelUnit=0
+} lmrcImageMoveMode;
+FileName:::: lmrcImageNormalizing.h
+typedef float lmrcImageNormalizingParaTypeReal;
+typedef enum lmrcImageNormalizingMode {
+	lmrcImageNormalizingModeDoubleExponential=0,
+	lmrcImageNormalizingModeMinMax=1,
+	lmrcImageNormalizingModeUsingContour=2,
+	lmrcImageNormalizingModeUsingContourWithSolventFlattening=3,
+	lmrcImageNormalizingModeNoEstimation=4
+} lmrcImageNormalizingMode ;
+
+typedef struct lmrcImageNormalizingInfo {
+	lmrcImageNormalizingParaTypeReal A;
+	lmrcImageNormalizingParaTypeReal B; /* A x + B */
+	lmrcImageNormalizingParaTypeReal ContourMin;
+	lmrcImageNormalizingParaTypeReal ContourMax;
+	lmrcImageNormalizingParaTypeReal ContourSolvent;
+	lmrcImageNormalizingMode Mode;
+} lmrcImageNormalizingInfo;
+FileName:::: lmrcImagePad.h
+typedef struct lmrcImagePadInfo {
+	mrcImageParaTypeInteger Width;
+	mrcImageParaTypeInteger Height;
+	mrcImageParaTypeReal Value;
+	mrcImageParaTypeReal AWSize;
+	mrcImageParaTypeReal AWMin;
+	mrcImageParaTypeReal AWMax;
+} lmrcImagePadInfo;
+
+typedef enum lmrcImagePadMode {
+	lmrcImagePadModeAverage                   = 0,
+	lmrcImagePadModeAveragedYAxis             = 1,
+	lmrcImagePadModeDynamicAveragedYAxis      = 2,
+	lmrcImagePadModeAveragedEdge              = 3,
+	lmrcImagePadModeBottomLeft                = 4,
+	lmrcImagePadModeCenterWithoutAveraging    = 5,
+	lmrcImagePadModeBottomLeftWithoutAveraging= 6,
+	lmrcImagePadModeAveragedOutsideCircle     = 7,
+	lmrcImagePadModeAveragedOutsideRing       = 8, 
+	lmrcImagePadModeByValue                   = 9 
+} lmrcImagePadMode;
+FileName:::: lmrcImagePrint.h
+typedef struct mrcImagePSFilePrintInfo  {
+	mrcImageParaTypeReal scale;
+	mrcImageParaTypeReal contourLineColorChange;
+	mrcImageParaTypeReal contourLineWidthStart;
+	mrcImageParaTypeReal contourLineWidthStep;
+	long centre; /* 0: bottom right or 1:centre */	
+	char whichSection; /* [x|y|z] */	
+	double untwistAngle; /* untwist Image */
+	psImageInfo psInfo;
+	mrcImageParaTypeReal circleRadius;
+} mrcImagePSFilePrintInfo;
+FileName:::: lmrcImageProjection.h
+typedef struct lmrcImageProjectionInfo{
+	long mode;
+	} lmrcImageProjectionInfo;
+FileName:::: lmrcImageROI2D.h
+typedef enum lmrcImageROIShape {
+    Rect   =0,
+    Rect2  =1,
+    Circle =2,
+	Line   =3
+} lmrcImageROIShape;
+
+typedef struct lmrcImageSingleROIInfo {
+    char* FileName;
+    lmrcImageROIShape Shape;
+    float centerx;     /* For All Shape */
+    float centery;     
+    float blx;         /* For Rect, Rect2, Circle */
+    float bly;
+    float brx;
+    float bry;
+    float trx;
+    float try;
+    float tlx;
+    float tly;
+	float startx;      /* For Line */
+	float starty;
+	float endx; 
+	float endy;
+
+	/* For Post Modification */
+    int flagWidth;     /* For Rect, Rect2, Circle, Line */
+    float width;
+    int flagHeight;    /* For Rect, Rect2, Circle */
+    float height; 
+
+    float radius;
+    int mode;
+
+	int flagRotation;
+	float angle;
+
+	int flagMagnifiedWidth;
+	float magnifiedWidth;
+
+	int flagMagnifiedHeight;
+	float magnifiedHeight;
+
+	/* For Layer Line Information */
+	int flagLayerLine;
+	float truePitch;
+	float Ly;
+	float dY;
+} lmrcImageSingleROIInfo;
+
+typedef struct lmrcImageROIsInfo {
+    lmrcImageSingleROIInfo* ROI;
+    int                numROI;
+} lmrcImageROIsInfo;
+FileName:::: lmrcImageROI3D.h
+typedef struct lmrcImageROI3DInfo {
+	mrcImageParaTypeReal z1;
+	mrcImageParaTypeReal z2;
+	int flagz; /* This is a dummy parameter the current version for the future */ 
+	int flagx;
+	mrcImageParaTypeReal x1;
+	mrcImageParaTypeReal x2;
+	int flagy;
+	mrcImageParaTypeReal y1;
+	mrcImageParaTypeReal y2;
+} lmrcImageROI3DInfo;
+FileName:::: lmrcImageRadialDistribution.h
+typedef struct lmrcImageRadialDistributionInfo {
+	float Cx;
+	float Cy;
+	int flagAverage;
+} lmrcImageRadialDistributionInfo;
+FileName:::: lmrcImageSSDA.h
+typedef struct lmrcImageSSDAInfo {
+	double Threshold; 	/* Threshold Level */
+	double Error; 		/* Sum of residual differences at (x, y)*/
+	mrcImageParaTypeRealCoord p; 		/* Lower Right Point Coordinate on Partial Image on the Input Image */
+	mrcImageParaTypeRealCoord optimump; /* Optimum Point */
+	mrcImageParaTypeRealCoord smin;     /* Search Area: Bottom Right */
+	mrcImageParaTypeRealCoord smax; 	/* Search Area: Top Left */
+	mrcImageParaTypeRealCoord predict;  /* Predictive Point */
+	mrcImageParaTypeInteger n; 			/* Addition Times at (x, y)*/
+} lmrcImageSSDAInfo;
+
+FileName:::: lmrcImageSamplingUnitChange.h
+typedef struct lmrcImageSamplingUnitChangeInfo {
+	mrcImageParaTypeRealCoord    L;
+	mrcImageParaTypeIntegerCoord N;
+	mrcImageParaTypeInteger      SamplingMethodMode;
+} lmrcImageSamplingUnitChangeInfo;
+FileName:::: lmrcImageSecondNoiseReductionByRelaxation.h
+typedef enum lmrcImageSecondNoiseReductionByRelaxationDijStyleMode1 {
+  lmrcImageSecondNoiseReductionByRelaxationDijStyleMode1SavitzyGolay = 1
+} lmrcImageSecondNoiseReductionByRelaxationDijStyleMode1;
+  
+typedef enum lmrcImageSecondNoiseReductionByRelaxationDijStyleMode2 {
+  lmrcImageSecondNoiseReductionByRelaxationDijStyleMode2Rectangle = 1,
+  lmrcImageSecondNoiseReductionByRelaxationDijStyleMode2Circle = 2
+} lmrcImageSecondNoiseReductionByRelaxationDijStyleMode2;
+
+typedef enum lmrcImageSecondNoiseReductionByRelaxationDijStyleMode3 {
+  lmrcImageSecondNoiseReductionByRelaxationDijStyleMode3FiveTimesFive = 1,
+  lmrcImageSecondNoiseReductionByRelaxationDijStyleMode3SevenTimesSeven = 2
+} lmrcImageSecondNoiseReductionByRelaxationDijStyleMode3;
+FileName:::: lmrcImageSinogram.h
+typedef struct lmrcImageSinogramInfo {
+	double dphi;
+	int correlationMode;
+} lmrcImageSinogramInfo;
+FileName:::: lmrcImageSolventFlattening.h
+typedef struct lmrcImageSolventFlatteningInfo {
+	double density;
+	long flagdensity;
+} lmrcImageSolventFlatteningInfo;
+FileName:::: lmrcImageSphere.h
+typedef struct lmrcImageSphereInfo {
+		float size;
+		float r;
+		float w;
+		long mode;
+}lmrcImageSphereInfo;
+FileName:::: lmrcImageSymmetryFind.h
+typedef enum lmrcImageSymmetryFindCheckType {
+	lmrcImageSymmetryFindCheckTypeCheckByAdd=1,
+	lmrcImageSymmetryFindCheckTypeCheckByCorrelation=2,
+	lmrcImageSymmetryFindCheckTypeCheckByFourier=4,
+	lmrcImageSymmetryFindCheckTypeCheckByTTest=8,
+	lmrcImageSymmetryFindCheckTypeCheckBySRP=16
+} lmrcImageSymmetryFindCheckType;
+
+typedef enum lmrcImageSymmetryFindCentreType {
+	lmrcImageSymmetryFindCheckTypeCentreGC       = 0,
+	lmrcImageSymmetryFindCheckTypeCentreSymmetry = 1 
+} lmrcImageSymmetryFindCentreType;
+
+typedef enum lmrcImageSymmetryFindSubtractionType {
+	lmrcImageSymmetryFindCheckTypeNoSubtraction   = 0,
+	lmrcImageSymmetryFindCheckTypeMeanSubtraction = 1,
+	lmrcImageSymmetryFindCheckTypeMinSubtraction  = 2 
+} lmrcImageSymmetryFindSubtractionType;
+
+typedef struct lmrcImageSymmetryFindInfo {
+	double dr;
+	double dtheta;
+	double threshold1;
+	double threshold2;
+	int    maxNfold;
+
+	/* Centre */
+	lmrcImageSymmetryFindCentreType centreMode;
+	lmrcImageDeterminationOfPolarAxisByAssumingNfoldInfo centreInfo;
+
+	lmrcImageSymmetryFindSubtractionType subtractionMode; /* Subtraction Mode */
+	int       flagImages;
+	mrcImage  Image;
+	mrcImage* Images;
+	int       flagBacks;
+	mrcImage  Back;
+	mrcImage* Backs;
+	
+	floatVector Value;
+	floatVector Point;
+	int         Symmetry;
+
+	FILE*    fptOut;
+
+	int      flagCorrelation;
+	mrcImage correlation;
+
+	int      flagFourier;
+	mrcImage  fourier;
+
+	int      flagTmap;
+	mrcImage tmap;
+
+	int      flagAvg;
+	mrcImage avg;
+	char*    avgName;
+	DescartesCoord centre;
+} lmrcImageSymmetryFindInfo;
+
+FileName:::: lmrcImageTransformDescartesIntoPolar.h
+typedef struct lmrcImageDeterminationOfPolarAxisByAssumingNfoldInfo {
+	int nFold;
+	double minx;
+	double maxx;
+	double delx;
+	double miny;
+	double maxy;
+	double dely;
+	double minz;
+	double maxz;
+	double delz;
+	double delPHI;
+} lmrcImageDeterminationOfPolarAxisByAssumingNfoldInfo;
+
+typedef struct lmrcImageTransformDescartesIntoPolarInfo {
+	double dr;        /* Angstrom */ 
+	double dphi;      /* Radian */
+	double dtheta;    /* Radian */ 
+	int    flagImageCentreIsGravityCentre;
+	int    flagDescartesIntoPolarInfo; 
+	int    flagrWeight; 
+
+	/* RotationalSymmetry */
+	int    flagRotationalSymmetry;
+	int    nRotationalSymmetry;
+	lmrcImageDeterminationOfPolarAxisByAssumingNfoldInfo axisInfo;
+
+	int    flagCentre;
+	mrcImageParaTypeRealCoord Centre;
+}  lmrcImageTransformDescartesIntoPolarInfo;
+
+FileName:::: lmrcImageWindowing.h
+typedef struct lmrcImageWindowingInfo {
+	long  flagWy;
+	float Wy;
+
+	long flagWx;
+	float Wx;
+
+} lmrcImageWindowingInfo;
+FileName:::: lmrcImagesStatDataGet.h
+typedef struct lmrcImagesStatDataGetInfo {
+	int      numImage;
+
+	int 	 flagAvg;
+	mrcImage Avg;
+	int 	 flagSQRAvg;
+	mrcImage SQRAvg;
+	int      flagVar;
+	mrcImage Var;
+	int      flagSD;
+	mrcImage SD;
+	int      flagSN;
+	mrcImage SN;
+	int      flagSE;
+	mrcImage SE;
+	int      flagt;
+	mrcImage t;
+} lmrcImagesStatDataGetInfo;
+FileName:::: mrcRefUtil.h
+typedef double mrcRefDegCoordinate; 
+
+typedef struct {
+  mrcRefDegCoordinate ip;
+  mrcRefDegCoordinate iw;
+  mrcRefDegCoordinate ia;
+  mrcRefDegCoordinate dp;
+  mrcRefDegCoordinate dw;
+  mrcRefDegCoordinate da;
+  mrcRefDegCoordinate wp;
+  mrcRefDegCoordinate ww;
+  mrcRefDegCoordinate wa;
+} mrcRefHeader;
+
+typedef struct {
+  mrcRefDegCoordinate ip;
+  mrcRefDegCoordinate iw;
+  mrcRefDegCoordinate ia;
+  mrcRefDegCoordinate dp;
+  mrcRefDegCoordinate dw;
+  mrcRefDegCoordinate da;
+  mrcRefDegCoordinate wp;
+  mrcRefDegCoordinate ww;
+  mrcRefDegCoordinate wa;
+  int mode;
+} mrcRefCorHeader;
+
+#define mrcRefHeaderNumber 9;
+
+typedef struct {
+  mrcRefDegCoordinate ip;
+  mrcRefDegCoordinate iw;
+  mrcRefDegCoordinate ia;
+  mrcRefDegCoordinate dp;
+  mrcRefDegCoordinate dw;
+  mrcRefDegCoordinate da;
+  mrcRefDegCoordinate wp;
+  mrcRefDegCoordinate ww;
+  mrcRefDegCoordinate wa;
+  double sy;
+  double ey;
+  double refsize;
+  int inverse;
+} mrcpwzCorHeader;
+
+FileName:::: lmrcFFTInfo.h
+
+typedef struct mrcFSInfo {
+	double F00;	
+	double Max;
+	double MaxExceptForF00;
+} mrcFSInfo;
+
+FileName:::: lmrcImageBinalization.h
+
+typedef struct lmrcImageBinalizationInfo {
+	double thresHold;	
+	double value;	
+	int flagNear;
+	double near; /* pixel unit */	
+}lmrcImageBinalizationInfo;
+
+FileName:::: lmrcImageCTFDetermination.h
+typedef struct lmrcImageCTFDeterminationInfo {
+	ctfInfo val;
+	ctfInfo min;
+	ctfInfo max;
+	ctfInfo del;
+	mrcImageParaTypeReal Rmax;
+	mrcImageParaTypeReal Rmin;
+	mrcImage Dif;
+	double minResidual;
+	double minDef;
+	double minRatio;
+	FILE*   Out;
+	int flagOutF;
+	mrcImage resFFT;
+} lmrcImageCTFDeterminationInfo;
+
+typedef struct lmrcImageCTFDeterminationInfoMode {
+	long FilterType;
+	long WeightType;
+	long SumType;
+	long CTFInfoType;
+} lmrcImageCTFDeterminationInfoMode;
+
+typedef struct lmrcImageCTFDeterminationInfoRef {
+	FILE* fptIn;
+	char* In;
+	FILE* fptRef;
+	char* Ref;
+	FILE* fptOut;
+	char* Out;
+	char MrcOut[100];
+	mrcImage* in;
+	mrcImage* out;
+	long Width;
+	float PixelSize;
+	float truePitch;
+	float firstDf;
+	float withinDf;
+	float firstAoverP;
+	float withinAoverP;
+	mrcImageParaTypeReal maxiter;
+	mrcImageParaTypeReal iter;
+} lmrcImageCTFDeterminationInfoRef;
+
+FileName:::: lmrcImageCentre.h
+
+typedef struct lmrcImageCenterOfMass {
+  float x;
+  float y;
+  float z;
+} lmrcImageCenterOfMass;
+
+FileName:::: lmrcImageCommonLine.h
+
+typedef enum lmrcImageCommonLineMode {
+	lmrcImageCommonLineModeImageCenterIsGC = 1
+} lmrcImageCommonLineMode;
+
+
+typedef enum lmrcImageCommonLineSearchMode {
+	lmrcImageCommonLineSearchModeFourierSpace = 0,
+	lmrcImageCommonLineSearchModeRealSpace = 1 
+} lmrcImageCommonLineSearchMode;
+
+typedef struct lmrcImageCommonLineInfo {
+	/* Input */
+	double dtheta;
+	lmrcImageCommonLineSearchMode searchMode; 
+	/* Output */
+	double optimumThetaIn;
+	double optimumThetaRef;
+	double optimumCor; 
+} lmrcImageCommonLineInfo;
+
+FileName:::: lmrcImageConnection.h
+typedef struct lmrcImageConnectionInfo {
+	long mode;
+} lmrcImageConnectionInfo;
+FileName:::: lmrcImageContourSurface.h
+typedef struct lmrcImageContourSurfaceInfo {
+	mrcImageParaTypeReal Contour;
+} lmrcImageContourSurfaceInfo;
+
+typedef enum lmrcImageContourSurfaceMode {
+	lmrcImageContourSurfaceModeSimple=0
+} lmrcImageContourSurfaceMode;
+FileName:::: lmrcImageCorrelation.h
+typedef struct lmrcImageAutoRotationCorrelationInfo {
+	int iter; /* iteration */
+	int nRot; /* Rotation */  
+	int Method;
+	float max;
+	float maxTheta;
+	mrcImageParaTypeRealCoord maxP;
+	mrcImageInformation corInfo;
+	lmrcImageSSDAInfo SSDAInfo;
+	float EuclidDistance; 
+	float LinearCorrelation;
+
+	/* Restriction Rotation Area */
+	int   flagRestrictionArea;
+	float thetaMin;
+	float thetaMax;
+
+	int   flagXshiftOnly;
+} lmrcImageAutoRotationCorrelationInfo;
+
+typedef struct lmrcImageCorrelationRefinementInfo {
+	mrcImageParaTypeRealCoord shift; 
+	mrcImageParaTypeRealCoord step; 
+	mrcImageParaTypeRealCoord range; 
+	mrcImageInformation corInfo;
+	int mode;
+} lmrcImageCorrelationRefinementInfo;
+
+FileName:::: lmrcImageCrystalCreate.h
+typedef struct lmrcImageCrystalCreateInfo {
+	long nx;
+	long ny;
+	long nz;
+} lmrcImageCrystalCreateInfo;
+FileName:::: lmrcImageDensity.h
+typedef struct lmrcImageDensityInfoInfo {
+	floatVector percentageVolume;
+	mrcImageParaTypeRealCoord centreOfGravity;
+	mrcImageParaTypeRealCoord centreOfGravitySD;
+	mrcImageParaTypeRealCoord max;
+	mrcImageParaTypeRealCoord maxSD;
+	double                    deltaVolume; 
+	mrcImage in;
+} lmrcImageDensityInfoInfo;
+
+typedef enum lmrcImageDensityInfoMode {
+	mrcImageDensityInfoPercentageVolume  =1,
+	mrcImageDensityInfoCentreOfGravity   =2,
+	mrcImageDensityInfoMax               =4,
+	mrcImageDensityInfoCentreOfGravitySD =8,
+	mrcImageDensityInfoMaxSD             =16
+} lmrcImageDensityInfoMode;
+
+typedef struct lmrcImageDensityChangeEsitmationInfo0 {
+	mrcImageParaTypeRealCoord change;
+	mrcImageParaTypeRealCoord changeSD;
+	double                    delta;
+	double                    deltaSD;
+	double                    deltaXY;
+	double                    deltaXYSD;
+} lmrcImageDensityChangeEstimationInfo0;
+
+typedef struct lmrcImageDensityChangeEsitmationInfo {
+	lmrcImageDensityChangeEstimationInfo0 CG;
+	lmrcImageDensityChangeEstimationInfo0 Max;
+	mrcImage in1;
+	mrcImage in2;
+} lmrcImageDensityChangeEstimationInfo;
+
+typedef enum lmrcImageDensityChangeEstimationMode {
+	mrcImageDensityChangeEstimationCentreOfGravity   =2,
+	mrcImageDensityChangeEstimationMax               =4,
+	mrcImageDensityChangeEstimationCentreOfGravitySD =8,
+	mrcImageDensityChangeEstimationMaxSD             =16
+} lmrcImageDensityChageEstimationMode;
+
+FileName:::: lmrcImageDensityNormalizationByImage.h
+typedef struct lmrcImageDenstiyNormalizationByImageInfo {
+  /* Input */
+  double sigma;
+
+  /* Region Information */
+  int flagCylinder;	
+  float centerx, centery;
+  float minr, maxr;
+  /* Fitting Mode */
+  int fitMode;
+  float tstBGMin;
+  float tstBGMax;
+  float tstBGDelta;
+
+  /* Output */
+  float a;
+  float b;
+  float sigma_a;
+  float sigma_b;
+  float chi2;
+  float q;
+  float r;
+
+  float refBG;
+  float tstBG;
+  float	chi2Signal;
+  float chi2BG;
+  int nData;
+  float* testData;
+  float* refData; 
+} lmrcImageDensityNormalizationByImageInfo;
+
+
+/*
+   minimization of (in1 - (a+b*in2))^2
+   out = a + b*in2
+*/
+
+typedef enum lmrcImageDensityNormalizationByImageMode {
+  lmrcImageDensityNormalizationByImageModeSigma   = 1,
+  lmrcImageDensityNormalizationByImageModeStdout  = 2,
+  lmrcImageDensityNormalizationByImageModeReverse = 4,
+  lmrcImageDensityNormalizationByImageModeRobust  = 8
+} lmrcImageDensityNormalizationByImageMode; 
+
+typedef enum lmrcImageDensityNormalizationByImageFitMode {
+  lmrcImageDensityNormalizationByImageFitModeSingleLine = 0,
+  lmrcImageDensityNormalizationByImageFitModeSingleLineWithBackground = 1 
+} lmrcImageDensityNormalizationByImageFitMode;
+
+FileName:::: lmrcImageEdgeAverage.h
+typedef struct lmrcImageEdgeAverageInfo {
+	/* In */
+	mrcImageParaTypeInteger devide; 
+	mrcImageParaTypeInteger width;
+	/* Out */
+	mrcImageParaTypeReal*   avg[4];
+	mrcImageParaTypeReal*   count[4];
+} lmrcImageEdgeAverageInfo;
+FileName:::: lmrcImageFilterCreate.h
+typedef enum lmrcImageFilterCreateMode {
+	lmrcImageFilterModeSquare=0,
+	lmrcImageFilterModeCircle=1
+} lmrcImageFilterCreateMode;
+
+typedef struct lmrcImageFilterCreateInfo {
+	mrcImageParaTypeInteger    np;
+	mrcImageParaTypeRealCoord* p;
+	mrcImageParaTypeReal*      weight;
+
+	mrcImageParaTypeIntegerCoord N;
+
+	mrcImageParaTypeIntegerCoord Size;
+
+	lmrcImageFilterCreateMode shape;
+	long                      outputMode;
+} lmrcImageFilterCreateInfo;
+FileName:::: lmrcImageFirstNoiseReductionByRelaxation.h
+typedef struct lmrcImageNoiseReductionByRelaxationInfo {
+  /* input */
+  /* OR Output */
+  double SD;
+  double datamax;
+  double datamin;
+  long classNumber;
+  int ddimx; 
+  int ddimy;
+  int ddimz;
+} lmrcImageNoiseReductionByRelaxationInfo;
+
+typedef enum lmrcImageNoiseReductionByRelaxationMode {
+  lmrcImageNoiseReductionByRelaxationModeSigma = 1,
+} lmrcImageNoiseReductionByRelaxationMode; 
+FileName:::: lmrcImageMasking.h
+typedef enum lmrcImageMaskingInfoShape {
+	lmrcImageMaskingInfoShapeCircle=0,
+	lmrcImageMaskingInfoSquare=0
+} lmrcImageMaskingInfoShape;
+
+typedef struct lmrcImageMaskingInfo {
+        mrcImageParaTypeRealCoord n;
+        mrcImageParaTypeRealCoord c;
+       	lmrcImageMaskingInfoShape 	 shape;
+        long mode;
+} lmrcImageMaskingInfo;
+FileName:::: lmrcImageModelCreate.h
+typedef struct _lmrcImageModelCreateMode1Info {
+	float radius;
+	float nHelix;
+	float zPitch;
+	float phiAngle;
+	float deltaPhi;
+	float startZ;
+	float endZ;
+	float startPhi;
+	int     flagIn;
+	mrcImage*  in;
+	mrcImageDataSetMode inMode;
+	int 	fm;
+	int 	units;
+} _lmrcImageModelCreateMode1Info;
+FileName:::: lmrcImageMontage.h
+typedef struct lmrcImageMontageInfo {
+	lmrcImagePadMode PadMode;
+	lmrcImagePadInfo PadInfo;
+	int nx;
+	int ny;
+	int                  flagMaxValue;
+	mrcImageParaTypeReal MaxValue;	
+	int                  flagValueAssignedToMax;
+	mrcImageParaTypeReal ValueAssignedToMax;	
+
+	int flagEdgeAverage;
+	int EdgeAverageWindow;
+	int flagNoAverage;
+} lmrcImageMontageInfo;
+FileName:::: lmrcImageMove.h
+typedef enum lmrcImageMoveMode {
+	lmrcImageMoveModePixelUnit=0
+} lmrcImageMoveMode;
+FileName:::: lmrcImageNormalizing.h
+typedef float lmrcImageNormalizingParaTypeReal;
+typedef enum lmrcImageNormalizingMode {
+	lmrcImageNormalizingModeDoubleExponential=0,
+	lmrcImageNormalizingModeMinMax=1,
+	lmrcImageNormalizingModeUsingContour=2,
+	lmrcImageNormalizingModeUsingContourWithSolventFlattening=3,
+	lmrcImageNormalizingModeNoEstimation=4
+} lmrcImageNormalizingMode ;
+
+typedef struct lmrcImageNormalizingInfo {
+	lmrcImageNormalizingParaTypeReal A;
+	lmrcImageNormalizingParaTypeReal B; /* A x + B */
+	lmrcImageNormalizingParaTypeReal ContourMin;
+	lmrcImageNormalizingParaTypeReal ContourMax;
+	lmrcImageNormalizingParaTypeReal ContourSolvent;
+	lmrcImageNormalizingMode Mode;
+} lmrcImageNormalizingInfo;
+FileName:::: lmrcImagePad.h
+typedef struct lmrcImagePadInfo {
+	mrcImageParaTypeInteger Width;
+	mrcImageParaTypeInteger Height;
+	mrcImageParaTypeReal Value;
+	mrcImageParaTypeReal AWSize;
+	mrcImageParaTypeReal AWMin;
+	mrcImageParaTypeReal AWMax;
+} lmrcImagePadInfo;
+
+typedef enum lmrcImagePadMode {
+	lmrcImagePadModeAverage                   = 0,
+	lmrcImagePadModeAveragedYAxis             = 1,
+	lmrcImagePadModeDynamicAveragedYAxis      = 2,
+	lmrcImagePadModeAveragedEdge              = 3,
+	lmrcImagePadModeBottomLeft                = 4,
+	lmrcImagePadModeCenterWithoutAveraging    = 5,
+	lmrcImagePadModeBottomLeftWithoutAveraging= 6,
+	lmrcImagePadModeAveragedOutsideCircle     = 7,
+	lmrcImagePadModeAveragedOutsideRing       = 8, 
+	lmrcImagePadModeByValue                   = 9 
+} lmrcImagePadMode;
+FileName:::: lmrcImagePrint.h
+typedef struct mrcImagePSFilePrintInfo  {
+	mrcImageParaTypeReal scale;
+	mrcImageParaTypeReal contourLineColorChange;
+	mrcImageParaTypeReal contourLineWidthStart;
+	mrcImageParaTypeReal contourLineWidthStep;
+	long centre; /* 0: bottom right or 1:centre */	
+	char whichSection; /* [x|y|z] */	
+	double untwistAngle; /* untwist Image */
+	psImageInfo psInfo;
+	mrcImageParaTypeReal circleRadius;
+} mrcImagePSFilePrintInfo;
+FileName:::: lmrcImageProjection.h
+typedef struct lmrcImageProjectionInfo{
+	long mode;
+	} lmrcImageProjectionInfo;
+FileName:::: lmrcImageROI2D.h
+typedef enum lmrcImageROIShape {
+    Rect   =0,
+    Rect2  =1,
+    Circle =2,
+	Line   =3
+} lmrcImageROIShape;
+
+typedef struct lmrcImageSingleROIInfo {
+    char* FileName;
+    lmrcImageROIShape Shape;
+    float centerx;     /* For All Shape */
+    float centery;     
+    float blx;         /* For Rect, Rect2, Circle */
+    float bly;
+    float brx;
+    float bry;
+    float trx;
+    float try;
+    float tlx;
+    float tly;
+	float startx;      /* For Line */
+	float starty;
+	float endx; 
+	float endy;
+
+	/* For Post Modification */
+    int flagWidth;     /* For Rect, Rect2, Circle, Line */
+    float width;
+    int flagHeight;    /* For Rect, Rect2, Circle */
+    float height; 
+
+    float radius;
+    int mode;
+
+	int flagRotation;
+	float angle;
+
+	int flagMagnifiedWidth;
+	float magnifiedWidth;
+
+	int flagMagnifiedHeight;
+	float magnifiedHeight;
+
+	/* For Layer Line Information */
+	int flagLayerLine;
+	float truePitch;
+	float Ly;
+	float dY;
+} lmrcImageSingleROIInfo;
+
+typedef struct lmrcImageROIsInfo {
+    lmrcImageSingleROIInfo* ROI;
+    int                numROI;
+} lmrcImageROIsInfo;
+FileName:::: lmrcImageROI3D.h
+typedef struct lmrcImageROI3DInfo {
+	mrcImageParaTypeReal z1;
+	mrcImageParaTypeReal z2;
+	int flagz; /* This is a dummy parameter the current version for the future */ 
+	int flagx;
+	mrcImageParaTypeReal x1;
+	mrcImageParaTypeReal x2;
+	int flagy;
+	mrcImageParaTypeReal y1;
+	mrcImageParaTypeReal y2;
+} lmrcImageROI3DInfo;
+FileName:::: lmrcImageRadialDistribution.h
+typedef struct lmrcImageRadialDistributionInfo {
+	float Cx;
+	float Cy;
+	int flagAverage;
+} lmrcImageRadialDistributionInfo;
+FileName:::: lmrcImageSSDA.h
+typedef struct lmrcImageSSDAInfo {
+	double Threshold; 	/* Threshold Level */
+	double Error; 		/* Sum of residual differences at (x, y)*/
+	mrcImageParaTypeRealCoord p; 		/* Lower Right Point Coordinate on Partial Image on the Input Image */
+	mrcImageParaTypeRealCoord optimump; /* Optimum Point */
+	mrcImageParaTypeRealCoord smin;     /* Search Area: Bottom Right */
+	mrcImageParaTypeRealCoord smax; 	/* Search Area: Top Left */
+	mrcImageParaTypeRealCoord predict;  /* Predictive Point */
+	mrcImageParaTypeInteger n; 			/* Addition Times at (x, y)*/
+} lmrcImageSSDAInfo;
+
+FileName:::: lmrcImageSamplingUnitChange.h
+typedef struct lmrcImageSamplingUnitChangeInfo {
+	mrcImageParaTypeRealCoord    L;
+	mrcImageParaTypeIntegerCoord N;
+	mrcImageParaTypeInteger      SamplingMethodMode;
+} lmrcImageSamplingUnitChangeInfo;
+FileName:::: lmrcImageSecondNoiseReductionByRelaxation.h
+typedef enum lmrcImageSecondNoiseReductionByRelaxationDijStyleMode1 {
+  lmrcImageSecondNoiseReductionByRelaxationDijStyleMode1SavitzyGolay = 1
+} lmrcImageSecondNoiseReductionByRelaxationDijStyleMode1;
+  
+typedef enum lmrcImageSecondNoiseReductionByRelaxationDijStyleMode2 {
+  lmrcImageSecondNoiseReductionByRelaxationDijStyleMode2Rectangle = 1,
+  lmrcImageSecondNoiseReductionByRelaxationDijStyleMode2Circle = 2
+} lmrcImageSecondNoiseReductionByRelaxationDijStyleMode2;
+
+typedef enum lmrcImageSecondNoiseReductionByRelaxationDijStyleMode3 {
+  lmrcImageSecondNoiseReductionByRelaxationDijStyleMode3FiveTimesFive = 1,
+  lmrcImageSecondNoiseReductionByRelaxationDijStyleMode3SevenTimesSeven = 2
+} lmrcImageSecondNoiseReductionByRelaxationDijStyleMode3;
+FileName:::: lmrcImageSinogram.h
+typedef struct lmrcImageSinogramInfo {
+	double dphi;
+	int correlationMode;
+} lmrcImageSinogramInfo;
+FileName:::: lmrcImageSolventFlattening.h
+typedef struct lmrcImageSolventFlatteningInfo {
+	double density;
+	long flagdensity;
+} lmrcImageSolventFlatteningInfo;
+FileName:::: lmrcImageSphere.h
+typedef struct lmrcImageSphereInfo {
+		float size;
+		float r;
+		float w;
+		long mode;
+}lmrcImageSphereInfo;
+FileName:::: lmrcImageSymmetryFind.h
+typedef enum lmrcImageSymmetryFindCheckType {
+	lmrcImageSymmetryFindCheckTypeCheckByAdd=1,
+	lmrcImageSymmetryFindCheckTypeCheckByCorrelation=2,
+	lmrcImageSymmetryFindCheckTypeCheckByFourier=4,
+	lmrcImageSymmetryFindCheckTypeCheckByTTest=8,
+	lmrcImageSymmetryFindCheckTypeCheckBySRP=16
+} lmrcImageSymmetryFindCheckType;
+
+typedef enum lmrcImageSymmetryFindCentreType {
+	lmrcImageSymmetryFindCheckTypeCentreGC       = 0,
+	lmrcImageSymmetryFindCheckTypeCentreSymmetry = 1 
+} lmrcImageSymmetryFindCentreType;
+
+typedef enum lmrcImageSymmetryFindSubtractionType {
+	lmrcImageSymmetryFindCheckTypeNoSubtraction   = 0,
+	lmrcImageSymmetryFindCheckTypeMeanSubtraction = 1,
+	lmrcImageSymmetryFindCheckTypeMinSubtraction  = 2 
+} lmrcImageSymmetryFindSubtractionType;
+
+typedef struct lmrcImageSymmetryFindInfo {
+	double dr;
+	double dtheta;
+	double threshold1;
+	double threshold2;
+	int    maxNfold;
+
+	/* Centre */
+	lmrcImageSymmetryFindCentreType centreMode;
+	lmrcImageDeterminationOfPolarAxisByAssumingNfoldInfo centreInfo;
+
+	lmrcImageSymmetryFindSubtractionType subtractionMode; /* Subtraction Mode */
+	int       flagImages;
+	mrcImage  Image;
+	mrcImage* Images;
+	int       flagBacks;
+	mrcImage  Back;
+	mrcImage* Backs;
+	
+	floatVector Value;
+	floatVector Point;
+	int         Symmetry;
+
+	FILE*    fptOut;
+
+	int      flagCorrelation;
+	mrcImage correlation;
+
+	int      flagFourier;
+	mrcImage  fourier;
+
+	int      flagTmap;
+	mrcImage tmap;
+
+	int      flagAvg;
+	mrcImage avg;
+	char*    avgName;
+	DescartesCoord centre;
+} lmrcImageSymmetryFindInfo;
+
+FileName:::: lmrcImageTransformDescartesIntoPolar.h
+typedef struct lmrcImageDeterminationOfPolarAxisByAssumingNfoldInfo {
+	int nFold;
+	double minx;
+	double maxx;
+	double delx;
+	double miny;
+	double maxy;
+	double dely;
+	double minz;
+	double maxz;
+	double delz;
+	double delPHI;
+} lmrcImageDeterminationOfPolarAxisByAssumingNfoldInfo;
+
+typedef struct lmrcImageTransformDescartesIntoPolarInfo {
+	double dr;        /* Angstrom */ 
+	double dphi;      /* Radian */
+	double dtheta;    /* Radian */ 
+	int    flagImageCentreIsGravityCentre;
+	int    flagDescartesIntoPolarInfo; 
+	int    flagrWeight; 
+
+	/* RotationalSymmetry */
+	int    flagRotationalSymmetry;
+	int    nRotationalSymmetry;
+	lmrcImageDeterminationOfPolarAxisByAssumingNfoldInfo axisInfo;
+
+	int    flagCentre;
+	mrcImageParaTypeRealCoord Centre;
+}  lmrcImageTransformDescartesIntoPolarInfo;
+
+FileName:::: lmrcImageWindowing.h
+typedef struct lmrcImageWindowingInfo {
+	long  flagWy;
+	float Wy;
+
+	long flagWx;
+	float Wx;
+
+} lmrcImageWindowingInfo;
+FileName:::: lmrcImagesStatDataGet.h
+typedef struct lmrcImagesStatDataGetInfo {
+	int      numImage;
+
+	int 	 flagAvg;
+	mrcImage Avg;
+	int 	 flagSQRAvg;
+	mrcImage SQRAvg;
+	int      flagVar;
+	mrcImage Var;
+	int      flagSD;
+	mrcImage SD;
+	int      flagSN;
+	mrcImage SN;
+	int      flagSE;
+	mrcImage SE;
+	int      flagt;
+	mrcImage t;
+} lmrcImagesStatDataGetInfo;
+FileName:::: mrcRefUtil.h
+typedef double mrcRefDegCoordinate; 
+
+typedef struct {
+  mrcRefDegCoordinate ip;
+  mrcRefDegCoordinate iw;
+  mrcRefDegCoordinate ia;
+  mrcRefDegCoordinate dp;
+  mrcRefDegCoordinate dw;
+  mrcRefDegCoordinate da;
+  mrcRefDegCoordinate wp;
+  mrcRefDegCoordinate ww;
+  mrcRefDegCoordinate wa;
+} mrcRefHeader;
+
+typedef struct {
+  mrcRefDegCoordinate ip;
+  mrcRefDegCoordinate iw;
+  mrcRefDegCoordinate ia;
+  mrcRefDegCoordinate dp;
+  mrcRefDegCoordinate dw;
+  mrcRefDegCoordinate da;
+  mrcRefDegCoordinate wp;
+  mrcRefDegCoordinate ww;
+  mrcRefDegCoordinate wa;
+  int mode;
+} mrcRefCorHeader;
+
+#define mrcRefHeaderNumber 9;
+
+typedef struct {
+  mrcRefDegCoordinate ip;
+  mrcRefDegCoordinate iw;
+  mrcRefDegCoordinate ia;
+  mrcRefDegCoordinate dp;
+  mrcRefDegCoordinate dw;
+  mrcRefDegCoordinate da;
+  mrcRefDegCoordinate wp;
+  mrcRefDegCoordinate ww;
+  mrcRefDegCoordinate wa;
+  double sy;
+  double ey;
+  double refsize;
+  int inverse;
+} mrcpwzCorHeader;
+

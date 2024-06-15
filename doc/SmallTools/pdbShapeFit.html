@@ -1,0 +1,73 @@
+<HTML>
+<HEAD>
+<TITLE>pdbShapeFit</TITLE>
+</HEAD>
+<BODY>
+<H1>pdbShapeFit</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: pdbShapeFit
+Options:
+    [-i[nput]pdb[File]   InPDB               (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-i[nput]mrc[File]   InMRC               (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-C[ontour]          Contour             (0.0       ).as(Real                ) ] :Essential :Contour
+    [-C[ontour]M[ode]    ContourMode         (0         ).as(Integer             ) ] :Optional  :ContourMode: refer to mrcImageContourSurfaceCreate
+    [-o[utput of ]mrc    OutMRC              (NULL      ).as(outFile             ) ] :Optional  :OutputDataFile
+    [-o[utput of ]txt    OutTxt              (stdout    ).as(outFile             ) ] :Optional  :OutputDataFile
+    [-o[utput of ]pdb    OutPDB              (NULL      ).as(outFile             ) ] :Optional  :OutputDataFile
+    [-xmin               xmin                (0         ).as(Real                ) ] :Optional  :xmin for fitting
+    [-xmax               xmax                (0         ).as(Real                ) ] :Optional  :xmax for fitting
+    [-xd[elta]           xDelta              (1         ).as(Real                ) ] :Optional  :delta x for fitting
+    [-ymin               ymin                (0         ).as(Real                ) ] :Optional  :ymin for fitting
+    [-ymax               ymax                (0         ).as(Real                ) ] :Optional  :ymax for fitting
+    [-yd[elta]           yDelta              (1         ).as(Real                ) ] :Optional  :delta y for fitting
+    [-zmin               zmin                (0         ).as(Real                ) ] :Optional  :zmin for fitting
+    [-zmax               zmax                (82        ).as(Real                ) ] :Optional  :zmax for fitting
+    [-zd[elta]           zDelta              (1         ).as(Real                ) ] :Optional  :delta z for fitting
+    [-E[uler]A[ngle]     EulerAngle          (ZOYS      ).as(String              ) ] :Optional  :Euler Angle for three-angle
+    [-phimin             phimin              (0         ).as(Real                ) ] :Optional  :phimin for fitting(degree)
+    [-phimax             phimax              (194       ).as(Real                ) ] :Optional  :phimax for fitting(degree)
+    [-phid[elta]         phiDelta            (2         ).as(Real                ) ] :Optional  :delta phi for fitting(degree)
+    [-psimin             psimin              (0         ).as(Real                ) ] :Optional  :psimin for fitting(degree)
+    [-psimax             psimax              (0         ).as(Real                ) ] :Optional  :psimax for fitting(degree)
+    [-psid[elta]         psiDelta            (2         ).as(Real                ) ] :Optional  :delta psi for fitting(degree)
+    [-thetamin           thetamin            (0         ).as(Real                ) ] :Optional  :thetamin for fitting(degree)
+    [-thetamax           thetamax            (0         ).as(Real                ) ] :Optional  :thetamax for fitting(degree)
+    [-thetad[elta]       thetaDelta          (2         ).as(Real                ) ] :Optional  :delta theta for fitting(degree)
+    [-P[DB]C[ontour]M[ode]surfaceMode         (0         ).as(Integer             ) ] :Optional  :PDB SurfaceMode: refer to pdbSurface
+    [-order              order               (1.7       ).as(Real                ) ] :Optional  :order: refer to pdbSurface
+    [-refine             refine              (2         ).as(Integer             ) ] :Optional  :refine: refer to pdbSurface
+    [-size               size                (3         ).as(Integer             ) ] :Optional  :size: refer to pdbSurface
+    [-weight             weight              (100       ).as(Real                ) ] :Optional  :weight: refer to pdbSurface
+    [-mergin             mergin              (3.0       ).as(Real                ) ] :Optional  :mergin: refer to pdbSurface
+    [-thres              thresHold           (0.0       ).as(Real                ) ] :Optional  :threshold: refer to pdbSurface
+    [-I[nverse]                                                                    ] :Optional  :Black is High Density.
+    [-Centre                                                                       ] :Optional  :Filament-axis is x=0, y=0
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+    -ipdb   : Filename : An atomic model to be fitted (PDB) 
+    -imrc   : Filename : 3-D density map (mrc-formated) 
+    -omrc   : Filename : fitting score map (MRC) 
+                         z=0: a max-score map of an phi-z plane which includes a max score point.
+                              The max score mean a maximum score in all x-y-psi-theta plane with specific values of phi and z.
+                         z=1: a max-score map of an psi-theta plane which includes a max score point.
+                              The max score mean a maximum score in all x-y plane with specific values of psi, theta, phi and z.
+                         z=2: a score map of an x-y plane which includes a max score point.
+    -otxt   : Filename : fitting results (Text)
+    -opdb   : Filename : An atomic model with a maximum score after fitting 
+    -x|y|zmin   : Initial value of z (should <= zmax)
+    -x|y|zmax   : Final   value of z
+    -x|y|zd     : Delta z for fitting (should !=0)
+    -phi|psi|thetamin : Initial value of phi (should <= phimax; initial value of phi is 0)
+    -phi|psi|thetamax : Final value of phi  (should !=0)
+    -phi|psi|thetad   : Delta phi for fitting (should >0)
+    -C      : Contour level of map file
+    -Inverse: Protein has high density on the image
+    -Centre : Filament-axis in an inPDBFile is along the line of x=0, y=0
+    -EA     : Euler Angle Set : ZOYS: z -> y -> x 
+    -c      : Not used now
+    -m   0 : Count the atom number inside the contour.
+</PRE>
+</BODY>
+</HTML>

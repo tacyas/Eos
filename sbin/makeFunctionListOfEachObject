@@ -1,0 +1,5 @@
+lib=$1
+nm --extern-only -s $lib |awk '{print $0," "}' >nm.temp
+objlist=`awk '/:/{len=length($1);print substr($1,1,len-1);}'`
+for obj in $objlist
+do	awk -v obj=$obj '{if (match($1,obj)){flag=1;}; if (flag && $2=="T"){print $2} else if (match($1,/:/)){flag=0;}}'

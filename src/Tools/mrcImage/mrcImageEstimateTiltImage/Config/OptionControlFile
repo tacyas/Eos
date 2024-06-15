@@ -1,0 +1,9 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-tiltAngle","-tiltAngle","Tilt Angle[degree]","Optional","1","1","TiltAngle","Real","0"
+"-tiltAxis","-tiltAxis","Tilt Axis[degree]","Optional","1","1","TiltAxis","Real","0"
+"-Inverse","-Inverse","To Non-tilt","Optional","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode: InterpolationMode","Optional","1","1","mode","Integer","0"

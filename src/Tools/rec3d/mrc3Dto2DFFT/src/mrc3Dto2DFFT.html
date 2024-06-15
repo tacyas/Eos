@@ -1,0 +1,33 @@
+<HTML>
+<HEAD>
+<TITLE>mrc3Dto2DFFT</TITLE>
+</HEAD>
+<BODY>
+<H1>mrc3Dto2DFFT</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrc3Dto2DFFT
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :Input: mrc(3D)
+    [-t[emplate]         Template            (NULL      ).as(inFile              ) ] :Essential :Input: mrcFFT(2D)
+    [-i[nput]Pri[or]     InPri               (NULL      ).as(inFile              ) ] :Optional  :Input:: 
+    [-o[utput]           Out                 (stdout    ).as(outFile             ) ] :Essential :Output: filelist
+    [-EulerMode          EulerMode           (YOYS      ).as(String              ) ] :Optional  :Input: EulerMode
+    [-Rot1               Rot1Start           (0.0       ).as(Real                ) 
+                         Rot1End             (360.0     ).as(Real                ) 
+                         Rot1Delta           (10        ).as(Real                ) ] :Optional  :OutputDataFile
+    [-Rot2               Rot2Start           (0.0       ).as(Real                ) 
+                         Rot2End             (360.0     ).as(Real                ) 
+                         Rot2Delta           (10        ).as(Real                ) ] :Optional  :OutputDataFile
+    [-Rot3               Rot3Start           (0.0       ).as(Real                ) 
+                         Rot3End             (360.0     ).as(Real                ) 
+                         Rot3Delta           (10        ).as(Real                ) ] :Optional  :OutputDataFile
+    [-trans[late]        TransX              (0.0       ).as(Real                ) 
+                         TransY              (0.0       ).as(Real                ) ] :Optional  :Input: Translation
+    [-InterpMode         InterpMode          (0         ).as(Integer             ) ] :Optional  :Interpolation Mode
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+</PRE>
+</BODY>
+</HTML>

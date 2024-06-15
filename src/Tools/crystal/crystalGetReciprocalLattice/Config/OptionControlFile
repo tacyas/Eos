@@ -1,0 +1,9 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input","Optional","1","1","In","inFile::ASCII","stdin"
+"-a","-a[Axis]","Asix[A]","Optional","3","1","ax","Real","1","2","ay","Real","0","3","az","Real","0"
+"-b","-b[Axis]","Asix[A]","Optional","3","1","bx","Real","0","2","by","Real","1","3","bz","Real","0"
+"-c","-c[Axis]","Asix[A]","Optional","3","1","cx","Real","0","2","cy","Real","0","3","cz","Real","1"
+"-o","-o[utput]","Output","Optional","1","1","Out","outFile::ASCII","stdout"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

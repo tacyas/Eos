@@ -1,0 +1,17 @@
+
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: 2D(FFT)","Essential","1","1","In2D","inFile::mrcImage","NULL"
+"-i3d","-i[nput]3d","Input: 3D(FFT)","Essential","2","1","In3D","inFile::","NULL","2","volPath","String","NULL"
+"-Prior","-Prior","Input: Prior","Optional","2","1","Prior","inFile::","NULL","2","PriPath","String","./"
+"-EulerMode","-EulerMode","Input: EulerMode","Optional","1","1","EulerMode","String","YOYS"
+"-Rot1","-Rot1","OutputDataFile","Optional","3","1","Rot1Start","Real","0.0","2","Rot1End","Real","360.0","3","Rot1Delta","Real","10"
+"-Rot2","-Rot2","OutputDataFile","Optional","3","1","Rot2Start","Real","0.0","2","Rot2End","Real","360.0","3","Rot2Delta","Real","10"
+"-Rot3","-Rot3","OutputDataFile","Optional","3","1","Rot3Start","Real","0.0","2","Rot3End","Real","360.0","3","Rot3Delta","Real","10"
+"-trans","-trans[late]","Input: Translation","Optional","2","1","TransX","Real","0.0","2","TransY","Real","0.0"
+"-InterpMode","-InterpMode","Interpolation Mode","Optional","1","1","InterpMode","Integer","0"
+"-o","-o[utput]","Output: PosteriorProb","Optional","1","1","Out1","outFile","stdout"
+"-oL","-o[utput]L[ikelihood]","Output: Likelihood","Optional","1","1","OutLikelihood","outFile","stdout"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-Lmode","-L[ikelihood]mode","Input: Likelihoodmode","Optional","3","1","Lcalcmode","Integer","0","2","Lmode1","Real","0.0","3","Lmode2","Real","0.0"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

@@ -1,0 +1,135 @@
+.SUFFIXES: .tiltpairs .alignpairs .roipairs .clstlog0 .clstlog0ps
+
+STARTSUFFIX=.ctf
+CENTRESIZE=512 
+PadSize=1988
+CorrelationMode=18
+PadMode=0
+RoiSizeX=120
+RoiSizeY=120
+
+.tiltpairs.alignpairs:
+	rm -f $*.alignpairs
+	cat $*.tiltpairs | \
+	while read line ; \
+	do \
+		TILT=`echo $$line | awk '{print $$1}'`     ; \
+		TILTBASE=`basename $$TILT $(STARTSUFFIX)`  ; \
+		ZERO=`echo $$line | awk '{print $$2}'`     ; \
+		ZEROBASE=`basename $$ZERO $(STARTSUFFIX)`  ; \
+		AxisAngle=`echo $$line | awk '{print $$3}'`; \
+		TiltAngle=`echo $$line | awk '{print $$4}'`; \
+		make $$TILTBASE.ctftilt TiltAngle=$$TiltAngle AxisAngle=$$AxisAngle ZeroBase=$$ZEROBASE; \
+		make $$TILTBASE.ctftiltcorinfo; \
+		make $$TILTBASE.ctftiltshiftcomp; \
+		echo $$TILTBASE.ctftiltshiftcomp >> $*.alignpairs ; \
+	done
+
+.alignpairs.roipairs:
+	rm -f $*.roipairs
+	rm -f $*.roipairs0
+	cat $*.tiltpairs | \
+	while read line ; \
+	do \
+		TILT=`echo $$line | awk '{print $$1}'`     ; \
+		TILTBASE=`basename $$TILT $(STARTSUFFIX)`  ; \
+		ZERO=`echo $$line | awk '{print $$2}'`     ; \
+		ZEROBASE=`basename $$ZERO $(STARTSUFFIX)`  ; \
+		AxisAngle=`echo $$line | awk '{print $$3}'`; \
+		TiltAngle=`echo $$line | awk '{print $$4}'`; \
+		make $$TILTBASE.roiinfo-zero ZeroBase=$$ZEROBASE ; \
+		make $$TILTBASE.roiinfo ZeroBase=$$ZEROBASE AxisAngle=$$AxisAngle TiltAngle=$$TiltAngle; \
+		make $$TILTBASE.rois    ZeroBase=$$ZEROBASE ; \
+		cat $$TILTBASE.roiinfo  >> $*.roipairs  ; \
+		cat $$TILTBASE.roiinfo0 >> $*.roipairs0 ; \
+	done
+
+.roiparis.clstlog0:
+	mrcImageClusterAnalysis -I $*.roipairs0 -o $*.clstlst0 -O -AR 72 -ARiter 2 -Log $*.clstlog0 -m 2 -M 18
+
+.clstlog0.clstlog0ps:
+	clusterShow -i $*.clstlog0 -P 0 400 -Log -I $*.roipairs -OL $*.clstlstout -AL $*.clstlstavg -S 10 10 -Offset 1e5 -Scaling 
+
+# Subroutines for roiinfo
+.SUFFIXES: .ctf .roiinfo-zero .roiinfo .rois
+
+.ctf.roiinfo-zero:
+	Display2 -i $(ZeroBase).ctf
+	cp $(ZeroBase).ctf.roiinfo $*.roiinfo-zero
+
+.roiinfo-zero.roiinfo:
+	rm  -f $*.roiinfo
+	rm  -f $*.roiinfo0
+	cat $*.roiinfo-zero | \
+	while read line ; \
+	do \
+		sx=`awk '/Shift:/ {if($(PadSize)/2<$$2) {print -1*($$2-$(PadSize))} else {print -1*$$2}}' $*.ctftiltcorinfo ` ; \
+		sy=`awk '/Shift:/ {if($(PadSize)/2<$$3) {print -1*($$3-$(PadSize))} else {print -1*$$3}}' $*.ctftiltcorinfo ` ; \
+		echo "$$sx $$sy" ; \
+		f1=`echo $$line  | sed -e s/$(ZeroBase).ctf/$*.ctf-0/ | awk '{print $$1}'`; \
+		f11=`echo $$line | sed -e s/$(ZeroBase).ctf/$*.ctf-1/ | awk '{print $$1}'`; \
+		f2=`echo $$line | awk '{print $$2}'`;  \
+		x0=`echo $$line | awk '{print $$3 -$(PadSize)/2}'`;  \
+		y0=`echo $$line | awk '{print $$4 -$(PadSize)/2}'`;  \
+		x1=`echo $$line | awk '{print $$5 -$(PadSize)/2}'`;  \
+		y1=`echo $$line | awk '{print $$6 -$(PadSize)/2}'`;  \
+		x2=`echo $$line | awk '{print $$7 -$(PadSize)/2}'`;  \
+		y2=`echo $$line | awk '{print $$8 -$(PadSize)/2}'`;  \
+		x3=`echo $$line | awk '{print $$9 -$(PadSize)/2}'`;  \
+		y3=`echo $$line | awk '{print $$10-$(PadSize)/2}'`;  \
+		X0=`pointAffineTransform -p $$x0 $$y0 0 -Euler ZEYS -$(AxisAngle) $(TiltAngle) $(AxisAngle) -shift $$sx $$sy 0 \
+			| awk '{print $$1+$(PadSize)/2}'` ; \
+		Y0=`pointAffineTransform -p $$x0 $$y0 0 -Euler ZEYS -$(AxisAngle) $(TiltAngle) $(AxisAngle) -shift $$sx $$sy 0 \
+			| awk '{print $$2+$(PadSize)/2}'` ; \
+		X1=`pointAffineTransform -p $$x1 $$y1 0 -Euler ZEYS -$(AxisAngle) $(TiltAngle) $(AxisAngle) -shift $$sx $$sy 0 \
+			| awk '{print $$1+$(PadSize)/2}'` ; \
+		Y1=`pointAffineTransform -p $$x1 $$y1 0 -Euler ZEYS -$(AxisAngle) $(TiltAngle) $(AxisAngle) -shift $$sx $$sy 0 \
+			| awk '{print $$2+$(PadSize)/2}'` ; \
+		X2=`pointAffineTransform -p $$x2 $$y2 0 -Euler ZEYS -$(AxisAngle) $(TiltAngle) $(AxisAngle) -shift $$sx $$sy 0 \
+			| awk '{print $$1+$(PadSize)/2}'` ; \
+		Y2=`pointAffineTransform -p $$x2 $$y2 0 -Euler ZEYS -$(AxisAngle) $(TiltAngle) $(AxisAngle) -shift $$sx $$sy 0 \
+			| awk '{print $$2+$(PadSize)/2}'` ; \
+		X3=`pointAffineTransform -p $$x3 $$y3 0 -Euler ZEYS -$(AxisAngle) $(TiltAngle) $(AxisAngle) -shift $$sx $$sy 0 \
+			| awk '{print $$1+$(PadSize)/2}'` ; \
+		Y3=`pointAffineTransform -p $$x3 $$y3 0 -Euler ZEYS -$(AxisAngle) $(TiltAngle) $(AxisAngle) -shift $$sx $$sy 0 \
+			| awk '{print $$2+$(PadSize)/2}'` ; \
+		x0=`echo $$line | awk '{print $$3}'`;  \
+		y0=`echo $$line | awk '{print $$4}'`;  \
+		x1=`echo $$line | awk '{print $$5}'`;  \
+		y1=`echo $$line | awk '{print $$6}'`;  \
+		x2=`echo $$line | awk '{print $$7}'`;  \
+		y2=`echo $$line | awk '{print $$8}'`;  \
+		x3=`echo $$line | awk '{print $$9}'`;  \
+		y3=`echo $$line | awk '{print $$10}'`;  \
+		echo "$$f1  $$f2 $$x0 $$y0 $$x1 $$y1 $$x2 $$y2 $$x3 $$y3 " ; \
+		echo "$$f1  $$f2 $$x0 $$y0 $$x1 $$y1 $$x2 $$y2 $$x3 $$y3 "  >> $*.roiinfo0; \
+		echo "$$f11 $$f2 $$X0 $$Y0 $$X1 $$Y1 $$X2 $$Y2 $$X3 $$Y3 " ; \
+		echo "$$f11 $$f2 $$X0 $$Y0 $$X1 $$Y1 $$X2 $$Y2 $$X3 $$Y3 "  >> $*.roiinfo; \
+	done
+
+.roiinfo.rois:
+	mrcImageROIs -I $*.roiinfo0 -i $(ZeroBase).ctf -o $*.roiinfo0mon -width $(RoiSizeX) -height $(RoiSizeY)
+	mrcImageROIs -I $*.roiinfo  -i $*.ctf -o $*.roinfomon            -width $(RoiSizeX) -height $(RoiSizeY) 
+	touch $*.rois
+
+# Subroutines for alignment
+.SUFFIXES: .ctf .ctftilt .ctftiltcorinfo .ctftiltshiftcomp
+.ctf.ctftilt:
+	mrcImageEstimateTiltImage -i $$ZeroBase.ctf -o $*.ctftilt -tiltAngle $(TiltAngle) -tiltAxis $(AxisAngle); 
+
+.ctftilt.ctftiltcorinfo:
+	mrcImageCenterGet -i $*.ctftilt -o $*.ctftiltcen -Nx $(CENTRESIZE) -Ny $(CENTRESIZE) 
+	mrcImagePad -m $(PadMode) -i $*.ctftiltcen -o $*.ctftiltpad -W $(PadSize) -H $(PadSize)
+	mrcImageCorrelation -m $(CorrelationMode) -i $*.ctftiltpad -r $*.ctf -s $*.ctftiltshift -c $*.ctftiltcorinfo -o $*.ctftiltcor 
+
+.ctftiltcorinfo.ctftiltshiftcomp:
+	mrcImageMultiplying -i $*.ctf -o $*.ctfinv -v -1
+	mrcImageMultiplying -i $*.ctftiltshift -o $*.ctftiltshiftinv -v -1
+	mrcImageColoring -r $*.ctfinv -g $*.ctftiltshiftinv -o $*.ctftiltshiftcomp
+
+
+help:
+	@echo ">>> tiltpairs file format"
+	@echo "    tiltImageFileName noneTiltImageFileName AxisAngle TiltAngle"
+
+

@@ -1,0 +1,10 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input(0:black, positive:white)","Essential","1","1","In","inFile::mrcImage","NULL"
+"-o","-o[utput]","Output(0:black, 1:white","Essential","1","1","Out","outFile::mrcImage","NULL"
+"-n","-n[eighbor]","Neighbor(Black)","Optional","1","1","Neighbor","Integer","8"
+"-bA","-b[lack]A[rea]","Output:BlackArea","Optional","1","1","BlackArea","outFile::mrcImage","NULL"
+"-bL","-b[lack]L[abel]","Output:BlackLabel","Optional","1","1","BlackLabel","outFile::mrcImage","NULL"
+"-b","-b[lack]","Output:Black","Optional","1","1","Black","outFile::mrcImage","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

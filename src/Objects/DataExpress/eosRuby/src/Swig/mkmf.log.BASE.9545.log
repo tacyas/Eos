@@ -1,0 +1,24 @@
+have_library: checking for main() in -lGL... -------------------- no
+
+"xcrun cc -o conftest -I. -I/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/universal-darwin12.0 -I. -I/Applications/Eos.app/Eos/include  -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE   -arch i386 -arch x86_64 -g -Os -pipe -fno-common -DENABLE_DTRACE  -fno-common  -pipe -fno-common   conftest.c  -L. -L/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib -L/usr/lib -L/Applications/Eos.app/Eos/lib/X86MAC64 -L/Applications/Eos.app/Eos/util/X86MAC64/lib -L. -arch i386 -arch x86_64      -lruby -lGL  -lpthread -ldl -lobjc  "
+ld: library not found for -lGL
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+checked program was:
+/* begin */
+1: /*top*/
+2: int main() { return 0; }
+3: int t() { void ((*volatile p)()); p = (void ((*)()))main; return 0; }
+/* end */
+
+"xcrun cc -o conftest -I. -I/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/universal-darwin12.0 -I. -I/Applications/Eos.app/Eos/include  -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE   -arch i386 -arch x86_64 -g -Os -pipe -fno-common -DENABLE_DTRACE  -fno-common  -pipe -fno-common   conftest.c  -L. -L/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib -L/usr/lib -L/Applications/Eos.app/Eos/lib/X86MAC64 -L/Applications/Eos.app/Eos/util/X86MAC64/lib -L. -arch i386 -arch x86_64      -lruby -lGL  -lpthread -ldl -lobjc  "
+ld: library not found for -lGL
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+checked program was:
+/* begin */
+1: /*top*/
+2: int main() { return 0; }
+3: int t() { main(); return 0; }
+/* end */
+
+--------------------
+

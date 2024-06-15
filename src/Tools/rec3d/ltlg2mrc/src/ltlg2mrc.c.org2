@@ -1,0 +1,143 @@
+/*
+# %M% %Y% %I%
+# The latest update : %G% at %U%
+#
+#%Z% ltlg2mrc ver %I%
+#%Z% Created by 
+#%Z%
+#%Z% Usage : ltlg2mrc
+#%Z% Attention
+#%Z%
+*/
+static char __sccs_id[] = "%Z%ltlg2mrc ver%I%; Date:%D% %Z%";
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#define DEBUG
+#include "../inc/config.h"
+#include "genUtil.h"
+#include "File.h"
+#include "String.h"
+#include "ltlgData.h"
+#include "mrcImage.h"
+#include "lltlg2mrc.h"
+
+int
+main(int argc, char* argv[]) 
+{
+    ltlgData ltlg;
+    mrcImage mrc;
+    ltlg2mrcInfo info;
+    lltlg2mrcInfo linfo;
+    ltlgDataParaTypeInteger status;
+	ltlgDataLLDataInfo w;
+
+	init0(&info);
+    argCheck(&info, argc, argv);
+    init1(&info);
+	
+	linfo.flagIn = info.flagIn;
+	linfo.In = info.In;
+	linfo.fptIn = info.fptIn;
+	linfo.flagOut = info.flagOut;
+	linfo.Out = info.Out;
+	linfo.fptOut = info.fptOut;
+	linfo.flagconfigFile = info.flagconfigFile;
+	linfo.fptconfigFile = info.fptconfigFile;
+	linfo.flagTitle = info.flagTitle;
+	linfo.Title = info.Title;
+	linfo.flagdelta = info.flagdelta;
+	linfo.delta = info.delta;
+	linfo.flagRepeatDistance = info.flagRepeatDistance;
+	linfo.RepeatDistance = info.RepeatDistance;
+	linfo.flagrMax = info.flagrMax;
+	linfo.rMax = info.rMax;
+	linfo.flagphiStart = info.flagphiStart;
+	linfo.phiStart = info.phiStart;
+	linfo.flagzMin = info.flagzMin;
+	linfo.zMin = info.zMin;
+	linfo.flagzMax = info.flagzMax;
+	linfo.zMax = info.zMax;
+	linfo.flagdeltaz = info.flagdeltaz;
+	linfo.deltaz = info.deltaz;
+	linfo.flagWeightOf0thLayer = info.flagWeightOf0thLayer;
+	linfo.WeightOf0thLayer = info.WeightOf0thLayer;
+	linfo.flagLayer = info.flagLayer;
+	linfo.fptLayer = info.fptLayer;
+	linfo.f99 = info.f99;
+	linfo.flagCUT = info.flagCUT;
+	linfo.CUT = info.CUT;
+	linfo.flagMean = info.flagMean;
+	linfo.Mean = info.Mean;
+	linfo.flagSigma = info.flagSigma;
+	linfo.Sigma = info.Sigma;
+	linfo.Inverse = info.Inverse;
+	linfo.notInteractive = info.notInteractive;
+	linfo.AntiPole = info.AntiPole;
+	linfo.mode = info.mode;
+
+	if(linfo.flagconfigFile) {
+		ltlg2mrcConfigFileRead(&linfo, linfo.fptconfigFile);
+	}
+	if(!linfo.flagconfigFile && !linfo.flagIn) {
+		usage(argv[0]);
+		exit(EXIT_FAILURE);
+	}
+
+    ltlgDataReadFile(linfo.fptIn, &ltlg, 0, &status);
+
+	if(linfo.flagLayer) {
+    	ltlgDataWeightModifyFromFile(&ltlg, linfo.fptLayer, 0);
+	}
+    if(linfo.flagWeightOf0thLayer) {
+        w.NL = 0;
+        w.WT = linfo.WeightOf0thLayer;
+        ltlgDataWeightModify(&ltlg, w, 1);
+    }
+	if(linfo.f99) {
+        ltlgDataWeightOfNEqualLOnly(&ltlg);
+	}
+	if(!linfo.notInteractive) {
+		ltlgDataPrint(stdout, ltlg, 3);
+	}
+
+
+    lltlg2mrc(&ltlg, &mrc, &linfo);
+
+
+	if(!linfo.notInteractive) {
+		mrcInfoPrint(stdout, &mrc, 3);
+	}
+	DEBUGPRINT1("%s\n", linfo.Out);
+    mrcFileWrite(&mrc, linfo.Out, "in main", 0);
+}
+
+void
+additionalUsage()
+{
+    fprintf(stderr, "Mode:\n");
+    fprintf(stderr, "\n");
+    fprintf(stderr, "\n");
+    fprintf(stderr, "If control file is used, control file fora filename to output\n");
+	fprintf(stderr, "\n");
+	fprintf(stderr, "InputFileName(char[72])A])\n");
+	fprintf(stderr, "Title(char[60])A])\n");
+	fprintf(stderr, "Y|N(char[1])                              : No use\n");
+    fprintf(stderr, "deltaX[A](if Y)||deltaY[A](if N)(F10.5)   : You need not care for deltaX or deltaY in this tool because deltaX = deltaY. You had better care for that for compatibility.\n");
+	fprintf(stderr, "C[A]rMax[A](2F7.0)                        : C[A]: Spacing of the 1st layer line in real space ; rMax: Maximum of radial elements.\n");
+	fprintf(stderr, "phiStart[degree](F7.0)                    : phi at Z = 0\n");
+	fprintf(stderr, "zMin[A],zMax[A],deltaz[A](3F7.0)          : z-section parameters for(z=zMin; z<zMax; z+=deltaz)\n");
+	fprintf(stderr, "Weight(F7.0)                              : Weight of the 0th layer line\n");
+	fprintf(stderr, "NNL,WEIGHT(I2,F8.0)                       : IF(NNL==99 && NN(LL)!=NL(LL)) WT(LL) = 0.0; IF(NNL!=0 && NNL==NL(LL)) WT(LL) = WEIGHT  and Repeat until NNL == 0 or 99 or None\n");
+	fprintf(stderr, "ACUT(F7.0)                                : IF(ACUT>Density[x][y]) Density[x][y]= 0.0\n");
+	fprintf(stderr, "Mean,Sigma(2F7.0)                         : Mean : Mean of hrzData?; Sigma : Standard Deviation of hrzData?\n");
+	fprintf(stderr, "OutputFile                                : hrz-data filename to output\n");
+	fprintf(stderr, "\n");
+	fprintf(stderr, "#### Attention ####\n");
+	fprintf(stderr, " In using this tool, you need not keep promises about format(F7.0 etc.).\n");
+	fprintf(stderr, "Instead, you need separate numbers with more space than one.\n");
+	fprintf(stderr, "Usually compatible but you need care when numbers have a line with no space.\n");
+								 
+}
+                        

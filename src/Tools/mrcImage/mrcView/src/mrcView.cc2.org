@@ -1,0 +1,142 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h> 
+#include <vtk.h>  
+#include <pdbFile.h>        
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+
+#define DEBUG
+#include "genUtil.h"
+#include "mrcImage.h"
+
+#define SPHERERADIUS          0.03
+#define SPHERETHETARESOLUTION 30
+#define SPHEREPHIRESOLUTION   30 
+#define SPHERECOLORR          1.0 
+#define SPHERECOLORG          0.0  
+#define SPHERECOLORB          1.0 
+#define SPHEREOPACITY         0.2 
+#define CONEHEIGHT           1.0
+#define CONERADIUS           0.5
+#define CONERESOLUTION       80
+int main(int argc, char* argv[])
+{
+	mrcViewInfo info;
+	pdbFile pdb;
+
+	init0(&info);
+    	argCheck(&info, argc, argv);
+    	init1(&info);
+
+	DEBUGPRINT("Program Start\n");   
+
+
+
+	vtkCamera *camera=vtkCamera::New();
+	 camera->SetFocalPoint(0,0,0);
+	 camera->SetPosition(0,0,10);
+	 camera->SetEyeAngle(10.0);
+
+	 
+	vtkLight *light=vtkLight::New();
+	 light->SetFocalPoint(0.21406,1.5,0);
+	 light->SetPosition(8.3761,4.94858,4.1250);
+
+	vtkRenderer *ren1=vtkRenderer::New();
+	 //ren1->SetViewport(0,0,0.5,1.0);
+	 ren1->SetViewport(0,0,1,1);
+	 ren1->ResetCamera();
+	 ren1->SetActiveCamera(camera);
+	 ren1->AddLight(light);
+	vtkRenderer *ren2=vtkRenderer::New();
+	 //ren2->SetViewport(0.5,0,1.0,1.0);
+	 ren2->SetViewport(0,0,1,1);
+	 ren2->ResetCamera();
+	 ren2->SetActiveCamera(camera);
+	 ren2->AddLight(light);	
+
+     vtkRenderWindow *renWin=vtkRenderWindow::New();
+	 renWin->SetStereoCapableWindow(1);
+	 renWin->AddRenderer(ren1);
+	 //renWin->AddRenderer(ren2);
+	 renWin->SetStereoType(VTK_STEREO_LEFT);
+	 renWin->SetWindowName("eosStereoWindow");
+	 //renWin->SetSize(600,300);
+	 renWin->SetSize(300,300);
+
+
+     vtkRenderWindow *renWin2=vtkRenderWindow::New();
+	 renWin2->SetStereoCapableWindow(1);
+	 //renWin2->AddRenderer(ren1);
+	 renWin2->AddRenderer(ren2);
+	 renWin2->SetStereoType(VTK_STEREO_RIGHT);
+	 renWin2->SetWindowName("eosStereoWindow2");
+	 //renWin2->SetSize(600,300);
+	 renWin2->SetSize(300,300);
+
+
+	vtkRenderWindowInteractor *iren=vtkRenderWindowInteractor::New();
+	vtkRenderWindowInteractor *iren2=vtkRenderWindowInteractor::New();
+	 iren->SetRenderWindow(renWin);
+	 iren2->SetRenderWindow(renWin2);
+	  /*
+	 
+        vtkCubeSource *cube = vtkCubeSource::New();
+           cube->SetXLength(1.0);
+           cube->SetYLength(1.0);
+           cube->SetZLength(1.0);
+	vtkPolyDataMapper *cubeMapper=vtkPolyDataMapper::New();
+	 cubeMapper->SetInput(cube->GetOutput());
+	vtkActor *cubeActor=vtkActor::New();
+	 cubeActor->SetMapper(cubeMapper);
+	 cubeActor->GetProperty()->SetColor(1.0,0.5,0.3);
+	 cubeActor->SetPosition(0,0,0);
+	  */
+
+	vtkConeSource *cone=vtkConeSource::New();
+	 cone->SetHeight(CONEHEIGHT);
+	 cone->SetRadius(CONERADIUS);
+	 cone->SetResolution(CONERESOLUTION);
+	vtkPolyDataMapper *coneMapper=vtkPolyDataMapper::New();
+	 coneMapper->SetInput(cone->GetOutput());
+	vtkActor *coneActor=vtkActor::New();
+	 coneActor->SetMapper(coneMapper);
+	 coneActor->GetProperty()->SetColor(0.0,0.0,1.0);
+	 coneActor->RotateZ(0.0);
+	 coneActor->SetPosition(0.0,0.0,0.0);
+	 coneActor->RotateY(0.0);
+	
+	vtkConeSource *cone2=vtkConeSource::New();
+	 cone2->SetHeight(CONEHEIGHT);
+	 cone2->SetRadius(CONERADIUS);
+	 cone2->SetResolution(CONERESOLUTION);
+	vtkPolyDataMapper *cone2Mapper=vtkPolyDataMapper::New();
+	 cone2Mapper->SetInput(cone2->GetOutput());
+	vtkActor *cone2Actor=vtkActor::New();
+	 cone2Actor->SetMapper(cone2Mapper);
+	 cone2Actor->GetProperty()->SetColor(0.0,0.0,1.0);
+	 cone2Actor->RotateZ(0.0);
+	 cone2Actor->SetPosition(0.0,0.0,0.0);
+	 cone2Actor->RotateY(0.0);
+	
+	 // ren1->AddActor(cubeActor);
+	ren1->AddActor(coneActor);
+    //ren2->AddActor(cone2Actor);
+    ren2->AddActor(coneActor);
+
+	renWin->Render();
+	renWin2->Render();
+
+	iren->Start();
+	iren2->Start();
+
+	exit(EXIT_SUCCESS);
+}
+
+void
+additionalUsage()
+{
+	fprintf(stderr, "----- Additional Usage -----\n");
+}

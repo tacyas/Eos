@@ -1,0 +1,1 @@
+CLASSNAME = bmpFile

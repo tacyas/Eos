@@ -1,0 +1,96 @@
+#!/bin/sh
+#
+# %M% %Y% %I%
+#
+# The latest update : %G% at %U%
+#
+#%Z% eosDirClean Function
+#%Z%
+#
+#%Z% Usage : eosDirClean SourceFileName
+#
+#%Z% Attention
+#%Z%
+#%Z% Parameter: 
+#%Z%     Essential:
+#%Z%         SourceFileName
+#%Z%     Optional:
+#%Z%
+
+usage()
+{
+	echo "Usage: eosDirClean HostName"
+}
+
+NameRead()
+{
+	ans="N"
+	while [ $ans != "Y" -a $ans != "y" ]
+	do
+		echo $1
+		read Name
+		echo "$Name is good ?"
+		read ans
+	done
+}
+# Store Flags
+FlagsCharacter="-"
+
+case $# in 
+	0)
+		;;
+	*)
+		while [ `echo $1 | cut -c1` = ${FlagsCharacter} ]
+		do
+			if [ `echo $1 | cut -c2` = "h" ] 
+			then
+				usage
+			else
+				parms="${parms} $1"
+				shift 
+			fi
+		done
+		;;
+esac
+
+case $# in
+	0) # No filename 
+		echo "-- Current Host --"
+		echo ${EOS_HOST}
+		echo "-- Host List --"
+		cd ${EOS_HOME}/src/Config
+		ls -1 [a-z]*.inc | sed -e s/\.inc//
+		echo "---------------"
+		echo "Enter HOST"
+		NameRead 
+		HOST=$Name
+		;;
+	1) # 
+		HOST=$1
+		;;
+	*) #
+		usage
+		;;
+esac
+#
+currentDir=`pwd`
+
+#
+#
+#
+EOS_HOST=${HOST}
+
+#
+#
+#
+cd ${EOS_HOME}/src
+for file  in /usr/local/bin/make /usr/bin/make ;
+do
+	if [ -f $file ]	; 
+	then
+		make MAKE=$file clean
+		break
+	fi
+done
+
+

@@ -1,0 +1,19 @@
+#define DoNotAutoRecreate NO
+
+#include EOS_INCLUDE
+
+OBJECT_TYPE = script
+
+TOOLBOX_NAME = eos
+
+OBJECT_NAME = pdb2mrc2d
+
+BINARY_NAME = pdb2mrc2d
+
+INSTPGMFLAGS =
+
+SCRIPTS = \
+	pdb2mrc2d.ksh
+
+#define KKSH_DEF
+#include <Script.template>

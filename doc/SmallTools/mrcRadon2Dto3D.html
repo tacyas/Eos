@@ -1,0 +1,29 @@
+<HTML>
+<HEAD>
+<TITLE>mrcRadon2Dto3D</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcRadon2Dto3D</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcRadon2Dto3D
+Options:
+    [-I[nput]            In2                 (NULL      ).as(inFileList          ) ] :Essential :InputDataFileList
+    [-I[nput]b[efore]    InBefore            (NULL      ).as(inFileList          ) ] :Optional  :InputDataFileListBefore
+    [-i[nput]b[efore]    inbefore            (NULL      ).as(inFile              ) ] :Optional  :InputDataFileBeforeData: mrcImageRadon3D
+    [-i[nput]w[eight]b[efore]inWbefore           (NULL      ).as(inFile              ) ] :Optional  :InputWeightDataFileBeforeData: mrcImageRadon3D
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile: radon3D
+    [-o[utput]w[eight]   OutW                (NULL      ).as(outFile             ) ] :Essential :OutputDataFile: weight
+    [-dp                 dp                  (2.0       ).as(Real                ) ] :Essential :Input: deltaP
+    [-dtheta             dtheta              (1         ).as(Real                ) ] :Essential :Input: deltaTheta
+    [-dphi               dphi                (1         ).as(Real                ) ] :Essential :Input: deltaPhi
+    [-T[hreshold]        T                   (1.0       ).as(Real                ) ] :Optional  :Threshold
+    [-InterpolationMode  InterpolationMode   (0         ).as(Integer             ) ] :Optional  :InterpolationMode
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Radon2Dto3D Intepolation Mode
+
+----- mode -----
+ 0 = NearestNeighbor
+ 1 = HigherOrder     (-T)
+</PRE>
+</BODY>
+</HTML>

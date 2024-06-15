@@ -1,0 +1,1317 @@
+#
+# %M% %Y% %I%
+#
+# The latest update : %G% at %U%
+#
+#%Z% create a new named one
+#%Z%
+#
+#%Z% Usage : makegeneral [Action] [World] [ClassName] [ObjectName]
+#
+#%Z% Attention
+#%Z%
+#%Z% Parameter: 
+#%Z%     Essential:
+#%Z%        Action          :
+#%Z%        World           : Tools | Objects 
+#%Z%        ClassName 
+#%Z%        ObjectName 
+#%Z% Optional:
+
+WorldHomeDir=${EOS_HOME}/src
+ObjectClassHomeDir=${WorldHomeDir}/Objects
+ToolClassHomeDir=${WorldHomeDir}/Tools
+AnotherWorldHomeDir=${EOS_ANOTHER_HOME}/src
+AnotherObjectClassHomeDir=${AnotherWorldHomeDir}/Objects
+AnotherToolClassHomeDir=${AnotherWorldHomeDir}/Tools
+
+TemplateDir=${WorldHomeDir}/Config/Template
+
+ToolHomeTemplate=${TemplateDir}/ToolsHomeTemplate.Dir
+ToolClassTemplate=${TemplateDir}/ToolsClassTemplate.Dir
+ToolTemplate=${TemplateDir}/ToolsTemplate.Dir
+
+ObjectHomeTemplate=${TemplateDir}/ObjectsHomeTemplate.Dir
+ObjectClassTemplate=${TemplateDir}/ObjectsClassTemplate.Dir
+ObjectTemplate=${TemplateDir}/ObjectsTemplate.Dir
+
+##
+#%Z% usage():Show Usage
+## No required argument
+##
+usage()
+{
+	echo "Usage:makegeneral [World] [ClassName] [ObjectName] [Action] [NoAns]"
+ 	exit
+}
+
+##
+#%Z% NameList():Show directory names except for Config/
+## Required arguments 
+##    $1:Name of directory including named ones  
+##
+NameList()
+{
+	Full=$1
+	echo ${Full}
+	ls -1F ${Full} | awk '
+		BEGIN {
+			i=0;
+		} 
+		$0 !~ /Config/ && /\// {
+			i++; 
+			gsub(/\//, ""); 
+			printf("> %s\n", $0);
+		}'
+}
+
+##
+#%Z% NameShow():Show a implemented list of tools/objects/classes
+##    $1: full pathname of directory including named tools/objects/classes
+##    $2: Tools | Objects | Class
+##
+NameShow()
+{
+	Full=$1
+	Target=$2
+	echo "Presently-implemented ${Target}"
+	NameList ${Full} > ${Full}/Config/Source.lst
+	cat ${Full}/Config/Source.lst
+}
+
+##
+#%Z% NameRead():Read name of one to treat
+##    $1: full pathname of directory including named ones  
+##    $2: Tools | Objects | Class
+##    
+## Output Variables
+##    Name : Name which was read
+##    ans  : "Y"
+NameRead()
+{
+	Full=$1
+	Target=$2
+
+	ans="N"
+	while [ $ans != "Y" -a $ans != "y" ] 
+	do
+		NameShow ${Full} ${Target}
+		echo "Enter ${Target} Name?"
+		read Name
+		if [ -d ${Full}/${Name} ]
+		then
+			echo  "${Name} is a implemented ${Target}."
+		else
+			echo  "${Name} is a new ${Target}!!"
+		fi
+		ans="N"; echo "${Name} is OK(y/n)?"
+		read ans
+	done
+}
+
+#%Z% genDirCheckAndMake():
+##    $1: full pathname of directory including named ones  
+##    $2: Name 
+## Output Variables
+##    Name  : Name which was checked and made
+##    ans   : "Y"
+genDirCheckAndMake()
+{
+	Full=$1
+	Name=$2
+	if [ -d ${Full}/${Name} ]
+	then
+		echo "${Name}: Implemented"
+	else
+		mkdir ${Full}/${Name}
+	fi
+}
+#%Z% DirCheckAndMake():
+##    $1: full pathname of directory including named ones  
+##    $2: Name 
+##    $3: Tools | Objects | Class
+## Output Variables
+##    Name  : Name which was checked and made
+##    ans   : "Y"
+##    Full  :
+##    World :
+##    
+DirCheckAndMake()
+{
+	Full=$1
+	Name=$2
+	Which=$3
+	ans="N"
+	while [ $ans != "Y" -a $ans != "y" ]
+	do 
+		ans="Y"
+		genDirCheckAndMake ${Full} ${Name}
+		genDirCheckAndMake ${Full} ${Name}/Config 
+	done
+}
+##
+## World
+##
+WorldNameShow()
+{
+	case ${Action} in 
+		Another|AnotherFollowingControlFile)
+			NameShow ${AnotherWorldHomeDir} World
+			;;
+		All|AllFollowingControlFile)
+			NameShow ${WorldHomeDir} World
+			;;
+		*)
+			echo "Not Supported Action: ${Action}"
+			exit
+			;;
+	esac
+}
+
+WorldNameRead()
+{
+	case ${Action} in 
+		Another|AnotherFollowingControlFile)
+			NameRead ${AnotherWorldHomeDir} World
+			;;
+		All|AllFollowingControlFile)
+			NameRead ${WorldHomeDir} World
+			;;
+		*)
+			echo "Not Supported Action: ${Action}"
+			exit
+			;;
+	esac
+	World=${Name}
+}
+
+WorldDirCheckAndMake() 
+{
+	case ${Action} in 
+		Another|AnotherFollowingControlFile)
+			DirCheckAndMake ${AnotherWorldHomeDir} ${World} World
+			;;
+		All|AllFollowingControlFile)
+			DirCheckAndMake ${WorldHomeDir} ${World} World
+			;;
+		*)
+			echo "Not Supported Action: ${Action}"
+			exit
+			;;
+	esac
+	World=${Name}
+}
+
+##
+## Object Class
+##
+ObjectClassNameShow()
+{
+	case ${Action} in 
+		Another|AnotherFollowingControlFile)
+			NameShow ${AnotherObjectClassHomeDir} Class
+			;;
+		All|AllFollowingControlFile)
+			NameShow ${ObjectClassHomeDir} Class
+			;;
+		*)
+			echo "Not Supported Action: ${Action}"
+			exit
+			;;
+	esac
+}
+
+ObjectClassNameRead()
+{
+	case ${Action} in 
+		Another|AnotherFollowingControlFile)
+			NameRead ${AnotherObjectClassHomeDir} Class
+			;;
+		All|AllFollowingControlFile)
+			NameRead ${ObjectClassHomeDir} Class
+			;;
+		*)
+			echo "Not Supported Action: ${Action}"
+			exit
+			;;
+	esac
+	ClassName=${Name}
+}
+
+ObjectClassDirCheckAndMake()
+{
+	case ${Action} in 
+		Another|AnotherFollowingControlFile)
+			DirCheckAndMake ${AnotherObjectClassHomeDir} ${ClassName} Class
+			;;
+		All|AllFollowingControlFile)
+			DirCheckAndMake ${ObjectClassHomeDir} ${ClassName} Class
+			;;
+		*)
+			echo "Not Supported Action: ${Action}"
+			exit
+			;;
+	esac
+	ClassName=${Name}
+}
+
+##
+## Object
+##
+ObjectNameShow()
+{
+	NameShow ${ObjectClassHomeDir}/${ClassName} Objects
+}
+
+ObjectNameRead()
+{
+	NameRead ${ObjectClassHomeDir}/${ClassName} Objects
+	ObjectName=${Name}
+}
+
+ObjectDirCheckAndMake()
+{
+	DirCheckAndMake ${ObjectClassHomeDir}/${ClassName} ${ObjectName} Objects
+	ObjectName=${Name}
+}
+
+##
+## Tool Class
+##
+ToolClassNameShow()
+{
+	case ${Action} in 
+		Another|AnotherFollowingControlFile)
+			NameShow ${AnotherToolClassHomeDir} Class
+			;;
+		All|AllFollowingControlFile)
+			NameShow ${ToolClassHomeDir} Class
+			;;
+		*)
+			echo "Not Supported Action: ${Action}"
+			exit
+			;;
+	esac
+}
+
+ToolClassNameRead()
+{
+	case ${Action} in 
+		Another|AnotherFollowingControlFile)
+			NameRead ${AnotherToolClassHomeDir} Class
+			;;
+		All|AllFollowingControlFile)
+			NameRead ${ToolClassHomeDir} Class
+			;;
+		*)
+			echo "Not Supported Action: ${Action}"
+			exit
+			;;
+	esac
+	ClassName=${Name}
+}
+
+ToolClassDirCheckAndMake()
+{
+	case ${Action} in 
+		Another|AnotherFollowingControlFile)
+			DirCheckAndMake ${AnotherToolClassHomeDir} ${ClassName} Class
+			;;
+		All|AllFollowingControlFile)
+			DirCheckAndMake ${ToolClassHomeDir} ${ClassName} Class
+			;;
+		*)
+			echo "Not Supported Action: ${Action}"
+			exit
+			;;
+	esac
+	ClassName=${Name}
+}
+
+##
+## Tool
+##
+ToolNameShow()
+{
+	NameShow ${ToolClassHomeDir}/${ClassName} Tools
+}
+
+ToolNameRead()
+{
+	case ${Action} in 
+		Another|AnotherFollowingControlFile)
+			NameRead ${AnotherToolClassHomeDir}/${ClassName} Tools
+			;;
+		All|AllFollowingControlFile)
+			NameRead ${ToolClassHomeDir}/${ClassName} Tools
+			;;
+		*)
+			echo "Not Supported Action: ${Action}"
+			exit
+			;;
+	esac
+	ToolName=${Name}
+}
+
+ToolDirCheckAndMake()
+{
+	case ${Action} in 
+		Another|AnotherFollowingControlFile)
+			DirCheckAndMake ${AnotherToolClassHomeDir}/${ClassName} ${ToolName} Tools
+			;;
+		All|AllFollowingControlFile)
+			DirCheckAndMake ${ToolClassHomeDir}/${ClassName} ${ToolName} Tools
+			;;
+		*)
+			echo "Not Supported Action: ${Action}"
+			exit
+			;;
+	esac
+	ToolName=${Name}
+}
+
+##
+## Action
+##
+ActionRead()
+{
+	echo ">>>> ${Action} <<<<"
+	case ${Action} in
+		All|Another|AllFollowingControlFile|AnotherFollowingControlFile)
+			case ${World} in
+				unknown)
+					WorldNameRead
+					WorldDirCheckAndMake
+					;;
+				Tools)
+					;;
+				Objects)
+					;;
+				*)
+					echo "Not Supported World : ${World}"
+					exit;
+				;;
+			esac
+			;;
+		Tools)
+			World=Tools
+			ToolActionRead
+			;;
+		Objects)
+			World=Objects
+			ObjectActionRead
+			;;
+		*)
+			echo "Not Supproted World : ${World}"
+			exit
+			;;
+	esac
+}
+
+ToolActionRead()
+{
+	echo "Supported Action"
+	echo "  0: Create a new tool on Eos."
+	echo "  1: Update a tool     on Eos."
+	echo "  2: Create a new tool on another Eos."
+	echo "  3: Update a tool     on another Eos."
+	echo "  4: Create a new tool on Eos (C++)."
+	echo "  5: Update a tool     on Eos (C++)."
+	echo "  6: Create a new tool on another Eos (C++)."
+	echo "  7: Update a tool     on another Eos (C++)."
+	echo "  8: Create a new tool on Eos (shell)."
+	echo "  9: Update a tool     on Eos (shell)."
+	echo " 10: Create a new tool on another Eos (shell)."
+	echo " 11: Update a tool     on another Eos (shell)."
+	echo " 99: exit"
+	echo "Which action do you want to select ? (number)"
+	read Ans
+	case $Ans in
+		0)
+			Action="All"
+			;;
+		1)
+			Action="AllFollowingControlFile"
+			;;
+		2)
+			Action="Another"
+			;;
+		3) 
+			Action="AnotherFollowingControlFile"
+			;;
+		4)
+			Action="AllCC"
+			;;
+		5)
+			Action="AllFollowingControlFileCC"
+			;;
+		6)
+			Action="AnotherCC"
+			;;
+		7) 
+			Action="AnotherFollowingControlFileCC"
+			;;
+		8)
+			Action="AllShell"
+			;;
+		9)
+			Action="AllFollowingControlFileShell"
+			;;
+		10)
+			Action="AnotherShell"
+			;;
+		11) 
+			Action="AnotherFollowingControlFileShell"
+			;;
+		99)
+			exit
+			;;
+		*)
+			echo "Not supported action"
+			ToolActionRead
+			;;
+	esac
+}
+##
+##
+ObjectActionRead()
+{
+	echo "Supported Action"
+	echo "  0: Create a new object on Eos"
+	echo "  1: Create a new object on another Eos"
+	echo " 99: exit"
+	echo "Which action do you want to select ? (number)"
+	read Ans
+	case $Ans in
+		0)
+			Action="All"
+			;;
+		1)
+			Action="Another"
+			;;
+		99)
+			exit
+			;;
+		*)
+			echo "Not supported action"
+			ObjectActionRead
+			;;
+	esac
+}
+
+##
+#%Z% NewNameAddToMakefile
+##    $1: fullpathname of Makefile
+##    $2: name of named one
+##    $3: Class | Objects | Tools
+##
+NewNameAddToMakefile()
+{
+	Full=$1
+	Target=$2
+	World=$3
+	echo "${Target} is added as a new ${World}!!"
+	mv ${Full} ${Full}.org
+	cat ${Full}.org | awk -v Name=${Target} '
+		$0 ~ /#LastSource/ {
+			printf("\t%s \\\n",Name);
+			print $0;
+		} 
+		$0 !~ /#LastSource/ {
+			print $0;
+		}
+	' > ${Full}
+}
+
+#
+# Object
+#
+ObjectClassDirModifyFollowingAction()
+{
+	case ${Action} in
+		All)
+			ObjectClassHome=${EOS_HOME}/src/Objects/
+			;;
+		Another)
+			echo "AnotherHome is ${AnotherHome}. Is it OK ?"
+			read ans
+			case $ans in
+				Y|y)
+					;;
+				*)
+					exit
+					;;
+			esac
+			for dir in src bin doc sccs src/Objects
+			do
+				if [ -d ${AnotherHome}/${dir} ]
+				then
+					echo "AnotherHome/${dir} : implemented."
+				else
+					mkdir ${AnotherHome}/${dir}
+				fi
+			done
+			rm -f ${AnotherHome}/src/Config
+			#ln -s ${EOS_HOME}/src/Config ${AnotherHome}/src/Config
+			cp -r ${EOS_HOME}/src/Config ${AnotherHome}/src/Config
+			ObjectClassHome=${AnotherHome}/src/Objects
+			;;
+		*)
+			echo "Not Supported Action: ${Action}"
+			exit
+			;;
+	esac
+	cd ${ObjectClassHome}
+	if [ -f ./Makefile ] 
+	then
+		echo "Makefile : implemented."
+	else
+		echo "A new Makefile is created"
+		cp ${ObjectHomeTemplate}/Makefile ./Makefile
+	fi
+	OldClass=`cat ./Makefile | awk -v Name=${ClassName} '{ if($1==Name) print $1} ' `
+	if [ ${OldClass} ] 
+	then
+		echo "${OldClass} : implemented in Objects/Makefile"
+	else
+		NewNameAddToMakefile ./Makefile ${ClassName} Class
+	fi
+	fullClassDir=${EOS_HOME}/src/Objects/${ClassName}
+	if [ -d ${fullClassDir} ] 
+	then
+		echo "Objects/${ClassName} : implemented."
+	else
+		mkdir ${fullClassDir}
+	fi
+	if [ -d ${fullClassDir}/Config ] 
+	then
+		echo "Objects/${ClassName}/Config : implemented."
+	else
+		mkdir ${fullClassDir}/Config
+	fi
+	cp -r ${EOS_HOME}/src/Config/Template/ObjectHomeTemplate.Dir/Config ${fullClassDir}
+}
+
+ObjectDirModifyFollowingAction()
+{
+	case ${Action} in
+		All)
+			ObjectHome=${EOS_HOME}/src/Objects/${ClassName}
+			;;
+		Another)
+			ObjectHome=${Another}/src/Objects/${ClassName}
+			;;
+		*)
+			echo "Not Supported Action: ${Action}"
+			exit
+			;;
+	esac
+	cd ${ObjectHome}
+	if [ -f ./Makefile ] 
+	then
+		echo "Makefile : implemented."
+	else
+		echo "A new Makefile is created"
+		cp ${ObjectClassTemplate}/Makefile ./Makefile
+	fi
+	OldClass=`cat ./Makefile | awk -v Name=${ObjectName} '{ if($1==Name) print $1} ' `
+
+	if [ ${OldClass} ] 
+	then
+		echo "${OldClass} : implemented in Objects/${ClassName}/Makefile."
+	else
+		NewNameAddToMakefile ./Makefile ${ObjectName} Objects
+	fi	
+	fullObjectDir=${EOS_HOME}/src/Objects/${ClassName}/${ObjectName}
+
+	case ${Action} in 
+		All)
+			if [ -d ${fullObjectDir} ]
+			then
+				echo "Eos has ${ObjectName}."
+			else 
+				mkdir ${fullObjectDir}		
+			fi
+			cd ${fullObjectDir}
+			pwd
+			for dir in src inc doc Config
+			do
+				if [ -d $dir ]
+				then
+					echo "Eos has ${ObjectName}/${dir}"
+				else
+					mkdir ${dir}
+				fi
+			done
+			### Root
+			if [ -h Makefile ]	
+			then
+				rm Makefile
+			fi
+			### Config
+			sed -e s/Object/${ObjectName}/g ${ObjectTemplate}/Config/Define.inc > Config/Define.inc
+			sed -e s/Tool/${ToolName}/g ${ObjectTemplate}/Config/Target.inc > Config/Target.inc
+
+			### src
+			rm -f ./Makefile
+			#ln -s ${ObjectTemplate}/Makefile Makefile
+			cp ${ObjectTemplate}/Makefile Makefile
+			rm -f ./src/Makefile
+			#ln -s ${ObjectTemplate}/src/Makefile ./src/Makefile
+			cp ${ObjectTemplate}/src/Makefile ./src/Makefile
+			touch src/.Depend
+			touch src/.Source	
+			touch src/.CHeader
+			touch src/.CCHeader
+
+			### inc
+			rm -f inc/Makefile
+			#ln -s ${ObjectTemplate}/inc/Makefile inc/Makefile
+			cp ${ObjectTemplate}/inc/Makefile inc/Makefile
+
+			### doc
+			if [ -h doc/Makefile ]	
+			then
+				rm doc/Makefile
+			fi
+			cp ${ObjectTemplate}/doc/Makefile doc/Makefile
+			#ln -s ${ObjectTemplate}/doc/Makefile doc/Makefile
+			touch doc/.header
+			touch doc/.footer
+			touch doc/.${ObjectName}.html
+			;;
+		*)
+			echo "Not supported action : %{Action}"
+			exit
+			;;
+	esac
+	case ${Action} in 
+		All)
+			cd ${EOS_HOME}/src/${World}/${ClassName}/${ObjectName}; make check
+			;;
+		*)
+			echo "Not supported action : %{Action}"
+			exit
+			;;
+	esac
+}
+
+#
+# Tool
+#
+ToolClassDirModifyFollowingAction()
+{
+	#### Create Tool Class Directory
+	case ${Action} in 
+		All|AllFollowingControlFile)	
+			ToolClassHome=${EOS_HOME}/src/Tools/
+			;;
+		Another|AnotherFollowingControlFile)
+			echo "AnotherHome is ${AnotherHome}. Is it OK ?"
+			read ans
+			case $ans in
+				Y|y)
+					;;
+				*)
+					exit
+					;;
+			esac
+			for dir in src bin doc sccs src/Tools
+			do
+				if [ -d ${AnotherHome}/${dir} ]
+				then
+					echo "AnotherHome/${dir} : implemented."
+				else
+					mkdir ${AnotherHome}/${dir}
+				fi
+			done
+			if [ -d ${AnotherHome}/src/Config ]
+			then
+				rm -f ${AnotherHome}/src/Config
+			else
+				rm -f ${AnotherHome}/src/Config 
+			fi
+			#ln -s ${EOS_HOME}/src/Config ${AnotherHome}/src/Config
+			cp -r ${EOS_HOME}/src/Config ${AnotherHome}/src/Config
+			ToolClassHome=${AnotherHome}/src/Tools
+			;;
+		*)
+			echo "Not supported action in ToolClassDirModifyFollowingAction: ${Action}"
+			exit
+			;;
+	esac
+
+	#### Create Makefile in Tools
+	cd ${ToolClassHome}
+	rm -f ./Makefile
+	#ln -s ${ToolHomeTemplate}/Makefile ./Makefile
+	cp ${ToolHomeTemplate}/Makefile ./Makefile
+	#### Create Config in Tools
+	cd ${ToolClassHome}
+	if [ -d ./Config ] 
+	then
+		echo "Tools/Config : implemented"
+	else
+		mkdir ./Config
+	fi
+	cd ${ToolClassHome}
+	if [ -f Config/Define.inc ] 
+	then
+		ans=`cat Config/Define.inc | awk -v Name=WORLDNAME '{ if ($1==Name) print $0}' `
+		if [ -n $ans ]
+		then
+			sed -e s/worldname/${World}/g ${ToolHomeTemplate}/Config/Define.inc >> Config/Define.inc
+		fi
+	else
+		sed -e s/worldname/${World}/g ${ToolHomeTemplate}/Config/Define.inc > Config/Define.inc
+	fi
+	if [ ! -f Config/Target.inc ] 
+	then
+		sed -e s/worldname/${World}/g ${ToolHomeTemplate}/Config/Define.inc > Config/Define.inc
+	fi
+
+	### Create Class in Tools
+	fullClassDir=${ToolClassHome}/${ClassName}
+	if [ -d ${fullClassDir} ] 
+	then
+		echo "Tools/${ClassName} : implemented."
+	else
+		mkdir ${fullClassDir}
+	fi
+	#### Update Makefile in Tools
+	cd ${ToolClassHome}
+	if [ -f ./.Source ]
+	then
+		echo "Tools/Makefile : implemented."
+	else
+		cp ${ToolHomeTemplate}/.Source ./.Source	
+	fi
+
+	OldClassName=
+	OldClassName=`cat ./.Source | awk -v Name=${ClassName} '{ if($1==Name) print $1} ' `
+	if [ ${OldClassName} ] 
+	then
+		echo "${OldClassName} : implemented in Tools/${ClassName}/Makefile."
+	else
+		${EOS_HOME}/sbin/dotSourceInMakefileCreate ./ ${ClassName} Class
+	fi
+
+	#### Create Config in Tools/Class
+	cd ${fullClassDir}
+	if [ -d ${fullClassDir}/Config ] 
+	then
+		echo "${fullClassDir}/Config : implemented."
+	else
+		mkdir ${fullClassDir}/Config
+	fi
+	cd ${fullClassDir}
+	if [ -f Config/Define.inc ] 
+	then
+		ans=`cat Config/Define.inc | awk -v Name=CLASSNAME '{ if ($1==Name) print $1}' `
+		if [ ! $ans ]
+		then
+			sed -e s/classname/${ClassName}/g ${ToolClassTemplate}/Config/Define.inc >> Config/Define.inc
+		fi
+	else
+		sed -e s/classname/${ClassName}/g ${ToolClassTemplate}/Config/Define.inc > Config/Define.inc
+	fi
+	if [ ! -f Config/Target.inc ] 
+	then
+		sed -e s/classname/${ClassName}/g ${ToolClassTemplate}/Config/Define.inc > Config/Define.inc
+	fi
+
+	rm -f ./Makefile
+	#ln -s ${ToolClassTemplate}/Makefile ./Makefile
+	cp ${ToolClassTemplate}/Makefile ./Makefile
+	if [ -f ./.Source ]
+	then
+		echo "Tools/Makefile : implemented."
+	else
+		cp ${ToolHomeTemplate}/.Source ./.Source	
+	fi
+}
+##
+## ToolDirModityFollowingAction
+##     This routine is a main Routine to construct a tool directory.
+##
+ToolDirModifyFollowingAction()
+{
+	##
+	## Create Tool Home Directory
+	##
+	case ${Action} in
+		All|AllFollowingControlFile|AllShell|AllShellFollowingControlFile)
+			ToolHome=${EOS_HOME}/src/Tools/${ClassName}
+			;;
+		Another|AnotherFollowingControlFile)
+			ToolHome=${AnotherHome}/src/Tools/${ClassName}
+			;;
+		*)
+			echo "Not supported action in ToolDirModifyFollowingAction: ${Action}"
+			exit
+			;;
+	esac
+	if [ -d ${ToolHome} ]
+	then
+		cd ${ToolHome}
+	else
+		echo "Something Wrong !!!"
+		echo "${ToolHome} is not found."
+		exit
+	fi
+	fullToolDir=${ToolHome}/${ToolName}
+	##
+	## Register a new tool in Makefile
+	##
+	cd ${ToolHome}
+	case ${Action} in 
+		All|AllFollowingControlFile|Another|AnotherFollowingControlFile)
+			### Set Makefile 
+			rm -f ./Makefile 
+			#ln -s ${ToolClassTemplate}/Makefile ./Makefile
+			cp ${ToolClassTemplate}/Makefile ./Makefile
+			if [ -f ./.Source ]
+			then
+				echo "${fullToolDir}/Makefile : implemented."
+			else
+				cp ${ToolClassTemplate}/.Source ./.Source
+			fi
+			### Set tool directory
+			if [ -d ${fullToolDir} ] 
+			then
+				echo "${ToolName} : implemented."
+			else 
+				mkdir ${fullToolDir}
+			fi
+			### Set .Source file
+			OldToolName=`cat ./.Source | awk -v Name=${ToolName} '{ if($1==Name) print $1} ' `
+			if [ ${OldToolName} ] 
+			then
+				echo "${OldToolName} : implemented in Tools/${ClassName}/${ToolName}/Makefile."
+			else
+				${EOS_HOME}/sbin/dotSourceInMakefileCreate ./ ${ToolName} Tools
+			fi
+			;;
+		*)
+			echo "Not supported action in ToolDirModifyFollowingAction: ${Action}"
+			exit
+			;;
+	esac
+
+	#### Set Environment File #####
+	cd ${fullToolDir}
+	case ${Action} in 
+		All|AllFollowingControlFile|Another|AnotherFollowingControlFile)
+			### Set tool directories
+			for dir in Config inc src doc
+			do
+				if [ -d ${dir} ] 
+				then
+					echo "${ToolName}/${dir} : implemented."
+				else
+					mkdir ${dir}
+				fi
+			done
+			### Set Config/Define.inc ###
+			if [ -f Config/Define.inc ]
+			then
+				echo "Config/Define.inc : implemented."
+			else
+				sed -e s/Tool/${ToolName}/g ${ToolTemplate}/Config/Define.inc > Config/Define.inc
+			fi
+			### Set Config/Target.inc ###
+			if [ -f Config/Target.inc ]
+			then
+				echo "Config/Target.inc : implemented."
+			else
+				sed -e s/Tool/${ToolName}/g ${ToolTemplate}/Config/Target.inc > Config/Target.inc
+			fi
+			### Set Makefile ###
+			rm -f Makefile 
+			cp  ${ToolTemplate}/Makefile Makefile
+			#ln -s ${ToolTemplate}/Makefile Makefile
+
+			### Set src/Makefile, src/.Depend, src/.Source, doc/Makefile  ###
+			rm -f ./src/Makefile
+			#ln -s ${ToolTemplate}/src/Makefile ./src/Makefile
+			cp ${ToolTemplate}/src/Makefile ./src/Makefile
+			touch src/.Depend
+			touch src/.Source
+			rm -f doc/Makefile
+			#ln -s ${ToolTemplate}/doc/Makefile ./doc/Makefile
+			cp ${ToolTemplate}/doc/Makefile ./doc/Makefile
+			;;
+		*)
+			echo "Not supported action in ToolDirModifyFollowingAction: ${Action}"
+			exit
+			;;
+	esac
+	##
+	## Set OptionControl File 
+	## 
+	cd ${fullToolDir}
+	case ${Action} in
+		All|Another)
+			if [ -f Config/OptionControlFile ] 
+			then
+				echo "Config/OptionControlFile exists now.  Would you like to overwrite it ?"
+				read ans
+			else
+				ans="y"
+			fi
+			if [ $ans = "Y" -o $ans = "y" ]
+			then
+				cp ${ToolTemplate}/Config/OptionControlFile  Config/OptionControlFile
+			else
+				echo "Not Overwrite Config/OptionControlFile"
+			fi	
+			;;	
+		AllFollowingControlFile|AnotherFollowingControlFile) 
+			;;
+		*)
+			echo "Not supported action in ToolDirModifyFollowingAction: ${Action}"
+			exit
+			;;
+	esac
+	##
+	## Create prototype source code 
+	## 
+	cd ${fullToolDir}
+	case ${Action} in
+		All|Another)
+			### inc/config/h
+			ans="y"
+			if [ -f inc/config.h ] 
+			then
+				echo "inc/config.h exists now. Would you like to overwrite it ?" 
+				read ans
+			fi
+			if [ $ans = "Y" -o $ans = "y" ]
+			then
+				sed -e s/Tool/${ToolName}/g ${ToolTemplate}/inc/config.h > inc/config.h
+			else
+				echo "Not Overwrite inc/config.h."
+			fi
+
+			ans="y"
+			if [ -f src/${ToolName}.c ]
+			then
+				echo "src/${ToolName}.c exists now. Would you like to overwrite it ?" 
+				read ans
+			fi
+			if [ $ans = "Y" -o $ans = "y" ]
+			then
+				sed -e s/Tool/${ToolName}/g ${EOS_HOME}/sbin/toolHead.Template \
+					-e s/Class/${ClassName}/g                                    > src/${ToolName}.c
+				sed -e s/Tool/${ToolName}/g ${ToolTemplate}/src/Tool.c \
+					-e s/Class/${ClassName}/g                                    >> src/${ToolName}.c
+			else
+				echo "Not Overwrite src/${ToolName}.c"
+			fi
+			;;
+		AllFollowingControlFile|AnotherFollowingControlFile) 
+			;;
+		*)
+			echo "Not supported action in ToolDirModifyFollowingAction: ${Action}"
+			exit
+			;;
+	esac
+	case ${Action} in
+		All|AllFollowingControlFile|Another|AnotherFollowingControlFile) 
+			${EOS_HOME}/sbin/ctrl2proto ${ClassName} ${ToolName} Config/OptionControlFile
+			;;
+		*)
+			echo "Not supported action in ToolDirModifyFollowingAction: ${Action}"
+			exit
+			;;
+	esac
+	##
+	## Directory Structure Check
+	##
+	case ${Action} in
+		All|AllFollowingControlFile|Another|AnotherFollowingControlFile) 
+			echo "Directory Checking"
+			cd ${EOS_HOME}/src/${World}/${ClassName}/${ToolName}; make check 
+			;;
+		*)
+			echo "Not supported action in ToolDirModifyFollowingAction: ${Action}"
+			exit
+			;;
+	esac
+
+}
+
+### Main Program
+#
+#
+#
+World="unknown"
+ClassName="unknown"
+ObjectName="unknown"
+ToolName="unknown"
+
+# Store Flags
+FlagsCharacter="-"
+
+## Option Flag Check
+case $# in 
+	0)
+		;;
+	*)
+		while [ `echo $1 | cut -c1` = ${FlagsCharacter} ]
+		do
+			if [ `echo $1 | cut -c2` = "h" ] 
+			then
+				usage
+			else 
+				parms="${parms} $1"
+				shift 
+			fi		
+		done
+		;;
+esac
+
+## argCheck and set ClassName and ObjectName
+case $# in
+	0) #No Name	
+		WorldNameRead
+		WorldDirCheckAndMake
+		case $World in
+			Objects)
+				ObjectClassNameRead
+				ObjectClassDirCheckAndMake
+	
+				ObjectNameRead ${ClassName}
+				ObjectDirCheckAndMake ${ClassName}
+
+				ObjectActionRead
+				;;
+			Tools)
+				ToolClassNameRead
+				ToolClassDirCheckAndMake
+	
+				ToolNameRead ${ClassName}
+				ToolDirCheckAndMake ${ClassName}
+
+				ToolActionRead
+				;;
+			*)
+				echo "Not Supported World: ${World}"
+				exit
+				;;
+		esac
+		ANS="Y"
+		;;
+	1) # $1 : Action/World
+		Action=$1
+		ActionRead
+		case ${World} in
+			Objects)
+				ObjectClassNameRead
+				ObjectClassDirCheckAndMake
+	
+				ObjectNameRead ${ClassName}
+				ObjectDirCheckAndMake ${ClassName}
+
+				;;
+			Tools)
+				ToolClassNameRead
+				ToolClassDirCheckAndMake
+	
+				ToolNameRead ${ClassName}
+				ToolDirCheckAndMake ${ClassName}
+
+				;;
+			*)
+				echo "Not Supported World in argnum=1: ${World}"
+				exit
+		esac
+		ANS="Y"
+		;;
+	2) # $1 : Action, $2: World, $3 : Class
+		Action=$1
+		World=$2
+		ActionRead
+		case $World in
+			Objects)
+				ObjectClassNameRead
+				ObjectClassDirCheckAndMake
+
+				ObjectNameRead ${ClassName}
+				ObjectDirCheckAndMake ${ClassName}
+
+				;;
+			Tools)
+				ToolClassNameRead
+				ToolClassDirCheckAndMake
+
+				ToolNameRead ${ClassName}
+				ToolDirCheckAndMake ${ClassName}
+
+				;;
+			*)
+				echo "Not Supported World ${World}"
+				exit
+		esac
+		ANS="Y"
+		;;
+	3) # $1: Action, $2 : World, $3 : Class, $4 : Name
+		Action=$1
+		World=$2
+		ActionRead
+		ClassName=$3
+		case $World in
+			Objects)
+				ObjectName=$4
+				;;
+			Tools)
+				ToolName=$4
+				;;
+			*)
+				echo "Not Supported World: ${World}"
+				exit
+		esac
+		ANS="Y"
+		;;
+	4) # $1 : Action, $2: World, $3 : Class, $4 : Name
+		Action=$1
+		World=$2
+		ActionRead
+		ClassName=$3
+		case $World in
+			Objects)
+				ObjectName=$4
+				;;
+			Tools)
+				ToolName=$4
+				;;
+			*)
+				echo "Not Supported World ${World}"
+				exit
+		esac
+		ANS="Y"
+		;;
+	5) # $1 : Action, $2: World, $3 : Class, $4 : Name, $5 : ANS
+		Action=$1
+		World=$2
+		ActionRead
+		ClassName=$3
+		case $World in
+			Objects)
+				ObjectName=$4
+				;;
+			Tools)
+				ToolName=$4
+				;;
+			*)
+				echo "Not Supported World ${World}"
+				exit
+		esac
+		ANS = $5
+		;;
+	*) #
+		usage
+		;;
+esac
+#
+#
+if [ ${World} = "unknown" -o ${ClassName} = "unknown" -o  ${ObjectName} = "unknown" -a ${ToolName} = "unknown" -o ${Action} = "unknown" ]
+then
+	echo "Something wrong"
+	usage
+else 
+	echo "World:  ${World}"
+	echo "Class:  ${ClassName}"
+	case ${World} in
+		Tools)
+			echo "Tools:   ${ToolName}"
+			;;
+		Objects)
+			echo "Objects: ${ObjectName}"
+			;;
+		*)
+			echo "Not Supported World : ${World}"
+			exit
+			;;
+	esac
+	echo "Action: ${Action}"
+	if [ $ANS = "Y" ] 
+	then 
+		echo "Is it OK ?"
+		read ans
+		if [ $ans = "y" -o $ans = "Y" ]
+		then
+			echo "----- Start -----"
+		else
+			echo "----- Please operate again !! -----"
+			exit
+		fi
+	else 
+		echo "----- Start -----"
+	fi
+fi
+
+currentDir=`pwd`
+fullWorldDir=${EOS_HOME}/src/${World}
+fullClassName=${fullWorldDir}/${ClassName}
+fullObjectName=${fullClassName}/${ObjectName}
+fullToolName=${fullClassName}/${ToolName}
+
+#
+if [ $EOS_ANOTHER_HOME ] 
+then
+	AnotherHome=$EOS_ANOTHER_HOME
+else
+	AnotherHome=$currentDir
+fi
+
+case ${World} in
+	Objects)
+		ObjectClassDirModifyFollowingAction
+		ObjectDirModifyFollowingAction
+		chgrp -R Eos ${fullObjectName}
+		chmod -R 775 ${fullObjectName}
+		;;
+	Tools)
+		ToolClassDirModifyFollowingAction
+		ToolDirModifyFollowingAction
+		chgrp -R Eos ${fullToolName}
+		chmod -R 775 ${fullToolName}
+		;;
+	*)
+		echo "Not Supported World : ${World}"
+		;;
+esac
+#
+
+##echo "Do you inform this new one to Eos mailing list? Y/N"
+##read Ans
+#case $Ans in
+#	Y|y)
+#		case ${Action} in
+#			All)
+#				echo "----- Information for Eos Group -----"
+#				case ${World} in
+#					Object)
+#						#mailToEosGroup "makeobj  new: ${ObjectName} in ${ClassName}"
+#						;;
+#					Tools)
+#						#mailToEosGroup "maketool new: ${ToolName} in ${ClassName}"
+#						;;
+#					*)
+#						;;
+#				esac	
+#				;;
+#			*)
+#			;;
+#		esac
+#		;;
+#esac
+
+pwd
+cd ${currentDir}
+EosWorld=$World
+EosClass=$ClassName
+EosObject=$ObjectName
+EosTool=$ToolName
+export EosWorld EosClass EosObject EosTool

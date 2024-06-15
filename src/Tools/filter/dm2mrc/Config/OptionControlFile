@@ -1,0 +1,7 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input:dmFile(dm3|dm4)","Essential","1","1","In","inFile::dmFile","NULL"
+"-o","-o[utput]","Output:mrcImage","Essential","1","1","Out","outFile::mrcImage","NULL"
+"-t","-t[humnail]","Thumnail:mrcImage","Optional","1","1","Thumnail","outFile::mrcImage","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

@@ -1,0 +1,162 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>                  
+#define GLOBAL_DECLARATION
+#undef DEBUG
+#include "../inc/config.h"
+#include "genUtil.h"
+#include "lctfDetermination.h"
+#include "mrcImage.h"
+#include "Vector.h"
+#include "ctfInfo.h"
+#include "nr2.h"
+
+extern void info2ctfInfo(ctfInfo* ctf, ctfDetermineInfo info, int mode);
+
+int
+main(int argc, char* argv[]) 
+{
+	long status;
+	ctfDetermineInfo info;
+	mrcImage mrc;
+	ctfInfo result;
+	ctfInfo var;
+	ctfInfo initial;
+
+	init0(&info);
+    argCheck(&info, argc, argv);
+    init1(&info);
+
+	mrcFileRead(&mrc, info.In, "in main", 0);
+
+	info2ctfInfo(&initial, info, 0);
+	if(info.flagconfigFile) {
+		ctfInfoRead(info.fptconfigFile, &initial, "", 0);
+	}
+	info2ctfInfo(&initial, info, 1);
+	ctfInfoWrite(stdout, initial, "", 0);
+
+	initial.mode    = 1;
+	result = var = initial;
+	switch(info.mode&0x000000F0) {
+		case 0: {
+			lctfDeterminationbyMinMaxMethods(&result, &mrc, &initial, 0x0000000F&info.mode);
+			ctfInfoWrite(info.fptOut, result, "", 0);
+			break;
+		}
+		case 16: {
+			fprintf(stdout, "Fitting Start!!!");
+			lctfDeterminationbyFittingMethods(&result, &var, &mrc, &initial, 0x0000000F&info.mode);
+			ctfInfoWrite(info.fptOut, result, "", 0);
+			ctfInfoWrite(info.fptOut, var,    "d", 0);
+			break;
+		}
+		default: {
+			fprintf(stderr, "Not supported Mode\n");
+			break;
+		}
+	}
+	return 0;
+}
+
+void
+additionalUsage()
+{
+	fprintf(stderr, ">>> Mode <<< \n");
+	fprintf(stderr, "	  0 : MinMax Methods (Henderson-like CTF determination) \n");
+	fprintf(stderr, "	  16: Fitting Methods \n");
+	fprintf(stderr, "\n");
+}
+
+void 
+info2ctfInfo(ctfInfo* ctf, ctfDetermineInfo info, int mode)
+{
+	switch(mode) {
+		case 0: {
+			ctf->kV      = info.Ac;
+			ctf->defocus = info.Defocus;
+			ctf->Cs      = info.Cs;
+			ctf->Cc      = info.Cc;
+			ctf->dE      = info.dE;
+			ctf->CutLow  = info.CutLow;
+			ctf->CutHigh = info.CutHigh;
+			ctf->I0      = info.I0;
+			ctf->Ain     = info.Ai;
+			ctf->ratioOfAmpToPhase = info.ratioOfAmpToPhase;
+			ctf->BofMTF  = info.BofMTF;
+			ctf->BofVibration = info.BofVibration;
+			ctf->WhiteNoise  = info.WhiteNoise;
+			ctf->WhiteNoise2 = info.WhiteNoise2;
+			ctf->MolecEnv    = info.MolcEnv;
+			ctf->Magnification = info.Magnification;
+			if(info.flagMolcEnvTable) {
+				ctf->flagMolecEnvTable = 1;
+				ctf->MolecEnvTable.filename = strdup(info.MolcEnvTable);
+				lmolecularEnvelopeFileRead(info.fptMolcEnvTable, &(ctf->MolecEnvTable), 0); 
+			}
+			break;
+		}
+		case 1: {
+			if(info.flagAc) {
+				ctf->kV      = info.Ac;
+			}
+			if(info.flagDefocus) {
+				ctf->defocus = info.Defocus;
+			}
+			if(info.flagCs) {
+				ctf->Cs      = info.Cs;
+			}
+			if(info.flagCc) {
+				ctf->Cc      = info.Cc;
+			}
+			if(info.flagdE) {
+				ctf->dE      = info.dE;
+			}
+			if(info.flagCutLow) {
+				ctf->CutLow  = info.CutLow;
+			}
+			if(info.flagCutHigh) {
+				ctf->CutHigh = info.CutHigh;
+			}
+			if(info.flagI0) {
+				ctf->I0      = info.I0;
+			}
+			if(info.flagAi) {
+				ctf->Ain     = info.Ai;
+			}
+			if(info.flagratioOfAmpToPhase) {
+				ctf->ratioOfAmpToPhase = info.ratioOfAmpToPhase;
+			}
+			if(info.flagBofMTF) {
+				ctf->BofMTF  = info.BofMTF;
+			}
+			if(info.flagBofVibration) {
+				ctf->BofVibration = info.BofVibration;
+			}
+			if(info.flagWhiteNoise) {
+				ctf->WhiteNoise  = info.WhiteNoise;
+			}	
+			if(info.flagWhiteNoise2) {
+				ctf->WhiteNoise2 = info.WhiteNoise2;
+			}
+			if(info.flagMolcEnv) {
+				ctf->MolecEnv    = info.MolcEnv;
+			}
+			if(info.flagMagnification) {
+				ctf->Magnification = info.Magnification;
+			}
+			if(info.flagMolcEnvTable == 1 && ctf->flagMolecEnvTable != 1) {
+				ctf->flagMolecEnvTable = 1;
+				ctf->MolecEnvTable.filename = strdup(info.MolcEnvTable);
+				lmolecularEnvelopeFileRead(info.fptMolcEnvTable, &(ctf->MolecEnvTable), 0); 
+			}
+			break;
+		}
+		default: {
+			fprintf(stderr, "Not supported mode in info2linfo: %d \n", mode);
+			break;
+		}
+	}
+}
+

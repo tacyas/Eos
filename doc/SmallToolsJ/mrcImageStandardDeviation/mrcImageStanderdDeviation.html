@@ -1,0 +1,273 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageStanderdDeviation</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageStanderdDeviation<br></h2></b></font>
+	<h4></h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>オプション</th>
+				<th>必須項目/選択項目</th>
+				<th>説明</th>
+				<th>デフォルト</th>
+			</tr>
+			<tr>
+				<td>-i</td>
+				<td>必須</td>
+				<td>入力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-o</td>
+				<td>選択</td>
+				<td>出力ファイル設定（モード２が１のときに使用）</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-h</td>
+				<td>選択</td>
+				<td>閾値の最大濃度値を設定</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-l</td>
+				<td>選択</td>
+				<td>閾値の最小濃度値を設定</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-m</td>
+				<td>選択</td>
+				<td>モード１</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-M</td>
+				<td>選択</td>
+				<td>モード２</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-h</td>
+				<td>選択</td>
+				<td>ヘルプを表示</td>
+				<td>　</td>
+			</tr>
+			</div>
+		</table>
+
+<!-- モード説明 -->
+
+	<br>
+	<caption><b>モード１の詳細</b></caption>
+	<table border="1">
+		<div align="left">
+			<tr>
+				<th>モード</th>
+				<th>説明</th>
+			</tr>
+			<tr>
+				<td>0</td>
+				<td>標準偏差</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td></td>
+			</tr>
+		</div>
+	</table>
+	
+	<br>
+	<caption><b>モード２の詳細</b></caption>
+	<table border="1">
+		<div align="left">
+			<tr>
+				<th>モード</th>
+				<th>説明</th>
+			</tr>
+			<tr>
+				<td>0</td>
+				<td>入力画像が一つのときに設定</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>入力画像が二つ以上のときに設定（リストを入力ファイルとする）</td>
+			</tr>
+		</div>
+	</table>
+	
+	<br>	
+	<h4>******実行例******</h4>
+
+<!-- 入力ファイル説明 -->
+
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<div>入力ファイル１（1vom-rot0.mrc）</div>
+	<table>
+		<tr>
+			<td><img src="1vom-rot0.png" border="0" alt="1vom-rot0.png(2221 byte)" width="64" height="64"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				73.1421<br>
+				6.29881<br>
+				13.7886<br>
+				0.215447<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<div>入力ファイル２（1vom-rot1.mrc）</div>
+	<table>
+		<tr>
+			<td><img src="1vom-rot1.png" border="0" alt="1vom-rot1.png(2155 byte)" width="64" height="64"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				77.0909<br>
+				6.29894<br>
+				14.3204<br>
+				0.223756<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<div>入力ファイル３（1vom-rot2.mrc）</div>
+	<table>
+		<tr>
+			<td><img src="1vom-rot2.png" border="0" alt="1vom-rot2.png(2010 byte)" width="64" height="64"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				83.9283<br>
+				6.29888<br>
+				15.77<br>
+				0.246406<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<div>入力ファイル４（1vom-rot3.mrc）</div>
+	<table>
+		<tr>
+			<td><img src="1vom-rot3.png" border="0" alt="1vom-rot3.png(2031 byte)" width="64" height="64"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				87.0306<br>
+				6.29884<br>
+				15.437<br>
+				0.241203<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<br>
+	<div>入力ファイルがリストの場合以下のようなデータファイルとする<br>
+	<img src="list.png" border="1" alt="list.png(820 byte)" width="100" height="67"></div>
+	
+	<!-- 実行結果 -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-m------</font></caption><br>
+	<div>
+		モード２：０で実行（入力ファイル１を使用）<br>
+		モード：０<br>
+		<img src="outdata-m00.png" border="0" alt="outdata-m00.png(519 byte)" width="94" height="30"><br>
+		モード：１<br>
+		<img src="outdata-m10.png" border="0" alt="outdata-m10.png(463 byte)" width="95" height="30">
+	</div>
+	<br>
+	<div>
+		モード２：１で実行（リストを使用）<br>
+		モード：０<br>
+		<table>
+			<tr>
+				<td><img src="outdata-m01.png" border="0" alt="outdata-m01.png(2358 byte)" width="64" height="64"></td>
+				<td><p align="left">最小<br>
+					最大<br>
+					平均値<br>
+					標準偏差<br>
+					標準誤差<br></p>
+				</td>
+				<td><p align="left">0<br>
+					23.9429<br>
+					2.00953<br>
+					3.92903<br>
+					0.0613911<br></p>
+				</td>
+			</tr>
+		</table>
+		モード：１<br>
+		<table>
+			<tr>
+				<td><img src="outdata-m11.png" border="0" alt="outdata-m11.png(2018 byte)" width="64" height="64"></td>
+				<td><p align="left">最小<br>
+					最大<br>
+					平均値<br>
+					標準偏差<br>
+					標準誤差<br></p>
+				</td>
+				<td><p align="left">0<br>
+					573.263<br>
+					19.4755<br>
+					55.0699<br>
+					0.860467<br></p>
+				</td>
+			</tr>
+		</table>
+	
+	</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

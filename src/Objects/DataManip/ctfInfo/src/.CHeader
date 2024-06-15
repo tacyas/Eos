@@ -1,0 +1,10 @@
+CHeader = \
+ctfDeterminationFromPhaseComparison.h \
+ctfInfoWrite2.h \
+ctfZeroPoint.h \
+ctffuncforbayes.h \
+lastigmatismDetection.h \
+lctfDetermination.h \
+lmrcFSInfoScatteringAngularDistributionAverageSection.h \
+powerspectraTangentLine.h \
+

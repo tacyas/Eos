@@ -1,0 +1,28 @@
+<HTML>
+<HEAD>
+<TITLE>mrcImageMultiCTFDetermination</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageMultiCTFDetermination</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageMultiCTFDetermination
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFileList          ) ] :Essential :InputDataFile
+    [-o[utput]           Out                 (stdout    ).as(outFile             ) ] :Optional  :Output Optimum
+    [-oP[utput]          Out2                (NULL      ).as(outFile             ) ] :Optional  :Output Distribution
+    [-kV                 kV                  (200       ).as(Real                ) ] :Optional  :AccVol[kV]
+    [-Cs                 Cs                  (1.7       ).as(Real                ) ] :Optional  :Cs[mm]
+    [-AoverP             minAoverP           (0.0       ).as(Real                ) 
+                         maxAoverP           (1.0       ).as(Real                ) 
+                         delAoverP           (0.01      ).as(Real                ) ] :Optional  :AoverP[A]
+    [-Rmax               Rmax                (0.1       ).as(Real                ) ] :Optional  :Rmax[/A]
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+>>>> inputfile format <<<<
+filename minDef[A] maxDef[A] deltaDef[A]
+.....
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,7 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-C","-C[utoff]","Cutoff","Optional","1","1","Cutoff","Real","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode:0 If |Pixel of Image| < Cutoff ,|Pixel of Image|=0 ,1:If |Pixel of Image| < Cutoff*SqrAvr ,|Pixel of Image|=0","Optional","1","1","mode","Integer","0"

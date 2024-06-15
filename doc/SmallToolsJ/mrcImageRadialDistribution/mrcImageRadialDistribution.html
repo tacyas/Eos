@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageRadialDistribution</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageRadialDistribution<br></h2></b></font>
+	<h4>動径分布</h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+	<table border="1">
+		<div align="left">
+		<tr>
+			<th>オプション</th>
+			<th>必須項目/選択項目</th>
+			<th>説明</th>
+			<th>デフォルト</th>
+		</tr>
+		<tr>
+			<td>-i</td>
+			<td>必須</td>
+			<td>入力ファイル設定</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-o</td>
+			<td>選択</td>
+			<td>出力ファイル設定</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-O</td>
+			<td>選択</td>
+			<td>出力ファイル設定</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-centre</td>
+			<td>選択</td>
+			<td>ピクセルの位置を設定</td>
+			<td>Cx=0.0 Cy=0.0</td>
+		</tr>
+		<tr>
+			<td>-Avg</td>
+			<td>選択</td>
+			<td>平均の度合を出力する</td>
+			<td>　</td>
+		</tr>
+		<tr>
+			<td>-Inv</td>
+			<td>選択</td>
+			<td>逆の度合を出力する</td>
+			<td>　</td>
+		</tr>
+		<tr>
+			<td>-h</td>
+			<td>選択</td>
+			<td>ヘルプを表示</td>
+			<td>　</td>
+		</tr>
+	</table>
+
+	<h4>******実行例******</h4>
+
+<!-- 入力ファイル説明 -->
+
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="b120-2.png" border="0" alt="b120-2.png(6742 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-65.0178<br>
+				94.4699<br>
+				4.85274<br>
+				20.4635<br>
+				0.255794<br></p>
+			</td>
+		</tr>
+	</table>
+	
+<!-- 出力ファイル -->
+	
+	<caption><font color="blue">------オプション必須項目のみの場合------</font></caption><br>
+	<div>以下のようなデータが表示される<br>
+	<img src="b120-2-1.png" border="0" alt="b120-2-1.png(389502 byte)" width="216" height="601">　
+	<img src="b120-2-2.png" border="0" alt="b120-2-2.png(5732 byte)" width="80" height="523"><br>
+	</div>
+	
+	<caption><font color="blue">------オプション　-o,-Oを設定------</font></caption><br>
+	<table>
+		<tr>
+			<td>画面に表示されるデータ</td>
+			<td>-oの出力ファイルのデータ</td>
+			<td>-Oの出力ファイルのデータ</td>
+		</tr>
+		<tr>
+			<td><img src="b120-2.outdata.png" border="0" alt="b120-2.outdata.png(13086 byte)" width="217" height="601"></td>
+			<td><img src="b120-2.outdata.ascll.png" border="1" alt="b120-2.outdata.ascll.png(6880 byte)" width="85" height="603"></td>
+			<td></td>
+		</tr>
+	</table>
+	
+	<caption><font color="blue">------オプション　-centreを設定------</font></caption><br>
+	<table>
+		<tr>
+			<td>画面に表示されるデータ</td>
+			<td>-oの出力ファイルのデータ</td>
+		</tr>
+		<tr>
+			<td><img src="b120-2.outdata-Centre20.png" border="0" alt="b120-2.outdata-Centre20.png(6083 byte)" width="151" height="328"></td>
+			<td><img src="b120-2.outdata-Centre20.ascll.png" border="1" alt="b120-2.outdata-Centre20.ascll.png(3689 byte)" width="86" height="325"></td>
+		</tr>
+	</table>
+
+	<caption><font color="blue">------オプション　-Avgを設定------</font></caption><br>
+	<table>
+		<tr>
+			<td>画面に表示されるデータ</td>
+			<td>-oの出力ファイルのデータ</td>
+		</tr>
+		<tr>
+			<td><img src="b120-2.outdata-Avg.png" border="0" alt="b120-2.outdata-Avg.png(13117 byte)" width="215" height="601"></td>
+			<td><img src="b120-2.outdata-Avg.ascll.png" border="1" alt="b120-2.outdata-Avg.ascll.png(6272 byte)" width="78" height="604"></td>
+		</tr>
+	</table>
+
+	<caption><font color="blue">------オプション　-Invを設定------</font></caption><br>
+	<table>
+		<tr>
+			<td>画面に表示されるデータ</td>
+			<td>-oの出力ファイルのデータ</td>
+		</tr>
+		<tr>
+			<td><img src="b120-2.outdata-Inv.png" border="0" alt="b120-2.outdata-Inv.png(13245 byte)" width="225" height="601"></td>
+			<td><img src="b120-2.outdata-Inv.ascll.png" border="1" alt="b120-2.outdata-Inv.ascll.png(7243 byte)" width="89" height="604"></td>
+		</tr>
+	</table>
+
+
+
+</body>
+</html>

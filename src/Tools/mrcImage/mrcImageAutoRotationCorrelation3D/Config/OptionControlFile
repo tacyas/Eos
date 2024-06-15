@@ -1,0 +1,18 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: mrc[test]","Essential","1","1","In","inFile","NULL"
+"-r","-r[ef]","Input: mrc[ref]","Essential","1","1","Ref","inFile","NULL"
+"-o","-o[utput]","Output: Parameter","Optional","1","1","Out","outFile","stdout"
+"-cor","-cor","Output: CorMap","Optional","1","1","Cor","outFile","NULL"
+"-fit","-fit","Output: Best Fit","Optional","1","1","Fit","outFile","stdout"
+"-EA","-E[uler]A[ngle]","Input: EulerAngle","Optional","1","1","EulerAngle","String","YOYS"
+"-Rot1","-Rot1","Rot1","Optional","3","1","Rot1Min","Real","0.0","2","Rot1Max","Real","360.0","3","Rot1Delta","Real","5.0"
+"-Rot2","-Rot2","Rot2","Optional","3","1","Rot2Min","Real","0.0","2","Rot2Max","Real","180.0","3","Rot2Delta","Real","5.0"
+"-Rot3","-Rot3","Rot3","Optional","3","1","Rot3Min","Real","0.0","2","Rot3Max","Real","360.0","3","Rot3Delta","Real","5.0"
+"-Xrange","-Xrange","Xrange[pixel]: Not set, all space search","Optional","2","1","XrangeMin","Real","0","2","XrangeMax","Real","0"
+"-Yrange","-Yrange","Yrange[pixel]: Not set, all space search","Optional","2","1","YrangeMin","Real","0","2","YrangeMax","Real","0"
+"-Zrange","-Zrange","Zrange[pixel]: Not set, all space search","Optional","2","1","ZrangeMin","Real","0","2","ZrangeMax","Real","0"
+"-M","-M[ode]","Mode: Correlation Mode","Optional","1","1","Mode","Integer","0"
+"-MR","-M[ode]R[otation]","Mode: Rotation3D Mode","Optional","1","1","ModeRotation","Integer","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode: InterpolationMode","Optional","1","1","mode","Integer","0"

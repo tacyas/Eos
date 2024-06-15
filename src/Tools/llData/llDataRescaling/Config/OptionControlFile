@@ -1,0 +1,8 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-r","-r[Scale]","[]","Optional","1","1","rScale","Real","1.0"
+"-dR","-dR","[/A]","Optional","1","1","delBR","Real","0.0 /* No Change */"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

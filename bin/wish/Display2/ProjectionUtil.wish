@@ -1,0 +1,67 @@
+#
+#
+proc projectionRecreate {} {
+	projectionClear
+	projectionCreate
+}
+
+proc projectionCreate { } {
+	global Projection
+	global Desktop
+	global mainImage
+	global Roi
+
+	set c $Desktop(mainCanvas).canvas
+
+	if { $Projection(which) == "X" } {
+		#puts $Projection(X)
+		$c delete ProjectionX
+		for { set i 0 } { $i < $mainImage(width) } {incr i 1} {
+			set data [ lindex $Projection(X) $i ]
+			lappend p $i [ expr ($data - $mainImage(min)*$mainImage(height))*$Projection(scale) ]
+		}
+		eval { $c create line } $p { -fill red -tags ProjectionX }
+		$c scale ProjectionX 0 0 $Roi(Zoom) $Roi(Zoom) 
+	} else {
+		#puts $Projection(Y)
+		$c delete ProjectionY
+		for { set i 0 } { $i < $mainImage(height) } {incr i 1} {
+			set data [ lindex $Projection(Y) $i ]
+			lappend p [ expr ($data - $mainImage(min)*$mainImage(width))*$Projection(scale) ] [ expr $mainImage(height) -1 - $i ]
+		}
+		eval { $c create line } $p { -fill red -tags ProjectionY }
+		$c scale ProjectionY 0 0 $Roi(Zoom) $Roi(Zoom)
+	}
+
+	set LayerLine(flag) ON
+}
+
+proc projectionClear { } {
+	global Desktop
+	global Projection
+
+	set c $Desktop(mainCanvas).canvas
+	if { $Projection(which) == "X" } {
+		$c delete ProjectionX
+	} else {
+		$c delete ProjectionY
+	}
+
+	set LayerLine(flag) OFF
+}
+
+proc projectionChange { } {
+	global Projection
+
+	set w .projectionInfo
+	set f $w.which
+	set b $f.which 
+	if { $Projection(which) == "X" } {
+		set Projection(which) Y
+	} else {
+		set Projection(which) X
+	}
+	$b configure -text $Projection(which) -command projectionChange
+}
+
+

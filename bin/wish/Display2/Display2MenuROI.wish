@@ -1,0 +1,409 @@
+#!../Display2.HP 
+#
+# Widget for ROI (region of interest)
+#
+
+# Procedures: 
+#    roiRelatedObjectRecreate 
+#    menuRoiCreate
+#    menuEditCreate
+#     
+proc roiRelatedObjectRecreate { } {
+	global roiInfoWin
+
+	if [ winfo exists $roiInfoWin(top) ] {
+		destroy $roiInfoWin(top)
+		roiInformationWinCreate	
+	}
+	menuRoiCreate
+	menuEditCreate
+	
+}
+
+#
+# Popup and Toolbar Menu for Roi 
+#
+proc menuRoiCreate { } {
+	global Roi
+
+	# Popup for ROI
+	set m .menu.roi.m 
+	if [ catch { menu $m } ] {
+		$m delete 0 last
+	} 
+
+	# Select shape of ROI 	
+	$m add radio -variable Roi(Shape) -label "Rectangle"  -command roiRelatedObjectRecreate
+	$m add radio -variable Roi(Shape) -label "TiltRectangle"  -command roiRelatedObjectRecreate
+	$m add radio -variable Roi(Shape) -label "Line"       -command roiRelatedObjectRecreate   
+	$m add radio -variable Roi(Shape) -label "Spline"     -command roiRelatedObjectRecreate
+	$m add separator
+	$m add radio -variable Roi(Action) -label "Create" -command roiRelatedObjectRecreate
+	switch $Roi(MultiShape) {
+		On {
+			$m add radio -variable Roi(Action) -label "Select" -command {  
+				roiRelatedObjectRecreate
+			}
+		}
+		Off {
+			#
+		}
+	}
+
+	# Zoom In / Out  
+	$m add com -label  "ZoomIn"  -command { 
+		roiAreaZoomIn  $Roi(Canvas) 
+	}
+	$m add com -label  "ZoomOut" -command { 
+		roiAreaZoomOut $Roi(Canvas) 
+	}
+	$m add separator
+
+	# Multi-ROI 
+	$m add check -variable Roi(MultiShape) \
+		-onvalue On -offvalue Off -label "MultiROI"  \
+		-command  {
+			roiRelatedObjectRecreate 
+			menuRoiSingleMultiTransform
+		}
+
+	$m add check -variable Roi(SizeLock) \
+		-onvalue On -offvalue Off -label "SizeLock"  \
+		-command {
+			roiRelatedObjectRecreate 
+		}
+
+	if { $Roi(SizeLock) == "On" } {
+		$m add check -variable Roi(AngleLock) \
+			-onvalue On -offvalue Off -label "AngleLock"  \
+			-command {
+				roiRelatedObjectRecreate 
+			}
+	}
+	$m add separator
+	$m add com -label "ROIInfo" -command roiInformationWinCreate 
+}
+
+#
+# menuRoiCancelCommand
+#
+proc menuRoiCancelCommand { } {
+	global Roi
+
+	$Roi(Canvas) delete $Roi(CurrentObject)
+	switch $Roi(Shape) {
+		Spline {
+			roiSplineInit $Roi(Canvas) 
+		}
+		default {
+			#
+		}
+	}
+	switch $Roi(MultiShape) {
+		On {
+			#
+			set i $Roi(CurrentID)
+			if { [ info exists Roi($i,Shape) ] } {
+				# Already OK, i.e., the current mode is "select mode"
+				switch $Roi([subst $i],Shape) { 
+					Rectangle {
+						set Roi(CurrentObject)  \
+							[ rectangleCreate $Roi(Canvas) \
+							                  $Roi([subst $i],x0) $Roi([subst $i],y0) \
+							                  $Roi([subst $i],x1) $Roi([subst $i],y1) \
+							                  $Roi([subst $i],x2) $Roi([subst $i],y2) \
+							                  $Roi([subst $i],x3) $Roi([subst $i],y3) \
+							]
+					}
+					TiltRectangle {
+						set Roi(CurrentObject)  \
+							[ rectangleCreate $Roi(Canvas) \
+							                  $Roi([subst $i],x0) $Roi([subst $i],y0) \
+							                  $Roi([subst $i],x1) $Roi([subst $i],y1) \
+							                  $Roi([subst $i],x2) $Roi([subst $i],y2) \
+							                  $Roi([subst $i],x3) $Roi([subst $i],y3) \
+							]
+					}
+					default {
+						puts "Not supported"
+					}
+				}
+			} else {
+				# Not yet OK
+				incr Roi(TotalN) -1
+				if { $Roi(TotalN) < 0 } {
+					set Roi(TotalN) 0
+				}
+			}
+		}
+		Off {
+			#
+		}
+	}
+	set Roi(CurrentID) [ expr $Roi(TotalN) - 1 ] 
+	set Roi(Action) Create
+}
+
+#
+#
+#
+proc menuRoiSingleMultiTransform {  } {
+	global Roi
+
+	#$Roi(Canvas) delete $Roi(CurrentObject)
+	switch $Roi(Shape) {
+		Spline {
+			roiSplineInit $Roi(Canvas) 
+		}
+		default {
+			#
+		}
+	}
+	switch $Roi(MultiShape) {
+		On {
+			# Single to Multi
+			switch $Roi(Shape) { 
+				Rectangle {
+					global rectanglePoints
+					# You have already set the Rectangle  
+					if { $Roi(CurrentObject) != 0 } {
+						set Roi(TotalN)    [ expr $Roi(TotalN) + 1 ]
+						set i $Roi(CurrentID)
+
+						set	Roi([subst $i],x0) $rectanglePoints(x0) 
+						set	Roi([subst $i],y0) $rectanglePoints(y0) 
+						set	Roi([subst $i],x1) $rectanglePoints(x1) 
+						set	Roi([subst $i],y1) $rectanglePoints(y1) 
+						set	Roi([subst $i],x2) $rectanglePoints(x2) 
+						set	Roi([subst $i],y2) $rectanglePoints(y2) 
+						set	Roi([subst $i],x3) $rectanglePoints(x3) 
+						set	Roi([subst $i],y3) $rectanglePoints(y3) 
+	
+						$Roi(Canvas) delete $Roi(CurrentObject) 
+						set Roi(CurrentObject)  \
+								[ rectangleCreate $Roi(Canvas) \
+								                  $Roi([subst $i],x0) $Roi([subst $i],y0) \
+								                  $Roi([subst $i],x1) $Roi([subst $i],y1) \
+								                  $Roi([subst $i],x2) $Roi([subst $i],y2) \
+								                  $Roi([subst $i],x3) $Roi([subst $i],y3) \
+								]
+					}	
+				}
+				TiltRectangle {
+					global rectanglePoints
+					# You have already set the Rectangle  
+					if { $Roi(CurrentObject) != 0 } {
+						set Roi(TotalN)    [ expr $Roi(TotalN) + 1 ]
+						set i $Roi(CurrentID)
+
+						set	Roi([subst $i],x0) $rectanglePoints(x0) 
+						set	Roi([subst $i],y0) $rectanglePoints(y0) 
+						set	Roi([subst $i],x1) $rectanglePoints(x1) 
+						set	Roi([subst $i],y1) $rectanglePoints(y1) 
+						set	Roi([subst $i],x2) $rectanglePoints(x2) 
+						set	Roi([subst $i],y2) $rectanglePoints(y2) 
+						set	Roi([subst $i],x3) $rectanglePoints(x3) 
+						set	Roi([subst $i],y3) $rectanglePoints(y3) 
+	
+						$Roi(Canvas) delete $Roi(CurrentObject) 
+						set Roi(CurrentObject)  \
+								[ rectangleCreate $Roi(Canvas) \
+								                  $Roi([subst $i],x0) $Roi([subst $i],y0) \
+								                  $Roi([subst $i],x1) $Roi([subst $i],y1) \
+								                  $Roi([subst $i],x2) $Roi([subst $i],y2) \
+								                  $Roi([subst $i],x3) $Roi([subst $i],y3) \
+								]
+					}	
+				}
+				default {
+					puts "Not supported"
+				}
+			}
+		}
+		Off {
+			# Multi to Single
+			puts "This routine has some bugs. You cannot change the multi-shape mode to the single-shape mode."
+			set i $Roi(CurrentID)
+			if { [ info exists Roi($i,Shape) ] } {
+				# Already OK, i.e., the current mode is "select mode"
+				switch $Roi([subst $i],Shape) { 
+					Rectangle {
+						set	rectanglePoints(x0) $Roi([subst $i],x0)
+						set	rectanglePoints(y0) $Roi([subst $i],y0)
+						set	rectanglePoints(x1) $Roi([subst $i],x1)
+						set	rectanglePoints(y1) $Roi([subst $i],y1)
+						set	rectanglePoints(x2) $Roi([subst $i],x2)
+						set	rectanglePoints(y2) $Roi([subst $i],y2)
+						set	rectanglePoints(x3) $Roi([subst $i],x3)
+						set	rectanglePoints(y3) $Roi([subst $i],y3)
+
+						$Roi(Canvas) delete $Roi(CurrentObject) 
+						set Roi(CurrentObject)  \
+							[ rectangleCreate $Roi(Canvas) \
+							                  $Roi([subst $i],x0) $Roi([subst $i],y0) \
+							                  $Roi([subst $i],x1) $Roi([subst $i],y1) \
+							                  $Roi([subst $i],x2) $Roi([subst $i],y2) \
+							                  $Roi([subst $i],x3) $Roi([subst $i],y3) \
+							]
+							
+					}
+					default {
+						puts "Not supported"
+					}
+				}
+			} else {
+				# Not yet OK
+				incr Roi(TotalN) -1
+				if { $Roi(TotalN) < 0 } {
+					set Roi(TotalN) 0
+				}
+				set Roi(CurrentID) [ expr $Roi(TotalN) - 1 ] 
+			}
+		}
+	}
+}
+
+#
+# menuMultiRoiOKCommand
+#
+proc menuMultiRoiOKCommand { } {
+	global Roi
+	global rectanglePoints
+
+	# Set
+	#puts [ set Roi($i,Shape) ]
+	set i                 $Roi(CurrentID)
+	set Roi($i,Shape)     $Roi(Shape)
+	set Roi(CurrentColor) $Roi(OKColor) 
+	set Roi($i,Object)    $Roi(CurrentObject)
+	$Roi(Canvas) itemconfigure $Roi(CurrentObject) -fill $Roi(OKColor) 
+
+	switch $Roi(Shape) {
+		Rectangle {
+			set Roi($i,x0) $rectanglePoints(x0)
+			set Roi($i,y0) $rectanglePoints(y0)
+			set Roi($i,x1) $rectanglePoints(x1)
+			set Roi($i,y1) $rectanglePoints(y1)
+			set Roi($i,x2) $rectanglePoints(x2)
+			set Roi($i,y2) $rectanglePoints(y2)
+			set Roi($i,x3) $rectanglePoints(x3)
+			set Roi($i,y3) $rectanglePoints(y3)
+		}
+		TiltRectangle {
+			set Roi($i,x0) $rectanglePoints(x0)
+			set Roi($i,y0) $rectanglePoints(y0)
+			set Roi($i,x1) $rectanglePoints(x1)
+			set Roi($i,y1) $rectanglePoints(y1)
+			set Roi($i,x2) $rectanglePoints(x2)
+			set Roi($i,y2) $rectanglePoints(y2)
+			set Roi($i,x3) $rectanglePoints(x3)
+			set Roi($i,y3) $rectanglePoints(y3)
+		}
+		Spline {
+			puts "Not supported shape at the multi mode"
+		}
+	}
+	roiAreaRedraw $i
+	# Next Action
+	set Roi(Action) Create
+}
+
+#
+# menuMultiRoiDeleteCommand
+#
+proc menuMultiRoiAllDeleteCommand { } {
+	global Roi
+	for { set i 0 } { $i < $Roi(TotalN) } { incr i } {
+		if { [ info exists Roi${i}(Object) ] } {
+			$Roi(Canvas) delete [ set Roi${i}(Object) ]
+			unset Roi${i}
+		}
+	}
+	set Roi(TotalN)    0
+	set Roi(CurrentID) 0
+	set Roi(Action)    Create
+}
+
+proc menuMultiRoiDeleteCommand { } {
+	global Roi
+	#
+	set i $Roi(CurrentID)
+	if { [ info exists Roi($i,Object) ] } {
+		$Roi(Canvas) delete [ set Roi($i,Object) ]
+		for { set i $Roi(CurrentID) } { $i < [ expr $Roi(TotalN) - 1 ] } { incr i } {
+			set j [ expr $i + 1]
+			#puts "$j -> $i"
+			foreach { name value } [ array get Roi ] {
+				puts $name,$value
+				if { [ string match "$j," $name ] } {
+					set name2 [ string trimleft $name "$j," ]
+					set Roi($i,$name2) $Roi([subst $j],$name2)
+					puts $i,$name2
+				}
+			}
+		}
+	} else {
+		$Roi(Canvas) delete $Roi(CurrentObject) 
+		#
+	}
+	incr Roi(TotalN) -1
+	set  Roi(CurrentID) [ expr $Roi(TotalN) - 1 ]
+	set  Roi(Action) Select
+}
+
+
+#
+# Popup menu for Editing of ROI
+#
+proc menuEditCreate { } {
+	global Roi
+
+	# Popup Information for ROI
+	# roiInformationWinCreate
+	
+	# Popup for ROI
+	set m .menu.edit.m 
+	if [ catch { menu $m } ] {
+		$m delete 0 last		
+	} 
+
+	# Menu for ROI
+	$m add com   -label "Cancel" -command menuRoiCancelCommand 
+
+	# Menu for Multi ROI
+	switch $Roi(MultiShape) {
+		On {
+			$m add radio -variable Roi(Action) -label "OK" -command menuMultiRoiOKCommand 
+		}
+	}
+	$m add separator	
+	$m add radio -variable Roi(Action) -label "Move"
+	$m add radio -variable Roi(Action) -label "Resize"
+	$m add radio -variable Roi(Action) -label "Rotate"
+
+	switch $Roi(MultiShape) {
+		On {
+			$m add separator	
+			$m add com   -label "All Delete" -command menuMultiRoiAllDeleteCommand 
+			$m add com   -label "Delete"     -command menuMultiRoiDeleteCommand 
+		}
+		Off {
+			#
+		}
+	}
+	$m add separator	
+
+	# Zoom In/Out 
+	$m add com -label  "ZoomIn"  -command { 
+		roiAreaZoomIn  $Roi(Canvas) 
+	}
+	$m add com -label  "ZoomOut" -command { 
+		roiAreaZoomOut $Roi(Canvas) 
+	}
+
+	# Additional Information 
+	#
+	$m add separator	
+	$m add com -label "ROIInfo" -command roiInformationWinCreate 
+}
+

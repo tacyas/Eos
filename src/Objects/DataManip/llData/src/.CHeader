@@ -1,0 +1,20 @@
+CHeader = \
+llDataPVM.h \
+lll2ltlg.h \
+lllDataAxisSearch.h \
+lllDataCTF.h \
+lllDataCTFCompensate.h \
+lllDataCTFCompensation.h \
+lllDataCompare.h \
+lllDataContributionCalcDifferentN.h \
+lllDataDifferenceCalc.h \
+lllDataEquatorAdd.h \
+lllDataExtract.h \
+lllDataFit.h \
+lllDataFitAndAverage.h \
+lllDataFitParamInverse.h \
+lllDataLowPassFiltering.h \
+lllDataMergeDifferentN.h \
+lllDataRescaling.h \
+lllDatarMaxLimit.h \
+

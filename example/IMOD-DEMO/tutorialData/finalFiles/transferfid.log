@@ -1,0 +1,42 @@
+Finding the best matched pair of views in the two series:
+              (Type Ctrl-C to end search)
+A 33  B 34  rotation -90  difference 994333*
+A 33  B 34  rotation +90  difference 254499*
+A 34  B 34  rotation -90  difference 993632 
+A 34  B 34  rotation +90  difference 250382*
+A 32  B 34  rotation -90  difference 699019 
+A 32  B 34  rotation +90  difference 297208 
+A 35  B 34  rotation -90  difference 997563 
+A 35  B 34  rotation +90  difference 288664 
+A 31  B 34  rotation +90  difference 346757 
+A 33  B 35  rotation +90  difference 278558 
+A 34  B 35  rotation +90  difference 278447 
+A 32  B 35  rotation +90  difference 308280 
+A 35  B 35  rotation +90  difference 304245 
+A 31  B 35  rotation +90  difference 348333 
+A 33  B 33  rotation +90  difference 268588 
+A 34  B 33  rotation +90  difference 260428 
+A 32  B 33  rotation +90  difference 310046 
+A 35  B 33  rotation +90  difference 296941 
+A 31  B 33  rotation +90  difference 356374 
+A 33  B 36  rotation +90  difference 333335 
+A 34  B 36  rotation +90  difference 334257 
+A 32  B 36  rotation +90  difference 350688 
+A 35  B 36  rotation +90  difference 348415 
+A 31  B 36  rotation +90  difference 378666 
+A 33  B 32  rotation +90  difference 277560 
+A 34  B 32  rotation +90  difference 273943 
+A 32  B 32  rotation +90  difference 308739 
+A 35  B 32  rotation +90  difference 296985 
+A 31  B 32  rotation +90  difference 348300 
+Transferring fiducials from view 34 in A to view 34 in B with Beadtrack:
+              (Type Ctrl-C to interrupt)
+Number of fiducials that failed to transfer: 0
+ 
+ The correspondence between points is as follows
+
+ Points in A: 1-25
+ Points in B: 1-25
+
+ Solvematch will be able to match up points using data in transferfid.coord
+ regardless of how well points track or whether you add or delete points

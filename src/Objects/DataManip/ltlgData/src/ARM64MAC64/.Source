@@ -1,0 +1,82 @@
+SRC = \
+lltlg2mrc.c \
+ltlgDataAllocate.c \
+ltlgDataGet.c \
+ltlgDataPrint.c \
+ltlgDataReadFile.c \
+ltlgDataWeightModify.c \
+ltlgDataWriteFile.c \
+
+OBJ = \
+lltlg2mrc.o \
+ltlgDataAllocate.o \
+ltlgDataGet.o \
+ltlgDataPrint.o \
+ltlgDataReadFile.o \
+ltlgDataWeightModify.o \
+ltlgDataWriteFile.o \
+
+SHAREDOBJ = \
+lltlg2mrc.sharedo \
+ltlgDataAllocate.sharedo \
+ltlgDataGet.sharedo \
+ltlgDataPrint.sharedo \
+ltlgDataReadFile.sharedo \
+ltlgDataWeightModify.sharedo \
+ltlgDataWriteFile.sharedo \
+
+REALOBJ = \
+ARM64MAC64/lltlg2mrc.o \
+ARM64MAC64/ltlgDataAllocate.o \
+ARM64MAC64/ltlgDataGet.o \
+ARM64MAC64/ltlgDataPrint.o \
+ARM64MAC64/ltlgDataReadFile.o \
+ARM64MAC64/ltlgDataWeightModify.o \
+ARM64MAC64/ltlgDataWriteFile.o \
+
+REALSHAREDOBJ = \
+ARM64MAC64/lltlg2mrc.sharedo \
+ARM64MAC64/ltlgDataAllocate.sharedo \
+ARM64MAC64/ltlgDataGet.sharedo \
+ARM64MAC64/ltlgDataPrint.sharedo \
+ARM64MAC64/ltlgDataReadFile.sharedo \
+ARM64MAC64/ltlgDataWeightModify.sharedo \
+ARM64MAC64/ltlgDataWriteFile.sharedo \
+
+OBJDEBUG = \
+lltlg2mrc.debugo \
+ltlgDataAllocate.debugo \
+ltlgDataGet.debugo \
+ltlgDataPrint.debugo \
+ltlgDataReadFile.debugo \
+ltlgDataWeightModify.debugo \
+ltlgDataWriteFile.debugo \
+
+REALOBJDEBUG = \
+ARM64MAC64/lltlg2mrc.debugo \
+ARM64MAC64/ltlgDataAllocate.debugo \
+ARM64MAC64/ltlgDataGet.debugo \
+ARM64MAC64/ltlgDataPrint.debugo \
+ARM64MAC64/ltlgDataReadFile.debugo \
+ARM64MAC64/ltlgDataWeightModify.debugo \
+ARM64MAC64/ltlgDataWriteFile.debugo \
+
+OBJCUDAGDB = \
+lltlg2mrc.cudagdb.o \
+ltlgDataAllocate.cudagdb.o \
+ltlgDataGet.cudagdb.o \
+ltlgDataPrint.cudagdb.o \
+ltlgDataReadFile.cudagdb.o \
+ltlgDataWeightModify.cudagdb.o \
+ltlgDataWriteFile.cudagdb.o \
+
+REALOBJCUDAGDB = \
+ARM64MAC64/lltlg2mrc.cudagdb.o \
+ARM64MAC64/ltlgDataAllocate.cudagdb.o \
+ARM64MAC64/ltlgDataGet.cudagdb.o \
+ARM64MAC64/ltlgDataPrint.cudagdb.o \
+ARM64MAC64/ltlgDataReadFile.cudagdb.o \
+ARM64MAC64/ltlgDataWeightModify.cudagdb.o \
+ARM64MAC64/ltlgDataWriteFile.cudagdb.o \
+
+

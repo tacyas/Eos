@@ -1,0 +1,70 @@
+#!/bin/sh
+#
+# htmlDirList  1.1
+#
+# The latest update : 12/22/95 at 09:56:10
+#
+#@(#) htmlDirList Function
+#@(#)
+#
+#@(#) Usage : htmlDirList
+#
+#@(#) Attention
+#@(#)
+#@(#) Parameter: 
+#@(#)     Essential:
+#@(#)     Optional:
+#@(#)
+
+usage()
+{
+	echo "Usage: htmlDirList "
+}
+
+NameRead()
+{
+	ans="N"
+	while [ $ans != "Y" -a $ans != "y" ]
+	do
+		echo $1
+		read Name
+		echo "$Name is good ?"
+		read ans
+	done
+}
+# Store Flags
+FlagsCharacter="-"
+
+case $# in 
+	0)
+		;;
+	*)
+		while [ `echo $1 | cut -c1` = ${FlagsCharacter} ]
+		do
+			if [ `echo $1 | cut -c2` = "h" ] 
+			then
+				usage
+			else
+				parms="${parms} $1"
+				shift 
+			fi
+		done
+		;;
+esac
+
+case $# in
+	0) # No filename 
+		;;
+	*) #
+		usage
+		;;
+esac
+#
+currentDir=`pwd`
+echo "<UL> <H2> Alphabetical List </H2>"
+htmlList=`ls -1 *.html | sort | sed -e 's/index.html//' -e 's/.html//' `
+for html in $htmlList
+do
+	echo "<LI> <A HREF=\"${html}.html\"> ${html}</A>"
+done
+echo "</UL>"

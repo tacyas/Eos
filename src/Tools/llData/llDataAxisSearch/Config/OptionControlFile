@@ -1,0 +1,16 @@
+# OptionControlFile
+# FileFormat
+"-i1","-i1[nput]","In: NearSide","Optional","1","1","In1","inFile","NULL"
+"-i2","-i2[nput]","In: FarSide","Optional","1","1","In2","inFile","NULL"
+"-o1","-o1[utput]","Out: NearSide","Optional","1","1","Out1","outFile","NULL"
+"-o2","-o2[utput]","Out: FarSide","Optional","1","1","Out2","outFile","NULL"
+"-a","-a[verage]","Out: Average","Optional","1","1","Avg","outFile","NULL"
+"-o","-o[utput]","Out: FitParam","Optional","1","1","Out","outFile","NULL"
+"-op2","-op2[utput]","OutParam2: FitParam Distribution [mrcImage]","Optional","1","1","OutP2","outFile","NULL"
+"-t","-t[ruePitch]","TruePitch[A]","Optional","1","1","truePitch","Real","0.0"
+"-l","-l[ayer]","LayerInfo","Optional","1","1","L","inFile","NULL"
+"-O","-O[mega]","Omega[degree]","Optional","3","1","Omin","Real","0.0","2","Omax","Real","0.0","3","Odelta","Real","1.0"
+"-x","-x[shift]","shiftx[A]","Optional","3","1","xmin","Real","-10.0","2","xmax","Real","10.0","3","xdelta","Real","0.1"
+"-R","-R","Resolution[A]","Optional","1","1","R","Real","10.0"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"

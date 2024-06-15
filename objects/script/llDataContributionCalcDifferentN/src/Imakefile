@@ -1,0 +1,19 @@
+#define DoNotAutoRecreate NO
+
+#include EOS_INCLUDE
+
+OBJECT_TYPE = script
+
+TOOLBOX_NAME = eos
+
+OBJECT_NAME = llDataContributionCalcDifferentN
+
+BINARY_NAME = llDataContributionCalcDifferentN
+
+INSTPGMFLAGS =
+
+SCRIPTS = \
+	llDataContributionCalcDifferentN.ksh
+
+#define KKSH_DEF
+#include <Script.template>

@@ -1,0 +1,16 @@
+# OptionControlFile
+# FileFormat
+"-I","-I[nput array of file]","InputDataFiles","Essential","1","1","In","inFile","stdin"
+"-o","-o[utput]","OutputDataFile","Optional","1","1","Out","outFile","stdout"
+"-O","-O[utput]","Output: averaged images","Optional","0"
+"-N","-N[umber of clusters]","Number of clusters","Optional","1","1","N","Integer","1"
+"-Iter","-Iter[ation]","IterationFlag","Optional","0"
+"-AR","-A[uto]R[otation]","AutoRotationFlag","Optional","1","1","AutoRotation","Integer","72"
+"-ARiter","-A[uto]R[otation]iter[ation]","AutoRotationIteration","Optional","1","1","AutoRotationIteration","Integer","2"
+"-ARMethod","-A[uto]R[otation]Method","Method for Correlation for Auto Rotation","Optional","1","1","AutoRotationMethod","Integer","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-Mi","-Mi[rrorimage]","Mirror Image is considered -m 2 only","Optional","0"
+"-M","-M[odeForCorrelation]","Correlation Mode for AutoRotation","Optional","1","1","correlationMode","Integer","0x00"
+"-MP","-M[ax]P[rocess]","The maximum process number","Optional","1","1","Maxprocess","Integer","8"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","2"
+ 

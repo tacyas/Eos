@@ -1,0 +1,11 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input:PDB","Essential","1","1","In","inFile","NULL"
+"-r","-r[efrence]","Input:PDB","Essential","1","1","Ref","inFile","NULL"
+"-o","-o[utput]","Output: NAMD Restraint","Optional","1","1","Out","outFile","stdout"
+"-O","-O[utput]","Output: NAMD PDB Force","Optional","1","1","Out2","outFile","stdout"
+"-kf","-kf","Input: Kf kcal/mol/A^2","Optional","1","1","Kf","Real","1.0"
+"-autokf","-autokf","Input: Kf kcal/mol for averaged length","Optional","1","1","AutoKf","Real","1.0"
+"-seg","-seg[name]","Input: segment name","Optional","1","1","SegName","String","EXAMPLE"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

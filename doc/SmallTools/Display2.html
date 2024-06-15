@@ -1,0 +1,29 @@
+<HTML>
+<HEAD>
+<TITLE>Display2</TITLE>
+</HEAD>
+<BODY>
+<H1>Display2</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: Display2
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile::mrcImage    ) ] :Optional  :Input:mrcImage
+    [-t[epmlate]         Template            (%d.roi   ).as(String              ) ] :Optional  :Template for InputFile 
+    [-H[ighForThres]     ThresHigh           (0.0       ).as(Real                ) ] :Optional  :HighThres
+    [-L[owForThres]      ThresLow            (0.0       ).as(Real                ) ] :Optional  :LowThres
+    [-Zoom               Zoom                (1.0       ).as(Real                ) ] :Optional  :Zoom for InputFile 
+    [-Inverse                                                                      ] :Optional  :Inverse (HighValue(dark)<->LowValue(bright)) for InputFile 
+    [-o[utput]           Out                 (.EosLog   ).as(String              ) ] :Optional  :OutputLogFile
+    [-def[ault]          Default             (~/.Eos/Display2).as(String              ) ] :Optional  :OutputLogFile
+    [-display            geometry            (:0.0      ).as(String              ) ] :Optional  :OutputLogFile
+    [-geometry           display             (1024x1024+0+0).as(String              ) ] :Optional  :OutputLogFile
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+New wish commands of Display2
+mrcInfoSet [z|min|max] value
+mrcInfoSet [log|pow] 
+mrcInfoGet [Nx|Ny|Nz|Max|Min|Mean|Hist]
+</PRE>
+</BODY>
+</HTML>

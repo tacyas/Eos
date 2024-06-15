@@ -1,0 +1,23 @@
+I686LINUX/mrcFFTSpectrum -html 
+I686LINUX/mrcFFTSpectrum -html 
+I686LINUX/mrcFFTSpectrum -html 
+./I686LINUX/mrcFFTSpectrum -i test/data/test.ctffft 
+I686LINUX/mrcFFTSpectrum -html 
+./I686LINUX/mrcFFTSpectrum -i test/data/test.ctffft 
+./I686LINUX/mrcFFTSpectrum -i test/data/test.ctffft -h 
+./I686LINUX/mrcFFTSpectrum -i test/data/test.ctffft -n 4 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/data/test.ctffft 
+/home/people/tacyas/Eos/bin/I686LINUX/Display2 -i test/data/test.ctffft 
+./I686LINUX/mrcFFTSpectrum -i test/data/test.ctffft -n 8 
+I686LINUX/mrcFFTSpectrum -html 
+./I686LINUX/mrcFFTSpectrum -i test/data/test.ctffft -n 8 
+./I686LINUX/mrcFFTSpectrum -i test/data/test.ctffft -n 8 -axis 45 
+./I686LINUX/mrcFFTSpectrum -i test/data/test.ctffft -n 8 -axis 45 
+I686LINUX/mrcFFTSpectrum -html 
+I686LINUX/mrcFFTSpectrum -html 
+I686LINUX/mrcFFTSpectrum -html 
+X86LINUX64/mrcFFTSpectrum -html 
+CELLLINUX64/mrcFFTSpectrum -html 
+I686LINUX/mrcFFTSpectrum -html 
+X86LINUX64/mrcFFTSpectrum -html 
+I686LINUX/mrcFFTSpectrum -html 

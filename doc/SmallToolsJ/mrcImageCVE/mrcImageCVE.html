@@ -1,0 +1,184 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageCVE</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageCVE<br></h2></b></font>
+	<h4>分散平滑化処理</h4>
+	
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+		<table border="1">
+			<div align="left">
+				<tr>
+					<th>オプション</th>
+					<th>必須項目/選択項目</th>
+					<th>説明</th>
+					<th>デフォルト</th>
+				</tr>
+				<tr>
+					<td>-i</td>
+					<td>必須</td>
+					<td>入力ファイル設定</td>
+					<td>NULL</td>
+				</tr>
+				<tr>
+					<td>-o</td>
+					<td>必須</td>
+					<td>出力ファイル設定</td>
+					<td>NULL</td>
+				</tr>
+				<tr>
+					<td>-sx</td>
+					<td>選択</td>
+					<td>カーネルサイズ（ｘ軸）を設定</td>
+					<td>25</td>
+				</tr>
+				<tr>
+					<td>-sy</td>
+					<td>選択</td>
+					<td>カーネルサイズ（ｙ軸）を設定</td>
+					<td>25</td>
+				</tr>
+				<tr>
+					<td>-sz</td>
+					<td>選択</td>
+					<td>カーネルサイズ（ｚ軸）を設定</td>
+					<td>25</td>
+				</tr>
+				<tr>
+					<td>-h</td>
+					<td>選択</td>
+					<td>ヘルプを表示</td>
+					<td>　</td>
+				</tr>
+			</div>
+		</table>
+	
+	<div>※オプション-sx,-sy,-szは中心を決めるために奇数でなければならない</div>
+	
+	<br>	
+	<h4>******実行例******</h4>
+	
+<!-- 入力ファイル説明 -->
+
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="b120-2.png" border="0" alt="b120-2.png(6742 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-65.0178<br>
+				94.4699<br>
+				4.85274<br>
+				20.4635<br>
+				0.255794<br></p>
+			</td>
+		</tr>
+	</table>
+
+<!-- 実行結果 -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション必須項目のみの場合------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="outdata.png" border="0" alt="outdata.png(6666 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">1.01639<br>
+				8.43754<br>
+				4.84739<br>
+				0.878085<br>
+				0.0109761<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-sx,-sy------</font></caption><br>
+	<div>sx=41,sy=41で実行</div>
+	<table>
+		<tr>
+			<td><img src="outdata-s40.png" border="0" alt="outdata-s40.png(6682 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">2.47541<br>
+				7.16498<br>
+				4.82822<br>
+				0.563772<br>
+				0.00704715<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>sx=61,sy=61で実行</div>
+	<table>
+		<tr>
+			<td><img src="outdata-s61.png" border="0" alt="outdata-s61.png(6732 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">3.28807<br>
+				6.4312<br>
+				4.80146<br>
+				0.392827<br>
+				0.00491034<br></p>
+			</td>
+		</tr>
+	</table>
+		
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

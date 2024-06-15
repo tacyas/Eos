@@ -1,0 +1,580 @@
+/*
+# %M% %Y% %I%
+# The latest update : %G% at %U%
+#
+#%Z% mrcImageGet ver %I%
+#%Z% Created by 
+#%Z%
+#%Z% Usage : mrcImageGet 
+#%Z% Attention
+#%Z%
+*/
+static char __sccs_id[] = "%Z%mrcImageGet ver%I%; Date:%D% %Z%";
+/* 
+* mrcGet.c
+*/
+#include <math.h>
+#include <stdlib.h>
+
+#include "../inc/mrcImage.h"
+
+#undef DEBUG
+
+#include "genUtil.h"
+
+#define SQR(x) ((x)*(x))
+#define FOR_RINT (0.5)
+
+
+#define RTN_NAME "mrc"
+inline
+double
+mrcImageDataGetbyAU(mrcImage* mrc,
+		mrcImageParaTypeReal x,
+		mrcImageParaTypeReal y,
+		mrcImageParaTypeReal z,
+		double* data,
+		mrcPixelDataType mode,
+		mrcPixelDataHowToGet how)
+{
+	return mrcPixelDataGet(mrc, x/mrc->HeaderLength.x,	
+						 y/mrc->HeaderLength.y,	
+						 z/mrc->HeaderLength.z,	
+						 data,
+						 mode,
+						 how);
+}
+#undef RTN_NAME
+
+#define RTN_NAME "mrcPixelDataGet"
+inline
+double
+mrcPixelDataGet(mrcImage* mrc,
+		mrcImageParaTypeReal x,
+		mrcImageParaTypeReal y,
+		mrcImageParaTypeReal z,
+		double* data,
+		mrcPixelDataType mode,
+		mrcPixelDataHowToGet how)
+{
+    static char s[20];
+    static mrcImageParaTypeInteger n, ix, iy, iz;
+    static double sig;
+
+    switch(mrc->HeaderMode) {
+		case mrcCharImage: 
+		case mrcShortImage:
+		case mrcLongImage:
+		case mrcFloatImage:
+		case mrcDoubleImage: {
+			ix = (mrcImageParaTypeInteger)POSITIVE_MODE(((mrcImageParaTypeInteger)floor(x+FOR_RINT)), mrc->HeaderN.x);
+			iy = (mrcImageParaTypeInteger)POSITIVE_MODE(((mrcImageParaTypeInteger)floor(y+FOR_RINT)), mrc->HeaderN.y);
+			iz = (mrcImageParaTypeInteger)POSITIVE_MODE(((mrcImageParaTypeInteger)floor(z+FOR_RINT)), mrc->HeaderN.z);
+			DEBUGPRINT3("(%d, %d, %d)\n", ix, iy, iz);
+			/*
+			ix = (mrcImageParaTypeInteger)floor(x+FOR_RINT);
+			iy = (mrcImageParaTypeInteger)floor(y+FOR_RINT);
+			iz = (mrcImageParaTypeInteger)floor(z+FOR_RINT);
+			*/
+            n =  ix + mrc->HeaderN.x*iy + mrc->HeaderN.x*mrc->HeaderN.y*iz;
+			sig = 1.0;
+			break;
+        }
+		case mrcComplexShortFT:
+		case mrcComplexLongFT:
+		case mrcComplexFloatFT:
+		case mrcComplexDoubleFT: {
+			if(x<0) {
+				ix = -(mrcImageParaTypeInteger)floor(x+FOR_RINT);
+				iy = -(mrcImageParaTypeInteger)floor(y+FOR_RINT) + mrc->HeaderN.y/2;
+				iz = -(mrcImageParaTypeInteger)floor(z+FOR_RINT) + mrc->HeaderN.z/2;
+				sig = -1.0;
+			} else {
+                ix = (mrcImageParaTypeInteger)floor(x+FOR_RINT);
+				iy = (mrcImageParaTypeInteger)floor(y+FOR_RINT) + mrc->HeaderN.y/2;
+				iz = (mrcImageParaTypeInteger)floor(z+FOR_RINT) + mrc->HeaderN.z/2;
+				sig = 1.0;
+ 			}
+			if(1 == mrc->HeaderN.z) {
+				n = (ix + (mrc->HeaderN.x/2+1)*iy)%((mrc->HeaderN.x/2 + 1)*(mrc->HeaderN.y));
+            } else {
+				n = (ix + (mrc->HeaderN.x/2+1)*iy + (mrc->HeaderN.x/2+1)*(mrc->HeaderN.y)*iz)%((mrc->HeaderN.x/2+1)*(mrc->HeaderN.y)*(mrc->HeaderN.z));
+            }
+			break;
+		}
+		default: {
+			sprintf(s, "mrcImage Mode %ld", mrc->HeaderMode);
+			mrcError("Check!", RTN_NAME, s, 
+				 mrcStatusMask_ExitFailure|MRC_ModeNotSupported);
+			exit(EXIT_FAILURE);
+        }
+    }
+
+    switch(how) {
+        case mrcPixelHowNearest: {
+			switch(mode) {
+				case mrcPixelRePart: {
+					switch(mrc->HeaderMode) {
+						case mrcCharImage: {
+						   *data = (double)mrc->ImageCharImage[n];
+						   break;
+						}
+						case mrcShortImage: {
+						   *data = (double)mrc->ImageShortImage[n];
+						   break;
+						}
+						case mrcFloatImage: {
+							*data = (double)mrc->ImageFloatImage[n];
+							break;
+						}
+						case mrcComplexShortFT: {
+							*data = (double)mrc->ImageShortImage[2*n];
+							break;
+                        }
+						case mrcComplexFloatFT: {
+							*data = (double)mrc->ImageFloatImage[2*n];
+							break;
+						}
+						case mrcLongImage: {
+							*data = (double)mrc->ImageLongImage[n];
+							break;
+						}
+						case mrcDoubleImage: {
+							*data = (double)mrc->ImageDoubleImage[n];
+							break;
+						}
+						case mrcComplexLongFT: {
+							*data = (double)mrc->ImageLongImage[2*n];
+							break;
+						}
+						case mrcComplexDoubleFT: {
+							*data = (double)mrc->ImageDoubleImage[2*n];
+							break;
+						}
+						default: {
+							sprintf(s, "mrcImage Mode %ld", mrc->HeaderMode);
+							mrcError(RTN_NAME, "mrcPixelRePart", s, 
+								 mrcStatusMask_ExitFailure|MRC_ModeNotSupported);
+						}
+					}
+					break;
+				}
+				case mrcPixelImPart: {
+					switch(mrc->HeaderMode) {
+						case mrcComplexShortFT: {
+							*data = sig*(double)mrc->ImageShortImage[2*n+1];
+							break;
+						}
+						case mrcComplexLongFT: {
+							*data = sig*(double)mrc->ImageLongImage[2*n+1];
+							break;
+						}
+						case mrcComplexFloatFT: {
+							*data = sig*(double)mrc->ImageFloatImage[2*n+1];
+							break;
+						}
+						case mrcComplexDoubleFT: {
+							*data = sig*(double)mrc->ImageDoubleImage[2*n+1];
+							break;
+						}
+						default: {
+							sprintf(s, "mrcImage Mode %ld", mrc->HeaderMode);
+                            mrcError(RTN_NAME, "mrcPixelImPart", s, 
+							 mrcStatusMask_ExitFailure|MRC_ModeNotSupported);
+                        }
+					}
+					break;
+                }
+				case mrcPixelMag: {
+					switch(mrc->HeaderMode) {
+						case mrcCharImage: {
+							*data = (double)mrc->ImageCharImage[n];
+							break;
+                        }
+						case mrcShortImage: {
+							*data = (double)mrc->ImageShortImage[n];
+							break;
+						}
+						case mrcFloatImage: {
+							*data = (double)mrc->ImageFloatImage[n];
+							break;
+						}
+						case mrcLongImage: {
+							*data = (double)mrc->ImageLongImage[n];
+							break;
+						}
+						case mrcDoubleImage: {
+							*data = (double)mrc->ImageDoubleImage[n];
+							break;
+						}
+						case mrcComplexShortFT: {
+							*data = sqrt(SQR((double)mrc->ImageShortImage[2*n])
+										+SQR((double)mrc->ImageShortImage[2*n+1]));
+							break;
+						}
+						case mrcComplexLongFT: { 
+							*data = sqrt(SQR((double)mrc->ImageLongImage[2*n]) 
+						    +SQR((double)mrc->ImageLongImage[2*n+1]));
+                            break;
+						}
+						case mrcComplexFloatFT: {
+						    *data = sqrt(SQR((double)mrc->ImageFloatImage[2*n])
+						                +SQR((double)mrc->ImageFloatImage[2*n+1]));
+						    break;
+						}
+						case mrcComplexDoubleFT: {
+						    *data = sqrt(SQR((double)mrc->ImageDoubleImage[2*n])
+						                +SQR((double)mrc->ImageDoubleImage[2*n+1]));
+						    break;
+						}
+						default: {
+						    sprintf(s, "mrcImage Mode %ld", mrc->HeaderMode);
+			                mrcError(RTN_NAME, "mrcPixelImPart", s, 
+							        mrcStatusMask_ExitFailure|MRC_ModeNotSupported);
+						}
+					}
+					break;
+				}
+				case mrcPixelPow: {
+					switch(mrc->HeaderMode) {
+						case mrcCharImage: {
+							*data = SQR((double)mrc->ImageCharImage[n]);
+							break;
+                        }
+						case mrcShortImage: {
+							*data = SQR((double)mrc->ImageShortImage[n]);
+							break;
+						}
+						case mrcFloatImage: {
+							*data = SQR((double)mrc->ImageFloatImage[n]);
+							break;
+						}
+						case mrcLongImage: {
+							*data = SQR((double)mrc->ImageLongImage[n]);
+							break;
+						}
+						case mrcDoubleImage: {
+							*data = SQR((double)mrc->ImageDoubleImage[n]);
+							break;
+						}
+						case mrcComplexShortFT: {
+						    *data = (SQR((double)mrc->ImageShortImage[2*n])
+						            +SQR((double)mrc->ImageShortImage[2*n+1]));
+						    break;
+						}
+						case mrcComplexLongFT: {
+						    *data = (SQR((double)mrc->ImageLongImage[2*n])
+						            +SQR((double)mrc->ImageLongImage[2*n+1]));
+			                            break;
+						}
+						case mrcComplexFloatFT: {
+						    *data = (SQR((double)mrc->ImageFloatImage[2*n])
+						            +SQR((double)mrc->ImageFloatImage[2*n+1]));
+						    break;
+						}
+						case mrcComplexDoubleFT: {
+						    *data = (SQR((double)mrc->ImageDoubleImage[2*n])
+						            +SQR((double)mrc->ImageDoubleImage[2*n+1]));
+						    break;
+						}
+						default: {
+						    sprintf(s, "mrcImage Mode %ld", mrc->HeaderMode);
+			                mrcError(RTN_NAME, "mrcPixelImPart", s, 
+							     mrcStatusMask_ExitFailure|MRC_ModeNotSupported);
+						}
+					}
+		    		break;
+				}
+				case mrcPixelLogMag: {
+					switch(mrc->HeaderMode) {
+						case mrcComplexShortFT: {
+							*data = log10(SQR((double)mrc->ImageShortImage[2*n])
+										 +SQR((double)mrc->ImageShortImage[2*n+1]))/2;
+						    break;
+						}
+						case mrcComplexLongFT: {
+						    *data = log10(SQR((double)mrc->ImageLongImage[2*n])
+						                 +SQR((double)mrc->ImageLongImage[2*n+1]))/2;
+			                            break;
+						}
+						case mrcComplexFloatFT: {
+						    *data = log10(SQR((double)mrc->ImageFloatImage[2*n])
+						                 +SQR((double)mrc->ImageFloatImage[2*n+1]))/2;
+						    break;
+						}
+						case mrcComplexDoubleFT: {
+						    *data = log10(SQR((double)mrc->ImageDoubleImage[2*n])
+						                 +SQR((double)mrc->ImageDoubleImage[2*n+1]))/2;
+						    break;
+						}
+						default: {
+						    sprintf(s, "mrcImage Mode %ld", mrc->HeaderMode);
+			                mrcError(RTN_NAME, "mrcPixelImPart", s, 
+							     mrcStatusMask_ExitFailure|MRC_ModeNotSupported);
+						}
+					}
+					break;
+				}
+				case mrcPixelLogPow: {
+					switch(mrc->HeaderMode) {
+						case mrcComplexShortFT: {
+						    *data = log10(SQR((double)mrc->ImageShortImage[2*n])
+						                 +SQR((double)mrc->ImageShortImage[2*n+1]));
+						    break;
+						}
+						case mrcComplexLongFT: {
+						    *data = log10(SQR((double)mrc->ImageLongImage[2*n])
+						                 +SQR((double)mrc->ImageLongImage[2*n+1]));
+			                            break;
+						}
+						case mrcComplexFloatFT: {
+						    *data = log10(SQR((double)mrc->ImageFloatImage[2*n])
+						                 +SQR((double)mrc->ImageFloatImage[2*n+1]));
+						    break;
+						}
+						case mrcComplexDoubleFT: {
+						    *data = log10(SQR((double)mrc->ImageDoubleImage[2*n])
+						                 +SQR((double)mrc->ImageDoubleImage[2*n+1]));
+						    break;
+						}
+						default: {
+						    sprintf(s, "mrcImage Mode %ld", mrc->HeaderMode);
+			                mrcError(RTN_NAME, "mrcPixelImPart", s, 
+							     mrcStatusMask_ExitFailure|MRC_ModeNotSupported);
+                        }
+		    		}
+		    		break;
+				}
+				case mrcPixelPhase: {
+					switch(mrc->HeaderMode) {
+						case mrcComplexShortFT: {
+							if(mrc->ImageShortImage[2*n+1]*mrc->ImageShortImage[2*n]==0) {
+								*data = 0;
+							} else {
+						    	*data = atan2(sig*((double)mrc->ImageShortImage[2*n+1])
+						                 ,((double)mrc->ImageShortImage[2*n]));
+							}
+						    break;
+						}
+						case mrcComplexLongFT: {
+							if(mrc->ImageLongImage[2*n+1]*mrc->ImageLongImage[2*n]==0) {
+								*data = 0.0;
+							} else {
+						    	*data = atan2(sig*((double)mrc->ImageLongImage[2*n+1])
+						                 ,((double)mrc->ImageLongImage[2*n]));
+							}
+			                            break;
+						}
+						case mrcComplexFloatFT: {
+							if(mrc->ImageFloatImage[2*n+1]*mrc->ImageFloatImage[2*n]==0) {
+								*data = 0.0;
+							} else {
+						    	*data = atan2(sig*((double)mrc->ImageFloatImage[2*n+1])
+						                 ,((double)mrc->ImageFloatImage[2*n]));
+							}
+						    break;
+						}
+						case mrcComplexDoubleFT: {
+							if(mrc->ImageDoubleImage[2*n+1]*mrc->ImageDoubleImage[2*n]==0) {
+								*data = 0.0;
+							} else {
+						    	*data = atan2(sig*((double)mrc->ImageDoubleImage[2*n+1])
+						                 ,((double)mrc->ImageDoubleImage[2*n]));
+							}
+						    break;
+						}
+						default: {
+						    sprintf(s, "mrcImage Mode %ld", mrc->HeaderMode);
+			                mrcError(RTN_NAME, "mrcPixelImPart", s, 
+							     mrcStatusMask_ExitFailure|MRC_ModeNotSupported);
+                        }
+					}
+					break;
+				}
+				default: {
+					sprintf(s, "mrcPixelType %d", mode);
+					mrcError(RTN_NAME, "Pixel Data Type", s, 
+						 mrcStatusMask_ExitFailure|MRC_ModeNotSupported);
+					break;
+				}
+			}
+            break;
+		} 
+        case mrcPixelHowLinear: {
+			static mrcImageParaTypeInteger ix0, iy0, iz0;
+			static mrcImageParaTypeInteger ix1, iy1, iz1;
+			static mrcImageParaTypeReal d000, d100, d010, d001, d011, d101, d110, d111;
+			ix0 = floor(x);
+			iy0 = floor(y);
+			iz0 = floor(z);
+			ix1 = ix0 + 1;
+			iy1 = iy0 + 1;
+			iz1 = iz0 + 1;
+			switch(mode) {
+				case mrcPixelRePart: {
+					switch(mrc->HeaderMode) {
+						case mrcFloatImage: {
+							*data = (ix1 -  x)*(iy1 -  y)*(iz1 -  z)*mrc->ImageFloatImage[
+											 		 			 POSITIVE_MODE(ix0,mrc->HeaderN.x)
+																+POSITIVE_MODE(iy0,mrc->HeaderN.y)*mrc->HeaderN.x
+																+POSITIVE_MODE(iz0,mrc->HeaderN.z)*mrc->HeaderN.x*mrc->HeaderN.y]
+								  + (ix1 -  x)*(  y -iy0)*(iz1 -  z)*mrc->ImageFloatImage[
+																 POSITIVE_MODE(ix0,mrc->HeaderN.x)
+																+POSITIVE_MODE(iy1,mrc->HeaderN.y)*mrc->HeaderN.x
+																+POSITIVE_MODE(iz0,mrc->HeaderN.z)*mrc->HeaderN.x*mrc->HeaderN.y]
+								  + (  x -ix0)*(iy1 -  y)*(iz1 -  z)*mrc->ImageFloatImage[
+																 POSITIVE_MODE(ix1,mrc->HeaderN.x)
+																+POSITIVE_MODE(iy0,mrc->HeaderN.y)*mrc->HeaderN.x
+																+POSITIVE_MODE(iz0,mrc->HeaderN.z)*mrc->HeaderN.x*mrc->HeaderN.y]
+								  + (  x -ix0)*(  y -iy0)*(iz1 -  z)*mrc->ImageFloatImage[
+																 POSITIVE_MODE(ix1,mrc->HeaderN.x)
+																+POSITIVE_MODE(iy1,mrc->HeaderN.y)*mrc->HeaderN.x
+																+POSITIVE_MODE(iz0,mrc->HeaderN.z)*mrc->HeaderN.x*mrc->HeaderN.y]
+							      + (ix1 -  x)*(iy1 -  y)*(  z -iz0)*mrc->ImageFloatImage[
+																 POSITIVE_MODE(ix0,mrc->HeaderN.x)
+																+POSITIVE_MODE(iy0,mrc->HeaderN.y)*mrc->HeaderN.x
+																+POSITIVE_MODE(iz1,mrc->HeaderN.z)*mrc->HeaderN.x*mrc->HeaderN.y]
+								  + (ix1 -  x)*(  y -iy0)*(  z -iz0)*mrc->ImageFloatImage[
+																 POSITIVE_MODE(ix0,mrc->HeaderN.x)
+																+POSITIVE_MODE(iy1,mrc->HeaderN.y)*mrc->HeaderN.x
+																+POSITIVE_MODE(iz1,mrc->HeaderN.z)*mrc->HeaderN.x*mrc->HeaderN.y]
+								  + (  x -ix0)*(iy1 -  y)*(  z -iz0)*mrc->ImageFloatImage[
+																 POSITIVE_MODE(ix1,mrc->HeaderN.x)
+																+POSITIVE_MODE(iy0,mrc->HeaderN.y)*mrc->HeaderN.x
+																+POSITIVE_MODE(iz1,mrc->HeaderN.z)*mrc->HeaderN.x*mrc->HeaderN.y]
+								  + (  x -ix0)*(  y -iy0)*(  z -iz0)*mrc->ImageFloatImage[
+																 POSITIVE_MODE(ix1,mrc->HeaderN.x)
+																+POSITIVE_MODE(iy1,mrc->HeaderN.y)*mrc->HeaderN.x
+																+POSITIVE_MODE(iz1,mrc->HeaderN.z)*mrc->HeaderN.x*mrc->HeaderN.y];
+							break;
+						}
+						default: {
+						    sprintf(s, "mrcImage Mode %ld", mrc->HeaderMode);
+			                mrcError(RTN_NAME, "mrcPixelRePart", s, 
+							     mrcStatusMask_ExitFailure|MRC_ModeNotSupported);
+                        }
+					}
+					break;
+				}
+				default: {
+					sprintf(s, "mrcPixelType %d", mode);
+					mrcError(RTN_NAME, "Pixel Data Type", s, 
+						 mrcStatusMask_ExitFailure|MRC_ModeNotSupported);
+					break;
+				}
+			}
+			break;
+		}
+        case mrcPixelHowCubicConv: {
+	  /*
+			ix = (int)x;
+			iy = (int)y;
+			iz = (int)z;
+			switch(mode) {
+				case mrcPixelRePart: {
+					switch(mrc->HeaderMode) {
+						case mrcFloatImage: {
+							*data = ((ix+1) - x)*((iy+1) - y)*((iz+1) - z)*mrc->ImageFloatImage[(n                                                   )%mrc->PixelPerImage]
+								  + ((ix+1) - x)*(  y    -iy)*((iz+1) - z)*mrc->ImageFloatImage[(n   + mrc->HeaderN.x                                )%mrc->PixelPerImage]
+								  + (  x    -ix)*((iy+1) - y)*((iz+1) - z)*mrc->ImageFloatImage[(n+1                                                 )%mrc->PixelPerImage]
+								  + (  x    -ix)*(  y    -iy)*((iz+1) - z)*mrc->ImageFloatImage[(n+1 + mrc->HeaderN.x                                )%mrc->PixelPerImage]
+							      + ((ix+1) - x)*((iy+1) - y)*(  z    -iz)*mrc->ImageFloatImage[(n                    + mrc->HeaderN.x*mrc->HeaderN.y)%mrc->PixelPerImage]
+								  + ((ix+1) - x)*(  y    -iy)*(  z    -iz)*mrc->ImageFloatImage[(n   + mrc->HeaderN.x + mrc->HeaderN.x*mrc->HeaderN.y)%mrc->PixelPerImage]
+								  + (  x    -ix)*((iy+1) - y)*(  z    -iz)*mrc->ImageFloatImage[(n+1                  + mrc->HeaderN.x*mrc->HeaderN.y)%mrc->PixelPerImage]
+								  + (  x    -ix)*(  y    -iy)*(  z    -iz)*mrc->ImageFloatImage[(n+1 + mrc->HeaderN.x + mrc->HeaderN.x*mrc->HeaderN.y)%mrc->PixelPerImage];
+							break;
+						}
+						default: {
+						    sprintf(s, "mrcImage Mode %ld", mrc->HeaderMode);
+			                mrcError(RTN_NAME, "mrcPixelRePart", s, 
+							     mrcStatusMask_ExitFailure|MRC_ModeNotSupported);
+                        }
+					}
+					break;
+				}
+				default: {
+					sprintf(s, "mrcPixelType %d", mode);
+					mrcError(RTN_NAME, "Pixel Data Type", s, 
+     						 mrcStatusMask_ExitFailure|MRC_ModeNotSupported);
+					break;
+				}
+			}
+			break;
+		}
+	  */
+	  static mrcImageParaTypeInteger ix0, iy0, iz0;
+	  static mrcImageParaTypeInteger xl ,yl ,xmin ,xmax ,ymin ,ymax;
+	  static mrcImageParaTypeReal dx,dy,nx,ny;
+	  static double imagedata;
+	  nx=mrc->HeaderN.x;
+	  ny=mrc->HeaderN.y;
+	  
+	  
+	  if((int)(x-3.0)<0) {
+	    xmin = 0;
+	  } else {
+	    xmin = (int)(x-3.0);
+	  }
+	  if((int)(x+3.0)>nx-1) {
+	    xmax = nx-1;
+	  } else {
+	    xmax = (int)(x+3.0);
+	  }
+	  
+	  if((int)(y-3.0)<0) {
+	    ymin = 0;
+	  } else {
+	    ymin = (int)(y-3.0);
+	  }   
+	  if((int)(y+3.0)>ny-1) {
+	    ymax = ny-1;
+	  } else {
+	    ymax = (int)(y+3.0);
+	  }
+
+	  *data = 0.0;   
+	  for(xl=xmin; xl<=xmax; xl++) {
+	    for(yl=ymin; yl<=ymax; yl++) {
+	      dx = fabs(x-xl);
+	      dy = fabs(y-yl);
+	      if(dx>=2.0||dy>=2.0) {
+                *data += 0.0;
+	      } else if(dx>=1.0&&dy>=1.0) {
+	        mrcPixelDataGet(mrc ,xl,yl,0,&imagedata,mrcPixelRePart ,mrcPixelHowNearest);
+                *data += ((4.0-8.0*dx+5.0*dx*dx-dx*dx*dx)
+			*(4.0-8.0*dy+5.0*dy*dy-dy*dy*dy)
+			*imagedata);
+	      } else if(dx>=1.0&&dy<1.0) {
+	        mrcPixelDataGet(mrc ,xl,yl,0,&imagedata,mrcPixelRePart ,mrcPixelHowNearest);
+                *data += ((4.0-8.0*dx+5.0*dx*dx-dx*dx*dx)
+			*(1.0-2.0*dy*dy+dy*dy*dy)
+			*imagedata);
+	      } else if(dx<1.0&&dy>=1.0) {
+	        mrcPixelDataGet(mrc ,xl,yl,0,&imagedata,mrcPixelRePart ,mrcPixelHowNearest);
+                *data += ((4.0-8.0*dy+5.0*dy*dy-dy*dy*dy)
+			*(1.0-2.0*dx*dx+dx*dx*dx)
+			*imagedata);
+	      } else if(dx<1.0&&dy<1.0) {
+	        mrcPixelDataGet(mrc ,xl,yl,0,&imagedata,mrcPixelRePart ,mrcPixelHowNearest);              
+		*data += ((1.0-2.0*dx*dx+dx*dx*dx)
+			*(1.0-2.0*dy*dy+dy*dy*dy)
+			*imagedata);
+	      } else {
+                fprintf(stderr, "That's stupid!\n!");
+	      }
+	    }
+	  }
+	}
+	  
+
+
+		default: {
+		    sprintf(s, "Unkown Methods:%d", how);
+		    mrcError(RTN_NAME, "How to Get Image Data", s, 
+		  			  mrcStatusMask_ExitFailure|MRC_ModeNotSupported);
+		}
+    }
+    return *data;
+}
+
+#undef RTN_NAME

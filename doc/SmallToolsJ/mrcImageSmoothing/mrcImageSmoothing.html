@@ -1,0 +1,279 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageSmoothing</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageSmoothing<br></h2></b></font>
+	<h4>平滑化処理</h4>
+	
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>オプション</th>
+				<th>必須項目/選択項目</th>
+				<th>説明</th>
+				<th>デフォルト</th>
+			</tr>
+			<tr>
+				<td>-i</td>
+				<td>必須</td>
+				<td>入力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-o</td>
+				<td>必須</td>
+				<td>出力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-sx</td>
+				<td>選択</td>
+				<td>平滑化フィルタのｘ軸を指定</td>
+				<td>3</td>
+			</tr>
+			<tr>
+				<td>-sy</td>
+				<td>選択</td>
+				<td>平滑化フィルタのｙ軸を指定</td>
+				<td>3</td>
+			</tr>
+			<tr>
+				<td>-sz</td>
+				<td>選択</td>
+				<td>平滑化フィルタのｚ軸を指定</td>
+				<td>3</td>
+			</tr>
+			<tr>
+				<td>-r</td>
+				<td>選択</td>
+				<td>平滑化フィルタの半径を指定</td>
+				<td>1</td>
+			</tr>
+			<tr>
+				<td>-m</td>
+				<td>選択</td>
+				<td>モード１を設定</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-M</td>
+				<td>選択</td>
+				<td>モード２を設定</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-h</td>
+				<td>選択</td>
+				<td>ヘルプを表示</td>
+				<td>　</td>
+			</tr>
+		</table>
+			
+<!-- モード説明 -->
+
+	<br>
+	<br>
+	<caption><b>モード１の詳細</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>モード</th>
+				<th>説明</th>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>メディアンフィルタ</td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td>平均値フィルタ</td>
+			</tr>
+			<tr>
+				<td>3</td>
+				<td>サーフェイスフィットフィルタ</td>
+			</tr>
+		</table>
+	<br>
+	<caption><b>モード２の詳細</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>モード</th>
+				<th>説明</th>
+			</tr>
+			<tr>
+				<td>0</td>
+				<td>平滑化フィルタを四角とする<br>
+				※オプションの-sx,-syを設定すること</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>平滑化フィルタを円とする<br>
+				モード１で１を選択したときのみ実行可<br>
+				※オプションの-rを設定すること</td>
+			</tr>
+		</table>
+		<br>
+		
+	<h4>******実行例******</h4>
+	
+<!-- 入力ファイル説明 -->
+
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="b120.center.png" border="0" alt="b120.center.png(6742 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-65.0178<br>
+				94.4699<br>
+				4.85274<br>
+				20.4635<br>
+				0.255794<br></p>
+			</td>
+		</tr>
+	</table>
+	
+<!-- モード１～３での処理 -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------モード１の1～3での処理画像------</font></caption><br>
+	<table>
+		<tr><td>モード１：1</td></tr>
+		<tr>
+			<td><img src="smo.m1.center.png" border="0" alt="smo.m1.center.png(6414 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-41.8721<br>
+				65.9659<br>
+				4.7617<br>
+				14.3083<br>
+				0.178854<br></p>
+			</td>
+			<td>モード２：0を選択<br>
+			-sx=9,-sy=9に変更<br>
+				　　－－－－－－＞</td>
+			<td><img src="smo.m1M0x9y9.center.png" border="0" alt="smo.m1M0x9y9.center.png(5878 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-54.6403<br>
+				54.0815<br>
+				4.773<br>
+				13.5848<br>
+				0.16981<br></p>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td>モード２：1を選択<br>
+			-r=5に変更<br>
+				　　－－－－－－＞</td>
+			<td><img src="smo.m1M1r5.center.png" border="0" alt="smo.m1M1r5.center.png(6055 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-54.6403<br>
+				55.7056<br>
+				4.73966<br>
+				13.9823<br>
+				0.174779<br></p>
+			</td>
+		</tr>
+		
+		<tr><td>モード１：2</td></tr>
+		<tr>
+			<td><img src="smo.m2.center.png" border="0" alt="smo.m2.center.png(6468 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-41.8721<br>
+				67.5276<br>
+				4.82079<br>
+				13.8056<br>
+				0.17257<br></p>
+			</td>
+			<td>モード２：0を選択<br>
+			-sx=9,-sy=9に変更<br>
+				　　－－－－－－＞</td>
+			<td><img src="smo.m2M0x9y9.center.png" border="0" alt="smo.m2M0x9y9.center.png(6033 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-54.6403<br>
+				54.0644<br>
+				4.89358<br>
+				13.5214<br>
+				0.169018<br></p>
+			</td>
+		</tr>
+
+		<tr><td>モード１：3</td></tr>
+		<tr>
+			<td><img src="smo.m3.center.png" border="0" alt="smo.m3.center.png(6803 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-41.8721<br>
+				83.4967<br>
+				4.85411<br>
+				17.5032<br>
+				0.21879<br></p>
+			</td>
+			<td>モード２：0を選択<br>
+			-sx=9,-sy=9に変更<br>
+				　　－－－－－－＞</td>
+			<td><img src="smo.m3M0x9y9.center.png" border="0" alt="smo.m3M0x9y9.center.png(6405 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-54.6403<br>
+				56.99<br>
+				4.87303<br>
+				14.4517<br>
+				0.180646<br></p>
+			</td>
+		</tr>
+	</table>
+	<br>
+	<div>※モード１はデフォルト＝０になっているが、モード１の選択肢に<br>
+	０は無いので、指定しなければエラーとなる。</div>
+</body>
+</html>

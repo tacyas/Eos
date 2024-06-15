@@ -1,0 +1,12 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","In: InputList","Optional","1","1","In","inFileList","NULL"
+"-I","-I[nput]","In: Average Variable N","Optional","3","1","In2","inFile","NULL","2","In2Var","inFile","NULL","3","In2N","Integer","0"
+"-Nor","-Nor[malizingParameter]","In: A + B*x: NormalizingParameter","Optional","2","1","NorA","Real","0.0","2","NorB","Real","1.0"
+"-r","-r[ef]","Ref: InputList","Optional","1","1","Ref","inFileList","NULL"
+"-R","-R[ef]","Ref: Average Variable N","Optional","3","1","Ref2","inFile","NULL","2","Ref2Var","inFile","NULL","3","Ref2N","Integer","0"
+"-NorR","-Nor[malizingParameter]R","In: A + B*x: NormalizingParameter for Ref","Optional","2","1","NorARef","Real","0.0","2","NorBRef","Real","1.0"
+"-o","-o[utput]","Output: Probability","Optional","1","1","Out","outFile","NULL"
+"-t","-t[Value]","Output: t-value","Optional","1","1","OutT","outFile","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

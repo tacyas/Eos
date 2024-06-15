@@ -1,0 +1,9 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input:mrcImage","Essential","1","1","In","inFile::mrcImage","NULL"
+"-o","-o[utput]","Output:basename-mrcImage(FT)s","Essential","1","1","FTBBase","String","out"
+"-O","-O[utput]","Output:basename-ascii","Essential","1","1","FTABase","String","Out"
+"-W","-W[idth]","Width[pixel]","Optional","1","1","width","Integer","256"
+"-H","-H[eight]","Height[pixel]","Optional","1","1","height","Integer","256"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

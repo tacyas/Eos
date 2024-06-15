@@ -1,0 +1,15 @@
+if [ $1 = "-h" ]
+then	echo "makefunctionlistfromlib output lib"
+	exit
+fi	
+result=$1
+lib=$2
+rm $result
+nm --extern-only -s $lib |awk '{print $0," "}' >nm.$result
+awk '$2=="T"{print $3}' nm.$result > temp.$result
+funclist=`cat temp.$result`
+for func in $funclist
+do	egrep ^"$func " nm.$result |awk  '$2=="in"{print $1,$3}' >> $result
+done
+rm temp.$result nm.$result	
+

@@ -1,0 +1,4 @@
+OBJECTNAME = pdb2SketchMacro
+EXTRA_LIB  =
+EXTRA_CCOPTS =
+EXTRA_INC =

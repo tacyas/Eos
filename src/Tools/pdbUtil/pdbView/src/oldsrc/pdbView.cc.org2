@@ -1,0 +1,224 @@
+/*
+  # pdbView : $Revision$  
+  # $Date$ 
+  # Created by $Author$
+  # Usage : pdbView
+  # Attention
+  #   $Loccker$
+  #  	$State$ 
+  #
+*/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <stream.h>
+#include "vtk.h"
+
+#include <pgsql/libpq-fe.h>
+
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+
+#define DEBUG
+#include "genUtil.h"
+#include "pdbFile.h"
+#include "Memory.h"
+
+#include "ShapeMaker.hh"
+#include "DataStore.hh"
+#include "ActorMaker.hh"
+#include "vtkTextMapper.h"
+#include "vtkPicker.h"
+
+enum CG{
+  All,
+  CAonly
+};
+
+enum TextMode{
+  TextModeResidueSequenceNumber,
+  TextModeAtomName,
+  TextModeResidueName,
+  TextModeChainIdentifier,
+  TextModeAllSet
+};
+
+class FigureFactory
+{
+private:
+  pdbFile* pdb;
+  vtkPolyDataMapper* mapper;
+  vtkActor* actor;
+  DataStore* dataStore;
+  SphereMaker* sphereMaker;
+  ActorMaker* actorMaker;
+  vtkRenderer* ren;
+  vtkAssembly* AllMolecule;
+  vtkAssembly* CaOnly;
+
+public:
+  FigureFactory();
+  void SetData(void* data, void* p, void* render);
+  void MAKE();
+};
+
+
+FigureFactory::FigureFactory()
+{
+  sphereMaker = new SphereMaker();
+}
+
+void FigureFactory::SetData(void* data, void* p, void* render)
+{
+    dataStore = (DataStore*)data;
+    pdb = (pdbFile*)p;
+    ren = (vtkRenderer *)render;
+}
+
+void FigureFactory::MAKE()
+{
+  float x;
+  float y;
+  float z;
+  int i=1;
+
+      //cout << form("PdbFile///// = %d\n",pdb->nAtom);
+      dataStore->SetArea(pdb->nAtom);
+
+  AllMolecule = vtkAssembly::New();
+  CaOnly = vtkAssembly::New();
+  
+  pdbFileTop(pdb);
+  while(1){
+    if(pdbFileIsAtom(pdb)){
+      pdbFileCoordGet(pdb, &x, &y, &z);
+      
+      sphereMaker->SetPosition(x, y, z);
+      sphereMaker->SetResolution(8 , 8);
+      sphereMaker->MAKE();
+      actorMaker = new ActorMaker();
+      actorMaker->SetMapper(sphereMaker->GetMapper());
+      //actorMaker->SetPosition(0, 0, 0);
+      //actorMaker->SetPosition(x, y, z);
+      actorMaker->SetColor(0.5, 0.8, 0.9);
+      
+      AllMolecule->AddPart(actorMaker->GetActor());
+      if(pdbFileIsCA(pdb))
+	{
+	  CaOnly->AddPart(actorMaker->GetActor());
+	}
+
+      //ren->AddActor(actorMaker->GetActor());
+      
+      //      ren->AddActor(actorMaker->GetActor());
+      
+      // cout << form("End of sequense number2 = %d ---i = %d\n",pdb->PDB->AtomSerialNumber,i); 
+       dataStore->SET(pdb->PDB,actorMaker->GetActor(),sphereMaker->GetMapper(),i);
+      
+      i=i+1;
+    }
+    if(pdbFileEnd(pdb)){
+      break;
+    } else {
+      pdbFileNext(pdb);
+    }
+  }
+  
+  //moleData->SetScale(2.0);
+  ren->AddActor(CaOnly);
+  //  ren->AddActor(moleData);
+}
+
+
+
+class DataSearcher{
+private:
+  DataStore* dataStore;
+  pdbRecord* pdb;
+  TextMode Mode;
+
+public:
+  DataSearcher();
+  void DataSearcher::SetData(void* data);
+  pdbRecord* DataSearcher::GetData(vtkAbstractMapper3D* mapper);
+  char* DataSearcher::GetData(vtkAbstractMapper3D* mapper, CG CAonly);
+  void ModeSet(TextMode m);
+  char* ReturnText(pdbRecord* pdb);
+};
+
+DataSearcher::DataSearcher()
+{
+  Mode = TextModeAllSet;
+}
+
+void DataSearcher::SetData(void* data)
+{
+ 
+  dataStore = (DataStore*)data;
+}
+
+void DataSearcher::ModeSet(TextMode m)
+{
+  Mode = m;
+}
+
+char* DataSearcher::GetData(vtkAbstractMapper3D* mapper, CG CAonly)
+{
+  vtkAbstractMapper3D* map;
+  int i=0;
+  
+  dataStore->ResetCaList();
+  
+  while(i!=-1){
+  vtkActor *cubeActor2 = vtkActor::New();
+  cubeActor2->SetMapper(cube2mapper);
+  cubeActor2->GetProperty()->SetOpacity(0.5);
+  cubeActor2->GetProperty()->SetColor(0.8,0.4,0.7);
+
+  
+  
+  //assign our actor to the renderer
+  
+  //ren->AddActor(cubeActor);
+  //ren->AddActor(cubeActor2);
+  ren->SetBackground(0,0,0);
+  //ren->SetBackground(0,0,0);
+  
+  ren->ResetCamera();
+  
+  renWindow->PolygonSmoothingOff();
+  renWindow->PointSmoothingOff();
+  renWindow->LineSmoothingOff();
+  
+  renWindow->SetSize(500,500);
+
+  
+  eosInteractorStyleStereo* istereo = eosInteractorStyleStereo::New();
+  iren->SetInteractorStyle(istereo);
+  vtkLight* light = vtkLight::New();
+  light->SetFocalPoint(0,0,0);
+  light->SetPosition(100,100,100);
+  light->SetLightType(1);
+  ren->AddLight(light);
+  istereo->SetRenderer(ren);
+
+
+
+  //draw the resulting scene
+  renWindow->Render();
+  
+  //Begin mouse interaction
+  iren->Start();
+  
+  //picker->Pick( 200, 200, 0, ren);
+  
+  exit(EXIT_SUCCESS);
+}
+
+void
+additionalUsage()
+{
+  fprintf(stderr, "----- Additional Usage -----\n");
+}

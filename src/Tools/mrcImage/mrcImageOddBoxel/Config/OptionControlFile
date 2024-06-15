@@ -1,0 +1,13 @@
+# OptionControlFile
+# FileFormat
+"-I","-I[nput array of file]","InputDataFiles","Essential","1","1","In","inFileListNoOpen","stdin"
+"-Iter","-Iter[ation]","IterationFlag","Optional","0"
+"-M","-M[olecularWeight]","MolecularWeight (for iteration only)","Optional","1","1","MolecularWeight","Real","1.0"
+"-n","-n[Molecule]","NumberOfMolecule (for iteration only)","Optional","1","1","nMolecule","Real","1.0"
+"-Boxel","-Boxel","Final volume for iteration uning boxel unit.","Optional","1","1","Boxel","Integer","0"
+"-d","-d[ensty]","Density (for iteration only)","Optional","1","1","Density","Real","1.35"
+"-I","-I[nverse]","Inverse (for iteration only)","Optional","0"
+"-Abs","-Abs[olute]","AbsoluteFlag","Optional","0"
+"-Th","-Th[reshold]","Threshold for calculation. (for iteration only) ","Optional","1","1","Th","Real","0.0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

@@ -1,0 +1,89 @@
+
+ RO image file on unit   1 : BBb.st     Size=        62466
+
+ Number of columns, rows, sections .........    512    512     61
+ Map mode ..................................    1
+ Start cols, rows, sects, grid x,y,z .......    0    0    0     512   512    61
+ Pixel spacing (Angstroms)..................  20.20      20.20      20.20    
+ Cell angles ...............................   90.000   90.000   90.000
+ Fast, medium, slow axes ...................    X    Y    Z
+ Origin on x,y,z ...........................  0.000      0.000      0.000    
+ Minimum density ...........................   532.00    
+ Maximum density ...........................   5902.0    
+ Mean density ..............................   3953.5    
+ tilt angles (original,current) ............  0.0   0.0   0.0   0.0   0.0   0.0
+ Space group,# extra bytes,idtype,lens .....       0     122       0       0
+
+     4 Titles :
+SerialEM: Digitized by Gatan Camera on TF30             30-Sep-03  13:39:31    
+          Tilt axis rotation angle = -12.5                                     
+REDUCEMONT: recut and reduced by factor of  2            3-Nov-03  15:45:19    
+clip: resized image.                                     3-Nov-03  15:47:36    
+
+
+ FORMATTED  new  file opened: BBb.prexf
+
+ FORMATTED  ro  file opened: BBb.rawtlt
+
+ Padded, binned size is  560 by  560
+View  35, shifts   -3.07    2.97
+View  36, shifts    0.61    3.10
+View  37, shifts   -2.49    2.41
+View  38, shifts    1.70    1.60
+View  39, shifts    1.59    1.79
+View  40, shifts   -0.23    2.99
+View  41, shifts    1.80    1.17
+View  42, shifts   -1.31    2.97
+View  43, shifts    0.17    1.20
+View  44, shifts    0.83    2.92
+View  45, shifts   -1.92    3.90
+View  46, shifts   -2.87    0.11
+View  47, shifts   -0.44    2.97
+View  48, shifts   -0.53    5.74
+View  49, shifts   -0.06    2.60
+View  50, shifts   -8.47    3.74
+View  51, shifts   -3.57    2.19
+View  52, shifts   -0.89    2.13
+View  53, shifts   -5.62    2.93
+View  54, shifts   -0.27    2.78
+View  55, shifts   -0.04    4.63
+View  56, shifts   -7.96    2.53
+View  57, shifts   -4.55    2.36
+View  58, shifts   -3.99    3.76
+View  59, shifts   -2.76    4.33
+View  60, shifts   -5.22    2.19
+View  61, shifts   -6.21    3.50
+View  33, shifts    2.10    0.76
+View  32, shifts   -4.97    1.48
+View  31, shifts    3.21   -5.87
+View  30, shifts   -5.05   22.20
+View  29, shifts   -0.29    4.28
+View  28, shifts   -1.08    4.39
+View  27, shifts   -0.72    3.99
+View  26, shifts   -1.60   -0.10
+View  25, shifts   -1.60    2.48
+View  24, shifts   -2.37    1.41
+View  23, shifts   -2.94    1.61
+View  22, shifts   -3.11    4.09
+View  21, shifts   -3.42   -0.40
+View  20, shifts   -1.52    5.43
+View  19, shifts   -5.38    4.72
+View  18, shifts   -7.03    4.41
+View  17, shifts   -1.73    3.92
+View  16, shifts   -5.39    7.78
+View  15, shifts   -8.03   -1.63
+View  14, shifts   -3.48    2.64
+View  13, shifts   -2.05    2.62
+View  12, shifts   -4.42    2.23
+View  11, shifts   -5.91    4.42
+View  10, shifts   -6.80   -0.41
+View   9, shifts   -5.90    2.32
+View   8, shifts  -10.27    5.02
+View   7, shifts   -8.86    0.11
+View   6, shifts   -8.63    1.24
+View   5, shifts   -8.46    2.71
+View   4, shifts   -9.59    3.05
+View   3, shifts  -11.48    1.74
+View   2, shifts  -15.38   -4.36
+View   1, shifts  -17.49   -4.46
+ PROGRAM EXECUTED TO END.

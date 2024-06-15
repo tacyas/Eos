@@ -1,0 +1,10 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Optional","1","1","In","inFile","NULL"
+"-is","-i[nput]s","InputDataFileList","Optional","1","1","Ins","inFileList","NULL"
+"-i2","-i2[nput]","InputDataFile(nea and far)","Optional","2","1","Nea","inFile","NULL","2","Far","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Optional","1","1","Out","outFile","stdout"
+"-Rmax","-Rmax","Input: Rmax [/A]","Optional","1","1","Rmax","Real","0.1"
+"-I","-I[nteractive]","Interactive","Optional","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

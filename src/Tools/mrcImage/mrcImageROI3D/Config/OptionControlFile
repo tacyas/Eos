@@ -1,0 +1,9 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-x","-x","from x1[pixel] to x2[pixel]","Optional","2","1","x1","Real","0.0","2","x2","Real","0.0"
+"-y","-y","from y1[pixel] to y2[pixel]","Optional","2","1","y1","Real","0.0","2","y2","Real","0.0"
+"-z","-z","from z1[pixel] to z2[pixel]","Optional","2","1","z1","Real","0.0","2","z2","Real","0.0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

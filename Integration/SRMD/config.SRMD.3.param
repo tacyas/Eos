@@ -1,0 +1,61 @@
+#--Step
+# MainLoop Iteration Number; < 9999 is better because of filename format %04d
+max=5000
+
+#--ConfigFile
+run=20
+run2=2000
+run_first=5000
+normal_run=200
+Low_run=400
+free_run=$run2
+langevinDanping=10
+tempSt=300
+tempBu=400
+tempS=$tempSt
+
+minimum_step=200
+#--Parameter
+burst=30000
+weight=5.0
+weight2=3.0
+
+Contour=102.064
+Contour1=99.7482
+Contour2=95.5268
+Contour3=88.1454
+Contour4=51.2297
+Contour5=20.6644
+Rotate=1
+Seed=0.0
+
+#--VarienceInit
+PotentialFlag=0
+free_On=0
+LowOn=5
+q=0
+d=0
+LowPassFlag=0
+dcd_limit=10
+firstLowLimit=80
+LowLimit=0
+template="yes"
+template2="no"
+template3="template3"
+
+#--InitCalculate
+burst2_next=15000
+pre_burst_next=`expr $burst2_next / 2 `
+
+free=`expr $max - 500`
+burst=`expr $burst - $run`
+pre_burst=`expr $burst - $pre_burst_next`
+burst2=`expr $burst + $burst2_next`
+pre_burst2=`expr $burst2 - $pre_burst_next `
+burst_next=30000
+
+tempBu_tempSt=`expr  $tempBu - $tempSt`
+tempBu_tempSt2=`expr $tempSt -  $tempBu`
+slope=`echo "scale=5; $tempBu_tempSt / $pre_burst_next " | bc `
+slope2=`echo "scale=5; $tempBu_tempSt2 / $pre_burst_next " | bc `	
+#-----

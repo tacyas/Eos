@@ -1,0 +1,234 @@
+/*
+# %M% %Y% %I%
+# The latest update : %G% at %U%
+#
+#%Z% mrc3Dto2D ver %I%
+#%Z% Created by 
+#%Z%
+#%Z% Usage : mrc3Dto2D
+#%Z% Attention
+#%Z%
+*/
+static char __sccs_id[] = "%Z%mrc3Dto2D ver%I%; Date:%D% %Z%";
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>                  
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+
+#define DEBUG
+#include "genUtil.h"
+#include "Matrix3D.h"
+#include "Vector.h"
+#include "mrcImage.h"
+
+typedef struct lmrc3Dto2DInfo {
+	/* Rot1 */
+	double Rot1Start;
+	double Rot1End;
+	double Rot1Delta;
+	int    nRot1;
+
+	/* Rot2 */
+	double Rot2Start;
+	double Rot2End;
+	double Rot2Delta;
+	int    nRot2;
+
+	/* Rot3 */
+	double Rot3Start;
+	double Rot3End;
+	double Rot3Delta;
+	int    nRot3;
+
+	/* EulerAngleMode*/
+	char   EulerAngleMode[5];
+
+	/* InterpolationMode */
+	int InterpolationMode;
+
+	/* PVM */
+	int flagPVM;	
+} lmrc3Dto2DInfo;
+
+
+extern void lmrcImage3Dto2D(mrcImage* out, mrcImage* in, lmrc3Dto2DInfo* linfo, int mode);
+
+
+int
+main(int argc, char* argv[]) 
+{
+	mrc3Dto2DInfo info;
+	lmrc3Dto2DInfo linfo;
+	mrcImage in;
+	mrcImage out;
+
+	init0(&info);
+    argCheck(&info, argc, argv);
+    init1(&info);
+
+	DEBUGPRINT("Program Start\n");
+	mrcFileRead (&in, info.In, "in main", 0);
+	/* Rot1 */
+	linfo.Rot1Start = info.Rot1Start*RADIAN;
+	linfo.Rot1End   = info.Rot1End*RADIAN;
+	linfo.Rot1Delta = info.Rot1Delta*RADIAN;
+	linfo.nRot1     = MAX(1,(int)(fabs((linfo.Rot1End - linfo.Rot1Start)/linfo.Rot1Delta)+0.5)+1);
+	/* Rot2 */
+	linfo.Rot2Start = info.Rot2Start*RADIAN;
+	linfo.Rot2End   = info.Rot2End*RADIAN;
+	linfo.Rot2Delta = info.Rot2Delta*RADIAN;
+	linfo.nRot2     = MAX(1,(int)(fabs((linfo.Rot2End - linfo.Rot2Start)/linfo.Rot2Delta)+0.5)+1);
+	/* Rot3 */
+	linfo.Rot3Start = info.Rot3Start*RADIAN;
+	linfo.Rot3End   = info.Rot3End*RADIAN;
+	linfo.Rot3Delta = info.Rot3Delta*RADIAN;
+	linfo.nRot3     = MAX(1,(int)(fabs((linfo.Rot3End - linfo.Rot3Start)/linfo.Rot3Delta)+0.5)+1);
+	/* EulerAngleMode */
+	linfo.EulerAngleMode[0] = info.EulerMode[0];
+	linfo.EulerAngleMode[1] = info.EulerMode[1];
+	linfo.EulerAngleMode[2] = info.EulerMode[2];
+	linfo.EulerAngleMode[3] = info.EulerMode[3];
+	/* */
+	linfo.InterpolationMode  = info.InterpolationMode; 
+
+	lmrcImage3Dto2D(&out, &in, &linfo, info.mode);
+
+	mrcFileWrite(&out, info.Out, "in main", 0);
+	exit(EXIT_SUCCESS);
+}
+
+void
+additionalUsage()
+{
+	fprintf(stderr, "----- Additional Usage -----\n");
+}
+
+void
+lmrcImage3Dto2D(mrcImage* out, mrcImage* in, lmrc3Dto2DInfo* linfo, int mode)
+{
+	int n;
+	int max;
+	int count;
+	double Rot1, Rot2, Rot3;
+	int    nRot1, nRot2, nRot3;
+	int    iRot1, iRot2, iRot3;
+	double sum;
+	mrcImageParaTypeReal gx, gy, gz;
+	mrcImageParaTypeReal g3x, g3y, g3z;
+	mrcImageParaTypeReal x, y, z;
+	mrcImageParaTypeReal prjx, prjy, prjz;
+	floatVector v;
+	Matrix3D Matrix;
+	Matrix3D MatrixAnti;
+	double data;
+	mrcImage tmp;
+	
+	n=linfo->nRot1*linfo->nRot2*linfo->nRot3;
+	max = MAX(in->HeaderN.x, MAX(in->HeaderN.y, in->HeaderN.z));
+	out->Header.Cont = in->Header.Cont;
+	out->HeaderN.x = max;
+	out->HeaderN.y = max;
+	out->HeaderN.z = n;
+	mrcInit(out, NULL);
+	out->numTailer = n;
+	mrcTailerInit(out, 0);
+
+	tmp.Header.Cont = in->Header.Cont;
+	tmp.HeaderN.x = max;
+	tmp.HeaderN.y = max;
+	tmp.HeaderN.z = max;
+	mrcInit(&tmp, NULL);
+
+	floatVectorInit(&v, 4);
+	g3x = (in->HeaderN.x - 1)/2.0;
+	g3y = (in->HeaderN.y - 1)/2.0;
+	g3z = (in->HeaderN.z - 1)/2.0;
+	gx  = (tmp.HeaderN.x - 1)/2.0;
+	gy  = (tmp.HeaderN.y - 1)/2.0;
+	gz  = (tmp.HeaderN.z - 1)/2.0;
+
+	count = 0;
+	/*
+	for(Rot1=linfo->Rot1Start; Rot1<=linfo->Rot1End; Rot1+=linfo->Rot1Delta) {
+	for(Rot2=linfo->Rot2Start; Rot2<=linfo->Rot2End; Rot2+=linfo->Rot2Delta) {
+	for(Rot3=linfo->Rot3Start; Rot3<=linfo->Rot3End; Rot3+=linfo->Rot3Delta) {
+	*/
+
+	nRot1 = linfo->nRot1;
+	for(iRot1=0; iRot1<nRot1; iRot1++) {
+		Rot1 = linfo->Rot1Start + iRot1*linfo->Rot1Delta;
+		if(0x01&mode) {
+			nRot2 = MAX(1,(int)(linfo->nRot2*fabs(sin(Rot1))+0.5));
+		} else {
+			nRot2 = linfo->nRot2;		
+		}	
+	for(iRot2=0; iRot2<nRot2; iRot2++) {
+		Rot2 = linfo->Rot2Start + iRot2*linfo->Rot2Delta;
+		nRot3 = linfo->nRot3;
+	for(iRot3=0; iRot3<linfo->nRot3; iRot3++) {
+		Rot3 = linfo->Rot3Start + iRot3*linfo->Rot3Delta;
+
+		DEBUGPRINT2("%d / %d\n", count, n);
+		out->Tailer[count].Cont.Mode = mrcImageTailerMode2DProjection;
+		out->Tailer[count].Cont.EulerAngleMode[0] = linfo->EulerAngleMode[0]; 
+		out->Tailer[count].Cont.EulerAngleMode[1] = linfo->EulerAngleMode[1]; 
+		out->Tailer[count].Cont.EulerAngleMode[2] = linfo->EulerAngleMode[2]; 
+		out->Tailer[count].Cont.EulerAngleMode[3] = linfo->EulerAngleMode[3]; 
+		out->Tailer[count].Cont.Rot1 = Rot1;
+		out->Tailer[count].Cont.Rot2 = Rot2;
+		out->Tailer[count].Cont.Rot3 = Rot3;
+
+		matrix3DRotationSetFollowingEulerAngle(Matrix,
+			out->Tailer[count].Cont.EulerAngleMode, 
+			out->Tailer[count].Cont.Rot1,
+			out->Tailer[count].Cont.Rot2,
+			out->Tailer[count].Cont.Rot3,
+			MATRIX_3D_MODE_INITIALIZE);
+
+		matrix3DRotationAntiSetFollowingEulerAngle(MatrixAnti,
+			out->Tailer[count].Cont.EulerAngleMode,
+			out->Tailer[count].Cont.Rot1,
+			out->Tailer[count].Cont.Rot2,
+			out->Tailer[count].Cont.Rot3,
+			MATRIX_3D_MODE_INITIALIZE);
+
+		for(prjx=0; prjx<tmp.HeaderN.x; prjx++) {
+		for(prjy=0; prjy<tmp.HeaderN.y; prjy++) {
+			sum =0.0;
+		for(prjz=0; prjz<tmp.HeaderN.z; prjz++) {
+		
+			v.data[0] = prjx - gx;
+			v.data[1] = prjy - gy;
+			v.data[2] = prjz - gz;
+			v.data[3] = 1;
+			matrix3DMultiplyVector(&v, MatrixAnti);
+			x = v.data[0] + g3x;
+			y = v.data[1] + g3y;
+			z = v.data[2] + g3z;
+			if(-0.5<=x && x<in->HeaderN.x-0.5
+			 &&-0.5<=y && y<in->HeaderN.y-0.5
+			 &&-0.5<=z && z<in->HeaderN.z-0.5) {
+				mrcPixelDataGet(in, x, y, z, &data, mrcPixelRePart, linfo->InterpolationMode);
+			} else {
+				data = 0;
+			}
+			mrcPixelDataSet(&tmp, prjx, prjy, prjz, data, mrcPixelRePart);
+			sum+=data;
+		}
+			mrcPixelDataSet(out, prjx,  prjy, count, sum/tmp.HeaderN.z, mrcPixelRePart);
+		}
+		}
+		count++;
+		if(n<count) {
+			fprintf(stderr, "Something wrong: count %d n %d\n", count, n);
+			exit(EXIT_FAILURE);
+		}
+	}
+	}
+	}
+	out->HeaderN.z = count;
+	out->numTailer = count;
+}
+

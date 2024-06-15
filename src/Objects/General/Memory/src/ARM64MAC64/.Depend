@@ -1,0 +1,4 @@
+ARM64MAC64/memoryAllocate.o:memoryAllocate.o
+ARM64MAC64/memoryByteSwap.o:memoryByteSwap.o
+ARM64MAC64/memoryClear.o:memoryClear.o
+ARM64MAC64/memoryCopy.o:memoryCopy.o

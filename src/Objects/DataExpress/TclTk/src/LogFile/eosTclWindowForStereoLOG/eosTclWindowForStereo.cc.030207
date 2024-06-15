@@ -1,0 +1,92 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "tcl.h" 
+#include "tk.h"
+
+extern int Vtktcl_SafeInit(Tcl_Interp *interp);
+class eosTclWindowForStereo
+{
+public:
+	Tcl_Interp* interp;
+	char w[256];
+	char* p;
+	FILE* fp;
+
+	eosTclWindowForStereo(char* argv);
+	void application(Tcl_Interp* interp);
+};
+ 
+eosTclWindowForStereo::eosTclWindowForStereo(char* argv)
+{
+  interp = Tcl_CreateInterp();      
+  
+  Tcl_FindExecutable(argv); 
+      
+  if(Tcl_Init(interp) == TCL_ERROR){ 
+    fprintf(stderr, "Tcl interpreter initialization failed.\n");
+    return;
+  }
+  if(Tk_Init(interp) != TCL_OK){
+    fprintf(stderr, "FATAL: Tk initialization error: %s\n",
+	    Tcl_GetStringResult(interp)); return;
+  }
+
+  if(Vtktcl_SafeInit(interp) != TCL_OK){
+    fprintf(stderr, "FATAL: Vtk initialization error: %s\n",
+	    Tcl_GetStringResult(interp)); return;
+  }
+  
+  application(interp);
+  Tcl_DeleteInterp(interp);
+  return;
+}
+
+void eosTclWindowForStereo::application(Tcl_Interp* interp){
+
+  if(TCL_ERROR==Tcl_EvalFile(interp, "ViewWindow.tcl")) {
+  	fprintf(stderr, "Error: On Evaluation of file\n");
+	return;
+  }
+
+/*
+  fp=fopen("ViewWindow.tcl","r");
+  
+  for(int i=1;;i++) 
+    {
+      //strcpy(window, "wm title . VTK<StereoModeWindow>\n button .exit -text EXIT -command exit \n pack .exit");
+
+      if(fgets(w,256,fp)==NULL)break;
+
+      if(Tcl_Eval(interp, w) == TCL_ERROR){
+    fprintf(stderr, "Interpretaion error: %s at %d \n",Tcl_GetStringResult(interp),i);        
+    return; 
+      }       
+    }
+*/
+  Tk_MainLoop();
+}
+
+
+int main(int argc, char* argv[]) 
+{
+	eosTclWindowForStereo *window = new  eosTclWindowForStereo(argv[0]);
+	
+}	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

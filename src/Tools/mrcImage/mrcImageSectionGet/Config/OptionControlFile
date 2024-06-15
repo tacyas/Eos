@@ -1,0 +1,8 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFileNoOpen","NULL"
+"-z","-z","z-Section number: -1 Serial section","Optional","1","1","z","Integer","0"
+"-e","-e[xtention]","Serial section format","Optional","1","1","format","String","%s.%04d"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

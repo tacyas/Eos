@@ -1,0 +1,8 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Test: Input","Essential","1","1","In","inFile","NULL"
+"-r","-r[eference]","Ref : Input","Essential","1","1","Ref","inFile","NULL"
+"-o","-o[utput]","Output","Optional","1","1","Out","outFile","stdout"
+"-omat","-o[utput]mat[rix]","Outputi[MRC]","Optional","1","1","OutMat","outFile","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

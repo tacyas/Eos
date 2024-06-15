@@ -1,0 +1,8 @@
+make[1]: Entering directory `/net/pc20/workPC20/Eos/src/Tools/mrcImage/mrcImageClusterAnalysis/src/I686LINUX'
+icc  -c -O2 -Ob2 -w1 -Zp1  -DII -DI686LINUX -I/home/people/terarin/Eos/util/I686LINUX/include -I../inc -I/home/people/terarin/Eos/include        ../mrcImageClusterAnalysis.c -o mrcImageClusterAnalysis.o  
+icc  -c -O2 -Ob2 -w1 -Zp1  -DII -DI686LINUX -I/home/people/terarin/Eos/util/I686LINUX/include -I../inc -I/home/people/terarin/Eos/include        ../init.c -o init.o  
+icc  -c -O2 -Ob2 -w1 -Zp1  -DII -DI686LINUX -I/home/people/terarin/Eos/util/I686LINUX/include -I../inc -I/home/people/terarin/Eos/include        ../argCheck.c -o argCheck.o  
+icc  -c -O2 -Ob2 -w1 -Zp1  -DII -DI686LINUX -I/home/people/terarin/Eos/util/I686LINUX/include -I../inc -I/home/people/terarin/Eos/include        ../usage.c -o usage.o  
+icc  -c -O2 -Ob2 -w1 -Zp1  -DII -DI686LINUX -I/home/people/terarin/Eos/util/I686LINUX/include -I../inc -I/home/people/terarin/Eos/include        ../util.c -o util.o  
+icc -O2 -Ob2 -w1 -Zp1 -DII -DI686LINUX -I/home/people/terarin/Eos/util/I686LINUX/include mrcImageClusterAnalysis.o init.o argCheck.o usage.o util.o /home/people/terarin/Eos/lib/I686LINUX/libEosObjects.a -lm -lc -lnsl -L/home/people/terarin/Eos/util/I686LINUX/lib -o mrcImageClusterAnalysis
+make[1]: Leaving directory `/net/pc20/workPC20/Eos/src/Tools/mrcImage/mrcImageClusterAnalysis/src/I686LINUX'

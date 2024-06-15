@@ -1,0 +1,17 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-nx","-nx","[pix] Default:in.HeaderN.x","Optional","1","1","nx","Real","0"
+"-ny","-ny","[pix]  Default:in.HeaderN.y","Optional","1","1","ny","Real","0"
+"-nz","-nz","[pix] Default:in.HeaderN.z","Optional","1","1","nz","Real","0"
+"-cx","-cx","[pix] Default:Center of image","Optional","1","1","cx","Real","0"
+"-cy","-cy","[pix] Default:Center of image","Optional","1","1","cy","Real","0"
+"-cz","-cz","[pix] Default:Center of image","Optional","1","1","cz","Real","0"
+"-Rot","-Rot[ation]","Masking Area Rotation Default: ZONS 0 0 0","Optional","4","1","Euler","String","0","2","Rot1","Real","0","3","Rot2","Real","0","4","Rot3","Real","0"
+"-Shape","-Shape","Default:Sphere","Optional","1","1","Shape","Integer","0"
+"-Soft","-Soft[Edge]","Default:","Optional","1","1","Soft","Integer","0"
+"-SoftWidth","-SoftWidth","[pix] Default:","Optional","1","1","SoftWidth","Real","0.0"
+"-Normalize","-Normalize","Default:No Op","Optional","1","1","Normalize","Integer","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

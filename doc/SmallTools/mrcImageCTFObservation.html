@@ -1,0 +1,35 @@
+<HTML>
+<HEAD>
+<TITLE>mrcImageCTFObservation</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageCTFObservation</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageCTFObservation
+Options:
+    [-i[nput]            In                  (stdin     ).as(inFile::mrcImage    ) ] :Essential :Input:2D
+    [-o[utput]           Out                 (stdout    ).as(outFile::mrcImage   ) ] :Essential :Output:2D
+    [-ctf                CTF                 (stdin     ).as(inFile::ASCII       ) ] :Optional  :Input:ctfInfo
+    [-kV                 kV                  (200       ).as(Real                ) ] :Optional  :AccVol[kV]
+    [-Cs                 Cs                  (2.1       ).as(Real                ) ] :Optional  :Cs[mm]
+    [-df                 Defocus             (27000     ).as(Real                ) ] :Optional  :Defocus [A]:under(+)
+    [-A                  AoverP              (0.0       ).as(Real                ) ] :Optional  :AmplitudeContrast/PhaseContrast
+    [-Ain                Ain                 (0.0       ).as(Real                ) ] :Optional  :IlluminationAperture[mrad]
+    [-white              WhiteNoise          (1.0       ).as(Real                ) ] :Optional  :WhiteNoise(N/S)
+    [-SinWin             SinWinRmin          (0.1       ).as(Real                ) 
+                         SinWinRmax          (1.0       ).as(Real                ) ] :Optional  :Windowing by sine function from Rmin[A] to Rmax[A]
+    [-ctfMode            ctfMode             (0         ).as(Integer             ) ] :Optional  :CTFMode
+    [-Astig[matism]      dfMin               (0         ).as(Real                ) 
+                         dfMax               (0         ).as(Real                ) 
+                         asAxis              (0         ).as(Real                ) ] :Optional  :With Atigmatism
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- ctfMode -----
+-ctfMode 0  : Phase Only
+-ctfMode 1  : Phase and Amplitude 
+-ctfMode 32  : With Illumination Angle
+-ctfMode 256  : As Absolute Value
+</PRE>
+</BODY>
+</HTML>

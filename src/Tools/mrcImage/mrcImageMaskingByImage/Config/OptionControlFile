@@ -1,0 +1,8 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-M","-M[askingFile]","FilenameForMasking","Essential","1","1","MaskFile","inFile","NULL"
+"-v","-v[alueForCut]","ValueForCut","Optional","1","1","CutValue","Real","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

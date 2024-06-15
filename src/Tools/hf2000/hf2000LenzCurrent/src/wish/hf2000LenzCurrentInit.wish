@@ -1,0 +1,46 @@
+proc hf2000LenzCurrentInit {} {
+	global Desktop
+	global LenzCurrent 
+	
+	puts "hf2000LenzCurrentInit"
+	hf2000LenzCurrentGet
+	hf2000LenzCurrentDesktopSet
+}
+
+proc hf2000LenzCurrentDesktopSet { } {
+	global Desktop
+	global LenzCurrent 
+
+	set f [ frame .lenzCurrentOBJ ]
+	CommandEntry $f.oBJH OBJH 4 hf2000PositionSet -textvar LenzCurrent(OBJH) 
+	CommandEntry $f.oBJD OBJD 4 hf2000PositionSet -textvar LenzCurrent(OBJD) 
+	CommandEntry $f.oBJA OBJA 4 hf2000PositionSet -textvar LenzCurrent(OBJA) 
+	pack $f.oBJH $f.oBJD $f.oBJA -side left 
+	set Desktop(LenzCurrentObj) $f
+
+	set f [ frame .lenzCurrentGet ]
+	button $f.get -text GET -command hf2000LenzCurrentGet
+	button $f.set -text SET -command hf2000LenzCurrentSet
+	pack $f.get $f.set -side left
+	set Desktop(LenzCurrentGet) $f
+
+	pack $Desktop(LenzCurrentObj) $Desktop(LenzCurrentGet) -side top
+}	
+
+proc hf2000LenzCurrentSet { } {
+	global LenzCurrent 
+	
+	hf2000 LenzCurrent Set OBJ $LenzCurrent(OBJD) 
+	hf2000LenzCurrentGet
+}
+
+proc hf2000LenzCurrentGet { } {
+	global LenzCurrent 
+	global Desktop
+
+	puts "hf2000LenzCurrentGet"
+	set C [ hf2000 LenzCurrent Get OBJ ]	
+	set LenzCurrent(OBJH) [ lindex $C 0 ]
+	set LenzCurrent(OBJD) [ lindex $C 1 ]
+	set LenzCurrent(OBJA) [ lindex $C 2 ]
+}

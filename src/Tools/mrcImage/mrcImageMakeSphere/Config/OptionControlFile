@@ -1,0 +1,13 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile (Template file)","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-C","-C[enter]","Cetnter position of Sphere.","Optional","3","1","Cx","Real","0","2","Cy","Real","0","3","Cz","Real","0"
+"-or","-or[Outer Radius]","Outer Radius (pixel)","Essential","1","1","or","Real","1"
+"-ir","-ir[Inner Radius]","Inner Radius (pixel)","Optional","1","1","ir","Real","0"
+"-r","-r[adius]","Center Radius (pixel): For mode 1 only.","Optional","1","1","r","Real","0"
+"-v","-v[alue]","Value of sphere","Optional","1","1","Value","Real","10.0"
+"-Other","-Other","Other acceptors.  For FRET Calculation.","Optional","1","1","Other","inFile","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"
+

@@ -1,0 +1,102 @@
+/*
+# %M% %Y% %I%
+# The latest update : %G% at %U%
+#
+#%Z% pdbAtomSection ver %I%
+#%Z% Created by 
+#%Z%
+#%Z% Usage : pdbAtomSection
+#%Z% Attention
+#%Z%
+*/
+static char __sccs_id[] = "%Z%pdbAtomSection ver%I%; Date:%D% %Z%";
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>                  
+#include "mrcImage.h"
+#include "pdbFile.h"
+#include "Memory.h"
+#include "psFile.h"
+#define GLOBAL_DECLARATION
+#define DEBUG
+#include "../inc/config.h"
+
+extern void lpdbAtomSection(FILE*,pdbFile*,float,float,float,float);
+void
+main(int argc, char* argv[]) 
+{
+	long status;
+	pdbAtomSectionInfo info;
+	pdbFile in;
+	
+	init0(&info);
+    argCheck(&info, argc, argv);
+    init1(&info);
+
+	pdbFileRead(info.fptIn, &in); 
+    lpdbAtomSection(info.fptOut, &in, info.zmin, info.zmax, info.distance,
+				  info.scale);
+	exit(EXIT_SUCCESS);
+}
+
+void
+lpdbAtomSection(FILE* out,pdbFile* in,float zmin, float zmax, float distance,
+				float scale)
+{
+    pdbFileParaTypeReal X,Y,Z;
+	long   iz;
+    psFile ps;
+    psImageInfo im;
+    double xscale;
+	pdbRecord* onePdbRecord;
+    char message0[MAX_STRING_LENGTH];
+    char marker[MAX_STRING_LENGTH];
+
+	xscale=1.0;
+	ps.fpt = out;
+    psFileInit(&ps, 0);
+
+
+	for(iz=zmin;iz<zmax;iz++){
+		sprintf(ps.info.label, "%ld", iz);
+        psFilePageStart(&ps, 0);
+		psFileLineWidthSet(&ps,0.1);
+		psFileStringDefaultStatusSet(&ps);
+        im.scaleX     = 1.0;  im.scaleY     = 1.0;
+        im.translateX = 20.0; im.translateY = 40.0;
+        psFileImageSpaceSet(&ps, im, 0);
+        sprintf(message0, "Scale:%10.2f XScale/YScale:%10.2f Section:%ld (%10.2f)", scale, xscale, iz, iz*distance);
+        psFileString(&ps, message0, 0, -30, 0);
+        im.scaleX = 72/25.4*scale; im.scaleY = 72/25.4*scale;
+        im.translateX = 0.0;              im.translateY = 0.0;
+        psFileImageSpaceSet(&ps, im, 0);
+
+	    onePdbRecord=pdbFileTop(in);
+		while(NULL!=onePdbRecord){
+			if(pdbFileIsCA(in)) {
+				pdbFileCoordGet(in,&X,&Y,&Z);
+				if(Z<(iz+1)*distance && Z>=iz*distance){
+					memset(marker,NULL,strlen(marker));
+					marker[0]=pdbFileChainIdentifierGet(in);
+					sprintf(&marker[1],"%ld",pdbFileResidueSequenceNumberGet(in));
+					strcat(marker,pdbFileResidueNameGet(in,RESIDUE_ONECHAR_MODE));
+					psFileStringStatusSet(&ps,"/Times-Roman",2);
+					psFileString(&ps,marker,(double)X,(double)Y,0);
+					psFileCircleCreate(&ps, X, Y, 1.0, 0);
+				}
+					
+			}
+			onePdbRecord=pdbFileNext(in);
+		}
+        psFileImageSpaceRestore(&ps, im, 0);
+        psFileImageSpaceRestore(&ps, im, 0);
+
+        psFilePageEnd(&ps, 0);
+	}
+    psFileEnd(&ps);
+}
+void
+additionalUsage()
+{
+}

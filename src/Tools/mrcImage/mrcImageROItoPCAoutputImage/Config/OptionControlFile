@@ -1,0 +1,10 @@
+# OptionControlFile
+# FileFormat
+#"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-i","-i[nput]","Input: filelist","Essential","1","1","InList","inFileListNoOpen","NULL"
+#"-ip","-i[nput]p[CAselection]","InputPCAselectionFile","Essential","1","1","InPCA","inFile","NULL"
+#"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-o","-o[utput]","Output: filelist","Essential","1","1","OutList","outFileListNoOpen","NULL"
+# "-I","-principalComponentI[nput]","PrincipalComponentInput","Essential","1","1","In","InFile","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

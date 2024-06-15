@@ -1,0 +1,245 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageRotation</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageRotation<br></h2></b></font>
+	<h4>mrcファイルを回転させる</h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+	<table border="1">
+			<div align="left">
+			<tr>
+				<th>オプション</th>
+				<th>必須項目/選択項目</th>
+				<th>説明</th>
+				<th>デフォルト</th>
+			</tr>
+			<tr>
+				<td>-i</td>
+				<td>必須</td>
+				<td>入力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-o</td>
+				<td>必須</td>
+				<td>出力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-a</td>
+				<td>選択</td>
+				<td>回転角度を設定</td>
+				<td>90.0</td>
+			</tr>
+			<tr>
+				<td>-Periodic</td>
+				<td>選択</td>
+				<td>周期を調整</td>
+				<td>　</td>
+			</tr>
+			<tr>
+				<td>-m</td>
+				<td>選択</td>
+				<td>モード</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-h</td>
+				<td>選択</td>
+				<td>ヘルプを表示</td>
+				<td>　</td>
+			</tr>
+			</div>
+		</table>
+		
+<!-- モード説明 -->
+
+	<br>
+	<caption><b>モードの詳細</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>モード</th>
+				<th>説明</th>
+			</tr>
+			<tr>
+				<td>0</td>
+				<td>最短距離法</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>バイリニア補間法</td>
+			</tr>
+			</div>
+		</table>
+		
+	<h4>******実行例******</h4>
+
+<!-- 入力ファイル説明 -->
+
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="b120.png" border="0" alt="b120.png(6753 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-64.5759<br>
+				93.0617<br>
+				5.50826<br>
+				20.7262<br>
+				0.259078<br></p>
+			</td>
+		</tr>
+	</table>
+	
+<!-- オプション必須項目のみの場合 -->
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション必須項目のみの場合------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="b120.out.png" border="0" alt="b120.out.png(6751 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-64.5759<br>
+				93.0617<br>
+				5.50826<br>
+				20.7262<br>
+				0.259078<br></p>
+			</td>
+		</tr>
+	</table>
+	
+<!-- オプション　-a -->
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-a------</font></caption><br>
+	<div>-aを180に設定</div>
+	<table>
+		<tr>
+			<td><img src="b120.out-a180.png" border="0" alt="b120.out-a180.png(6753 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-64.5759<br>
+				93.0617<br>
+				5.50826<br>
+				20.7262<br>
+				0.259078<br></p>
+			</td>
+		</tr>
+	</table>
+	
+<!-- オプション　-Periodic -->
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-Periodic------</font></caption><br>
+	<div>-aを45に設定</div>
+	<table>
+		<tr><td>-Periodic設定前</td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td>-Periodic設定後</td></tr>
+		<tr>
+			<td><img src="b120.out-a45.png" border="0" alt="b120.out-a45.png(6004 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-64.5759<br>
+				93.0617<br>
+				5.43135<br>
+				19.6426<br>
+				0.245532<br></p>
+			</td>
+			<td>　-Periodic設定<br>
+			　－－－－－－＞</td>
+			<td><img src="b120.out-a45Pm0.png" border="0" alt="b120.out-a45Pm0.png(6751 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-64.5759<br>
+				93.0617<br>
+				5.32614<br>
+				20.7513<br>
+				0.259392<br></p>
+			</td>
+		</tr>
+	</table>
+	
+<!-- オプション　-Periodic -->
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-m------</font></caption><br>
+	<div>-a→45,-Periodicを設定し、モードを変更する</div>
+	<div>モード：０</div>
+	<table>
+		<tr>
+			<td><img src="b120.out-a45Pm0.png" border="0" alt="b120.out-a45Pm0.png(6751 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-64.5759<br>
+				93.0617<br>
+				5.32614<br>
+				20.7513<br>
+				0.259392<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>モード：１</div>
+	<table>
+		<tr>
+			<td><img src="b120.out-a45Pm1.png" border="0" alt="b120.out-a45Pm1.png(6723 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-40.7276<br>
+				81.6688<br>
+				5.51546<br>
+				16.8148<br>
+				0.210185<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	
+	
+	
+</body>
+</html>

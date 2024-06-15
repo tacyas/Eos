@@ -1,0 +1,37 @@
+/home/people/tacyas/Eos/bin/I686LINUX/tiff2mrc -h 
+/home/people/tacyas/Eos/bin/I686LINUX/mrcInfo -i test/010147_0100.roi 
+/home/people/tacyas/Eos/bin/I686LINUX/mrcInfo -i test/010147_0100.roi -h 
+I686LINUX/mrcImageAbnormalValueRemove -html 
+I686LINUX/mrcImageAbnormalValueRemove -html 
+I686LINUX/mrcImageAbnormalValueRemove -html 
+I686LINUX/mrcImageAbnormalValueRemove -html 
+I686LINUX/mrcImageAbnormalValueRemove -html 
+I686LINUX/mrcImageAbnormalValueRemove -html 
+I686LINUX/mrcImageAbnormalValueRemove -html 
+I686LINUX/mrcImageAbnormalValueRemove -html 
+I686LINUX/mrcImageAbnormalValueRemove -html 
+I686LINUX/mrcImageAbnormalValueRemove -html 
+I686LINUX/mrcImageAbnormalValueRemove -html 
+I686LINUX/mrcImageAbnormalValueRemove -html 
+I686LINUX/mrcImageAbnormalValueRemove -html 
+I686LINUX/mrcImageAbnormalValueRemove -html 
+I686LINUX/mrcImageAbnormalValueRemove -html 
+I686LINUX/mrcImageAbnormalValueRemove -html 
+I686LINUX/mrcImageAbnormalValueRemove -html 
+I686LINUX/mrcImageAbnormalValueRemove -html 
+I686LINUX/mrcImageAbnormalValueRemove -html 
+I686LINUX/mrcImageAbnormalValueRemove -html 
+I386LINUX/mrcImageAbnormalValueRemove -html 
+I686LINUX/mrcImageAbnormalValueRemove -html 
+I686LINUX/mrcImageAbnormalValueRemove -html 
+I686LINUX/mrcImageAbnormalValueRemove -html 
+X86LINUX64/mrcImageAbnormalValueRemove -html 
+CELLLINUX64/mrcImageAbnormalValueRemove -html 
+I686LINUX/mrcImageAbnormalValueRemove -html 
+X86LINUX64/mrcImageAbnormalValueRemove -html 
+I686LINUX/mrcImageAbnormalValueRemove -html 
+/home/people/tacyas/Eos/bin/I686LINUX/mrcImageAbnormalValueRemove -h 
+I686LINUX/mrcImageAbnormalValueRemove -html 
+I686LINUX/mrcImageAbnormalValueRemove -html 
+/home/people/tacyas/Eos/bin/I686LINUX/mrcImageAbnormalValueRemove -h 
+I686LINUX/mrcImageAbnormalValueRemove -html 

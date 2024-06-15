@@ -1,0 +1,70 @@
+#
+#
+proc layerLineRecreate {} {
+	layerLineClear
+	layerLineCreate
+}
+
+proc layerLineCreate { } {
+	global LayerLine
+	global Desktop
+	global mainImage
+	global LayerLine
+
+	set LayerLine(0) 0.0
+	set LayerLine(1) 1.8
+	set LayerLine(2) 3.1 
+	set LayerLine(3) 4.2 
+	set LayerLine(4) 5.3
+	set LayerLine(5) 6.4
+	set LayerLine(6) 7.5 
+	set LayerLine(7) 8.6 
+	set LayerLine(8) 9.6 
+
+	set c $Desktop(mainCanvas).canvas
+
+	if { $LayerLine(which) == "X" } {
+		#puts $LayerLine(X)
+		$c delete LayerLineX
+		eval { $c create line } $LayerLine(X) { -fill red -tags LayerLineX }
+		$c move LayerLineX 0 [ expr -1 * $mainImage(min) * $mainImage(height)]  
+		$c scale LayerLineX 0 0 1.0 $LayerLine(scale) 
+	} else {
+		#puts $LayerLine(Y)
+		$c delete LayerLineY
+		eval { $c create line } $LayerLine(Y) { -fill red -tags LayerLineY }
+		$c move LayerLineY [ expr -1 * $mainImage(min) * $mainImage(width) ] 0   
+		$c scale LayerLineY 0 0 $LayerLine(scale) 1.0
+	}
+
+	set LayerLine(flag) ON
+}
+
+proc layerLineClear { } {
+	global Desktop
+	global LayerLine
+
+	set c $Desktop(mainCanvas).canvas
+	if { $LayerLine(which) == "X" } {
+		$c delete LayerLineX
+	} else {
+		$c delete LayerLineY
+	}
+
+	set LayerLine(flag) OFF
+}
+
+proc layerLineChange { } {
+	global LayerLine
+
+	set w .layerLineInfo
+	set f $w.which
+	set b $f.which
+	if { $LayerLine(which) == "X" } {
+		set LayerLine(which) Y
+	} else {
+		set LayerLine(which) X
+	}
+	$b configure -text $LayerLine(which) -command layerLineChange
+}
+

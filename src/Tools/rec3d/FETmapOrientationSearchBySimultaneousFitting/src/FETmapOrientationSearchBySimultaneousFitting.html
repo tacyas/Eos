@@ -1,0 +1,29 @@
+<HTML>
+<HEAD>
+<TITLE>FETmapOrientationSearchBySimultaneousFitting</TITLE>
+</HEAD>
+<BODY>
+<H1>FETmapOrientationSearchBySimultaneousFitting</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: FETmapOrientationSearchBySimultaneousFitting
+Options:
+    [-i[nput]            InML                (NULL      ).as(inFile              ) ] :Essential :InputMapList
+    [-i[nput]n[ame]      InNL                (NULL      ).as(inFile              ) ] :Essential :InputNameList
+    [-i[nput]C[ore]L[ist]InCL                (NULL      ).as(inFile              ) ] :Essential :InputCandidateCoreList
+    [-P[eakArea]M[ode]   PM                  (0         ).as(Integer             ) ] :Optional  :PeakDetectAreaMode
+    [-P[eak]N[umber]     PN                  (10        ).as(Integer             ) ] :Optional  :PeakNumber
+    [-PDT[hres]          PDT                 (0.2       ).as(Real                ) ] :Optional  :PeakDetectThreshold_ForMode0
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+InputMapList: FETcorrelationMapList
+InputNameList: FETfileNameList 
+PaekAreaMode: 0-10
+PaekNumber: 1-50
+PaekDetectThreshold: 0.02-1.00
+SearchArea: 1-20
+</PRE>
+</BODY>
+</HTML>

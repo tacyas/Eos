@@ -1,0 +1,56 @@
+
+ RO image file on unit   1 : BBa.rec     Size=        98306
+
+ Number of columns, rows, sections .........    512     96    512
+ Map mode ..................................    1
+ Start cols, rows, sects, grid x,y,z .......    0    0    0     512    96   512
+ Pixel spacing (Angstroms)..................  20.20      20.20      20.20    
+ Cell angles ...............................   90.000   90.000   90.000
+ Fast, medium, slow axes ...................    X    Y    Z
+ Origin on x,y,z ...........................  5171.      969.6      0.000    
+ Minimum density ...........................  -3249.4    
+ Maximum density ...........................   2218.5    
+ Mean density ..............................   692.10    
+ tilt angles (original,current) ............  0.0   0.0   0.0  90.0   0.0   0.0
+ Space group,# extra bytes,idtype,lens .....       0       0       0       0
+
+     7 Titles :
+SerialEM: Digitized by Gatan Camera on TF30             01-Oct-03  10:21:14    
+          Tilt axis rotation angle = -12.5                                     
+REDUCEMONT: recut and reduced by factor of  2            3-Nov-03  13:57:56    
+clip: resized image.                                     3-Nov-03  15:41:45    
+NEWSTACK: Images copied, transformed                    20-Oct-06  12:27:15    
+mrctaper: Image tapered down to fill value at edges     20-Oct-06  12:27:20    
+TILT: Tomographic reconstruction                        20-Oct-06  12:27:25    
+
+
+ RO image file on unit   2 : BBb.mat     Size=        98306
+
+ Number of columns, rows, sections .........    512     96    512
+ Map mode ..................................    1
+ Start cols, rows, sects, grid x,y,z .......    0    0    0     512    96   512
+ Pixel spacing (Angstroms)..................  20.20      20.20      20.20    
+ Cell angles ...............................   90.000   90.000   90.000
+ Fast, medium, slow axes ...................    X    Y    Z
+ Origin on x,y,z ...........................  5171.      969.6      0.000    
+ Minimum density ...........................  -2937.0    
+ Maximum density ...........................   2163.0    
+ Mean density ..............................   692.22    
+ tilt angles (original,current) ............  0.0   0.0   0.0  90.0   0.0   0.0
+ Space group,# extra bytes,idtype,lens .....       0       0       0       0
+
+     8 Titles :
+SerialEM: Digitized by Gatan Camera on TF30             30-Sep-03  13:39:31    
+          Tilt axis rotation angle = -12.5                                     
+REDUCEMONT: recut and reduced by factor of  2            3-Nov-03  15:45:19    
+clip: resized image.                                     3-Nov-03  15:47:36    
+NEWSTACK: Images copied, transformed                    20-Oct-06  16:37:31    
+mrctaper: Image tapered down to fill value at edges     20-Oct-06  16:37:35    
+TILT: Tomographic reconstruction                        20-Oct-06  16:37:39    
+MATCHVOL: 3-D transformation of tomogram:               20-Oct-06  16:39:09    
+
+
+ FORMATTED  ro  file opened: solve.xf
+
+ FORMATTED  new  file opened: patch.out
+   27.06 correlations per position, Fourier correlations computed    1 times

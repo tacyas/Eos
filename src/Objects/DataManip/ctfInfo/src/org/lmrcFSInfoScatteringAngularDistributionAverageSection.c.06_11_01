@@ -1,0 +1,176 @@
+/*
+# lmrcFSInfoScatteringAngularDistributionAverageSection : $Revision$  
+# $Date$ 
+# Created by $Author$
+# Usage : lmrcFSInfoScatteringAngularDistributionAverageSection 
+# Attention
+#   $Loccker$
+#  	$State$ 
+#
+*/
+/* $Log$ */
+
+#include<stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#define DEBUG
+#include  "genUtil.h"
+#include "mrcImage.h"
+#include "Vector.h"
+#include "./lmrcFSInfoScatteringAngularDistributionAverageSection.h"
+
+floatVector*
+lmrcFSInfoScatteringAngularDistributionAverageSection(mrcImage* fft, int quadrant)
+{
+	floatVector* fv;
+	floatVector* count;
+	float iX, iY;
+	double re, im, pow;
+	int flag, i, R;
+	int startX,startY,endX,endY;
+	float mul, mul2;
+	float* data;
+	unsigned long size;
+
+	if(fft->HeaderN.x<fft->HeaderN.y) {
+		flag = 0; 
+		size = fft->HeaderN.x/2+1;
+		mul = ((float)fft->HeaderN.x)/((float)fft->HeaderN.y);
+	} else {
+		flag = 1;
+		size = fft->HeaderN.y/2+1;
+		mul = ((float)fft->HeaderN.y)/((float)fft->HeaderN.x);
+	}
+	mul2 = mul*mul;
+	fv    = floatVectorInit(NULL, size);
+	count = floatVectorInit(NULL, size);
+	DEBUGPRINT3("%d %d %d\n", count->size, fv->size, size);
+
+	switch(quadrant){
+		
+		case 1 : {
+			startX = 0;
+			endX   = fft->HeaderN.x/2.0;
+			startY = 0;
+			endY   = fft->HeaderN.y/2.0;
+			break;
+		}
+		case 2 : {
+			startX = 0;
+			endX   = fft->HeaderN.x/2.0;
+			startY = 0;
+			endY   = fft->HeaderN.y/2.0;
+			break;
+		}
+		case 3 : {
+			startX = -fft->HeaderN.x/2.0+1;
+			endX   = 0;
+			startY = 0;
+			endY   = fft->HeaderN.y/2.0;
+			break;
+		}
+		case 4 : {
+			startX = -fft->HeaderN.x/2.0+1;
+			endX   = 0;
+			startY = 0;
+			endY   = fft->HeaderN.y/2.0;
+			break;
+		}
+	}
+	
+	for(i=0; i<size; i++) {
+		fv->data[i] = 0.0;
+		count->data[i] = 0.0;
+	}
+	
+	//fprintf(stderr,"%d %d\n%d %d %d %d %d\n",fft->HeaderN.x, fft->HeaderN.y, quadrant, startX, endX, startY, endY);
+	if(flag==0) {
+		for(iX=startX ; iX<endX; iX++) {
+			for(iY=startY ; iY<endY ; iY++) {
+				mrcPixelDataGet(fft, iX, iY, 0.0, &pow, mrcPixelPow, mrcPixelHowNearest);
+				R = (int)(sqrt(iX*iX+iY*iY*mul2)+0.5);
+				if(R<size) {
+					switch(quadrant){
+						case 1 : {
+							if( iX >= iY ){
+								fv->data[R] += pow;
+								count->data[R] ++;
+							}
+							break;
+						}
+						case 2 : {
+							if( iX <=  iY ){
+							fv->data[R] += pow;
+							count->data[R] ++;
+							}	 
+							break;
+						}
+						case 3 :{
+							if( -1*iX <= iY ){
+								fv->data[R] += pow;
+								count->data[R] ++;
+							}
+							break;
+						}
+						case 4 : {
+							if( -1*iX >= iY ){
+								fv->data[R] += pow;
+								count->data[R] ++;
+							}
+							break;
+						}
+					}
+				}
+			}
+		}
+	} else {
+		for(iX=startX ; iX<endX ; iX++) {
+			for(iY=startY ; iY<endY ; iY++) {
+				mrcPixelDataGet(fft, iX, iY, 0.0, &pow, mrcPixelPow, mrcPixelHowNearest);
+				R = (int)(sqrt(iX*iX*mul2+iY*iY)+0.5);
+				if(R<size) {
+					switch(quadrant){
+						case 1 : {
+							if( iX > iY ){
+								fv->data[R] += pow;
+								count->data[R] ++;
+							}
+							break;
+						}
+						case 2 : {
+							if( iX <  iY ){
+								fv->data[R] += pow;
+								count->data[R] ++;
+							}
+							break;
+						}
+						case 3 :{
+							if( -1*iX < iY ){
+								fv->data[R] += pow;
+								count->data[R] ++;
+							}
+							break;
+						}
+						case 4 : {
+							if( -1*iX > iY ){
+								fv->data[R] += pow;
+								count->data[R] ++;
+							}
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	for(i=0; i<size; i++) {
+		if(0!=count->data[i]) {
+			fv->data[i] /= count->data[i] ;
+		} else {
+			fv->data[i] = 0;
+		}
+	}
+	return fv;
+}
+									

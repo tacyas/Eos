@@ -1,0 +1,7 @@
+ARM64MAC64/eosPointCopy.o:eosPointCopy.o
+ARM64MAC64/eosPointProject.o:eosPointProject.o
+ARM64MAC64/eosPointRead.o:eosPointRead.o
+ARM64MAC64/eosPointRotate.o:eosPointRotate.o
+ARM64MAC64/eosPointUtil.o:eosPointUtil.o
+ARM64MAC64/eosPointWrite.o:eosPointWrite.o
+ARM64MAC64/leosPointPositionCorrection.o:leosPointPositionCorrection.o

@@ -1,0 +1,31 @@
+<HTML>
+<HEAD>
+<TITLE>mrcImageFourierNeighborCorrelation</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageFourierNeighborCorrelation</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageFourierNeighborCorrelation
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile::mrcImage    ) ] :Essential :Input
+    [-o[utput]           Out                 (stdout    ).as(outFile::ASCII      ) ] :Optional  :Output:FNC
+    [-d[elta]            delta               (0.0       ).as(Real                ) ] :Optional  :Mode
+    [-C[enter]           Centre              (0         ).as(Integer             ) ] :Optional  :CentreMode
+    [-M[ode]             GetMode             (0         ).as(Integer             ) ] :Optional  :PixelDataGetHowToGet: InterpolationMode 
+    [-FSC                                                                          ] :Optional  :Output:predicted FSC
+    [-Cref                                                                         ] :Optional  :Output:Cref
+    [-FSCfull                                                                      ] :Optional  :Output:FSC full
+    [-NoiseWeighted      Brestore            (0.0       ).as(Real                ) ] :Optional  :NoiseWeighted: Cref*exp(-Brestore/(4*d^2)
+    [-mask               InMask              (NULL      ).as(inFile::mrcImage    ) ] :Optional  :Input: Mask for FSC
+    [-maskBack           InBackMask          (NULL      ).as(inFile::mrcImage    ) ] :Optional  :Input: Mask for FSC Back
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+0: Centre is ImageCentre Shift: (Nx/2.0, Ny/2.0, Nz/2.0 ) 
+1: Centre is BottomLeft  Shift: (0,      0,      0      ) 
+2: Use StartN            Shift: (StartNx,StartNy,StartNz) 
+Duncan Sousa, Nikolaus Grigorieff, 2007, JSB 
+</PRE>
+</BODY>
+</HTML>

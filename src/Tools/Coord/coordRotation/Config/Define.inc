@@ -1,0 +1,4 @@
+OBJECTNAME = coordRotation
+EXTRA_LIB  =
+EXTRA_CCOPTS =
+EXTRA_INC =

@@ -1,0 +1,250 @@
+/*
+# %M% %Y% %I%
+# The latest update : %G% at %U%
+#
+#%Z% llDataMultiCTFCompensation ver %I%
+#%Z% Created by 
+#%Z%
+#%Z% Usage : llDataMultiCTFCompensation
+#%Z% Attention
+#%Z%
+*/
+static char __sccs_id[] = "%Z%llDataMultiCTFCompensation ver%I%; Date:%D% %Z%";
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>                  
+#define GLOBAL_DECLARATION
+#define DEBUG
+#include "genUtil.h"
+#include "Memory.h"
+#include "String.h"
+#include "../inc/config.h"
+#include "llData.h"
+#include "ctfInfo.h"
+
+typedef struct lllDataMultiCTFCompensationInfo {
+	llData* llTest;
+	llData  llRef;
+	ctfInfo* ctfIn;
+	double*  weight;
+	long number;
+	double   truePitch;
+	llDataFittedParam range;
+	llDataFittedParam* paraFit;
+	double Noise;
+} lllDataMultiCTFCompensationInfo;
+
+extern void lllDataMultiCTFCompensation(llData* out, lllDataMultiCTFCompensationInfo* linfo, long mode);
+void
+main(int argc, char* argv[]) 
+{
+	long status;
+	llDataMultiCTFCompensationInfo info;
+	lllDataMultiCTFCompensationInfo linfo;
+	llData*  llIn;
+	llData  llAve;
+	long i, iter;
+	char s[1024];
+	long l, n, iR;
+	float Z, R;
+
+	init0(&info);
+    argCheck(&info, argc, argv);
+    init1(&info);
+
+	/* Set Fitting Parameter */
+    linfo.range.Para.r.Min   = info.rmin;
+    linfo.range.Para.r.Max   = info.rmax;
+    linfo.range.Para.r.Delta = info.dr;
+    linfo.range.Para.phi.Min = info.phimin*RADIAN;
+    linfo.range.Para.phi.Max = info.phimax*RADIAN;
+    linfo.range.Para.phi.Delta = info.dphi*RADIAN;
+    linfo.range.Para.z.Min   = info.zmin;
+    linfo.range.Para.z.Max   = info.zmax;
+    linfo.range.Para.z.Delta = info.dz;
+	/* Allocate paraFit */	
+	linfo.paraFit=(llDataFittedParam*)memoryAllocate(info.flagIn*sizeof(llDataFittedParam), "in main");
+	linfo.Noise = info.Noise;	
+	/* Input reference data */
+	DEBUGPRINT("----- Input Ref Data -----\n");
+	llDataFileRead(info.fptRef, &(linfo.llRef), &status);
+	DEBUGPRINT("----- Set Weight -----\n");
+	lllDataWeightSet(info.fptllInfo, &(linfo.llRef), 0.0, 0);
+
+	/* Input test data*/
+	DEBUGPRINT("----- Input Data -----\n");
+	llIn  = (llData*)memoryAllocate(sizeof(llData)*info.flagIn, "in main");
+	linfo.llTest = (llData*)memoryAllocate(sizeof(llData)*info.flagIn, "in main");
+	linfo.ctfIn  = (ctfInfo*)memoryAllocate(sizeof(ctfInfo)*info.flagIn, "in main");
+	linfo.weight = (double*)memoryAllocate(sizeof(double)*info.flagIn, "in main");
+	linfo.number = info.flagIn;
+	fseek(info.fptInList, 0L, SEEK_SET);
+	for(i=0; i<info.flagIn; i++) {
+		llDataFileRead(info.fptIn[i], &(llIn[i]), &status);
+		lllDataWeightSet(info.fptllInfo, &(llIn[i]), 0.0, 0);
+
+		llIn[i].truePitch = info.truePitch;
+		llIn[i].Weight    = 1.0;
+
+		stringGetFromFile(s, "", info.fptInList, stdout, 1);			
+		linfo.weight[i]			= stringGetNthRealData(s, 2, " ,");
+		linfo.ctfIn[i].defocus = stringGetNthRealData(s, 3, " ,");
+		linfo.ctfIn[i].Cs 		= stringGetNthRealData(s, 4, " ,");
+		linfo.ctfIn[i].kV 		= stringGetNthRealData(s, 5, " ,");
+		linfo.ctfIn[i].ratioOfAmpToPhase 	= stringGetNthRealData(s, 6, " ,");
+		linfo.ctfIn[i].mode     = ctfInfoModePhaseAndAmpCTF;
+
+		switch(mode) {
+			case 1: {
+				for(l=0; l<llIn[i].llMax: l++) {
+					Z = llIn[i].LL[l].nl/llIn[i].truePitch;
+					for(iR=0; iR<llIn[i].nR; iR++) {
+						CTF = ctfFunction(&(linfo.ctfIn[i]), 
+										sqrt(SQR(lln[i].LL[l].data[iR].RR)
+										    +SQR(Z)), 
+										0);
+						llIn[i].LL[l].data[iR].Re *= -1;
+					}
+				}
+				break;
+			}
+			default: {
+			}
+		}
+	}
+	linfo.truePitch = info.truePitch;
+
+	for(iter=0; iter<info.MaxIter; iter++) {
+	    fprintf(stdout, "The %ldth Iteration\n", iter);
+		/* Fitting */
+	    for(i=0; i<info.flagIn; i++) {
+	        linfo.paraFit[i].QPara.R         = 0.0;
+	        linfo.paraFit[i].QPara.phi.Value = 0.0;
+	        linfo.paraFit[i].QPara.z.Value   = 0.0;
+	        linfo.paraFit[i].QPara.r.Value   = 0.0;
+	        linfo.paraFit[i].Para = linfo.range.Para;
+	        fprintf(stdout, "Fit model to %s\n", info.In[i]);
+	        if(info.flagOutParam2) {
+	            lllDataFitWithFile(&(linfo.llRef), &(llIn[i]), &(linfo.paraFit[i]), info.OutParam2[i], PVALUE_MODE|info.mode);
+	        } else {
+	            lllDataFit(&(linfo.llRef), &(llIn[i]), &(linfo.paraFit[i]), PVALUE_MODE|info.mode);
+	        }
+	    }
+		/* Phase Shift */
+	    for(i=0; i<info.flagIn; i++) {
+	        if(linfo.paraFit[i].PPara.R <= linfo.paraFit[i].PParaInv.R) {
+	            linfo.paraFit[i].Para = linfo.paraFit[i].PPara;
+	            linfo.paraFit[i].Para.Pole = llDataPoleNormal;
+	        } else {
+	            linfo.paraFit[i].Para = linfo.paraFit[i].PParaInv;
+	            linfo.paraFit[i].Para.Pole = llDataPoleAnti;
+	        }
+	        linfo.llTest[i] = linfo.llRef;
+	        llDataInit(&(linfo.llTest[i]));
+	        lllDataAttributeCopy(&(linfo.llTest[i]), &(linfo.llRef));
+	        lllDataPhaseShiftInter(&(linfo.llTest[i]), &(llIn[i]), &(linfo.paraFit[i]));
+	        /* Fitted llData Output */
+			if(info.flagOut) {
+	        	llDataFileWrite(info.fptOut[i], &(linfo.llTest[i]), &status);
+			}
+	    }
+		/* Averaging */
+		lllDataMultiCTFCompensation(&llAve, &linfo, info.mode);
+	}
+
+	llDataFileWrite(info.fptAve, &llAve, &status);
+
+    /* Output */
+    fprintf(stdout, "---Output---\n");
+    fprintf(info.fptOutParam, "## Fit and Average Step ##\n");
+    for(i=0; i<info.flagIn; i++) {
+        fprintf(info.fptOutParam, "%s %s %15.6f %15.6f %15.6f %15.6f %5d\n",
+            info.Ref,
+            info.In[i],
+            linfo.paraFit[i].Para.R*DEGREE,
+            linfo.paraFit[i].Para.phi.Value*DEGREE,
+            linfo.paraFit[i].Para.z.Value,
+            linfo.paraFit[i].Para.r.Value,
+            linfo.paraFit[i].Para.Pole);
+    }
+	exit(EXIT_SUCCESS);
+}
+
+void
+additionalUsage()
+{
+	ERRORPRINT("---- InputFileFormat ----\n");
+	ERRORPRINT("filename weight(NumberOfAveragedFile) deltaF[A] Cs[mm] kV[kV] ratioOfAmpToPhase\n");
+	ERRORPRINT("---- Mode ----");
+	ERRORPRINT("    0: |CTFi|/Sigma(SQR(CTFi))\n");
+	ERRORPRINT("    1:  CTFi /Sigma(SQR(CTFi))\n");
+}
+
+void
+lllDataMultiCTFCompensation(llData* out, lllDataMultiCTFCompensationInfo* linfo, long mode)
+{
+	long ll, iR, i;
+	double Z, R, CTF, Weight;
+	double Sum, F, Re, Im, phi;  
+
+	*out = linfo->llRef;
+	llDataInit(out);
+	lllDataAttributeCopy(out, &(linfo->llRef));
+	lllDataClear(out);
+	
+	DEBUGPRINT1(" in lllDataMultiCTFCompensation: llMax %d\n", out->llMax);
+	for(ll=0; ll<out->llMax; ll++) {
+		Z = out->LL[ll].Z = out->LL[ll].nl/linfo->truePitch;
+		for(iR = 0; iR<out->LL[ll].nR; iR++) {
+			Sum = 0.0;
+			Re  = 0.0;
+			Im  = 0.0;
+			for(i=0; i<linfo->number; i++) {
+				switch(0x0f&mode) {
+					case 0: 
+					case 1: {
+						CTF = ctfFunction(&(linfo->ctfIn[i]), 
+										sqrt(SQR(linfo->llTest[i].LL[ll].data[iR].RR)
+										    +SQR(Z)), 
+										0);
+						CTF = fabs(CTF);	
+						F   = linfo->llTest[i].LL[ll].data[iR].F;
+						phi = linfo->llTest[i].LL[ll].data[iR].PHI;
+						Weight =linfo->weight[i]; 
+#ifdef DEBUG2
+						if(F!=0) {
+							DEBUGPRINT2("%f ,%f\n", F, phi);
+							DEBUGPRINT2("CTF:%f Weight:%f\n", CTF, Weight);
+						}
+#endif
+						Re += Weight*CTF*F*cos(phi);
+						Im += Weight*CTF*F*sin(phi);
+						Sum+= (Weight*SQR(CTF) + SQR(linfo->Noise));
+						break;
+					}
+					default: {
+						ERRORPRINT1("Not supported mode: %ld\n", mode);
+						exit(EXIT_FAILURE);
+						break;
+					}
+				}
+			}
+			if(Sum==0.0) {
+				Re = 0.0;
+				Im = 0.0;
+			} else {
+				Re /= Sum;
+				Im /= Sum;
+			}
+#ifdef DEBUG2
+			DEBUGPRINT2("%f +i %f\n", Re, Im);
+#endif
+			out->LL[ll].data[iR].Re = Re;
+			out->LL[ll].data[iR].Im = Im;
+			out->LL[ll].data[iR].F  = sqrt(SQR(Re)+SQR(Im));
+			out->LL[ll].data[iR].PHI= atan2(Im, Re);
+			out->LL[ll].data[iR].RR = linfo->llRef.LL[ll].data[iR].RR;
+		}
+	}
+}

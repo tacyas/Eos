@@ -1,0 +1,14 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input:2DFT","Essential","2","1","In","inFileNoOpen::mrcImage","NULL","2","PathIn","String","./"
+"-iL","-i[nput]L[ikelihood]","Input: LikelihoodList","Essential","2","1","InLikelihood","inFileListNoOpen","NULL","2","PathL","String","./"
+"-i3d","-i[nput]3d[SectionList]","Input: CentralSectionList","Essential","2","1","In3D","inFileListNoOpen","NULL","2","Path3D","String","./"
+"-o","-o[utput]","Output: 2DSigma","Essential","1","1","Out","outFile::mrcImage","NULL"
+"-EulerMode","-EulerMode","Input: EulerMode","Optional","1","1","EulerMode","String","YOYS"
+"-Rot1","-Rot1","OutputDataFile","Optional","3","1","Rot1Start","Real","0.0","2","Rot1End","Real","360.0","3","Rot1Delta","Real","10"
+"-Rot2","-Rot2","OutputDataFile","Optional","3","1","Rot2Start","Real","0.0","2","Rot2End","Real","360.0","3","Rot2Delta","Real","10"
+"-Rot3","-Rot3","OutputDataFile","Optional","3","1","Rot3Start","Real","0.0","2","Rot3End","Real","360.0","3","Rot3Delta","Real","10"
+"-trans","-trans[late]","Input: Translation","Optional","2","1","TransX","Real","0.0","2","TransY","Real","0.0"
+"-InterpMode","-InterpMode","Interpolation Mode","Optional","1","1","InterpMode","Integer","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

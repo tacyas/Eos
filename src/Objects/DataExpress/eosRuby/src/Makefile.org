@@ -1,0 +1,285 @@
+SHELL=/bin/ksh
+include ../Config/Define.inc
+include ../../Config/Define.inc
+include ../../../Config/Define.inc
+include ../../../../Config/Define.inc
+
+include $(OSTYPE)/.Source
+include .CHeader
+include .CCHeader
+include .Wish
+include .Ruby
+
+LIBNAME=lib$(OBJECTNAME).a
+SHAREDLIB=lib$(OBJECTNAME).so
+LIBNAMEDEBUG=lib$(OBJECTNAME).debug.a
+
+DSTDIR=../../../../../lib/$(OSTYPE)/
+SOURCE=$(OSTYPE)/.Source
+
+all: static-lib 
+	@echo LIBNAME:$(LIBNAME)
+	@echo OBJECTNAME:$(OBJECTNAME)
+
+shared: shared-lib
+
+debug: debug-lib
+
+static-lib::
+	@echo LIBNAME:$(LIBNAME)
+	cd $(OSTYPE); \
+	$(RM) -f Makefile; \
+	$(CP) ../../../../../Config/Template/$(WORLDNAME)Template.Dir/src/ARCH/Makefile \
+		   Makefile ; pwd ; \
+	$(MAKE) $(LIBNAME)
+
+shared-lib::
+	@cd $(OSTYPE); \
+	$(RM) -f Makefile;  \
+	$(CP) ../../../../../Config/Template/$(WORLDNAME)Template.Dir/src/ARCH/Makefile \
+		   Makefile ; pwd ; \
+	$(MAKE) $(SHAREDLIB)
+
+debug-lib::
+	@cd $(OSTYPE); \
+	$(RM) -f Makefile; \
+	$(CP) ../../../../../Config/Template/$(WORLDNAME)Template.Dir/src/ARCH/Makefile \
+		   Makefile ; pwd ; \
+	$(MAKE) $(LIBNAMEDEBUG)
+
+clean: 
+	rm -f *.[oa] *.debugo $(OSTYPE)/*.[ao] $(OSTYPE)/*.debugo *.bak core 
+
+Makefile:
+	touch .Source
+	touch .CHeader
+	touch .CCHeader
+
+install: all $(DSTDIR)/$(LIBNAME) install-ascii 
+	@echo "Installation has completed: $(LIBNAME)" 
+
+
+install-debug: debug $(DSTDIR)/$(LIBNAMEDEBUG) install-ascii 
+	@echo "Installation has completed: $(LIBNAMEDEBUG)" 
+
+install-ascii: h hh wish ruby 
+
+h:
+	@if [ -n "$(CHeader)" ] ; \
+	then\
+		echo "C Header Install" ; \
+		for file in $(CHeader) dummy ; \
+		do \
+			if [ -f $${file} ] ; \
+			then\
+				echo $${file}; $(INSTALL) -m 444 $${file} $(DSTDIR)/../../include ; \
+			fi;\
+		done; \
+	fi
+
+hh:
+	@if [ -n "$(CCHeader)" ] ; \
+	then \
+		echo "C++ Header Install" ; \
+		for file in $(CCHeader) dummy ; \
+		do \
+			if [ -f $${file} ] ; \
+			then\
+				echo $${file}; $(INSTALL) -m 444 $${file} $(DSTDIR)/../../include ; \
+			fi;\
+		done; \
+	fi
+
+wish:
+	@if [ -n "$(Wish)" ] ; \
+	then \
+		echo "Wish Install" ; \
+		for file in $(Wish) dummy ; \
+		do \
+			if [ -f $${file} ] ; \
+			then\
+				echo $${file}; $(INSTALL) -m 444 $${file} $(DSTDIR)/../../lib ; \
+			fi;\
+		done; \
+	fi
+
+ruby:
+	@if [ -n "$(Ruby)" ] ; \
+	then \
+		echo "Ruby Install" ; \
+		for file in $(Ruby) dummy ; \
+		do \
+			if [ -f $${file} ] ; \
+			then\
+				echo $${file}; $(INSTALL) -m 444 $${file} $(DSTDIR)/../../lib ; \
+			fi;\
+		done; \
+	fi
+
+put:
+	@Files=`ls -l | grep $${USER} | grep rw | grep -e "\.c" ` ;\
+	for file in $${Files} dummy; \
+	do \
+		if [ -w $${file} ] ; \
+		then\
+			echo $${file}; sccsPut $${file} ; \
+		fi;\
+	done
+
+$(DSTDIR)/$(LIBNAME): all
+	@echo Installing lib: $(LIBNAME)
+	@if [ ! -d $(DSTDIR) ] ; then mkdir $(DSTDIR) ; fi
+	@cd $(OSTYPE); $(INSTALL) -m 444 $(LIBNAME) ../$(DSTDIR)
+	@echo LIBNAME:$(LIBNAME)
+	@echo Link EosObjects
+	@OBJLIST=`ls $(OSTYPE)/*.o `;\
+	echo $${OBJLIST} | sed -f ../../../../Config/o2nl.sed > .tmp1 ; \
+	echo $(REALOBJ)  | sed -f ../../../../Config/o2nl.sed > .tmp2 ; \
+	echo "#### Attention Uncompiled file ####";\
+	comm -13 .tmp1 .tmp2 ; \
+	echo "########";\
+	echo $(AR) r $(DSTDIR)/libEosObjects.a $${OBJLIST} ; \
+	$(AR) r $(DSTDIR)/libEosObjects.a $${OBJLIST}; 
+	@echo $(AR) s $(DSTDIR)/libEosObjects.a ; \
+	$(AR) s $(DSTDIR)/libEosObjects.a 
+	chmod 660 $(DSTDIR)/libEosObjects.a
+	@rm .tmp1 .tmp2
+
+$(DSTDIR)/$(LIBNAMEDEBUG): debug 
+	@echo Installing lib: $(LIBNAMEDEBUG)
+	@if [ ! -d $(DSTDIR) ] ; then mkdir $(DSTDIR) ; fi
+	@cd $(OSTYPE); $(INSTALL) -m 444 $(LIBNAMEDEBUG) ../$(DSTDIR)
+	@echo LIBNAME:$(LIBNAMEDEBUG)
+	@echo Link EosObjects
+	@OBJLISTDEBUG=`ls $(OSTYPE)/*.debugo `;\
+	echo $${OBJLISTDEBUG} | sed -f ../../../../Config/o2nl.sed > .tmp1 ; \
+	echo $(REALOBJDEBUG)  | sed -f ../../../../Config/o2nl.sed > .tmp2 ; \
+	echo "#### Attention Uncompiled file ####";\
+	comm -13 .tmp1 .tmp2 ; \
+	echo "########";\
+	echo $(AR) r $(DSTDIR)/libEosObjects.debug.a $${OBJLISTDEBUG} ; \
+	$(AR) r $(DSTDIR)/libEosObjects.debug.a $${OBJLISTDEBUG}; 
+	@echo $(AR) s $(DSTDIR)/libEosObjects.debug.a ; \
+	$(AR) s $(DSTDIR)/libEosObjects.debug.a 
+	chmod 660 $(DSTDIR)/libEosObjects.debug.a
+	@rm .tmp1 .tmp2
+
+$(DSTDIR)/$(SHAREDLIB):$(SHAREDLIB)
+	@echo Installing shared-lib
+	@if [ ! -d $(DSTDIR) ] ; then mkdir $(DSTDIR) ; fi
+	@cd $(OSTYPE); $(INSTALL) -m 444 $(SHAREDLIB) ../$(DSTDIR)
+
+install-all: 
+	@cd ..  ; $(MAKE) install
+
+install-shared:
+	$(MAKE) $(DSTDIR)/$(SHAREDLIB)
+
+install-ruby:shared
+	cd $(OSTYPE); $(RUBY) -r ftools -e 'File::install(ARGV[0], ARGV[1], 0555, true)' $(SHAREDLIB) $(RUBYSHAREDLIB)/$(SHAREDLIB)	
+
+depend:
+	@echo dependency checking now 
+	@echo $(OSTYPE)
+	@echo SRC = \\ > $(SOURCE) 
+	@ls -1 *.c  | sed -e "s/\.c/.c \\\\/"   >> $(SOURCE)
+	@ls -1 *.cc | sed -e "s/\.cc/.cc \\\\/" >> $(SOURCE)
+	@ls -1 *.ccm | sed -e "s/\.ccm/.ccm \\\\/" >> $(SOURCE)
+	@ls -1 *.idl | sed -e "s/\.idl/.idl \\\\/" >> $(SOURCE)
+	@echo >> $(SOURCE)
+	@#
+	@echo OBJ = \\ >> $(SOURCE)
+	@ls -1 *.c   | sed -e "s/\.c/.o \\\\/"    >> $(SOURCE)
+	@ls -1 *.cc  | sed -e "s/\.cc/.o  \\\\/"  >> $(SOURCE)
+	@ls -1 *.ccm  | sed -e "s/\.ccm/.o  \\\\/"  >> $(SOURCE)
+	@ls -1 *.idl | sed -e "s/\.idl/.o  \\\\/" >> $(SOURCE)
+	@echo >> $(SOURCE)
+	@#
+	@echo REALOBJ = \\ >> $(SOURCE)
+	@ls -1 *.c   | sed -e "s/^/\$(OSTYPE)\//" -e "s/\.c/.o \\\\/"  >> $(SOURCE)
+	@ls -1 *.cc  | sed -e "s/^/\$(OSTYPE)\//" -e "s/\.cc/.o \\\\/" >> $(SOURCE)
+	@ls -1 *.ccm  | sed -e "s/^/\$(OSTYPE)\//" -e "s/\.ccm/.o \\\\/" >> $(SOURCE)
+	@ls -1 *.idl | sed -e "s/^/\$(OSTYPE)\//" -e "s/\.idl/.o \\\\/" >> $(SOURCE)
+	@echo >> $(SOURCE) 
+	@echo OBJDEBUG = \\ >> $(SOURCE)
+	@ls -1 *.c   | sed -e "s/\.c/.debugo \\\\/"    >> $(SOURCE)
+	@ls -1 *.cc  | sed -e "s/\.cc/.debugo  \\\\/"  >> $(SOURCE)
+	@ls -1 *.ccm  | sed -e "s/\.ccm/.debugo  \\\\/"  >> $(SOURCE)
+	@ls -1 *.idl | sed -e "s/\.idl/.debugo  \\\\/" >> $(SOURCE)
+	@echo >> $(SOURCE)
+	@#
+	@echo REALOBJDEBUG = \\ >> $(SOURCE)
+	@ls -1 *.c   | sed -e "s/^/\$(OSTYPE)\//" -e "s/\.c/.debugo \\\\/"  >> $(SOURCE)
+	@ls -1 *.cc  | sed -e "s/^/\$(OSTYPE)\//" -e "s/\.cc/.debugo \\\\/" >> $(SOURCE)
+	@ls -1 *.ccm  | sed -e "s/^/\$(OSTYPE)\//" -e "s/\.ccm/.debugo \\\\/" >> $(SOURCE)
+	@ls -1 *.idl | sed -e "s/^/\$(OSTYPE)\//" -e "s/\.idl/.debugo \\\\/" >> $(SOURCE)
+	@echo >> $(SOURCE) 
+	@#
+	@echo >> $(SOURCE)
+	@echo CCHeader = \\ > .CCHeader
+	@ls -1 *.hh | sed -e "s/\.hh/.hh \\\\/" >> .CCHeader
+	@echo >> .CCHeader
+	@#
+	@echo CHeader = \\ > .CHeader
+	@ls -1 *.h | sed -e "s/\.h/.h \\\\/" >> .CHeader
+	@echo >> .CHeader
+	@#
+	@echo Wish = \\ > .Wish
+	@ls -1 *.wish | sed -e "s/\.wish/.wish \\\\/" >> .Wish
+	@echo >> .Wish
+	@#
+	@echo Ruby = \\ > .Ruby
+	@ls -1 *.rb | sed -e "s/\.rb/.rb \\\\/" >> .Ruby
+	@echo >> .Ruby
+	@#
+	@ls -1 *.c *.cc *.ccm | \
+	awk -vHostType=$(OSTYPE) -f$(EOS_HOME)/sbin/awk/objectdependency.awk > $(OSTYPE)/.Depend
+	@#
+	@$(DEPENDCOMMAND) $(INCLUDEDIR) $(EXTRA_INC) $(EXTRA_DEFINE) $(KHOROS_INCS) *.c *.cc *.ccm >> $(OSTYPE)/.Depend
+	@for file in $(SRC) dummy ; \
+	do  \
+		if [ -f $${file} ] ; \
+		then \
+			echo $${file} ; \
+			ln -sf ../$${file} $(OSTYPE)/$${file}; \
+		fi ;\
+	done
+
+#
+#
+#
+test::
+	@if [ -d test ] ; then \
+		cd test; \
+		$(MAKE); \
+	else \
+		echo "No test directory: making test"; \
+		mkdir test; \
+		cd test; \
+		touch Makefile; \
+	fi
+
+#
+# cvs
+#
+cvsupdate::
+	cvs -d $(EOS_CVSROOT) update -d 
+
+cvslogin::
+	cvs -d $(EOS_CVSROOT) login 
+
+cvscommit::
+	@echo "cvs -d $(EOS_CVSROOT) commit -m @"message@" filename"
+
+cvsadd::
+	@echo "cvs -d $(EOS_CVSROOT) add  filename|dirname"
+	@echo "Need Commit for filename"
+	@echo "make cvscommit"
+
+cvsremove::
+	@echo "cvs -d $(EOS_CVSROOT) remove filename"
+	@echo "Need Commit for filename"
+	@echo "make cvscommit" 
+
+include $(OSTYPE)/.Depend
+include ../Config/Target.inc

@@ -1,0 +1,115 @@
+<H2> Content </H2>
+<UL>
+	<LI> <A HREF="EosTutorial.html">Quick Tutorial </A>
+	<LI> <A HREF="#EosSetting">Eos Environment Setting </A>
+	<LI> <A HREF="#NewTool">When you create a new tool,</A>
+	<LI> <A HREF="#AdminTool">When you admine a tool,(Under Contruction)</A>
+	<LI> <A HREF="#NewObj">When you create a new object,</A>
+	<LI> <A HREF="#NewObjMethod">When you add a new method of object,(Under Contruction)</A>
+	<LI> <A HREF="#AdminObj">When you admine a object,(Under Contruction)</A>
+	<LI> <A HREF="#OptionControlFile">OptionControlFile,</A>
+	<LI> <A HREF="#MainFile">Main Source File,</A>
+	<LI> <A HREF="#SomeTechiniques">Some Techiniques for Quick Bug-fix,</A>
+	<LI> <A HREF="EosDirMaintain.html">When you maintain Eos directories,</A>
+</UL>
+<HR>
+<A NAME="EosSetting">
+<H2> Eos Enviroment Setting </H2>
+</A>
+<OL> 
+	<LI> Eos default setting
+		<DT> EOS_HOME
+			<DD> Eos home directory
+		<DT> EOS_HOST
+			<DD> Eos working station type
+	<LI> When you want to create a new tool on another Eos, 
+		<DT> EOS_ANOTHER_HOME
+			<DD> Anonther Eos home directory
+</OL>
+<HR>
+<A NAME="NewTool">
+<H2> When you create a new tool, </H2>
+</A>
+<A HREF="Rule.html">Rule</A>
+<OL>
+	<LI> create new directories and proto-type source codes
+		<DD> <CODE> $ <A HREF="../DevelopmentTools/maketool.html">maketool</A> classname toolname new </CODE>
+	<LI> change a working directory.
+		<DD> <CODE> $ cd $EOS_HOME/src/Tools/classname/toolname/src</CODE>
+	<LI> When you want to add new arguments, you need to modify a file of <A HREF="#OptionControlFile">../Config/OptionControlFile </A>.
+		<DD> Now we are creating a interactive tool, makeOptionControlFile.  Wait a moment please.
+	<LI> If you modify a file of OptionControlFile, you must update your new source codes.
+		<DD> <CODE>$ make update </CODE>
+	<LI> modify <A HREF="#MainFile">toolname.c (a main-source file)</A>
+		<DD> This step is essential but cannot be auto-made.
+	<LI> check file-dependency.
+		<DD> <CODE>$ make depend </CODE>
+	<LI> build a new tool
+		<DD> <CODE>$ make </CODE>
+	<LI> fix bugs in a main-source file.
+		<DD> This step is essential, too.  It may take many hours to fix bugs.  Eos supplies <A HREF="#SomeTechniques">some techniques</A> for the purpose of quick bug-fix, while the bug-fix step cannot be auto.
+	<LI> install a new tool
+		<DD> <CODE>$ make install </CODE>
+</OL>
+
+<HR>
+<A NAME="OptionControlFile">
+<H2><A HREF="ControlFileFormat.html">Control File Format </A></H2>
+</A>
+	This control file is used to generate prototype-source code.
+
+<HR>
+<A NAME="MainFile">
+<H2> Main Source File </H2>
+</A>
+<UL>
+	<LI> Main source file
+		<DD> Default: <A HREF="Tool.c"> Tool.c</A>
+		<DT> ToolInfo
+			<DD> This struct includes the information of argmunets (argv) of main function
+		<DT> init0 (init.c)
+			<DD> Assign default values to ToolInfo
+		<DT> argCheck (argCheck.c)
+			<DD> Assign values to ToolInfo using the information of arguments (argv)
+		<DT> init1 (init.c)
+			<DD> Initialize ToolInfo following the information of arguments (ToolInfo).
+</UL>
+
+<HR>
+<A NAME="SomeTechiniques">
+<H2> Some Techiniques for Quick Bug-fix </H2>
+</A>
+<OL>
+	<LI> DEBUGPRINT function (#include "genUtil.h")
+<H3> Example </H3>
+<H4>If you begin to debug programs,</H4>
+<PRE>
+#define DEBUG
+#include "genUtil.h"
+
+................
+DEBUGPRINT("This step is OK");
+DEBUGPRINT1("This step is OK: %ld \n", mode);
+................
+
+DEBUGPRINT6("This step is OK: %ld %ld %ld %ld %ld %ld\n", mode1, mode2, mode3, mode4, mode5, mode6);
+................
+
+</PRE>
+<H4>If you finish to debug programs,</H4>
+<PRE>
+#undef DEBUG
+#include "genUtil.h"
+
+................
+DEBUGPRINT("This step is OK");
+DEBUGPRINT1("This step is OK: %ld \n", mode);
+................
+
+DEBUGPRINT6("This step is OK: %ld %ld %ld %ld %ld %ld\n", mode1, mode2, mode3, mode4, mode5, mode6);
+................
+
+</PRE>
+</OL>
+<HR>
+

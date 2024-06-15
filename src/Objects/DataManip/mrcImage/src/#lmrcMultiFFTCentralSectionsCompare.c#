@@ -1,0 +1,119 @@
+/*
+# %M% %Y% %I%
+# The latest update : %G% at %U%
+#
+#%Z% lmrcMultiFFTCentralSectionsCompare ver %I%
+#%Z% Created by 
+#%Z%
+#%Z% Usage : lmrcMultiFFTCentralSectionsCompare 
+#%Z% Attention
+#%Z%
+*/
+static char __sccs_id[] = "%Z%lmrcMultiFFTCentralSectionsCompare ver%I%; Date:%D% %Z%";
+
+#define DEBUG
+#include "genUtil.h"
+#include "Memory.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include "./lmrcFFTCentralSection.h"
+#include "../inc/mrcImage.h"
+
+void
+lmrcMultiFFTCentralSectionsCompare(lmrcMultiFFTCentralSectionsCompareInfoOut* Out, mrcImage* in, mrcImage* volume, lmrcMultiFFTCentralSectionsCompareInfo* linfo, int mode){
+
+	mrcImageParaTypeReal x, y;
+	float likelihood;
+	double rein, imin;
+	double revol, imvol;
+	int i;
+	
+	DEBUGPRINT("lmrcMultiFFTCentralSectionsCompare start\n");
+
+	lmrcFFTCentralSectionsGet(Out, in, volume, linfo,mode);
+	
+	for(i=0; i < linfo->llinfo.RotSize; i++){
+		likelihood = 0;
+		for(x=0; x < in->HeaderN.x ; x++){
+			for(y=0; y < in -> HeaderN.y ; y++){
+				mrcPixelDataGet(in, x, y, 0, &rein, mrcPixelRePart, linfo->llinfo.llinfo.InterpMode);
+				mrcPixelDataGet(in, x, y, 0, &imin, mrcPixelImPart, linfo->llinfo.llinfo.InterpMode);
+
+				mrcPixelDataGet(&(Out+i)->out, x, y, 0, &revol, mrcPixelRePart, linfo->llinfo.llinfo.InterpMode);
+				mrcPixelDataGet(&(Out+i)->out, x, y, 0, &imvol, mrcPixelImPart, linfo->llinfo.llinfo.InterpMode);
+				likelihood = likelihood + ((rein - revol)*(rein - revol) + (imin - imvol)*(imin - imvol))/(-2);
+
+			}
+		}
+		
+		(Out +i) -> Likelihood = exp(likelihood)/(2*M_PI);
+	}
+	DEBUGPRINT("lmrcMultiFFTCentralSectionsGet end\n");
+}
+
+void
+lmrcMultiFFTCentralSectionsCompareNormalization(lmrcMultiFFTCentralSectionsCompareInfoOut* Out, lmrcMultiFFTCentralSectionsCompareInfo* linfo, int mode){
+
+	int i;
+	float sum=0;
+
+	for(i=0; i < linfo->llinfo.RotSize; i++){
+		sum = sum + (Out+i)-> Likelihood;
+	}	
+	
+	DEBUGPRINT1("lmrcMultiFFTCentralSectionsComapreNormalization sum: %f\n",sum);
+	
+	for(i=0; i<linfo->llinfo.RotSize; i++){
+		(Out +i) -> Prob = (Out +i)-> Likelihood / sum;
+	}
+}
+
+void
+lmrcMultiFFTCentralSectionsCompareInfoWrite(FILE* fpt, char* filename, lmrcMultiFFTCentralSectionsCompareInfoOut* Out, lmrcMultiFFTCentralSectionsCompareInfo* linfo, int mode){
+
+	int i;
+	
+	for(i=0; i< linfo->llinfo.RotSize; i++){
+		if((Out+i)->Prob >= mode){
+			fprintf(fpt,"%s %s %15.4f %15.4f %15.4f %15.6e\n", filename, linfo->EulerMode, (Out+i)->Rot[0]*DEGREE, (Out+i)->Rot[1]*DEGREE, (Out+i)->Rot[2]*DEGREE, (Out+i)->Prob);
+		}
+	}
+}
+
+void
+lmrcMultiFFTCentralSectionsCompareInfoSort(lmrcMultiFFTCentralSectionsCompareInfoOut Out[], int left, int right){
+
+	int pl=left;
+	int pr=right;
+	int middle=(left+right)/2;
+	lmrcMultiFFTCentralSectionsCompareInfoOut temp;
+	float pivot;
+	
+	//DEBUGPRINT("lmrcMultiFFTCentralSectionsCompareInfoSort strat\n");
+	pivot = Out[middle].Prob;
+	DEBUGPRINT1("lmrcMultiFFTCentralSectionsComapreInfoSort pivot: %15.4f\n",pivot);
+	
+	do{
+		while(Out[pl].Prob > pivot) pl++;
+		while(Out[pr].Prob < pivot) pr--;
+		
+		DEBUGPRINT2("lmrcMultiFFTCentralSectionsComapreInfoSort pl pr: %15.4f %15.4f\n",Out[pl].Prob, Out[pr].Prob);
+		
+		if(pl <= pr){
+		temp = Out[pl];
+		Out[pl] = Out[pr];
+		Out[pr] = temp;
+		pl++;
+		pr--;
+		}
+		
+	}while(pl <= pr);
+
+	DEBUGPRINT("lmrcMultiFFTCentralSectionsCompareInfoSort end\n");
+	if(left < pr) lmrcMultiFFTCentralSectionsCompareInfoSort(Out, left, pr);
+	if(pl < right) lmrcMultiFFTCentralSectionsCompareInfoSort(Out, pl, right);
+
+	DEBUGPRINT("lmrcMultiFFTCentralSectionsCompareInfoSort all end\n");
+}
+

@@ -1,0 +1,14 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-p","-p[ower]","Use (|F|^p ) to create fourier phase image","Optional","1","1","Power","Real","1"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"
+"-C","-C[utoff]","Mode 0:If |F|<Cutoff ,this pixel is not used.Default:Mean/10 \n Mode 1:|F|<Cutoff*Mean is used to cut.Default:0.1","Optional","1","1","Cutoff","Real","-1.0"
+
+
+
+
+
+

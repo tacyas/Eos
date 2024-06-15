@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrc2tiff</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrc2tiff<br></h2></b></font>
+	<h4>mrcファイルをtiffファイルに変換する</h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>オプション</th>
+				<th>必須項目/選択項目</th>
+				<th>説明</th>
+				<th>デフォルト</th>
+			</tr>
+			<tr>
+				<td>-i</td>
+				<td>必須</td>
+				<td>入力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-o</td>
+				<td>必須</td>
+				<td>出力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-H</td>
+				<td>選択</td>
+				<td>閾値（最大濃度値を設定）</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-L</td>
+				<td>選択</td>
+				<td>閾値（最小濃度値を設定）</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-I</td>
+				<td>選択</td>
+				<td>インバース（色を反転させる）</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-m</td>
+				<td>選択</td>
+				<td>モードを設定</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-h</td>
+				<td>選択</td>
+				<td>ヘルプを表示</td>
+				<td>　</td>
+			</tr>
+			</div>
+		</table>
+
+<!-- モード説明 -->
+
+	<br>
+	<caption><b>モードの詳細</b></caption>
+	<table border="1">
+		<div align="left">
+			<tr>
+				<th>モード</th>
+				<th>説明</th>
+			</tr>
+			<tr>
+				<td>0</td>
+				<td>8ビット</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>16ビット</td>
+			</tr>
+		</div>
+	</table>
+
+	<br>	
+	<h4>******実行例******</h4>
+	
+<!-- 実行結果 -->
+
+	<caption><font color="blue">------オプション指定なし------</font></caption><br>
+	<div><img src="outdata.png" border="0" alt="outdata.png(6742 byte)" width="80" height="80"></div>
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-H------</font></caption><br>
+	<div>-H=10で実行<br>
+	<img src="outdata-H10.png" border="0" alt="outdata-H10.png(5776 byte)" width="80" height="80"></div>
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-L------</font></caption><br>
+	<div>-L=10で実行<br>
+	<img src="outdata-L10.png" border="0" alt="outdata-L10.png(4348 byte)" width="80" height="80"></div>
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-I------</font></caption><br>
+	<div><img src="outdata-I.png" border="0" alt="outdata-I.png(6743 byte)" width="80" height="80"></div>
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-m------</font></caption><br>
+	<div>-m=1で実行<br>
+	<img src="outdata-m1.png" border="0" alt="outdata-m1.png(12991 byte)" width="80" height="80"></div>
+
+
+
+</body>
+</html>

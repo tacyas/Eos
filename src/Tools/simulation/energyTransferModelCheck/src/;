@@ -1,0 +1,677 @@
+/* 
+# %M% %Y% %I%
+# The latest update : %G% at %U%
+#
+#%Z% energyTransferModelCheck ver %I%
+#%Z% Created by 
+#%Z%
+#%Z% Usage : energyTransferModelCheck
+#%Z% Attention
+#%Z%
+*/
+static char __sccs_id[] = "%Z%energyTransferModelCheck ver%I%; Date:%D% %Z%";
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>                  
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+
+#define DEBUG
+#include "genUtil.h"
+#include "String.h"
+#include "Memory.h"
+#include "mrcImage.h"
+#include "pdbFile.h"
+#include "lpdb2mrcInfo.h"
+
+typedef enum energyTransferPointMode {
+	energyTransferPointModeFixedPoint   = 0,
+	energyTransferPointModeUnfixedPoint = 1,
+	energyTransferPointModeConnect      = 2 
+} energyTransferPointMode;
+
+typedef double energyTransferParaTypeReal;
+
+typedef struct energyTransferPoint {
+	int nID;
+	char* ID;
+	energyTransferPointMode mode;
+	energyTransferParaTypeReal x;
+	energyTransferParaTypeReal y;
+	energyTransferParaTypeReal z;
+	energyTransferParaTypeReal rootB;
+} energyTransferPoint;
+
+typedef struct energyTransferConnect {
+	int nID;
+	char* ID;
+	int nID2;
+	char* ID2;
+	energyTransferPointMode    mode;
+	energyTransferParaTypeReal length;
+	energyTransferParaTypeReal rootB;
+} energyTransferConnect;
+
+typedef struct energyTransferData {
+	int numFix;
+	energyTransferPoint* fix;
+	int numUnfix;
+	energyTransferPoint* unfix;
+	int numConnect;
+	energyTransferConnect* connect;
+} energyTransferData;
+
+
+typedef struct lenergyTransferModelCheckInfo {
+	int flagStartingDelta;
+	energyTransferParaTypeReal sdx;
+	energyTransferParaTypeReal sdy;
+	energyTransferParaTypeReal sdz;
+	energyTransferParaTypeReal neglect;
+	int excludedPDB;	
+	int iter;
+} lenergyTransferModelCheckInfo;
+
+typedef enum lenergyTransferModelCheckMode {
+	a=0,
+	b=1
+} lenergyTransferModelCheckMode;
+
+
+extern void
+lenergyTransferModelCheck(energyTransferData* src, mrcImage* unfix, mrcImage* fix, 
+		lenergyTransferModelCheckInfo linfo, int mode);
+
+extern void
+lenergyTransferModelExpectedFRET(FILE* fpt, energyTransferData* src, mrcImage* unfix, 
+		lenergyTransferModelCheckInfo linfo, int mode);
+
+extern void
+energyTransferDataWrite(energyTransferData* dst, FILE* fpt, int lmode);
+extern void
+energyTransferDataRead(energyTransferData* dst, FILE* fpt, int lmode);
+
+int
+main(int argc, char* argv[]) 
+{
+	energyTransferData etData;
+	mrcImage* mrc;
+	mrcImage* mrc2;
+	pdbFile pdb;
+	energyTransferModelCheckInfo info;
+	lenergyTransferModelCheckInfo linfo;
+	lpdb2mrcInfo lpdbInfo;
+	int i;
+	char s[1024];
+	FILE* fpt;
+
+	init0(&info);
+    argCheck(&info, argc, argv);
+    init1(&info);
+
+	DEBUGPRINT("Program Start\n");
+	energyTransferDataRead(&etData, info.fptIn, 0);
+	energyTransferDataWrite(&etData, info.fptOut, 0);
+
+	mrc  = (mrcImage*)memoryAllocate(sizeof(mrcImage)*etData.numUnfix, "in main");
+	mrc2 = (mrcImage*)memoryAllocate(sizeof(mrcImage)*etData.numUnfix, "in main");
+	
+	if(0==info.startIter) {
+		for(i=0; i<etData.numUnfix; i++) {
+				mrc[i].HeaderMode = mrcFloatImage;		
+				mrc[i].HeaderN.x  = (info.endx - info.startx)/info.deltax + 1;
+				mrc[i].HeaderN.y  = (info.endy - info.starty)/info.deltay + 1;
+				mrc[i].HeaderN.z  = (info.endz - info.startz)/info.deltaz + 1;
+				mrc[i].HeaderLength.x  = info.deltax;
+				mrc[i].HeaderLength.y  = info.deltay;
+				mrc[i].HeaderLength.z  = info.deltaz;
+				mrc[i].HeaderStartN.x  = floor(info.startx/info.deltax + 0.5);
+				mrc[i].HeaderStartN.y  = floor(info.starty/info.deltay + 0.5);
+				mrc[i].HeaderStartN.z  = floor(info.startz/info.deltaz + 0.5);
+				mrcInit(&(mrc[i]), NULL);
+				mrc2[i].Header = mrc[i].Header;
+				mrcInit(&(mrc2[i]), NULL);
+		}
+		
+		linfo.excludedPDB = info.flagPDB; 
+		if(info.flagPDB) {
+				pdbFileRead(info.fptPDB, &pdb);
+				lpdbInfo.sx = info.startx;
+				lpdbInfo.sy = info.starty;
+				lpdbInfo.sz = info.startz;
+				lpdbInfo.dx = info.deltax;
+				lpdbInfo.dy = info.deltay;
+				lpdbInfo.dz = info.deltaz;
+				lpdbInfo.nx = mrc[0].HeaderN.x;
+				lpdbInfo.ny = mrc[0].HeaderN.y;
+				lpdbInfo.nz = mrc[0].HeaderN.z;
+				lpdbInfo.Weight = -1.0/sqrt(M_PI)/info.deltax;
+				lpdbInfo.Sigma  =  info.deltax;
+				DEBUGPRINT3("PDB: N(%ld %ld %ld)\n", lpdbInfo.nx, lpdbInfo.ny, lpdbInfo.nz);
+				for(i=0; i<etData.numUnfix; i++) {
+						lpdb2mrc3d(&mrc2[i], &pdb, &lpdbInfo, 0);  
+				}
+		}
+	} else {
+		for(i=0; i<etData.numUnfix; i++) {
+			sprintf(s, "%s.%s.%02ld",     info.Out, etData.unfix[i].ID, info.startIter - 1);
+			mrcFileRead(&(mrc[i]), s, "in main", 0);
+			sprintf(s, "%s.%s.%02ld.fix", info.Out, etData.unfix[i].ID, info.startIter - 1);
+			mrcFileRead(&(mrc2[i]), s, "in main", 0);
+		}
+	}
+
+	linfo.flagStartingDelta = info.flagsdeltax;	
+	if(linfo.flagStartingDelta){
+		linfo.sdx = info.sdeltax;
+		linfo.sdy = info.sdeltay;
+		linfo.sdz = info.sdeltaz;
+	}
+
+	linfo.neglect = info.neglect;
+
+	linfo.iter = info.startIter;
+	while(linfo.iter < info.maxIter) {
+		lenergyTransferModelCheck(&etData, mrc, mrc2, linfo, 0); 
+
+		for(i=0; i<etData.numUnfix; i++) {
+			sprintf(s, "%s.%s.%02d",     info.Out, etData.unfix[i].ID, linfo.iter);
+			fpt = fopen(s, "w");
+			fclose(fpt);
+			mrcFileWrite(&(mrc[i]), s, "in main", 0);
+			sprintf(s, "%s.%s.%02d.fix", info.Out, etData.unfix[i].ID, linfo.iter);
+			fpt = fopen(s, "w");
+			fclose(fpt);
+			mrcFileWrite(&(mrc2[i]), s, "in main", 0);
+		}
+
+		lenergyTransferModelExpectedFRET(info.fptOut, &etData, mrc, linfo, 0); 
+	}
+	exit(EXIT_SUCCESS);
+}
+
+void
+additionalUsage()
+{
+	fprintf(stderr, "----- Additional Usage -----\n");
+	fprintf(stderr, "----- Point Information : Each ID has no space character. -----\n");
+	fprintf(stderr, "ID fix     x y z rootB\n");
+	fprintf(stderr, "......\n");
+	fprintf(stderr, "ID unfix   x y z rootB\n");
+	fprintf(stderr, "......\n");
+	fprintf(stderr, "ID connect ID length rootB\n");
+	fprintf(stderr, "......\n");
+}
+
+void
+lenergyTransferModelCheck(energyTransferData* src, mrcImage* unfix, mrcImage* fix, 
+	lenergyTransferModelCheckInfo linfo, int mode)
+{
+	int i, j, k, m;
+	mrcImageParaTypeReal x, y, z;
+	mrcImageParaTypeReal x0, y0, z0;
+	mrcImageParaTypeReal dx, dy, dz;
+	mrcImageParaTypeReal realx, realy, realz;
+	mrcImageParaTypeReal realx0, realy0, realz0;
+	mrcImageParaTypeReal xk, yk, zk;
+	mrcImageParaTypeReal realxk, realyk, realzk;
+	mrcImageParaTypeReal xk0, yk0, zk0;
+	mrcImageParaTypeReal realxk0, realyk0, realzk0;
+	double data, data1, data2, data0, weight, variance;
+	double distance;
+
+	/* Clearing */
+	if(0==linfo.iter) {
+		for(i=0; i<src->numUnfix; i++) {
+			if(fix[i].HeaderN.x != unfix[i].HeaderN.x
+			 ||fix[i].HeaderN.y != unfix[i].HeaderN.y 
+			 ||fix[i].HeaderN.z != unfix[i].HeaderN.z 
+			 ||fix[i].HeaderStartN.x != unfix[i].HeaderStartN.x
+			 ||fix[i].HeaderStartN.y != unfix[i].HeaderStartN.y
+			 ||fix[i].HeaderStartN.z != unfix[i].HeaderStartN.z) {
+				fprintf(stderr, "Size is different between fix and unfix: %d\n", i); 	
+			}	
+			for(x=0; x<unfix[i].HeaderN.x; x++) {
+				for(y=0; y<unfix[i].HeaderN.y; y++) {
+					for(z=0; z<unfix[i].HeaderN.z; z++) {
+						mrcPixelDataSet(&(unfix[i]), x, y, z, 1.0, mrcPixelRePart);
+					}
+				}
+			}
+			for(x=0; x<fix[i].HeaderN.x; x++) {
+				for(y=0; y<fix[i].HeaderN.y; y++) {
+					for(z=0; z<fix[i].HeaderN.z; z++) {
+						mrcPixelDataGet(&(fix[i]), x, y, z, &data, mrcPixelRePart, mrcPixelHowNearest);
+						if(0<=data) {
+							data = 1.0;
+						}
+						mrcPixelDataSet(&(fix[i]), x, y, z,  data, mrcPixelRePart);
+					}
+				}
+			}
+		}
+	}
+
+	DEBUGPRINT("Using Fixed Point\n");
+	for(i=0; i<src->numConnect; i++) {
+		for(j=0; j<src->numFix; j++) { 
+			DEBUGPRINT1("CONNECTION: %d\n", i);
+			k = -1;
+			if(src->connect[i].nID  == src->fix[j].nID
+			&& src->numFix <= src->connect[i].nID2) {        /* ID: Fixed,    ID2: Unfixed: */
+				k = src->connect[i].nID2 - src->numFix;		   
+			} else if(src->connect[i].nID2 == src->fix[j].nID
+				   && src->numFix <= src->connect[i].nID ) { /* ID: Unfixed, ID2: Fixed */
+			 	k = src->connect[i].nID  - src->numFix;		   
+			}
+			if(0<=k && k<src->numUnfix) {                    /* j: Fixed Point, k: Unfixed Point */
+				DEBUGPRINT3("CONNECTION: %d Fixed ID %d <-> Unfixed %d\n", i, j, k);
+				dx = MAX(1, linfo.sdx/fix[k].HeaderLength.x);  
+				dy = MAX(1, linfo.sdy/fix[k].HeaderLength.y);
+				dz = MAX(1, linfo.sdz/fix[k].HeaderLength.z); 
+				for(x=0; x<fix[k].HeaderN.x; x+=dx) {
+					realx = (fix[k].HeaderStartN.x + x)*fix[k].HeaderLength.x;
+					for(y=0; y<fix[k].HeaderN.y; y+=dy) {
+						realy = (fix[k].HeaderStartN.y + y)*fix[k].HeaderLength.y;
+						for(z=0; z<fix[k].HeaderN.z; z+=dz) {
+							realz = (fix[k].HeaderStartN.z + z)*fix[k].HeaderLength.z;
+
+							if(0==linfo.iter) {
+								/* Unfixed Point (realx, realy, realz) */
+								/* Fixed Point    src->fix[j].(x, y, z) */
+								distance = sqrt(SQR(realx - src->fix[j].x)
+									          + SQR(realy - src->fix[j].y)
+							  				  + SQR(realz - src->fix[j].z));  
+								variance = SQR(src->connect[i].rootB) 
+								 	 	      + SQR(src->fix[j].rootB)
+										  	  + SQR(src->unfix[k].rootB); 
+								weight   = exp(-SQR(distance - src->connect[i].length)/variance/2.0)
+											/sqrt(2*M_PI*variance);
+								mrcPixelDataGet(&(fix[k]), x, y, z, 
+									&data, mrcPixelRePart, mrcPixelHowNearest);
+
+								if(0<=data) {
+									data *= weight;
+								} else if(fabs(data) <= weight) {
+									data  = weight;		
+								} else {
+									data  = data*(1.0/(1.0 + weight)); 
+								}
+
+								for(x0=x; x0<x+dx; x0++) {
+									realx0 = (fix[k].HeaderStartN.x + x0)*fix[k].HeaderLength.x;
+								for(y0=y; y0<y+dy; y0++) {
+									realy0 = (fix[k].HeaderStartN.y + y0)*fix[k].HeaderLength.y;
+								for(z0=z; z0<z+dz; z0++) {
+									realz0 = (fix[k].HeaderStartN.z + z0)*fix[k].HeaderLength.z;
+									if(data < linfo.neglect) {
+										mrcPixelDataSet(&(fix[k]), x0, y0, z0, data, mrcPixelRePart);
+									} else {
+										distance = sqrt(SQR(realx0 - src->fix[j].x)
+									    		      + SQR(realy0 - src->fix[j].y)
+							  						  + SQR(realz0 - src->fix[j].z));  
+										variance = SQR(src->connect[i].rootB) 
+								 	 		     + SQR(src->fix[j].rootB)
+										  	  	 + SQR(src->unfix[k].rootB); 
+										weight   = exp(-SQR(distance - src->connect[i].length)/variance/2.0)
+												/sqrt(2*M_PI*variance);
+
+										mrcPixelDataGet(&(fix[k]), x0, y0, z0, 
+											&data0, mrcPixelRePart, mrcPixelHowNearest);
+
+										if(0<=data0) {
+											data0 *= weight;
+										} else if(fabs(data0) <= weight) {
+											data0  = weight;		
+										} else {
+											data0  = data*(1.0/(1.0 + weight)); 
+										}
+										mrcPixelDataSet(&(fix[k]), x0, y0, z0, data0, mrcPixelRePart);
+									}
+								}
+								}
+								}
+							}
+						}
+					}
+				}	
+			}
+		}
+	}
+
+	for(j=0; j<src->numUnfix; j++) {
+		lmrcImageNormalizationAsProbability(&(fix[j]), 0);
+	}
+	DEBUGPRINT("Using Only Unfixed Point\n");
+	for(i=0; i<src->numConnect; i++) {
+		for(j=0; j<src->numUnfix; j++) {
+			DEBUGPRINT2("CONNECTION: %d : unfix %d\n", i, j);
+			k = -1;
+			if(       src->connect[i].nID  == src->unfix[j].nID
+			 &&       src->numFix          <= src->connect[i].nID2) {  /* ID: Unfixed, ID2: Unfixed */
+				k = src->connect[i].nID2 - src->numFix;
+				if(src->unfix[k].nID!=src->connect[i].nID2) {
+					fprintf(stderr, "Something wrong: ID different\n");
+				} else {
+					DEBUGPRINT("OK ID\n");
+				}
+			} else if(src->connect[i].nID2 == src->unfix[j].nID
+				   && src->numFix          <= src->connect[i].nID) {   /* ID: Unfixed, ID2: Unfixed */ 
+				k = src->connect[i].nID  - src->numFix;
+				if(src->unfix[k].nID!=src->connect[i].nID) {
+					fprintf(stderr, "Something wrong: ID different\n");
+				} else {
+					DEBUGPRINT("OK ID\n");
+				}
+			}
+			if(0<=k && k<src->numUnfix) { /* Unfixed: point: j, k */
+				DEBUGPRINT3("CONNECTION: %d : unfix %d <-> unfix %d\n", i, j, k);
+				dx = MAX(1, linfo.sdx/fix[k].HeaderLength.x);  
+				dy = MAX(1, linfo.sdy/fix[k].HeaderLength.y);
+				dz = MAX(1, linfo.sdz/fix[k].HeaderLength.z); 
+				for(x =0; x <unfix[j].HeaderN.x; x+=dx) {
+					DEBUGPRINT1("x: %f\n", x);
+					realx  = (unfix[j].HeaderStartN.x + x )*unfix[j].HeaderLength.x;
+				for(y =0; y <unfix[j].HeaderN.y; y+=dy) {
+					realy  = (unfix[j].HeaderStartN.y + y )*unfix[j].HeaderLength.y;
+				for(z =0; z <unfix[j].HeaderN.z; z+=dz) {
+					realz  = (unfix[j].HeaderStartN.z + z )*unfix[j].HeaderLength.z;
+					mrcPixelDataGet(&(  fix[j]), x,  y,  z,  &data1, mrcPixelRePart, mrcPixelHowNearest);
+					mrcPixelDataGet(&(unfix[j]), x,  y,  z,  &data,  mrcPixelRePart, mrcPixelHowNearest);
+					if(linfo.neglect<=data1 && linfo.neglect<=data) {
+						for(xk=0; xk<unfix[k].HeaderN.x; xk+=dx) {
+							realxk = (unfix[k].HeaderStartN.x + xk)*unfix[k].HeaderLength.x;
+						for(yk=0; yk<unfix[k].HeaderN.y; yk+=dy) {
+							realyk = (unfix[k].HeaderStartN.y + yk)*unfix[k].HeaderLength.y;
+						for(zk=0; zk<unfix[k].HeaderN.z; zk+=dz) {
+							realzk = (unfix[k].HeaderStartN.z + zk)*unfix[k].HeaderLength.z;
+
+							if(0==linfo.iter) {
+								mrcPixelDataGet(&(  fix[k]), xk, yk, zk, &data2, mrcPixelRePart, mrcPixelHowNearest);
+								if(linfo.neglect<=data2) {
+									if(0==linfo.iter) {
+										distance = sqrt( SQR(realx - realxk)
+														+SQR(realy - realyk)
+														+SQR(realz - realzk)); 
+										variance =   SQR(src->connect[i].rootB) 
+													+SQR(src->unfix[j].rootB)
+													+SQR(src->unfix[k].rootB);
+										weight   = exp(-SQR(distance-src->connect[i].length)/variance/2.0)
+													/sqrt(2*M_PI*variance);
+									
+										mrcPixelDataGet(&(unfix[j]), x,  y,  z,  &data,  mrcPixelRePart, mrcPixelHowNearest);
+										data *= (weight*data1*data2);
+
+										for(x0=x; x0<x+dx; x0++) {
+											realx0 = (unfix[k].HeaderStartN.x + x0)*unfix[k].HeaderLength.x;
+										for(y0=y; y0<y+dy; y0++) {
+											realy0 = (unfix[k].HeaderStartN.y + y0)*unfix[k].HeaderLength.y;
+										for(z0=z; z0<z+dz; z0++) {
+											realz0 = (unfix[k].HeaderStartN.z + z0)*unfix[k].HeaderLength.z;
+											mrcPixelDataGet(&(  fix[j]), x,  y,  z,  &data1, mrcPixelRePart, mrcPixelHowNearest);
+										for(xk0=xk; xk0<xk+dx; xk0++) {
+											realxk0 = (unfix[k].HeaderStartN.x + xk0)*unfix[k].HeaderLength.x;
+										for(yk0=yk; yk0<yk+dy; yk0++) {
+											realyk0 = (unfix[k].HeaderStartN.y + yk0)*unfix[k].HeaderLength.y;
+										for(zk0=zk; zk0<zk+dz; zk0++) {
+											realzk0 = (unfix[k].HeaderStartN.z + zk0)*unfix[k].HeaderLength.z;
+											mrcPixelDataGet(&(  fix[k]), x,  y,  z,  &data2, mrcPixelRePart, mrcPixelHowNearest);
+
+											if(data<linfo.neglect) {
+												mrcPixelDataSet(&(unfix[j]), x0,  y0,  z0, 0.0, mrcPixelRePart);
+											} else {	
+												distance = sqrt( SQR(realx0 - realxk0)
+																+SQR(realy0 - realyk0)
+																+SQR(realz0 - realzk0)); 
+												variance =   SQR(src->connect[i].rootB) 
+															+SQR(src->unfix[j].rootB)
+															+SQR(src->unfix[k].rootB);
+												weight   = exp(-SQR(distance-src->connect[i].length)/variance/2.0)
+															/sqrt(2*M_PI*variance);
+									
+												mrcPixelDataGet(&(unfix[j]), x0,  y0,  z0,  &data0, mrcPixelRePart, mrcPixelHowNearest);
+												data0 *= (weight*data1*data2);
+												mrcPixelDataSet(&(unfix[j]), x0,  y0,  z0,   data0, mrcPixelRePart);
+											}	
+										}
+										}
+										}
+										}
+										}
+										}
+									}	
+								} else {
+									for(x0=x; x0<x+dx; x0++) {
+									for(y0=y; y0<y+dy; y0++) {
+									for(z0=z; z0<z+dz; z0++) {
+										mrcPixelDataSet(&(unfix[j]), x0,  y0,  z0, 0.0, mrcPixelRePart);
+									}
+									}
+									}
+								}
+							}
+						}
+						}
+						}
+					} else {
+						for(x0=x; x0<x+dx; x0++) {
+						for(y0=y; y0<y+dy; y0++) {
+						for(z0=z; z0<z+dz; z0++) {
+							mrcPixelDataSet(&(unfix[j]), x0,  y0,  z0, 0.0, mrcPixelRePart);
+						}
+						}
+						}
+					}
+				}
+				}
+				}
+			}
+		}
+	}
+}
+
+void
+lmrcImageNormalizationAsProbability(mrcImage* mrc, int mode)
+{
+	mrcImageParaTypeReal x, y, z;
+	double sum;
+
+	sum = 0;
+	for(x=0; x<mrc->HeaderN.x; x++) {
+		for(y=0; y<mrc->HeaderN.y; y++) {
+			for(z=0; z<mrc->HeaderN.z; z++) {
+				mrcPixelDataGet(mrc, x, y, z, &data, mrcPixelRePart, mrcPixelHowNearest);
+				sum += data;
+			}
+		}	
+	}
+	for(x=0; x<mrc->HeaderN.x; x++) {
+		for(y=0; y<mrc->HeaderN.y; y++) {
+			for(z=0; z<mrc->HeaderN.z; z++) {
+				mrcPixelDataGet(mrc, x, y, z, &data, mrcPixelRePart, mrcPixelHowNearest);
+				data /= sum;
+				mrcPixelDataSet(mrc, x, y, z,  data, mrcPixelRePart);
+			}
+		}	
+	}
+}
+
+void
+lenergyTransferModelExpectedFRET(FILE* fpt, energyTransferData* dst, mrcImage* unfix, 
+	lenergyTransferModelCheckInfo linfo, int mode) 
+{
+	int i;
+	float length;
+	float sigma;
+
+	/* Max probability */
+	for(i=0; i<dst->numUnfix; i++) {
+		LOGPRINT6(fpt, "ITER", "UNFIX", "%s %d %f %f %f %f", 
+			dst->unfix[i].ID, dst->unfix[i].nID, dst->unfix[i].x, dst->unfix[i].y, dst->unfix[i].z, dst->unfix[i].rootB);  	
+	}	
+
+	/* Expected FRET-1 */
+	for(i=0; i<dst->numConnect; i++) {
+		LOGPRINT7(fpt, "ITER", "CONNECT", "iter: %02d %s %d %s %d %f %f",
+			linfo.iter,
+			dst->connect[i].ID, dst->connect[i].nID, dst->connect[i].ID2, dst->connect[i].nID2, 
+			length, sigma);  	
+	}
+
+	/* Expected FRET-2 */
+	for(i=0; i<dst->numConnect; i++) {
+		LOGPRINT7(fpt, "ITER", "CONNECT", "iter: %02d %s %d %s %d %f %f",
+			linfo.iter,
+			dst->connect[i].ID, dst->connect[i].nID, dst->connect[i].ID2, dst->connect[i].nID2, 
+			length, sigma);  	
+	}
+}
+
+void
+energyTransferDataWrite(energyTransferData* dst, FILE* fpt, int lmode) 
+{
+	int i;
+
+	for(i=0; i<dst->numFix; i++) {
+		LOGPRINT6(fpt, "INIT", "FIX", "%s %d %f %f %f %f", 
+			dst->fix[i].ID, dst->fix[i].nID, dst->fix[i].x, dst->fix[i].y, dst->fix[i].z, dst->fix[i].rootB);  	
+	}	
+	for(i=0; i<dst->numUnfix; i++) {
+		LOGPRINT6(fpt, "INIT", "UNFIX", "%s %d %f %f %f %f", 
+			dst->unfix[i].ID, dst->unfix[i].nID, dst->unfix[i].x, dst->unfix[i].y, dst->unfix[i].z, dst->unfix[i].rootB);  	
+	}	
+	for(i=0; i<dst->numConnect; i++) {
+		LOGPRINT6(fpt, "INIT", "CONNECT", "%s %d %s %d %f %f", 
+			dst->connect[i].ID, dst->connect[i].nID, dst->connect[i].ID2, dst->connect[i].nID2, 
+			dst->connect[i].length, dst->connect[i].rootB);  	
+	}	
+}
+
+void
+energyTransferDataRead(energyTransferData* dst, FILE* fpt, int lmode) 
+{
+	char s[1024];
+	char* ID;
+	char* mode;
+	int ifix, iunfix, iconnect;
+
+	fseek(fpt, 0L, SEEK_SET);
+	dst->numFix = 0;
+	dst->numUnfix = 0;
+	dst->numConnect = 0;
+	while(NULL!=stringGetFromFile(s, "", fpt, stdout, 3)) {
+		ID   = stringGetNthWord(s, 1, " ,\t");
+		mode = stringGetNthWord(s, 2, " ,\t");
+		SSWITCH(mode) 
+			SCASE("fix") {
+				dst->numFix++;
+				SBREAK;
+			}
+			SCASE("unfix") {
+				dst->numUnfix++;
+				SBREAK;
+			}
+			SCASE("connect") {
+				dst->numConnect++;
+				SBREAK;
+			}
+			SDEFAULT {
+				SBREAK;
+			}
+		SSWITCHEND;	
+	}
+	DEBUGPRINT3("Fix: %d Unfix: %d Connect: %d\n", dst->numFix, dst->numUnfix, dst->numConnect);
+	if(dst->numFix) {
+		dst->fix = (energyTransferPoint*)memoryAllocate(sizeof(energyTransferPoint)*dst->numFix, "in Read");
+	}
+	if(dst->numUnfix) {
+		dst->unfix = (energyTransferPoint*)memoryAllocate(sizeof(energyTransferPoint)*dst->numUnfix, "in Read");
+	}
+	if(dst->numConnect) {
+		dst->connect = (energyTransferConnect*)memoryAllocate(sizeof(energyTransferConnect)*dst->numConnect, "in Read");
+	}
+	
+	ifix = 0;
+	iunfix = 0;
+	iconnect = 0;
+	fseek(fpt, 0L, SEEK_SET);
+	while(NULL!=stringGetFromFile(s, "", fpt, stdout, 3)) {
+		ID   = stringGetNthWord(s, 1, " ,\t");
+		mode = stringGetNthWord(s, 2, " ,\t");
+		SSWITCH(mode) 
+			SCASE("fix") {
+				dst->fix[ifix].ID    = ID;
+				dst->fix[ifix].nID   = ifix;
+				dst->fix[ifix].mode  = energyTransferPointModeFixedPoint;
+				dst->fix[ifix].x     = stringGetNthRealData(s, 3, " ,\t"); 
+				dst->fix[ifix].y     = stringGetNthRealData(s, 4, " ,\t"); 
+				dst->fix[ifix].z     = stringGetNthRealData(s, 5, " ,\t"); 
+				dst->fix[ifix].rootB = stringGetNthRealData(s, 6, " ,\t"); 
+				ifix++;
+				SBREAK;
+			}
+			SCASE("unfix") {
+				dst->unfix[iunfix].ID    = ID;
+				dst->unfix[iunfix].nID   = iunfix + dst->numFix;
+				dst->unfix[iunfix].mode  = energyTransferPointModeUnfixedPoint;
+				dst->unfix[iunfix].x     = stringGetNthRealData(s, 3, " ,\t"); 
+				dst->unfix[iunfix].y     = stringGetNthRealData(s, 4, " ,\t"); 
+				dst->unfix[iunfix].z     = stringGetNthRealData(s, 5, " ,\t"); 
+				dst->unfix[iunfix].rootB = stringGetNthRealData(s, 6, " ,\t"); 
+				iunfix++;
+				SBREAK;
+			}
+			SCASE("connect") {
+				dst->connect[iconnect].ID     = ID;
+				dst->connect[iconnect].mode   = energyTransferPointModeConnect;
+				dst->connect[iconnect].ID2    = stringGetNthWord(s, 3, " ,\t");
+				dst->connect[iconnect].length = stringGetNthRealData(s, 4, " ,\t"); 
+				dst->connect[iconnect].rootB  = stringGetNthRealData(s, 5, " ,\t"); 
+				iconnect++;
+				SBREAK;
+			}
+			SDEFAULT {
+				SBREAK;
+			}
+		SSWITCHEND;	
+	}
+
+	for(iconnect=0; iconnect<dst->numConnect; iconnect++) {
+		DEBUGPRINT2("ID: %s ID2: %s \n", dst->connect[iconnect].ID, dst->connect[iconnect].ID2);
+		dst->connect[iconnect].nID  = dst->numFix + dst->numUnfix; 	
+		dst->connect[iconnect].nID2 = dst->numFix + dst->numUnfix; 	
+		for(ifix=0; ifix<dst->numFix; ifix++) {
+			DEBUGPRINT1("Fix: ID: %s \n", dst->fix[ifix].ID);
+			if(stringIsSame(dst->connect[iconnect].ID,  dst->fix[ifix].ID, 10)) {
+				dst->connect[iconnect].nID  = dst->fix[ifix].nID;
+			} else {
+				DEBUGPRINT2("Fix: ID: %s != %s\n", dst->fix[ifix].ID, dst->connect[iconnect].ID);
+			}
+			if(stringIsSame(dst->connect[iconnect].ID2, dst->fix[ifix].ID, 10)) {
+				dst->connect[iconnect].nID2 = dst->fix[ifix].nID;
+			}
+		}
+		for(iunfix=0; iunfix<dst->numUnfix; iunfix++) {
+			DEBUGPRINT1("Unfix: ID: %s \n", dst->unfix[iunfix].ID);
+			if(stringIsSame(dst->connect[iconnect].ID,  dst->unfix[iunfix].ID, 10)) {
+				dst->connect[iconnect].nID  = dst->unfix[iunfix].nID;
+			} else {
+				DEBUGPRINT2("Fix: ID: %s != %s\n", dst->unfix[iunfix].ID, dst->connect[iconnect].ID);
+			}
+			if(stringIsSame(dst->connect[iconnect].ID2, dst->unfix[iunfix].ID, 10)) {
+				dst->connect[iconnect].nID2 = dst->unfix[iunfix].nID;
+			}
+		}
+
+		if(dst->numFix + dst->numUnfix == dst->connect[iconnect].nID) { 
+			fprintf(stderr, "something wrong: please check your data file: no id connection\n");
+			fprintf(stderr, "ID: %s \n", dst->connect[iconnect].ID);
+		}
+		if(dst->numFix + dst->numUnfix == dst->connect[iconnect].nID2) { 
+			fprintf(stderr, "something wrong: please check your data file: no id connection\n");
+			fprintf(stderr, "ID2: %s \n", dst->connect[iconnect].ID2);
+		}
+	}
+}
+

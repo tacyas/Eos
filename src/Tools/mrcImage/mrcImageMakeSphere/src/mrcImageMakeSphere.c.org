@@ -1,0 +1,109 @@
+/*
+# %M% %Y% %I%
+# The latest update : %G% at %U%
+#
+#%Z% mrcImageMakeSphere ver %I%
+#%Z% Created by 
+#%Z%
+#%Z% Usage : mrcImageMakeSphere
+#%Z% Attention
+#%Z%
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>                  
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+#define DEBUG
+#include "genUtil.h"
+#include "mrcImage.h"
+
+
+/* prototypes */
+void lmrcImageMakeSphere(mrcImage* out, mrcImage* in, float Cx, float Cy, float Cz, float ir, float or, float v, float cr, int mode);
+
+int
+main(int argc, char* argv[]) 
+{
+	mrcImageMakeSphereInfo info;
+
+/* variables */
+	mrcImage in;
+	mrcImage out;
+
+
+/* input patameters ,file open */
+	init0(&info);
+	argCheck(&info, argc, argv);
+	init1(&info);
+
+/* begin */
+	DEBUGPRINT("Program Start\n");
+	init0(&info);
+	argCheck(&info, argc, argv);
+	init1(&info);
+	mrcFileRead(&in ,info.In ,"in main" ,0);
+	if (info.mode && ! info.flagr ){
+	  info.r = (info.ir + info.or)/2;
+	}
+	lmrcImageMakeSphere(&out, &in, info.Cx, info.Cy, info.Cz, info.ir, info.or, info.Value, info.r, info.mode);
+	mrcFileWrite(&out ,info.Out ,"in main" ,0);
+	exit(EXIT_SUCCESS);
+}
+
+void
+additionalUsage()
+{
+	fprintf(stderr, "----- Additional Usage -----\n");
+	fprintf(stderr, "mode 0: Constant\n");
+	fprintf(stderr, "mode 1: Gaussian\n");
+}
+
+void lmrcImageMakeSphere(mrcImage* out, mrcImage* in, float Cx, float Cy, float Cz, float ir, float or, float v, float r, int mode)
+{
+  double d,data,ind,outd;
+  int x,y,z;
+
+  out->Header = in->Header;  	
+  mrcInit(out, NULL);
+  ind = r-ir;
+  outd = or-r;
+
+  for (z=0 ; z < out->HeaderN.z; z++){
+    for (y=0 ; y < out->HeaderN.y; y++){
+      for (x=0 ; x < out->HeaderN.x; x++){
+	d=(z-Cz)*(z-Cz)+(y-Cy)*(y-Cy)+(x-Cx)*(x-Cx);
+	if (mode == 0){
+	  if (d >= ir*ir && d <= or*or){
+	    mrcPixelDataSet(out, x, y, z, v, mrcPixelMag);
+	  }
+	} else {
+	  if (d > 0){
+	    d = sqrt(d);
+	  }
+	  if (d < r){
+	    data = v * exp( - (r-d)*(r-d)/ind/ind );
+	  } else {
+	    data = v * exp( - (d-r)*(d-r)/outd/outd );
+	  }
+	  mrcPixelDataSet(out, x, y, z, data, mrcPixelMag);
+	}
+      }
+    }
+  }
+  mrcStatDataSet(out ,0);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

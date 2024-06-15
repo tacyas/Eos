@@ -1,0 +1,184 @@
+# %M% %Y% %I%
+# The latest update : %G% at %U%
+#
+#%Z% Display3Image.wish ver %I%
+#%Z% Created by 
+#%Z%
+#%Z% Usage : Display3Image.wish
+#%Z% Attention
+#%Z%
+
+
+package require vtk
+package require vtkinteraction
+
+proc fileOpen { } {
+	global fileNameIn
+
+	wm title . [ file tail $fileNameIn(0,fileName) ]
+	mainImagePut
+}
+
+proc contourSet { {index 0} } {
+	global contourSurface 
+
+	$contourSurface([subst $index],main) SetValue 0 $contourSurface([subst $contourSurface(current)],contour)
+	$contourSurface([subst $contourSurface(current)],renWin) Render
+}
+
+proc mainImagePut { } {
+	global acamera
+	global contourSurface
+	global fileNameIn
+	global renWin
+
+	for { set i 0 } { $i < $fileNameIn(num) } { incr i 1 } {
+		#
+		# Read Volume Data as mrcImage
+		#
+		set contourSurface($i,avol) [ vtkmrcImageReader aVolume$i ]
+		set vol                     aVolume$i
+		$vol SetFilename $fileNameIn([subst $i],fileName)
+		#puts $fileNameIn([subst $i],fileName)
+		$vol SetDataType  0
+		$vol SetDataHow   0
+		#$vol GetOutput ReleaseDataFlagOn
+		$vol Update
+
+		#
+		# Create Contour
+		#
+		set contourSurface($i,main) [ vtkContourFilter cf$i ]
+		set cf                      cf$i
+		$cf SetInput   [ $vol GetOutput ]
+		$cf SetValue 0 [ subst $fileNameIn([subst $i],contour) ]
+		#puts [ subst $fileNameIn([subst $i],contour) ]
+		$cf ComputeScalarsOff
+		$cf ReleaseDataFlagOn 
+	
+		set contourSurface($i,mapper) [ vtkPolyDataMapper mapper$i  ]
+		set mapper mapper$i
+		$mapper SetInput [ $contourSurface([subst $i],main) GetOutput ]
+		$mapper ImmediateModeRenderingOn
+
+		set contourSurface($i,actor) [ vtkActor actor$i ]
+		set actor  actor$i
+		$actor SetMapper $mapper
+		eval [ $actor GetProperty ] SetDiffuseColor 1.0 1.0 1.0
+		eval [ $actor GetProperty ] SetColor 1.0 1.0 1.0
+		eval [ $actor GetProperty ] SetSpecular 0.5
+		eval [ $actor GetProperty ] SetDiffuse  0.4
+
+		#
+		# Edge
+		#
+#       set contourSurface($i,edge) [ vtkEdgePoints edge$i ]
+#		set edge edge$i
+#		$edge SetInput [ $vol GetOutput ]
+#		$edge SetValue  [subst $fileNameIn([subst $i],contour) ]
+#		
+#		set contourSurface($i,edgemapper) [ vtkPolyDataMapper edgemapper$i ]  
+#		set edgemapper edgemapper$i
+#		$edgemapper SetInput [ $contourSurface([subst $i],edge) GetOutput ]
+#		$edgemapper ImmediateModeRenderingOn 
+#
+#		set contourSurface($i,edgeactor) [ vtkActor edgeactor$i ]
+#		set edgeactor edgeactor$i
+#		$edgeactor SetMapper $edgemapper 
+#
+		#
+		# Create the RenderWindow, Renderer and Interactor
+		#
+		set contourSurface($i,ren)    [ vtkRenderer ren$i ]
+		set ren ren$i
+		set contourSurface($i,renWin) [ vtkRenderWindow renWin$i ]
+		set renWin renWin$i
+		$renWin AddRenderer $ren
+
+		set contourSurface($i,iren) [ vtkRenderWindowInteractor iren$i ]
+		set iren iren$i
+		$iren SetRenderWindow $renWin
+    	$iren Initialize
+
+		#
+		# Create outline 
+		#
+		set contourSurface($i,outline) [ vtkOutlineFilter outline$i ] 
+		set outline outline$i
+		$outline SetInput [ $vol GetOutput ]
+		set contourSurface($i,omapper) [ vtkPolyDataMapper omapper$i ]
+		set omapper omapper$i
+		$omapper SetInput [ $outline GetOutput]
+
+		set contourSurface($i,actoromap) [ vtkActor actoromap$i ]
+		set actoromap actoromap$i
+		$actoromap SetMapper $omapper
+		eval [ $actoromap GetProperty ] SetColor 1.0 1.0 1.0
+
+		#
+		#  Create Light
+		#
+		set light [ vtkLight light$i ]
+		set coutourSurface($i,light) $light
+		$light SetColor 0.7 0.7 0.4
+		$light SetLightType 1
+
+		set maximumPositionX [ mrcInfoGet $fileNameIn([subst $i],fileName) Nx ]
+		set maximumPositionY [ mrcInfoGet $fileNameIn([subst $i],fileName) Ny ]
+		set maximumPositionZ [ mrcInfoGet $fileNameIn([subst $i],fileName) Nz ]
+		set WindowRate 2
+		set WindowSizeX [ expr $maximumPositionX*$WindowRate ]
+		set WindowSizeY [ expr $maximumPositionY*$WindowRate ]
+
+		set acamera(body) [ vtkCamera camera ]
+		#acamera(body) GetStereo
+
+		$ren AddLight $light
+		$ren AddActor $actoromap
+		$ren AddActor $actor
+#       $ren AddActor $edgeactor
+		$ren SetActiveCamera $acamera(body)
+		$ren SetBackground 0.8 0.8 1.0
+		$ren ResetCamera 
+
+		$renWin Render
+
+		cameraAutomaticallyInformationAboutPositionGetAndSet
+		cameraAutomaticallyViewAngleGetAndSet
+
+		$iren SetDesiredUpdateRate 10
+		$iren Initialize
+	}
+}
+
+
+proc fileSaveAsPPM { } {
+	global renWin
+	global ren1
+	global fileNameAsPPM
+
+	set fileNameAsPPM [ file tail [fileSave] ]
+	$renWin SetFilename $fileNameAsPPM
+	$renWin SaveImageAsPPM
+	puts ""
+	puts "The window was reserved as a file '$fileNameAsPPM'...OK"
+
+}
+
+
+proc fileSaveAsTIFF { } {
+	global renWin
+	global ren1
+	global fileNameAsPPM
+	global fileNameAsTIFF
+
+	set fileNameAsPPM [ file tail [fileSave] ]
+	set fileNameAsTIFF "test.tiff"
+	$renWin SetFilename $fileNameAsPPM
+	$renWin SaveImageAsPPM
+	exec ppm2tiff $fileNameAsPPM $fileNameAsTIFF
+	puts ""
+	puts "The window was reserved as a file '$fileNameAsTIFF'...OK"
+
+}
+

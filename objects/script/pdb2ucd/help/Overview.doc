@@ -1,0 +1,8 @@
+.onlineHelp EOS pdb2ucd "Introduction to pdb2ucd"
+.
+.section 1 "Introduction to pdb2ucd"
+.
+.\" This is the help page associated with the Help button on
+.\" the toplevel window of pdb2ucd
+If you are reading this text,
+you should report it as a bug :-)

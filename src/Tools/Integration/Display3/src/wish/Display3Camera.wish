@@ -1,0 +1,146 @@
+# %M% %Y% %I%
+# The latest update : %G% at %U%
+#
+#%Z% Display3Image.wish ver %I%
+#%Z% Created by 
+#%Z%
+#%Z% Usage : Display3Camera.wish
+#%Z% Attention
+#%Z%
+
+proc cameraAutomaticallyInformationAboutPositionGetAndSet { } {
+	global acamera
+
+	cameraAutomaticallyViewUpGetAndSet
+	cameraAutomaticallyPositionGetAndSet
+	cameraAutomaticallyFocalPointGetAndSet
+}
+
+proc cameraAutomaticallyViewAngleGetAndSet { } {
+	global acamera
+
+	set acamera(viewAngle) [ $acamera(body) GetViewAngle ]
+	$acamera(body) SetViewAngle $acamera(viewAngle)
+
+}
+
+proc cameraAutomaticallyViewUpGetAndSet { } {
+	global acamera
+	
+	$acamera(body) OrthogonalizeViewUp
+	set acamera(automaticallyViewUpSet) [ $acamera(body) GetViewUp ]
+	set acamera(viewUpX) [ lindex $acamera(automaticallyViewUpSet) 0 ]
+	set acamera(viewUpY) [ lindex $acamera(automaticallyViewUpSet) 1 ]
+	set acamera(viewUpZ) [ lindex $acamera(automaticallyViewUpSet) 2 ]
+#	puts $acamera(automaticallyViewUpSet)
+	$acamera(body) SetViewUp $acamera(viewUpX) $acamera(viewUpY) $acamera(viewUpZ)
+}
+
+proc cameraAutomaticallyPositionGetAndSet { } {
+	global acamera
+
+	set acamera(automaticallyPositionSet) [ $acamera(body) GetPosition ]
+#	puts $acamera(automaticallyPositionSet)
+	set acamera(positionX) [ lindex $acamera(automaticallyPositionSet) 0 ]
+	set acamera(positionY) [ lindex $acamera(automaticallyPositionSet) 1 ]
+	set acamera(positionZ) [ lindex $acamera(automaticallyPositionSet) 2 ]
+	$acamera(body) SetPosition $acamera(positionX) $acamera(positionY) $acamera(positionZ)
+}
+
+proc cameraAutomaticallyFocalPointGetAndSet { } {
+	global acamera
+
+	set acamera(automaticallyFocalPointSet) [ $acamera(body) GetFocalPoint ]
+#	puts $acamera(automaticallyFocalPointSet)
+	set acamera(focalPointX) [ lindex $acamera(automaticallyFocalPointSet) 0 ]
+	set acamera(focalPointY) [ lindex $acamera(automaticallyFocalPointSet) 1 ]
+	set acamera(focalPointZ) [ lindex $acamera(automaticallyFocalPointSet) 2 ]
+	$acamera(body) SetFocalPoint $acamera(focalPointX) $acamera(focalPointY) $acamera(focalPointZ)
+}
+
+proc cameraPositionFind { } {
+	global iren
+	global renWin
+	global acamera
+	puts "Get Positon "
+#	puts "Get Positon : $acamera(positionX) $acamera(positionY) $acamera(positionZ)"
+#	$renWin Render
+	$iren Start
+
+}
+
+proc objectRotate { times angle } {
+	global ren1
+	global renWin
+	global object
+	global acamera
+	global rotation
+
+# The camera Rotates so that we can see vtkObject Rotating around Oyler-Method Axis
+
+	set rotateAngle [ expr $angle - $rotation(value,$times) ]
+
+	if {1==$rotation(axis,$times)} {
+		$acamera(body) Elevation $rotateAngle
+	}
+	if {2==$rotation(axis,$times)} {
+		$acamera(body) Azimuth $rotateAngle
+	}
+	if {3==$rotation(axis,$times)} {
+		$acamera(body) Roll $rotateAngle
+	}
+	set rotation(value,$times) $angle
+	$renWin Render
+	cameraAutomaticallyInformationAboutPositionGetAndSet
+
+}
+	
+
+proc cameraSlide {Xplus Yplus Zplus} {
+	global ren1
+	global renWin
+	global acamera
+
+	set acamera(positionX) [ expr $acamera(positionX) + $Xplus ]
+	set acamera(positionY) [ expr $acamera(positionY) + $Yplus ]
+	set acamera(positionZ) [ expr $acamera(positionZ) + $Zplus ]
+	$acamera(body) SetPosition $acamera(positionX) $acamera(positionY) $acamera(positionZ)
+#	puts "Camera Slide Ok yo-----"
+	$renWin Render
+	cameraAutomaticallyInformationAboutPositionGetAndSet
+}
+
+proc cameraFocalSlide {Xplus Yplus Zplus} {
+	global ren1
+	global renWin
+	global acamera
+
+	set acamera(focalPointX) [ expr $acamera(focalPointX) + $Xplus ]
+	set acamera(focalPointY) [ expr $acamera(focalPointY) + $Yplus ]
+	set acamera(focalPointZ) [ expr $acamera(focalPointZ) + $Zplus ]
+	$acamera(body) SetFocalPoint $acamera(focalPointX) $acamera(focalPointY) $acamera(focalPointZ)
+#	puts "Camera Focal Slide Ok yo-----"
+	$renWin Render
+	cameraAutomaticallyInformationAboutPositionGetAndSet
+}
+
+proc cameraMove { } {
+	global renWin
+	global acamera
+
+	$acamera(body) SetPosition $acamera(positionX) $acamera(positionY) $acamera(positionZ)
+#	puts "in cameraMove:"
+#	puts "Camera Move Ok yo-----"
+	$renWin Render
+
+}
+
+proc cameraViewAngleSet { angle } {
+	global renWin
+	global acamera
+
+	set acamera(viewAngle) $angle
+	$acamera(body) SetViewAngle $acamera(viewAngle)
+#	puts "OK View Angle $acamera(viewAngle)"
+	$renWin Render
+}

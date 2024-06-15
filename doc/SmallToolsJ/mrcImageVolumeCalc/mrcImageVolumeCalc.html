@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageVolumeCalc</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageVolumeCalc<br></h2></b></font>
+	<h4></h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+		<table border="1">
+			<div align="left">
+				<tr>
+					<th>オプション</th>
+					<th>必須項目/選択項目</th>
+					<th>説明</th>
+					<th>デフォルト</th>
+				</tr>
+				<tr>
+					<td>-i</td>
+					<td>必須</td>
+					<td>入力ファイル設定</td>
+					<td>NULL</td>
+				</tr>
+				<tr>
+					<td>-o</td>
+					<td>選択</td>
+					<td>出力ファイル設定</td>
+					<td>stdout</td>
+				</tr>
+				<tr>
+					<td>-n</td>
+					<td>選択</td>
+					<td>分子の数</td>
+					<td>1.0</td>
+				</tr>
+				<tr>
+					<td>-M</td>
+					<td>選択</td>
+					<td>分子量</td>
+					<td>1.0</td>
+				</tr>
+				<tr>
+					<td>-d</td>
+					<td>選択</td>
+					<td>密度</td>
+					<td>1.35</td>
+				</tr>
+				<tr>
+					<td>-D</td>
+					<td>選択</td>
+					<td>ピクセル幅を設定</td>
+					<td>5.0</td>
+				</tr>
+				<tr>
+					<td>-I</td>
+					<td>選択</td>
+					<td>反転</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>-h</td>
+					<td>選択</td>
+					<td>ヘルプを表示</td>
+					<td>　</td>
+				</tr>
+			</div>
+		</table>
+
+
+	<br>	
+	<h4>******実行例******</h4>
+
+<!-- 入力ファイル説明 -->
+
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<div>入力画像は３Ｄ画像でなければならない</div>
+	<table>
+		<tr>
+			<td><img src="inputdata.png" border="0" alt="inputdata.png(7780 byte)" width="110" height="115"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				2<br>
+				0.00148981<br>
+				0.043511<br>
+				4.26578e-05<br></p>
+			</td>
+		</tr>
+	</table>
+
+<!-- 実行結果 -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------出力結果------</font></caption><br>
+	<div>今回の入力ファイルのH-rasの分子量などを設定する<br>
+	n=1,M=21000,d=1.35,D=1.700となる<br>
+	実行すると以下のデータが得られる<br>
+	<img src="outdata.png" border="1" alt="outdata.png(7364 byte)" width="198" height="321"></div>
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-I------</font></caption><br>
+	<div>上記と同じ条件でオプション-Iを使用すると以下のようなデータが得られる<br>
+	<img src="outdata-I..png" border="1" alt="outdata-I..png(8249 byte)" width="212" height="323"></div>
+	
+	
+	
+
+</body>
+</html>

@@ -1,0 +1,94 @@
+<H1> pdbFile </H1>
+
+<UL>
+	<LI> Structure  <DL>
+	<DT> pdbFile
+		<DD> This structure is used to treat a pdb File.
+		<DD> pdbFile pdb;
+		<DD> 
+		<DD> pdb.PDB->ResidueSequenceNumber
+		<DD> pdb.PDB->Coord.x
+		<DD> pdb.PDB->Coord.y
+	</DL>
+	<LI> File  <UL>
+		<LI> pdbFileRead (fpt, &pdb)
+		<LI> pdbFileWrite(fpt, &pdb)
+	</UL>
+	<LI> Check <UL>
+		<LI> pdbFileIsAtom
+			<DD> if(pdbFileIsAtom(&pdb)) { }
+		<LI> pdbFileIsCA
+			<DD> if(pdbFileIsCA(&pdb)) { }
+		<LI> pdbFileIsEndLine
+			<DD> if(pdbFileIsEndLine(&pdb)) { }
+		<LI> pdbRecordisNearby : Adjacent Residue or not
+			<DD> if(pdbRecordisNearby(&pdbRecord, &pdbRecord)) { }
+		<LI> pdbFileIsHelix
+			<DD> if(pdbFileIsHelix(&pdb)) { }
+		<LI> pdbFileIsSheet
+			<DD> if(pdbFileIsSheet(&pdb)) { }
+		<LI> pdbFileIsTurn
+			<DD> if(pdbFileIsTurn(&pdb)) { }
+		<LI> pdbFileIsNegative
+			<DD> if(pdbFileIsNegative(&pdb)) { }
+		<LI> pdbFileIsPositive
+			<DD> if(pdbFileIsPositive(&pdb)) { }
+		<LI> pdbFileIsCharge
+			<DD> if(pdbFileIsCharge(&pdb)) { }
+	</UL>
+	<LI> Check2 <UL>
+		<LI> lpdbDistanceCheck : mode 0: Near 1: Far ; compare the distance between pdb->current with p v.s. distance
+			<DD> if(lpdbDistanceCheck(&pdb, p, distance, mode)) {
+		<LI> lpdbDistanceNear
+			<DD> if(lpdbDistanceNear(&pdb, p, distance, mode)) {
+		<LI> lpdbDistanceFar
+			<DD> if(lpdbDistanceFar(&pdb, p, distance, mode)) {
+	</UL>
+	<LI> Get and Set  <UL>
+		<p><B>Get</B>
+		<LI> pdbFileCoordGet(&pdb, &x, &y, &z)
+		<LI> unsigned char pdbFileChainIdentifierGet(&pdb)
+		<LI> pdbFileResidueSequenceNumberGet(&pdb)
+		<LI> char* pdbFileResidueNameGet(&pdb,mode)
+		<p><B>Set</B>
+		<LI> pdbFileCoordSet(&pdb, x, y, z)
+		<LI> pdbFileChainIdentifierSetAll(&pdb, c)
+		<LI> pdbFileChainIdentifierSet(&pdb, c)
+		<LI> pdbFileTemperatureFactorSet(&pdb, (double)temp)
+	</UL>
+	<LI> Seeking <UL>
+		<LI> pdbFileTop(&pdb)
+		<LI> pdbFileNext(&pdb)
+		<LI> pdbFileNextAtom(&pdb)
+		<LI> pdbFileNextCA(&pdb)
+		<LI> pdbFileNextProtein(&pdb)
+		<LI> pdbFileEnd(&pdb)
+	</UL>
+	<LI> New, append etc. <UL>
+		<LI> pdbFileNew(&pdb)
+		<LI> pdbFileAppend(&pdb)
+		<LI> pdbFileFree(&pdb)
+	</UL>
+	<LI> Print  <UL>
+		<LI> pdbFilePrint(fpt, &pdb); 
+		<LI> pdbFileRecordPrint(fpt, &pdb); 
+		<LI> pdbFileRecordTablePrint(fpt, &pdb); 
+	</UL>
+	<LI> Copy <UL>
+		<LI> pdbFileOneRecordCopy(&pdb, &src)
+		<LI> pdbFileCAOnlyCopyAll(&pdb, &src)
+		<LI> pdbFileCopyAll(&pdb, &src)
+		<LI> pdbFileOneProteinCopy(&pdb, &src, num)  
+		<LI> pdbFileCAOnlyCopyAll(&pdb, &src)
+	</UL>
+	<LI> Translation and rotation <UL>
+		<LI> pdbTrans
+		<LI> pdbMatrixFileRead
+		<LI> pdbMatrixFileWrite
+		<LI> pdbMatrixFileFormat
+	</UL>
+	<LI> Transform <UL>
+		<LI> lpdb2mrc3d
+			<DD> lpdb2mrc3d(&mrc, &pdb, &linfo, mode)
+	</UL>
+</UL>

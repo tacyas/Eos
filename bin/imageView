@@ -1,0 +1,144 @@
+#!/usr/bin/wish
+
+proc DesktopInit { f class }  {
+	global fileListControl
+
+	frame $f -class $class -borderwidth 2 
+	pack $f -side top -fill x
+
+	set ff [ frame $f.menu ]		
+	button $ff.list -font fixed -text Start -command { fileListSet $fileList }  
+	entry  $ff.filelist -font fixed -width 30 -bg white -relief sunken -textvar fileList 
+	bind $ff.filelist <Return> {fileListSet $fileList }
+
+	button $ff.prev -font fixed -text "<" -command prevImage
+	entry  $ff.filenum  -font fixed -width  5 -bg white -relief sunken -textvar fileListControl(current) 
+	entry  $ff.filename -font fixed -width 30 -bg white -relief sunken -textvar fileListControl(current,File)
+	button $ff.next -font fixed -text ">" -command nextImage
+	button $ff.quit -font fixed -text "quit" -command { quitMenu }
+	pack  $ff.list $ff.filelist $ff.prev $ff.filenum $ff.filename $ff.next $ff.quit -side left 
+
+	set ff [ frame  $f.buf ]
+	label  $ff.sizeT -font fixed -text BufferSize
+	entry  $ff.size -font fixed -width 10 -bg white -relief sunken -textvar fileListControl(bufsize)
+	pack $ff.sizeT $ff.size -side left
+
+	pack  $f.menu $f.buf -side top  
+}
+
+proc quitMenu { } {
+	exit
+}
+
+proc fileListSet { expr } {
+	global fileListArray
+	global fileListControl
+
+	set fileListControl(current) 0
+	set fileListControl(max)     0
+	foreach match [glob -nocomplain $expr ]  {
+		set i  $fileListControl(max)
+		puts $i,$match
+		set fileListArray($i,File) $match 
+		set fileListArray($i,PID)  NULL
+		puts $fileListArray($i,File),$match
+		incr fileListControl(max)
+	}
+	puts $fileListControl(current)
+	puts $fileListControl(max)
+	showImage 0
+}
+
+proc prevImage { }  {
+	global fileListControl
+
+	showImage -1
+}
+
+proc nextImage { } {
+	global fileListControl
+
+	showImage 1
+}
+
+proc showImage { step } {
+	global fileListArray
+	global fileListControl
+
+	# current
+	incr fileListControl(current) $step 
+	#puts  $fileListControl(current) 
+	if { $fileListControl(current) < 0 } {
+		set fileListControl(current) [ expr $fileListControl(max) +  $fileListControl(current) ]
+	} elseif {  $fileListControl(max) <=  $fileListControl(current) } {
+		set fileListControl(current) [ expr $fileListControl(current) -  $fileListControl(max)]
+	} else {
+	}
+	#puts  $fileListControl(current) 
+
+	#first
+	if { 0 < $step } {
+		killDisplay2 $fileListControl(first)
+	}
+	set   fileListControl(first)     [ expr $fileListControl(current) - $fileListControl(bufsize)/2] 
+	#puts "firstfirst:$fileListControl(first)"
+	if {  $fileListControl(first) < 0 } { 
+		set   fileListControl(first) [ expr $fileListControl(first) + $fileListControl(max) ]
+		#puts "firstfirst:$fileListControl(first)"
+	}
+	# last
+	if { $step < 0 } {
+		killDisplay2 $fileListControl(last)
+	}
+	set   fileListControl(last)    [ expr $fileListControl(current) + $fileListControl(bufsize)/2]
+	if { [expr  $fileListControl(max) - 1 ] <  $fileListControl(last) } {
+		set fileListControl(last)  [ expr $fileListControl(last) -  $fileListControl(max)] 
+	}
+
+	# current
+	set   fileListControl(current,File) $fileListArray($fileListControl(current),File)
+	#puts  $fileListControl(current,File)
+
+	set first $fileListControl(first)
+	set last  $fileListControl(last)
+	set max   $fileListControl(max)
+	puts "max:$fileListControl(max)"
+	puts "current:$fileListControl(current)"
+	puts "first:$first"
+	puts "last:$last"
+	for { set i $first } { $i !=  [ expr $last + 1 ] && $i != [ expr $last + 1 - $max ] } { incr i } {
+		puts $i
+		if { $fileListArray($i,PID) == "NULL" } {
+			executeDisplay2 $i
+		}
+		if { $i == [ expr $fileListControl(max) - 1 ] } {
+			set i -1
+		}
+	}
+	updateDisplay2 $fileListControl(current) 
+}
+
+proc updateDisplay2 { i } {
+	global fileListArray
+	#set [ exec Display2 -i $fileListArray($i,File) &]
+}
+
+proc executeDisplay2 { i } {
+	global fileListArray
+	set fileListArray($i,PID) [ exec Display2 -i $fileListArray($i,File) &]
+	puts "PID: $fileListArray($i,PID)"
+}
+
+proc killDisplay2 { i } {
+	global fileListArray
+	puts "PID: $fileListArray($i,PID) to be killed"
+	set PID [ exec ps -el | awk -vPID=$fileListArray($i,PID) "{ if(PID==\$5) print \$4;}" ] 
+	puts $PID
+	catch { exec kill $PID }
+	set fileListArray($i,PID)  NULL
+}
+
+set fileListControl(bufsize)  6 
+
+DesktopInit .top ImageView
+

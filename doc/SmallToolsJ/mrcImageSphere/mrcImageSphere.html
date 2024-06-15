@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageSphere</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageSphere<br></h2></b></font>
+	<h4></h4>
+	
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+	<table border="1">
+		<div align="left">
+			<tr>
+				<th>オプション</th>
+				<th>必須項目/選択項目</th>
+				<th>説明</th>
+				<th>デフォルト</th>
+			</tr>
+			<tr>
+				<td>-o</td>
+				<td>必須</td>
+				<td>出力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-size</td>
+				<td>選択</td>
+				<td>ピクセルサイズを設定</td>
+				<td>5</td>
+			</tr>
+			<tr>
+				<td>-r</td>
+				<td>選択</td>
+				<td>作成される球の半径を設定</td>
+				<td>5</td>
+			</tr>
+			<tr>
+				<td>-weight</td>
+				<td>選択</td>
+				<td>最大値を設定</td>
+				<td>100</td>
+			</tr>
+			<tr>
+				<td>-m</td>
+				<td>選択</td>
+				<td>モード</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-h</td>
+				<td>選択</td>
+				<td>ヘルプを表示</td>
+				<td>　</td>
+			</tr>
+		</div>
+	</table>
+
+<!-- モード説明 -->
+
+	<br>
+	<br>
+	<caption><b>モードの詳細</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>モード</th>
+				<th>説明</th>
+			</tr>
+			<tr>
+				<td>0</td>
+				<td>char→1バイト</td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td>float→4バイト</td>
+			</tr>
+		</table>
+
+	<h4>******実行例******</h4>
+
+<!-- 出力結果 -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション必須項目のみの場合------</font></caption><br>
+	<div><img src="outdata.png" border="0" alt="outdata.png(10249 byte)" width="557" height="250"></div>
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-size------</font></caption><br>
+	<div>-size=1.72に設定し実行<br>
+	<img src="outdata-size1.72.png" border="0" alt="outdata-size1.72.png(9565 byte)" width="558" height="237"></div>
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-r------</font></caption><br>
+	<div>-r=50に設定し実行<br>
+	<img src="outdata-r50.png" border="0" alt="outdata-r50.png(9313 byte)" width="560" height="236"></div>
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-weight------</font></caption><br>
+	<div>-weight=50に設定し実行<br>
+	<img src="outdata-weight50.png" border="0" alt="outdata-weight50.png(9633 byte)" width="559" height="237"></div>
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-m------</font></caption><br>
+	<div>-m=2に設定し実行<br>
+	<img src="outdata-m1.png" border="0" alt="outdata-m1.png(9560 byte)" width="559" height="237"></div>
+
+
+
+</body>
+</html>

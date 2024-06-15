@@ -1,0 +1,53 @@
+Init Start
+<HTML>
+<HEAD>
+<TITLE>mrcImageCorrelation</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageCorrelation</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageCorrelation
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Optional  :OutputDataFile: Correlation Map
+    [-O[utput]           Out2                (NULL      ).as(outFile             ) ] :Optional  :OutputDataFile: Correlation Map for Refinement
+    [-r[eference]        Ref                 (NULL      ).as(inFile              ) ] :Essential :ReferenceDataFile
+    [-cor[relation]Info  OutCor              (stdout    ).as(outFile             ) ] :Optional  :Output: Correlation Info
+    [-a[verage]          Avg                 (NULL      ).as(outFile             ) ] :Optional  :OutputDataFile: Averaged File
+    [-s[hit]             Shift               (NULL      ).as(outFile             ) ] :Optional  :OutputDataFile: Shifted InputFile
+    [-refine             RefineStep          (0.25      ).as(Real                ) 
+                         RefineRange         (3.0       ).as(Real                ) 
+                         RefineMode          (2         ).as(Integer             ) ] :Optional  :Refinemnet: Step Range[pixelUnit]
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+    [-M[ode2]            mode2               (0         ).as(Integer             ) ] :Optional  :Mode2
+----- Mode:  -m -----
+0: Normal Correlation FxG*
+1: Phase  Correlation FxG*/     |FxG*|
+2: Phase  Correlation FxG*/sqrt(|FxG*|)
+3: Normalized Normal Correlation FxG*/|F||G|)
+16: (0,0) = 0 
+Refinement Correlation Map
+0: sqrt(Sum |Fi-Gi|^2                 / Sum |Gi|^2)
+1:      Sum |Gi||phaseFi - phaseGi|   / Sum |Gi|  
+2: sqrt(Sum |Gi||phaseFi - phaseGi|^2 / Sum |Gi|  )
+----- Mode2: -M -----
+mode 0: Correlation by FFT.  Output is a mrcImage to file.
+            -a : Averaged image after Shift Transform [pixel unit] and Averaging
+            -s : Shifted  image after Shift Transform [pixel unit]
+            -o : Correation Map 
+mode 1: Correlation by multiplying in normal space.  Output is a real value 
+            Normalized correlation value
+            No shift transform 
+            No Correlation Map 
+----- Refinement:  -refine -----
+            refineStep[PixelUnit]  : refinement step size 
+            refineRange[PixelUnit] : refinement range     
+            refineMode             : refinement mode      
+            --- search area ----- 
+            the position of max correlation +- refineRange / refineStep 
+            Attention: If this option is set, the meaning of -o option is changed to a residual map 
+</PRE>
+</BODY>
+</HTML>

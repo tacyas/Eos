@@ -1,0 +1,11 @@
+make[1]: Entering directory `/net/hp01/workC25/Eos/src/Tools/mrcImage/mrcView/src/I386LINUX'
+g++ -c -finline-functions -O0 -g -Wall  -DII -DI386LINUX -I/home/people/nishida/Eos/util/I386LINUX/include -I../inc -I/home/people/nishida/Eos/include   -I/home/people/nishida/Eos/util/I386LINUX/include -I/home/people/nishida/Eos/util/I386LINUX/include/tk -I/home/people/nishida/Eos/util/I386LINUX/include/vtk -DHAVE_GETCWD=1 -DHAVE_UNISTD_H=1 -DUSE_TERMIOS=1 -DHAVE_SYS_TIME_H=1 -DTIME_WITH_SYS_TIME=1 -DHAVE_TM_ZONE=1 -DHAVE_TIMEZONE_VAR=1 -DHAVE_ST_BLKSIZE=1 -DSTDC_HEADERS=1 -DNO_UNION_WAIT=1 -DNEED_MATHERR=1 -DHAVE_SIGNED_CHAR=1 -DHAVE_SYS_IOCTL_H=1 -DHAVE_UNISTD_H=1 -DHAVE_LIMITS_H=1 -DSTDC_HEADERS=1 -DHAVE_SYS_TIME_H=1 -DTIME_WITH_SYS_TIME=1     ../mrcView.cc -o mrcView.o 
+g++ -finline-functions -O0 -g -Wall -DII -DI386LINUX -I/home/people/nishida/Eos/util/I386LINUX/include mrcView.o init.o argCheck.o usage.o util.o /home/people/nishida/Eos/lib/I386LINUX/libEosObjects.a -L/home/people/nishida/Eos/util/I386LINUX/lib/vtk -lvtkRenderingTCL -lvtkRendering -lvtkImagingTCL -lvtkImaging -lvtkGraphicsTCL -lvtkGraphics -lvtkFilteringTCL -lvtkFiltering -lvtkParallelTCL -lvtkParallelTCL -lvtkIOTCL -lvtkIO -lvtkHybridTCL -lvtkHybrid -lvtkCommonTCL -lvtkCommon -L/home/people/nishida/Eos/util/I386LINUX/lib -lBLT -ltk8.3 -ltcl8.3 -ldl -lpthread -L/usr/lib -lGL -lGLU -L/usr/X11R6/lib/ -lXext -lXt -lSM -lICE -lX11 -lvtkjpeg -lvtkpng -lvtkzlib -L/usr/X11R6/lib/ -lXext -lXt -lSM -lICE -lX11 -L/home/people/nishida/Eos/util/I386LINUX/lib -ljpeg -lm -L/home/people/nishida/Eos/util/I386LINUX/lib -o mrcView
+make[1]: Leaving directory `/net/hp01/workC25/Eos/src/Tools/mrcImage/mrcView/src/I386LINUX'
+---- Installing to bin
+../../../../../bin/I386LINUX/mrcView
+---- end of bin
+creating html
+make[1]: Entering directory `/net/hp01/workC25/Eos/doc/SmallTools'
+Updating SmallTools document on WWW server
+make[1]: Leaving directory `/net/hp01/workC25/Eos/doc/SmallTools'

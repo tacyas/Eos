@@ -1,0 +1,16 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: in[sinogram: mrc]","Essential","1","1","In","inFile","NULL"
+"-r","-r[ef]","Input: ref[sinogram: mrc]","Essential","1","1","Ref","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-w","-w[eigth]","Weigth for Mode: 1","Optional","3","1","w0th","Real","1.0","1","w1st","Real","0.0","1","w2nd","Real","0.0","1"
+"-T","-T[hreshold]","threshold for Mode: 2","Optional","1","1","threshold","Real","0.0","1"
+"-M","-M[odeforCorrelation]","Mode: for Correlation","Optional","1","1","corMode","Integer","0"
+"-LM","-L[ength]M[ode]","Length Mode: for LengthCorrelation","Optional","1","1","LengthMode","Integer","0"
+"-LTM","-L[ength]T[hreshold]M[ode]","Length Threshold Mode: for LengthCorrelation","Optional","1","1","LengthThresholdMode","Integer","0"
+"-LTR","-L[ength]T[hreshold]R[atio]","ratio of threshold for LenthMode: 1","Optional","1","1","LengthThresholdRatio","Real","1.0","1"
+"-LCM","-L[ength]C[orrelation]M[ode]","Mode: for LengthCorrelationMode","Optional","1","1","LCMode","Integer","0"
+"-LCT","-L[ength]C[orrelation]T[hreshold]","threshold for LengthCorrelation","Optional","1","1","LengthCorrelationThreshold","Real","0.0","1"
+"-wL","-w[eight]L[ength]","Weight for LengthCorrelation","Optional","1","1","weightLength","Real","1.0","1"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

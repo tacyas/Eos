@@ -1,0 +1,28 @@
+OSTYPE  = ALPHA
+
+MAKE    = /usr/local/bin/make
+
+CD      = cd
+
+INSTALL = $(EOS_HOME)/sbin/eosinstall
+
+CC     = gcc
+CCOPTS = -O3 -g -Wall $(EXTRA_DEFINE) -DM68 -DVECLIB -I/usr/cxsoft/include 
+
+AR     = /bin/ar
+
+RM     = /bin/rm
+
+LS     = /bin/ls
+
+AWK    = /usr/bin/awk
+
+CAT    = /bin/cat
+
+CP     = /bin/cp
+
+CHMOD  = /bin/chmod
+
+DEPENDCOMMAND = gcc $(CCOPT) -E -M
+
+HOSTDEPENDENTLIB = -lm

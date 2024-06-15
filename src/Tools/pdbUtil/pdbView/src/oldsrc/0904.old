@@ -1,0 +1,431 @@
+/*
+# pdbView : $Revision$  
+# $Date$ 
+# Created by $Author$
+# Usage : pdbView
+# Attention
+#   $Loccker$
+#  	$State$ 
+#
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <vtk.h>
+              
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+
+#define DEBUG
+#include "genUtil.h"
+
+#include "pdbFile.h"
+
+
+
+/*
+Example:
+typedef struct lpdbViewInfo {
+	float a;
+	int   b;
+} lpdbViewInfo;
+
+typedef enum lpdbViewMode {
+	a=0,
+	b=1
+} lpdbViewMode;
+*/
+
+
+class eosAxisSourceCoord {
+public:
+  double X;
+  double Y;
+  double Z;
+  float Xcolor[3];
+  float Ycolor[3];
+  float Zcolor[3];
+public:
+  eosAxisSourceCoord() {
+    X = 1;
+    Y = 1;
+    Z = 1;
+    for(int i=0; i<3; i++) {
+      Xcolor[i] = (i==0?1.0:0.0);
+      Ycolor[i] = (i==1?1.0:0.0);
+      Zcolor[i] = (i==2?1.0:0.0);
+    }
+  }
+};
+
+
+class eosAxisSource{
+public:
+  double scale;
+  double axisRatio;
+  double arrowRatio;
+  int axisFace;
+  int arrowFace;
+
+
+  eosAxisSourceCoord axisLength;
+  eosAxisSourceCoord axisRadius;
+  //eosAxisSourceCoord axisFace;
+  eosAxisSourceCoord axisColor;
+
+  eosAxisSourceCoord arrowLength;
+  eosAxisSourceCoord arrowRadius;
+  // eosAxisSourceCoord arrowFace;
+  eosAxisSourceCoord arrowColor;
+
+  double sphereRadius;
+  float sphereColor[3];
+
+  eosAxisSourceCoord axisPosition;
+  eosAxisSourceCoord arrowPosition;
+
+  eosAxisSource() {
+
+  scale=8;
+  axisRatio=0.0625;
+  arrowRatio=0.375;
+  axisFace=20;
+  arrowFace=20;
+  sphereRadius=1;
+  sphereColor[0]=1.0;
+  sphereColor[1]=0.0;
+  sphereColor[2]=1.0;
+
+    reset();
+
+  }
+  void SetScale(double s) {
+    scale = s;
+    reset();
+  }
+  void reset() {
+    axisLength.X=axisLength.X*scale;
+    axisLength.Y=axisLength.Y*scale;
+    axisLength.Z=axisLength.Z*scale;
+  
+    axisRadius.X=axisRadius.X*axisRatio*scale;
+    axisRadius.Y=axisRadius.Y*axisRatio*scale;
+    axisRadius.Z=axisRadius.Z*axisRatio*scale;
+  
+    axisPosition.X=axisLength.X/2;
+    axisPosition.Y=axisLength.Y/2;
+    axisPosition.Z=axisLength.Z/2;
+  
+    arrowLength.X = axisLength.X*arrowRatio;
+    arrowLength.Y = axisLength.Y*arrowRatio;
+    arrowLength.Z = axisLength.Z*arrowRatio;
+
+    arrowRadius.X = axisRadius.X*3;
+    arrowRadius.Y = axisRadius.Y*3;
+    arrowRadius.Z = axisRadius.Z*3;
+
+    arrowPosition.X=axisLength.X+arrowLength.X/3;
+    arrowPosition.Y=axisLength.Y+arrowLength.Y/3;
+    arrowPosition.Z=axisLength.Z+arrowLength.Z/3;
+  }
+};
+
+
+
+
+int
+main(int argc, char* argv[]) 
+{
+
+  eosAxisSourceCoord axisColor;
+  eosAxisSource axisClass;
+
+
+	pdbViewInfo info;
+	pdbFile pdb;
+
+	init0(&info);
+    argCheck(&info, argc, argv);
+    init1(&info);
+
+	DEBUGPRINT("Program Start\n");
+
+    pdbFileRead(info.fptIn, &pdb);
+
+    vtkRenderer *ren = vtkRenderer::New();
+    vtkRenderWindow *renWindow = vtkRenderWindow::New();
+    renWindow->AddRenderer(ren);
+    vtkRenderWindowInteractor *iren = vtkRenderWindowInteractor::New();
+    iren->SetRenderWindow(renWindow);
+
+    //Create an actor and give it cone geometry
+    vtkConeSource *cone = vtkConeSource::New();
+    cone->SetResolution(30);
+    cone->SetHeight(5);
+    cone->SetRadius(3);
+    vtkPolyDataMapper *coneMapper = vtkPolyDataMapper::New();
+    coneMapper->SetInput(cone->GetOutput());
+    vtkActor *coneActor = vtkActor::New();
+    coneActor->SetMapper(coneMapper);
+    coneActor->GetProperty()->SetColor(1.0,0.0,0.0);
+    coneActor->SetPosition(0,5,0);
+
+    //Mine Create
+    vtkConeSource *cone2 = vtkConeSource::New();
+    cone2->SetResolution(6);
+    cone2->SetHeight(2);
+    cone2->SetRadius(3);
+    vtkPolyDataMapper *coneMapper2=vtkPolyDataMapper::New();
+    coneMapper2->SetInput(cone2->GetOutput());
+    vtkActor *coneActor2 = vtkActor::New();
+    coneActor2->SetMapper(coneMapper2);
+    coneActor2->GetProperty()->SetColor(0.2,0.8,0.7);
+
+    //Cube
+    vtkCubeSource *cube = vtkCubeSource::New();
+    cube->SetCenter(0,0,0);
+    cube->SetXLength(3);
+    cube->SetYLength(3);
+    cube->SetZLength(3);
+    //cube->SetBounds(0.0,0.5,0.0,0.3,0.0,0.2);
+    vtkPolyDataMapper *cubeMapper = vtkPolyDataMapper::New();
+    cubeMapper->SetInput(cube->GetOutput());
+    vtkActor *cubeActor = vtkActor::New();
+    cubeActor->SetMapper(cubeMapper);
+    cubeActor->GetProperty()->SetOpacity(0.5);
+    cubeActor->GetProperty()->SetColor(0.4,0.4,0.7);
+
+    //Sphere
+    vtkSphereSource *sphere = vtkSphereSource::New();
+    sphere->SetCenter(0,0,0);
+    sphere->SetRadius(0.5);
+    vtkPolyDataMapper *sphereMapper = vtkPolyDataMapper::New();
+    sphereMapper->SetInput(sphere->GetOutput());
+    vtkActor *sphereActor = vtkActor::New();
+    sphereActor->SetMapper(sphereMapper);
+    //sphereActor->GetProperty()->SetOpacity(0.5);
+    sphereActor->GetProperty()->SetColor(0.9,0.4,0.8);
+
+
+    //LineX
+    vtkLineSource *lineX = vtkLineSource::New();
+    lineX->SetPoint1(0,0,0);
+    lineX->SetPoint2(5,0,0);
+    vtkPolyDataMapper *lineXMapper = vtkPolyDataMapper::New();
+    lineXMapper->SetInput(lineX->GetOutput());
+    vtkActor *lineXActor = vtkActor::New();
+    lineXActor->SetMapper(lineXMapper);
+    lineXActor->GetProperty()->SetColor(1.0,0,0);
+
+
+    //LineY
+    vtkLineSource *lineY = vtkLineSource::New();
+    lineY->SetPoint1(0,0,0);
+    lineY->SetPoint2(0,5,0);
+    vtkPolyDataMapper *lineYMapper = vtkPolyDataMapper::New();
+    lineYMapper->SetInput(lineY->GetOutput());
+    vtkActor *lineYActor = vtkActor::New();
+    lineYActor->SetMapper(lineYMapper);
+    lineYActor->GetProperty()->SetColor(0,1.0,0);
+
+
+    //LineZ
+    vtkLineSource *lineZ = vtkLineSource::New();
+    lineZ->SetPoint1(0,0,0);
+    lineZ->SetPoint2(0,0,5);
+    vtkPolyDataMapper *lineZMapper = vtkPolyDataMapper::New();
+    lineZMapper->SetInput(lineZ->GetOutput());
+    vtkActor *lineZActor = vtkActor::New();
+    lineZActor->SetMapper(lineZMapper);
+    lineZActor->GetProperty()->SetColor(0,0,1.0);
+
+
+
+
+    //CylinderY
+    vtkCylinderSource *axisY = vtkCylinderSource::New();
+    axisY->SetHeight(axisClass.axisLength.Y);
+    axisY->SetRadius(axisClass.axisRadius.Y);
+    //axisY->SetCenter(0,4,0);
+    axisY->SetResolution(axisClass.axisFace);
+    vtkPolyDataMapper *axisYMapper = vtkPolyDataMapper::New();
+    axisYMapper->SetInput(axisY->GetOutput());
+    vtkActor *axisYActor = vtkActor::New();
+    axisYActor->SetMapper(axisYMapper);
+    axisYActor->GetProperty()->SetColor(axisColor.Ycolor);
+    axisYActor->SetPosition(0,axisClass.axisPosition.Y,0);
+
+
+    //arrowY
+    vtkConeSource *arrowY = vtkConeSource::New();
+    arrowY->SetResolution(axisClass.arrowFace);
+    arrowY->SetHeight(axisClass.arrowLength.Y);
+    arrowY->SetRadius(axisClass.arrowRadius.Y);
+    vtkPolyDataMapper *arrowYMapper = vtkPolyDataMapper::New();
+    arrowYMapper->SetInput(arrowY->GetOutput());
+    vtkActor *arrowYActor = vtkActor::New();
+    arrowYActor->SetMapper(arrowYMapper);
+    arrowYActor->GetProperty()->SetColor(axisColor.Ycolor);
+    arrowYActor->RotateZ(90);
+    arrowYActor->SetPosition(0,axisClass.arrowPosition.Y,0);
+    arrowYActor->GetProperty()->SetOpacity(0.5);
+
+
+    //CylinderX
+    vtkCylinderSource *axisX = vtkCylinderSource::New();
+    axisX->SetHeight(axisClass.axisLength.X);
+    axisX->SetRadius(axisClass.axisRadius.X);
+    axisX->SetCenter(0,0,0);
+    axisX->SetResolution(axisClass.axisFace);
+    vtkPolyDataMapper *axisXMapper = vtkPolyDataMapper::New();
+    axisXMapper->SetInput(axisX->GetOutput());
+    vtkActor *axisXActor = vtkActor::New();
+    axisXActor->SetMapper(axisXMapper);
+    axisXActor->GetProperty()->SetColor(axisColor.Xcolor);
+    axisXActor->RotateZ(90);
+    axisXActor->SetPosition(axisClass.axisPosition.X,0,0);
+
+
+
+
+    //arrowX
+    vtkConeSource *arrowX = vtkConeSource::New();
+    arrowX->SetResolution(axisClass.arrowFace);
+    arrowX->SetHeight(axisClass.arrowLength.X);
+    arrowX->SetRadius(axisClass.arrowRadius.X);
+    vtkPolyDataMapper *arrowXMapper = vtkPolyDataMapper::New();
+    arrowXMapper->SetInput(arrowX->GetOutput());
+    vtkActor *arrowXActor = vtkActor::New();
+    arrowXActor->SetMapper(arrowXMapper);
+    arrowXActor->GetProperty()->SetColor(axisColor.Xcolor);
+    //arrowXActor->RotateZ(90);
+    arrowXActor->SetPosition(axisClass.axisPosition.X,0,0);
+
+
+    //CylinderZ
+    vtkCylinderSource *axisZ = vtkCylinderSource::New();
+    axisZ->SetHeight(axisClass.axisLength.Z);
+    axisZ->SetRadius(axisClass.axisRadius.Z);
+    axisZ->SetCenter(0,0,0);
+    axisZ->SetResolution(axisClass.axisFace);
+    vtkPolyDataMapper *axisZMapper = vtkPolyDataMapper::New();
+    axisZMapper->SetInput(axisZ->GetOutput());
+    vtkActor *axisZActor = vtkActor::New();
+    axisZActor->SetMapper(axisZMapper);
+    axisZActor->GetProperty()->SetColor(axisColor.Zcolor);
+    axisZActor->RotateX(90);
+    axisZActor->SetPosition(0,0,axisClass.axisPosition.Z);
+
+    //arrowZ
+    vtkConeSource *arrowZ = vtkConeSource::New();
+    arrowZ->SetResolution(axisClass.arrowFace);
+    arrowZ->SetHeight(axisClass.arrowLength.Z);
+    arrowZ->SetRadius(axisClass.arrowRadius.Z);
+    vtkPolyDataMapper *arrowZMapper = vtkPolyDataMapper::New();
+    arrowZMapper->SetInput(arrowZ->GetOutput());
+    vtkActor *arrowZActor = vtkActor::New();
+    arrowZActor->SetMapper(arrowZMapper);
+    arrowZActor->GetProperty()->SetColor(axisColor.Zcolor);
+    arrowZActor->RotateY(-90);
+    arrowZActor->SetPosition(0,0,axisClass.axisPosition.Z);
+
+
+    //CylinderTEST:Z
+    vtkCylinderSource *axisT = vtkCylinderSource::New();
+    axisT->SetHeight(axisClass.axisLength.Z);
+    axisT->SetRadius(axisClass.axisRadius.Z);
+    axisT->SetCenter(0,0,0);
+    axisT->SetResolution(axisClass.axisFace);
+    vtkPolyDataMapper *axisTMapper = vtkPolyDataMapper::New();
+    axisTMapper->SetInput(axisT->GetOutput());
+    vtkActor *axisTActor = vtkActor::New();
+    axisTActor->SetMapper(axisTMapper);
+    
+    axisTActor->GetProperty()->SetColor(axisColor.Zcolor);
+    axisTActor->RotateX(90);
+    axisTActor->SetPosition(0,0,axisClass.axisPosition.Z);
+    //axisTActor->SetPosition(0,0,0);
+
+
+    //arrowZ:TEST
+    vtkConeSource *arrowT = vtkConeSource::New();
+    arrowT->SetResolution(axisClass.arrowFace);
+
+    //arrowT->SetHeight(3);
+    //arrowT->SetRadius(1.5);
+
+    arrowT->SetHeight(axisClass.arrowLength.Z);
+    arrowT->SetRadius(axisClass.arrowRadius.Z);
+    vtkPolyDataMapper *arrowTMapper = vtkPolyDataMapper::New();
+    arrowTMapper->SetInput(arrowT->GetOutput());
+    vtkActor *arrowTActor = vtkActor::New();
+    arrowTActor->SetMapper(arrowTMapper);
+    arrowTActor->GetProperty()->SetColor(axisColor.Zcolor);
+    arrowTActor->RotateY(-90);
+    arrowTActor->SetPosition(0,0,axisClass.arrowPosition.Z);
+
+
+
+    //MineDotted
+    //vtkPoints *point = vtkPoints::New();
+    //point->SetPoints(5,5,5);
+
+    //assign our actor to the renderer
+
+    //ren->AddActor(coneActor);
+    //ren->AddActor(coneActor2);
+    //ren->AddActor(pointActor);
+    //ren->AddActor(cubeActor);
+    //ren->AddActor(sphereActor);
+    ren->AddActor(lineXActor);
+    ren->AddActor(lineYActor);
+    ren->AddActor(lineZActor);
+    //ren->AddActor(axisActor);
+    //ren->AddActor(arrowActor);
+
+    ren->AddActor(axisXActor);
+    ren->AddActor(arrowXActor);
+
+    ren->AddActor(axisZActor);
+    ren->AddActor(arrowZActor);
+
+    ren->AddActor(axisYActor);
+    ren->AddActor(arrowYActor);
+
+
+    ren->SetBackground(0,0,0);
+
+    ren->ResetCamera();
+
+    renWindow->SetSize(400,400);
+
+    //draw the resulting scene
+    renWindow->Render();
+
+    //Begin mouse interaction
+    iren->Start();
+
+
+    //mine
+    //vtkLine *line = vtkLine::New();
+    //float lineCoords[2][1];
+
+    //line->GetPointIds()->SetId(0,0);
+    //line->GetPointIds()->SetId(1,1);
+
+    //lineCoords[0][0]=.25;
+    //lineCoords[1][0]=.75;
+
+
+
+
+
+	exit(EXIT_SUCCESS);
+}
+
+void
+additionalUsage()
+{
+	fprintf(stderr, "----- Additional Usage -----\n");
+}

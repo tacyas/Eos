@@ -1,0 +1,37 @@
+SRC = \
+dsn6Init.c \
+dsn6Write.c \
+
+OBJ = \
+dsn6Init.o \
+dsn6Write.o \
+
+SHAREDOBJ = \
+dsn6Init.sharedo \
+dsn6Write.sharedo \
+
+REALOBJ = \
+ARM64MAC64/dsn6Init.o \
+ARM64MAC64/dsn6Write.o \
+
+REALSHAREDOBJ = \
+ARM64MAC64/dsn6Init.sharedo \
+ARM64MAC64/dsn6Write.sharedo \
+
+OBJDEBUG = \
+dsn6Init.debugo \
+dsn6Write.debugo \
+
+REALOBJDEBUG = \
+ARM64MAC64/dsn6Init.debugo \
+ARM64MAC64/dsn6Write.debugo \
+
+OBJCUDAGDB = \
+dsn6Init.cudagdb.o \
+dsn6Write.cudagdb.o \
+
+REALOBJCUDAGDB = \
+ARM64MAC64/dsn6Init.cudagdb.o \
+ARM64MAC64/dsn6Write.cudagdb.o \
+
+

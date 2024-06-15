@@ -1,0 +1,13 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: pdbFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","Output: pdbFile","Essential","1","1","Out","outFile","NULL"
+"-order","-order","Order: [A]","Optional","1","1","order","Real","1.7"
+"-refine","-refine","Refine: Meshsize = Order/Refine","Optional","1","1","refine","Integer","2"
+"-size","-size","Refine: Shell thickness = Order/Refine*Size","Optional","1","1","size","Integer","3"
+"-weight","-weight","Weight","Optional","1","1","weight","Real","100.0"
+"-mergin","-mergin","SearchArea","Optional","1","1","mergin","Real","3.0"
+"-thres","-thres","thresHold","Optional","1","1","thresHold","Real","0.0"
+"-densityMode","-densityMode","DensityMode","Optional","1","1","DensityMode","Integer","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

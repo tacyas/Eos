@@ -1,0 +1,2 @@
+#!/bin/bash
+ruby -I$EOS_HOME/lib/$EOS_HOSTDIR -I$EOS_HOME/lib  -I./ $*

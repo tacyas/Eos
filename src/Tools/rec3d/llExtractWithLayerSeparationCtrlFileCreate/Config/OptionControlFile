@@ -1,0 +1,14 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input DataFile","Optional","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Optional","1","1","Out","outFile","stdout"
+"-t","-t[urn]","Tern","Essential","1","1","Turn","Integer","-13"
+"-u","-u[nit]","Unit","Essential","1","1","Unit","Integer","28"
+"-N","-N[-helix]","Helix","Optional","1","1","nHelix","Integer","1"
+"-dY","-dY","Position of the 1st layer line: [pixel]","Optional","1","1","dY","Integer","3"
+"-truePitch","-truePitch","truePitch [A]","Essential","1","1","truePitch","Integer","770"
+"-rMax","-rMax","rMax [A]","Essential","1","1","rMax","Real","50"
+"-RMax","-RMax","RMax [/A]","Optional","1","1","RMax","Real","0.1"
+"-RZMax","-RZMax","RZMax [/A]","Optional","1","1","RZMax","Real","0.1"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

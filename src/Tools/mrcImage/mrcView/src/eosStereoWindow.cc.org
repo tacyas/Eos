@@ -1,0 +1,85 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h> 
+#include <vtk.h>  
+#include <pdbFile.h>        
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+
+#define DEBUG
+#include "genUtil.h"
+#include "mrcImage.h"
+
+#define SPHERERADIUS          0.03
+#define SPHERETHETARESOLUTION 30
+#define SPHEREPHIRESOLUTION   30 
+#define SPHERECOLORR          1.0 
+#define SPHERECOLORG          0.0  
+#define SPHERECOLORB          1.0 
+#define SPHEREOPACITY         0.2 
+
+class eosStereoWindow:vtkRenderWindow,vtkRenderWindowInteractor{
+  public:
+	vtkRenderWindow   *renWindow;
+	vtkRenderWindowInteractor  *iren;
+};
+
+eosWindowPicker::eosWindowPicker(void){
+        renWindow=vtkRenderWindow::New();
+        iren=vtkRenderWindowInteractor::New();
+	renWindow->SetSize(600,600);
+	renWindow->StereoRenderOn();
+	renWindow->SetStereoTypeToLeft();
+}
+
+
+/***** class eosStereoRenderer start *****/ 
+
+class eosStereoRenderer:vtkRenderer{
+  public:
+        vtkRenderer  *ren;         
+
+        eosStereoRenderer(void);
+};
+
+eosStereoRenderer::eosStereoRenderer(void){
+        ren=vtkRenderer::New();
+}
+
+
+/***** class eosStereoLight start *****/
+
+class eosStereoLight:vtkLight{
+  public:
+	vtkLight *Light;
+
+        void init(void);
+        eosStereoLight(void);
+        eosStereoLight(float,float,float,float,float,float);
+};
+
+void init(void){
+        Light=vtkLight::New();
+	Light->SetPosition(0,0,0);
+	Light->SetFocalPoint(0,0,-1);
+}
+
+eosStereoLight::eosStereoLight(void){
+        init();
+}
+
+eosStereoLight::eosStereoLight(float x,float y,float z,float X,float Y,float Z){
+        init();
+	Light->SetPosition(x,y,z);
+	Light->SetFocalPoint(X,Y,Z);
+}
+
+
+/***** class eosStereoCamera start *****/
+
+class eosStereoCamera:vtkCamera{
+  public:
+        vtkCamera *eosStereoCamera;
+    
+        eosStereoCamera 

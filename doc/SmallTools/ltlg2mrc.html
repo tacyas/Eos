@@ -1,0 +1,60 @@
+<HTML>
+<HEAD>
+<TITLE>ltlg2mrc</TITLE>
+</HEAD>
+<BODY>
+<H1>ltlg2mrc</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: ltlg2mrc
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Optional  :InputDataFile
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Optional  :OutputDataFile
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-t[itle]            Title               (NULL      ).as(String              ) ] :Optional  :Title
+    [-d[elta]            delta               (2.5       ).as(Real                ) ] :Optional  :delta[A]
+    [-C                  RepeatDistance      (2.5       ).as(Real                ) ] :Optional  :RepeatDistance[A]
+    [-r[Max]             rMax                (2.5       ).as(Real                ) ] :Optional  :rMax[A]
+    [-p[hiStart]         phiStart            (0         ).as(Real                ) ] :Optional  :phiStart[degree]
+    [-zmi[n]             zMin                (0.0       ).as(Real                ) ] :Optional  :zMin
+    [-zma[x]             zMax                (55.0      ).as(Real                ) ] :Optional  :zMax
+    [-zde[lta]           deltaz              (2.5       ).as(Real                ) ] :Optional  :deltaz
+    [-w[eight]           WeightOf0thLayer    (0.5       ).as(Real                ) ] :Optional  :WeightOf0thLayer
+    [-l[Weight]          Layer               (NULL      ).as(inFile              ) ] :Optional  :Layer WeightOfEachLayer
+    [-f9[9]                                                                        ] :Optional  :IF(NN(LL)!=NL(LL)) WT(LL) = 0.0
+    [-O[ffset]           CUT                 (0.5       ).as(Real                ) ] :Optional  :CUT
+    [-a[mean]            Mean                (0.0       ).as(Real                ) ] :Optional  :Mean
+    [-s[igma]            Sigma               (0.0       ).as(Real                ) ] :Optional  :Sigma
+    [-I[nverse]                                                                    ] :Optional  :Nega-Posi Reverse
+    [-n[otInteractive]                                                             ] :Optional  :not Intaracitve
+    [-AntiPole                                                                     ] :Optional  :Anti Pole: zmax -> zmin:  Else zmin->zmax
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :
+				0: Normarize
+				1: Not Normarize bu edge average is zero.
+				2: Not Normarize
+				defalt: 0
+Mode:
+
+
+If control file is used, control file fora filename to output
+
+InputFileName(char[72])A])
+Title(char[60])A])
+Y|N(char[1])                              : No use
+deltaX[A](if Y)||deltaY[A](if N)(F10.5)   : You need not care for deltaX or deltaY in this tool because deltaX = deltaY. You had better care for that for compatibility.
+C[A]rMax[A](2F7.0)                        : C[A]: Spacing of the 1st layer line in real space ; rMax: Maximum of radial elements.
+phiStart[degree](F7.0)                    : phi at Z = 0
+zMin[A],zMax[A],deltaz[A](3F7.0)          : z-section parameters for(z=zMin; z<zMax; z+=deltaz)
+Weight(F7.0)                              : Weight of the 0th layer line
+NNL,WEIGHT(I2,F8.0)                       : IF(NNL==99 && NN(LL)!=NL(LL)) WT(LL) = 0.0; IF(NNL!=0 && NNL==NL(LL)) WT(LL) = WEIGHT  and Repeat until NNL == 0 or 99 or None
+ACUT(F7.0)                                : IF(ACUT>Density[x][y]) Density[x][y]= 0.0
+Mean,Sigma(2F7.0)                         : Mean : Mean of hrzData?; Sigma : Standard Deviation of hrzData?
+OutputFile                                : hrz-data filename to output
+
+#### Attention ####
+ In using this tool, you need not keep promises about format(F7.0 etc.).
+Instead, you need separate numbers with more space than one.
+Usually compatible but you need care when numbers have a line with no space.
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,11 @@
+ARM64MAC64/matrix3DEulerAngleGet.o:matrix3DEulerAngleGet.o
+ARM64MAC64/matrix3DEulerAngleSet.o:matrix3DEulerAngleSet.o
+ARM64MAC64/matrix3DEulerAngles.o:matrix3DEulerAngles.o
+ARM64MAC64/matrix3DFile.o:matrix3DFile.o
+ARM64MAC64/matrix3DInit.o:matrix3DInit.o
+ARM64MAC64/matrix3DMultiply.o:matrix3DMultiply.o
+ARM64MAC64/matrix3DMultiplyMatrix.o:matrix3DMultiplyMatrix.o
+ARM64MAC64/matrix3DMultiplyVector.o:matrix3DMultiplyVector.o
+ARM64MAC64/matrix3DRotation.o:matrix3DRotation.o
+ARM64MAC64/matrix3DTranslation.o:matrix3DTranslation.o
+ARM64MAC64/matrix3DUtil.o:matrix3DUtil.o

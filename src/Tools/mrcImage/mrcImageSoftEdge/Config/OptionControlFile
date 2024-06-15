@@ -1,0 +1,7 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-w","-w[idth]","[pix] ","Optional","1","1","width","Real","0.0"
+"-e","-e[nvelop]","Envelop: 0 Gauss, 1: Cosine","Optional","1","1","envelop","Integer","0"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

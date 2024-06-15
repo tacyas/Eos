@@ -1,0 +1,14 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: filelist","Essential","1","1","InList","inFileListNoOpen","NULL"
+# "-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-O","-O[utput]","Output: ClassificationDataFile","Essential","1","1","Outclassification","outFile","NULL"
+"-ocir","-o[utput]c[lassification]i[ntegration]r[ate]","OutputClassificationIntegrationRate: classificationIntegrationRatefile","Optional","1","1","OutClassificationIntegrationRate","outFile","NULL"
+#"-ew","-e[igenValue]w[eight]","InputEigenValueWeight","Optional","1","1","eigenWeight","inFile","NULL"
+"-od","-o[utput]d[istance]","OutputDistance: distancefile","Optional","1","1","OutDistance","outFile","NULL"
+"-odr","-o[utput]d[istance]r[ate]","OutputDistanceRate: distanceRatefile","Optional","1","1","OutDistanceRate","outFile","NULL"
+"-oudn","-o[utput]u[pper]d[istance]n[umberOfClasses]","OutputUpperDistanceNumberOfClasses: upperDistanceRatefile","Optional","1","1","OutUpperDistanceRate","outFile","NULL"
+"-oudc","-o[utput]u[pper]d[istance]c[lassificationDatafile]","OutputUpperDistanceClassificationDatafile: ClassificationDatafile","Optional","1","1","OutClassName","outFile","NULL"
+# "-N","-N[umberOfClusters]","Number of clusters","Optional","1","1","N","Integer","1"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

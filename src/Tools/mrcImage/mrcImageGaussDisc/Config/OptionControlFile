@@ -1,0 +1,15 @@
+# OptionControlFile
+# FileFormat
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-sigmax","-sigmax","sigmax[A]","Optional","1","1","sigmax","Real","10"
+"-sigmay","-sigmay","sigmay[A]","Optional","1","1","sigmay","Real","10"
+"-sigma_range","-sigma_range","sigma","Optional","1","1","sigma_range","Real","3"
+"-weight","-weight","weight","Optional","1","1","weight","Real","10"
+"-size","-size","Pixel Size[A]","Optional","1","1","size","Real","5"
+"-W","-W[idth]","Image Width[A]","Optional","1","1","Width","Real","0"
+"-H","-H[eight]","Image Height[A]","Optional","1","1","Height","Real","0"
+"-cx","-cx","x: Centre[A]","Optional","1","1","centrex","Real","0"
+"-cy","-cy","y: Centre[A]","Optional","1","1","centrey","Real","0"
+"-a","-a[ngle]","Angle: [degree]","Optional","1","1","Angle","Real","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","2"

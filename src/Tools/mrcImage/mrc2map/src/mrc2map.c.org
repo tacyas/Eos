@@ -1,0 +1,234 @@
+#ifndef MRC_2_HDF_H
+#define MRC_2_HDF_H
+/*
+* mrcImageInfo.h
+*/
+#include "mrcImage2.h"
+
+#define THIS_PROGRAM mrc2map
+#define THIS_ROUTINE lmrc2map
+
+#define OPTION_FLAG      '-'
+#define OPTION_FLAG_POS  (0)
+#define OPTION_POS       (1)
+#define FILENAME_LENGTH  (1024)
+#define DEFAULT_MODE     (MRC_char_image)
+
+typedef struct shortCoord {
+	short x;
+	short y;
+	short z;
+} shortCoord;
+
+typedef struct mapHeader {
+	shortCoord Start;
+	shortCoord N;
+	shortCoord M;
+	shortCoord Length; /* x i1 */
+	shortCoord Angle;  /* x i1 */
+	short prod;        /* x i2 */
+	short plus;
+	short i1;
+	short i2;
+	short dummy[256-19];
+} mapHeader;
+
+typedef struct THIS_PROGRAM\
+Info {
+    char  inFileName[FILENAME_LENGTH];
+    FILE* fptIn;
+    long  flagInFile;
+    char  outFileName[FILENAME_LENGTH];
+    FILE* fptOut;
+    long  flagOutFile;
+    mrcImageMode mode;
+} THIS_PROGRAM\
+Info;
+
+/* in ../src/mrcImageModeChange.c */
+extern void THIS_ROUTINE/**/(THIS_PROGRAM\
+Info* info, mrcImage* img);
+
+/* in ../src/argCheck.c */
+extern void argCheck(THIS_PROGRAM\
+Info* info, int argc, char* argv[]);
+                     
+/* in ../src/init.c */     
+extern void init0(THIS_PROGRAM\
+Info* info);
+extern void init1(THIS_PROGRAM\
+Info* info);
+         
+/* in ../src/usage.c */         
+extern void usage(char* thisProgram);
+
+/* in ../src/util.c */
+#endif /* MRC_IMAGE_INFO_H */
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+       
+#include "../inc/config.h"
+#include "genUtil.h"
+void
+main(int argc, char* argv[])
+{
+    mrcImage img;
+	mrc2mapInfo  info;
+
+    init0(&info);
+    argCheck(&info, argc, argv);
+    init1(&info);
+    mrcFileRead(&img, info.inFileName, "from Main Routine", 0);
+	lmrc2map(&info, &img);
+}
+ 
+void 
+lmrc2map(mrc2mapInfo* info, mrcImage* img)
+{
+	int i, x, y, z, i1, i2;
+	int qx, qy, qz, qx2, qy2, qz2, qnx, qny, qnz, n;
+	double data, plus, prod;
+	mapHeader map;
+	unsigned char record[8*8*8], uctmp;
+	unsigned char* rhobyte;
+	int itmp;
+
+	i1 = 100;
+	i2 = 100;
+	prod = 254.0/(img->HeaderAMax - img->HeaderAMin);
+	plus = (int)(0.5 - (prod*img->HeaderAMin));
+	map.Start.x = img->HeaderStartN.x;
+	map.Start.y = img->HeaderStartN.y;
+	map.Start.z = img->HeaderStartN.z;
+	map.N.x     = img->HeaderN.x;
+	map.N.y     = img->HeaderN.y;
+	map.N.z     = img->HeaderN.z;
+	map.M.x     = img->HeaderM.x;
+	map.M.y     = img->HeaderM.y;
+	map.M.z     = img->HeaderM.z;
+	map.Length.x = img->HeaderLength.x*i1;
+	map.Length.y = img->HeaderLength.y*i1;
+	map.Length.z = img->HeaderLength.z*i1;
+	map.Angle.x  = img->HeaderAlpha*i1; 
+	map.Angle.y  = img->HeaderBeta *i1;
+	map.Angle.z  = img->HeaderGamma*i1;
+	map.prod = prod*i2;
+	map.plus = plus;
+	map.i1 = i1;
+	map.i2 = i2;
+    for(i=0; i<256-19; i++) {
+		map.dummy[i] = 0;
+	}
+	fseek(info->fptOut, 0L, SEEK_SET);
+	fwrite(&map, sizeof(map), 1, info->fptOut);
+	
+    qnx = map.N.x/8; if(qnx*8!=map.N.x) { qnx += 1; }
+    qny = map.N.y/8; if(qny*8!=map.N.y) { qny += 1; }
+    qnz = map.N.z/8; if(qnz*8!=map.N.z) { qnz += 1; }
+	n = qnx*8*qny*8*qnz*8;
+	rhobyte=(unsigned char*)memoryAllocate(sizeof(unsigned char)*n, "in lmrc2map");
+	
+	for(i=0; i<n; i++) {
+		rhobyte[i] = 0;
+	}
+	for(x=0; x<map.N.x; x++) {
+		for(y=0; y<map.N.y; y++) {
+			for(z=0; z<map.N.z; z++) {
+				mrcPixelDataGet(img, x, y, z, &data, mrcPixelMag, mrcPixelHowNearest);
+				itmp = data*prod + plus + 0.5;
+				if(itmp>255) {
+					itmp = 255;
+				} else if (itmp<0) {
+					itmp = 0;
+				}
+				rhobyte[x+qnx*8*y+qnx*8*qny*8*z] = (unsigned char)itmp;
+			}
+		}
+	}
+
+	for(qz=0; qz<qnz; qz++) {
+		for(qy=0; qy<qny; qy++) {
+			for(qx=0; qx<qnx; qx++) {
+				for(qz2=0; qz2<8; qz2++) {
+					for(qy2=0; qy2<8; qy2++) {
+						for(qx2=0; qx2<8; qx2+=2) {
+							x = qx*8 + qx2;
+							y = qy*8 + qy2;
+							z = qz*8 + qz2;
+							record[qx2+1+qy2*8+qz2*8*8] = rhobyte[x   + y*qnx*8 + z*qnx*8*qny*8];
+							record[qx2  +qy2*8+qz2*8*8] = rhobyte[x+1 + y*qnx*8 + z*qnx*8*qny*8];
+						}
+					}
+				}
+				fwrite(record, sizeof(unsigned char), 8*8*8, info->fptOut);
+			}
+		}
+	}
+}
+#ifndef MRC_2_HDF_H
+#define MRC_2_HDF_H
+/*
+* mrcImageInfo.h
+*/
+#include "mrcImage2.h"
+
+#define THIS_PROGRAM mrc2map
+#define THIS_ROUTINE lmrc2map
+
+#define OPTION_FLAG      '-'
+#define OPTION_FLAG_POS  (0)
+#define OPTION_POS       (1)
+#define FILENAME_LENGTH  (1024)
+#define DEFAULT_MODE     (MRC_char_image)
+
+typedef struct shortCoord {
+	short x;
+	short y;
+	short z;
+} shortCoord;
+
+typedef struct mapHeader {
+	shortCoord Start;
+	shortCoord N;
+	shortCoord M;
+	shortCoord Length; /* x i1 */
+	shortCoord Angle;  /* x i1 */
+	short prod;        /* x i2 */
+	short plus;
+	short i1;
+	short i2;
+	short dummy[256-19];
+} mapHeader;
+
+typedef struct THIS_PROGRAM\
+Info {
+    char  inFileName[FILENAME_LENGTH];
+    FILE* fptIn;
+    long  flagInFile;
+    char  outFileName[FILENAME_LENGTH];
+    FILE* fptOut;
+    long  flagOutFile;
+    mrcImageMode mode;
+} THIS_PROGRAM\
+Info;
+
+/* in ../src/mrcImageModeChange.c */
+extern void THIS_ROUTINE/**/(THIS_PROGRAM\
+Info* info, mrcImage* img);
+
+/* in ../src/argCheck.c */
+extern void argCheck(THIS_PROGRAM\
+Info* info, int argc, char* argv[]);
+                     
+/* in ../src/init.c */     
+extern void init0(THIS_PROGRAM\
+Info* info);
+extern void init1(THIS_PROGRAM\
+Info* info);
+         
+/* in ../src/usage.c */         
+extern void usage(char* thisProgram);
+
+/* in ../src/util.c */
+#endif /* MRC_IMAGE_INFO_H */

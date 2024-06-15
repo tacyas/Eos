@@ -1,0 +1,253 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageWindowing</title>
+</head>
+<body>
+
+
+	<font color="red"><b><h2>mrcImageWindowing<br></h2></b></font>
+	<h4>入力データに窓関数を掛け合わせる</h4>
+	
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+	<table border="1">
+		<div align="left">
+		<tr>
+			<th>オプション</th>
+			<th>必須項目/選択項目</th>
+			<th>説明</th>
+			<th>デフォルト</th>
+		</tr>
+		<tr>
+			<td>-i</td>
+			<td>必須</td>
+			<td>入力ファイル設定</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-o</td>
+			<td>必須</td>
+			<td>出力ファイル設定</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-W</td>
+			<td>選択</td>
+			<td>窓関数のサイズを設定<br>
+			※数値は1以下にしなければ正しく処理されない</td>
+			<td>(Wx WxMax Wy WyMax)→(0.1 0 0.1 0)</td>
+		</tr>
+		<tr>
+			<td>-m</td>
+			<td>選択</td>
+			<td>モード</td>
+			<td>0</td>
+		</tr>
+		<tr>
+			<td>-h</td>
+			<td>選択</td>
+			<td>ヘルプを表示</td>
+			<td>　</td>
+		</tr>
+	</table>
+	
+<!-- モードの詳細 -->
+
+	<br>
+	<br>
+	<caption><b>モードの詳細</b></caption>
+	<table border="1">
+	<div align="left">
+		<tr>
+			<th>モード</th>
+			<th>説明</th>
+		</tr>
+		<tr>
+			<td>0</td>
+			<td>90%が窓関数</td>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>オプション-WのWyを使用</td>
+		</tr>
+		<tr>
+			<td>2</td>
+			<td>オプション-WのWx,WxMax,Wy,WyMaxを使用</td>
+		</tr>
+	</table>
+	<div>+16でコントラストの平均値を下げる</div>
+	
+	<h4>******実行例******</h4>
+	
+<!-- 入力ファイル説明 -->
+
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="b120.png" border="0" alt="b120.png(6753 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-64.5759<br>
+				93.0617<br>
+				5.50826<br>
+				20.7262<br>
+				0.259078<br></p>
+			</td>
+		</tr>
+	</table>
+
+<!-- 必須項目のみの場合 -->
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション必須項目のみの場合------</font></caption><br>
+		<table>
+		<tr>
+			<td><img src="b120-out.png" border="0" alt="b120-out.png(6487 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-64.5759<br>
+				93.0617<br>
+				5.52557<br>
+				19.1797<br>
+				0.239746<br></p>
+			</td>
+		</tr>
+	</table>
+
+<!-- 入力ファイル説明 -->
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-m------</font></caption><br>
+	<div>モード：１<br>
+	オプション-WでWyを２に設定</div>
+		<table>
+		<tr>
+			<td><img src="b120-m1-2.png" border="0" alt="b120-m1-2.png(4071 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-54.44<br>
+				93.0617<br>
+				5.86721<br>
+				15.4987<br>
+				0.193734<br></p>
+			</td>
+		</tr>
+	</table>
+	<br>
+	<div>モード：２<br>
+	オプション-Wで全てを0.2に設定</div>
+	<table>
+		<tr>
+			<td><img src="b120-m2-0.2.png" border="0" alt="b120-m2-0.2.png(3235 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-44.768<br>
+				93.0617<br>
+				5.56309<br>
+				15.9952<br>
+				0.199941<br></p>
+			</td>
+		</tr>
+	</table>
+	<br>
+	<div>モード：１６</div>
+	<table>
+		<tr>
+			<td><img src="b120-m16.png" border="0" alt="b120-m16.png(6478 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-64.5759<br>
+				93.0617<br>
+				6.57686<br>
+				18.9585<br>
+				0.236981<br></p>
+			</td>
+		</tr>
+	</table>
+	<br>
+	<div>モード：１７<br>
+	オプション-WでWyを２に設定</div>
+		<table>
+		<tr>
+			<td><img src="b120-m17-02.png" border="0" alt="b120-m17-02.png(4071 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-54.44<br>
+				93.0617<br>
+				5.86721<br>
+				15.4987<br>
+				0.193734<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>今回の画像では、モード１と特に変化が見られない</div>
+	<br>
+	<div>モード：１８<br>
+	オプション-Wで全てを0.2に設定</div>
+	<table>
+		<tr>
+			<td><img src="b120-m18-0.2.png" border="0" alt="b120-m18-0.2.png(3230 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-44.768<br>
+				93.0617<br>
+				9.17013<br>
+				14.9189<br>
+				0.186486<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>オプション-Wで0 0.2 0 0.2に設定</div>
+	<table>
+		<tr>
+			<td><img src="b120-m18-0.2-2.png" border="0" alt="b120-m18-0.2-2.png(6143 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-64.5759<br>
+				93.0617<br>
+				7.50673<br>
+				17.2497<br>
+				0.215621<br></p>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

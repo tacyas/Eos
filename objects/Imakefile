@@ -1,0 +1,13 @@
+#include EOS_INCLUDE
+
+OBJECT_TYPE = dir
+
+TOOLBOX_NAME = eos
+
+OBJECT_NAME =
+
+SUBDIRS = \
+	kroutine \
+	script
+
+#include <Dir.template>

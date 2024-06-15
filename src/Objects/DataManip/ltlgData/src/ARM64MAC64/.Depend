@@ -1,0 +1,7 @@
+ARM64MAC64/lltlg2mrc.o:lltlg2mrc.o
+ARM64MAC64/ltlgDataAllocate.o:ltlgDataAllocate.o
+ARM64MAC64/ltlgDataGet.o:ltlgDataGet.o
+ARM64MAC64/ltlgDataPrint.o:ltlgDataPrint.o
+ARM64MAC64/ltlgDataReadFile.o:ltlgDataReadFile.o
+ARM64MAC64/ltlgDataWeightModify.o:ltlgDataWeightModify.o
+ARM64MAC64/ltlgDataWriteFile.o:ltlgDataWriteFile.o

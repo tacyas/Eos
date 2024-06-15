@@ -1,0 +1,26 @@
+1th word not found in : exception 
+<HTML>
+<HEAD>
+<TITLE>mrcImageSplit</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageSplit</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageSplit
+Options:
+    [-i[nput]            In                  (NULL      )] :Essential :Input: mrcImage
+    [-o[utput]           Out                 (          )] :Optional  :Output: Basename
+    [-s[uffix]           Suffix              (008848551680000.splt)] :Optional  :Output: Suffix
+    [-H[eight]           Height              (0         )] :Optional  :Input: Height[y]: SplitSize [pixel]
+    [-W[idth]            Width               (0         )] :Optional  :Input: Width[x]: SplitSize [pixel]
+    [-S[ection]          Section             (0         )] :Optional  :Input: Section[z]: SplitSize [pixel]
+    [-H[eight]A[ngstrom] HeightA             (0         )] :Optional  :Input: Height: SplitSize [A]
+    [-W[idth]A[ngstrom]  WidthA              (0         )] :Optional  :Input: Width: SplitSize [A]
+    [-S[ection]A[ngstrom]SectionA            (0         )] :Optional  :Input: Section: SplitSize [A]
+    [-c[onfig]           configFile          (NULL      )] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         )] :Optional  :Mode
+----- Additional Usage -----
+</PRE>
+</BODY>
+</HTML>

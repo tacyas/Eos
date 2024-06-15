@@ -1,0 +1,8 @@
+CHeader = \
+lpdb2mrcInfo.h \
+lpdbCoord.h \
+lpdbCoordInfo.h \
+lpdbSelectedAtom.h \
+lpdbSurface.h \
+pdbInfoGet.h \
+

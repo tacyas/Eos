@@ -1,0 +1,15 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-oF","-o[utput] F[ile]","OutputDataFile","Optional","1","1","OutF","outFile","NULL"
+"-oI","-o[utput]I[nformation]","OutputDataFile","Optional","1","1","OutI","outFile","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-truePitch","-truePitch","True Pitch","Optional","1","1","truePitch","Real","430"
+"-PixelSize","-PixelSize","Pixel Size [A]","Optional","1","1","PixelSize","Real","5"
+"-deltadY","-deltadY","A range of deltadY to determine dY.","Optional","1","1","deltadY","Real","0.5"
+"-kV","-kV","AccVol[kV]","Optional","1","1","kV","Real","200"
+"-Cs","-Cs","Cs[mm]","Optional","1","1","Cs","Real","2.1"
+"-df","-df","Defocus[A]:under(+)","Optional","1","1","Defocus","Real","27000"
+"-A","-A","AmplitudeContrast/PhaseContrast","Optional","1","1","AoverP","Real","0.1"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

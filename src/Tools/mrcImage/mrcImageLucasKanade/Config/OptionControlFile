@@ -1,0 +1,13 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Optional","3","1","InVx","inFile::mrcImage","NULL","2","InVy","inFile::mrcImage","NULL","3","InVz","inFile::mrcImage","NULL"
+"-I","-I[nput]","InputDataFile","Optional","3","1","InVxList","inFileList::mrcImage","NULL","2","InVyList","inFileList::mrcImage","NULL","3","InVzList","inFileList::mrcImage","NULL"
+"-i1","-i[nput]1","InputDataFile","Optional","3","1","In1Vx","inFile::mrcImage","NULL","2","In1Vy","inFile::mrcImage","NULL","3","In1Vz","inFile::mrcImage","NULL"
+"-i2","-i[nput]2","InputDataFile","Optional","3","1","In2Vx","inFile::mrcImage","NULL","2","In2Vy","inFile::mrcImage","NULL","3","In2Vz","inFile::mrcImage","NULL"
+"-i3","-i[nput]3","InputDataFile","Optional","3","1","In3Vx","inFile::mrcImage","NULL","2","In3Vy","inFile::mrcImage","NULL","3","In3Vz","inFile::mrcImage","NULL"
+"-i4","-i[nput]4","InputDataFile","Optional","3","1","In4Vx","inFile::mrcImage","NULL","2","In4Vy","inFile::mrcImage","NULL","3","In4Vz","inFile::mrcImage","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","3","1","outVx","outFile::mrcImage","NULL","2","outVy","outFile::mrcImage","NULL","3","outVz","outFile::mrcImage","NULL"
+"-nos","-n[umber]o[f]s[tairs]","NOS","Optional","1","1","NOS","Real","4"
+"-oSize","-o[utput]Size","Output:Chimera","Optional","1","1","Size","outFile::mrcImage","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

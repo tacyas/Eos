@@ -1,0 +1,8 @@
+.onlineHelp EOS pdbTwoProteinFit "Introduction to pdbTwoProteinFit"
+.
+.section 1 "Introduction to pdbTwoProteinFit"
+.
+.\" This is the help page associated with the Help button on
+.\" the toplevel window of pdbTwoProteinFit
+If you are reading this text,
+you should report it as a bug :-)

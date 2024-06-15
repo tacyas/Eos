@@ -1,0 +1,578 @@
+/*
+# %M% %Y% %I%
+# The latest update : %G% at %U%
+#
+#%Z% lctfDetermination ver %I%
+#%Z% Created by 
+#%Z%
+#%Z% Usage : lctfDetermination 
+#%Z% Attention
+#%Z%
+*/
+static char __sccs_id[] = "%Z%lctfDetermination ver%I%; Date:%D% %Z%";
+#include <stdio.h>
+#include <stdlib.h>
+#include "./lctfDetermination.h"
+#define DEBUG
+#include "genUtil.h"
+#include "Vector.h"
+#include "nr2.h"
+
+/*
+    Henderson-like Min-Max Method
+		0.9<CTF*CTF: +Scattering : Score 
+		CTF*CTF<0.1: -Scattering : Penalty
+*/
+
+void
+lctfDeterminationbyMinMaxMethods(ctfInfo* res, mrcImage* mrc, ctfInfo* ini, long mode)
+{
+    floatVector* scatter;
+    floatVector* spacing;
+    floatVector* ctf;
+    long         i;
+    float        E;
+	float	     maxE;
+    ctfInfo      tmp;
+
+    scatter = lmrcFSInfoScatteringAngularDistributionAverage(mrc);
+    spacing = lmrcFSInfoSpacing(mrc);
+	DEBUGPRINT2("%f %f\n", scatter->data[1], spacing->data[1]);
+    ctf     = floatVectorInit(NULL, spacing->size);
+    tmp     = *ini;
+    *res    = *ini;
+
+    maxE = 0;
+
+    for(tmp.defocus=0; tmp.defocus<2*ini->defocus; tmp.defocus+=ini->defocus/100.0) {
+        for(i=0; i<spacing->size; i++) {
+            ctf->data[i] = ctfFunction(&tmp, spacing->data[i], mode);
+        }
+		DEBUGPRINT1("%f\n", ctf->data[1]);
+        E = 0.0;
+        for(i=0; i<spacing->size; i++) {
+            if(tmp.CutLow < spacing->data[i]
+             &&spacing->data[i] < tmp.CutHigh ) {
+                if(SQR(ctf->data[i])>0.9) {
+                    E += scatter->data[i];
+                } else if(SQR(ctf->data[i])<0.1) {
+                    E -= scatter->data[i];
+                }
+            }
+        }
+        if(maxE<E) {
+			fprintf(stdout, "Max: %f %f %f\n", tmp.defocus, E, maxE);
+			maxE = E;
+            res->defocus = tmp.defocus;
+        }
+        fprintf(stdout, "%10.6e %10.6e\n", tmp.defocus, E);
+    }
+}
+
+/* 
+	Fitting Method:
+
+    F(R) = S(R)*S(R) + N(R)*N(R) + N2(R)*N2(R)
+	, where
+		S(R)  = I0*|CTF(R)|*Env(R)*ME(R)*Vib(R)*MTF(R) ,
+		N(R)  = I0*White*MTF(R) and
+		N2(R) = I0*White2
+
+	Fitted to F(R)
+        A   : Normalization Factor 
+        CTF :   -sin(Kai)-a*cos(Kai)
+                Kai = M_PI*dF*lambda*R*R - 0.5*M_PI*Cs*lambda*lambda*lambda*R*R*R*R
+		ENV(Cs) : exp(-SQR(M_PI*Cs*lambda*lambda*R*R*R-M_PI*dF*R)*SQR(Ain)/log(2))
+		ENV(Cc) : exp(-SQR(M_PI*lambda*R*R*Cc*dE/E*((1+E/E0)/(1+E/E0/2))/4/sqrt(log(2))))
+        Me  : Table
+        SN  : constant (White Noise)
+        B   : constant (MTF) SingleExp/Lorenzian/Both 
+
+    a[1]  : I0  : normarizing factor
+    a[2]  : dF : defocus (underfocus is positive)
+    a[3]  : Cs : Cs 
+    a[4]  : a  : the ratio of amplitude contrast to phase contrast
+    a[5]  : Ai : Illumination angle 
+    a[6]  : Cc : Cc 
+    a[7]  : dE : dE
+    a[8]  : V  : Vibration : exp(-V*V*R*R/2)
+    a[9]  : White  : signal to noise ratio
+    a[10] : White2 : signal to noise ratio
+    a[11] : B  : Dumping Factor of MTF: exp(-B*R)
+    a[12] : E  : Energy : fixed
+    a[13] : E0 : Energy : fixed
+    a[14] : lambda  : Wave Length : fixed
+    a[15] : Me : Scattering Factor : fixed
+
+*/
+static ctfInfo __lctfDetermineCTF;
+
+
+void
+angularDistributionFunctionOfSignalAndNoise(float x, float p[], float* y, float dyda[], int na)
+{
+    float R, I0, dF, Cs, a, Ai, Cc, dE, V, White, White2, B,  E, E0, lambda, Me;
+	float chi, dchidR, dchi, spread, dspread, CTF, dCTF, Env1, Env2, Env, Vib, MTF;
+	float S;
+	float N;
+	float N2;
+	float F;
+	float Mag;
+	
+	Mag = p[16];
+    R  = x*Mag;
+    I0 = p[1];
+    dF = p[2];
+    Cs = p[3];
+    a  = p[4];
+    Ai = p[5];
+    Cc = p[6];
+    dE = p[7];
+    V  = p[8];
+    White  = p[9];
+    White2 = p[10];
+    B  = p[11];
+	/* */  
+	if(__lctfDetermineCTF.flagMolecEnvTable) {
+		Me = lmolecularEnvelopeDataGet(&(__lctfDetermineCTF.MolecEnvTable), R*1e-10, 0);
+	} else {
+		Me = exp(-p[12]*p[12]*R*R/2.0);
+	}
+	/* fixed */
+    E  = p[13];
+    E0 = p[14];
+    lambda = p[15];
+
+	/* Wave Length */
+    chi    = M_PI*(dF*lambda - 0.5*Cs*lambda*lambda*lambda*R*R)*R*R;
+    dchidR = 2*M_PI*(dF*lambda - Cs*lambda*lambda*lambda*R*R)*R;
+	dchi   = M_PI*(Cs*lambda*lambda*R*R - dF)*R;
+	spread = M_PI*lambda*R*R*Cc*dE/E*((1+E/E0)/(1+E/E0/2))/4/sqrt(log(2));
+    CTF = -sin(chi) - a*cos(chi);
+	Env1 = exp(-SQR(dchi)*SQR(Ai)/log(2));
+	Env2 = exp(-SQR(spread));
+	Env  = Env1*Env2;
+	Vib  = exp(-V*V*R*R/2.0);
+	MTF  = exp(-B*R);
+
+	S  = I0*Me*CTF*Env*Vib*MTF;
+	N  = I0*White*MTF;
+	N2 = I0*White2;
+
+    F  = SQR(S) + SQR(N) + SQR(N2);
+	*y = F;
+
+
+    dyda[1] = 2*F/I0;
+    dyda[2] = 2*S*I0*Me*(-cos(chi)+a*sin(chi))*(M_PI*lambda*R*R)*Env*Vib*MTF
+	         +2*S*S*(-2)*dchi*(-M_PI*R)*SQR(Ai)/log(2); 
+    dyda[3] = 2*S*I0*Me*(-cos(chi)+a*sin(chi))*(M_PI*(-0.5)*lambda*lambda*lambda*R*R*R*R)*Env*Vib*MTF
+	         +2*S*S*(-2)*dchi*(M_PI*lambda*lambda*R*R*R)*SQR(Ai)/log(2);
+    dyda[4] = 2*S*I0*Me*(-cos(chi))*Env*Vib*MTF;
+    dyda[5] = 2*S*S*(-2)*SQR(dchi)*Ai/log(2);
+    dyda[6] = 2*S*S*(-2)*spread*M_PI*lambda*R*R*   dE/E*((1+E/E0)/(1+E/E0/2))/4/sqrt(log(2));
+    dyda[7] = 2*S*S*(-2)*spread*M_PI*lambda*R*R*Cc   /E*((1+E/E0)/(1+E/E0/2))/4/sqrt(log(2));
+    dyda[8] =   S*S*(-1)*V*R*R;
+    dyda[9] = 2*N *N /White;
+    dyda[10]= 2*N2*N2/White2;
+    dyda[11]= 2*(S*S+N*N)*(-R);
+	/* fixed */
+	if(__lctfDetermineCTF.flagMolecEnvTable) {
+    	dyda[12] = 0;
+	} else {
+		dyda[12] = 2*S*S*(-p[12]*R*R); 
+	}
+	DEBUGPRINT6("%e %e %e %e %e %e ", dyda[1], dyda[2], dyda[3], dyda[4], dyda[5], dyda[6]);
+	DEBUGPRINT6("%e %e %e %e %e %e \n", dyda[7], dyda[8], dyda[9], dyda[10], dyda[11], dyda[12]);
+    dyda[13]= 0.0;
+    dyda[14]= 0.0;
+    dyda[15]= 0.0;
+
+	if(__lctfDetermineCTF.flagMolecEnvTable) {
+		dyda[16]= x*
+				  (2*S*
+				  (I0*Me*((-cos(chi)+a*sin(chi))*dchidR)*Env*Vib*MTF 
+				 + I0*Me*CTF*((-2)*dchi*SQR(Ai)/log(2)*M_PI*(3*Cs*lambda*lambda*R - dF)*Env1)*Vib*MTF 
+				 + I0*Me*CTF*((-2)*spread*2*M_PI*lambda*R*Cc*dE/E*((1+E/E0)/(1+E/E0/2))/4/sqrt(log(2))*Env2)*Vib*MTF 
+				 + I0*Me*CTF*Env*(-V*V*R*Vib)*MTF 
+				 + I0*Me*CTF*Env*Vib*(-B*MTF)) 
+				 +(2*N*(-B*N)));
+	} else {
+		dyda[16]= x*
+				  (2*S*
+				  (I0*(-V*V*R*Me)*CTF*Env*Vib*MTF 
+				 + I0*Me*((-cos(chi)+a*sin(chi))*dchidR)*Env*Vib*MTF 
+				 + I0*Me*CTF*((-2)*dchi*SQR(Ai)/log(2)*M_PI*(3*Cs*lambda*lambda*R*R - dF)*Env1)*Env2*Vib*MTF 
+				 + I0*Me*CTF*Env1*((-2)*spread*2*M_PI*lambda*R*Cc*dE/E*((1+E/E0)/(1+E/E0/2))/4/sqrt(log(2))*Env2)*Vib*MTF 
+				 + I0*Me*CTF*Env*(-V*V*R*Vib)*MTF 
+				 + I0*Me*CTF*Env*Vib*(-B*MTF)) 
+				 +(2*N*(-B*N)));
+	}
+}
+
+void
+lctfDeterminationbyFittingMethods(ctfInfo* res, ctfInfo* var, mrcImage* mrc, ctfInfo* ini, long mode)
+{
+
+    floatVector* scatter;
+    floatVector* spacing;
+    floatVector*  ctf;
+    floatVector*  sig;
+    long i, j, imin, imax, n, flag;
+    float E, maxE;
+    ctfInfo tmp;
+	int count;
+    float* a;
+    int* ia;
+    int ma;
+    float** covar;
+    float** alpha;
+    float chisq;
+    float alambda, oldalambda;
+
+    scatter = lmrcFSInfoScatteringAngularDistributionAverage(mrc);
+    sig     = lmrcFSInfoScatteringAngularDistributionSD(mrc);
+    spacing = lmrcFSInfoSpacing(mrc);
+    ctf     = floatVectorInit(NULL, spacing->size);
+    imin = 0; imax = spacing->size - 1; n = 0;
+    for(i=0; i<spacing->size; i++) {
+        if(ini->CutLow  <= spacing->data[i]
+         &&ini->CutHigh >= spacing->data[i]) {
+            if(0==n) {
+                imin = i;
+            }
+            n++;
+        }
+        spacing->data[i] = spacing->data[i]*1e10 ;
+        DEBUGPRINT4("%d: %g %g %g\n", i, spacing->data[i], scatter->data[i], sig->data[i]);
+    }
+	if(n<3) {
+		fprintf(stderr, "mrcImage is too small : %d!!\n", n);
+		exit(EXIT_FAILURE);
+	}
+    DEBUGPRINT4("Low: %g High: %g ::: n: %d, imin: %d\n", ini->CutLow, ini->CutHigh, n, imin);
+    tmp  = *ini;
+    *res = *ini;
+
+    ma = 16;
+    a  = vector(1, ma);
+    ia = ivector(1, ma);
+    covar = matrix(1, ma, 1, ma);
+    alpha = matrix(1, ma, 1, ma);
+
+	for(i=1; i<=ma; i++) {	
+		a[i]  = 0;
+		ia[i] = 0;
+		for(j=1; j<=ma; j++) {	
+			covar[i][j] = 0;
+			alpha[i][j] = 0;
+		}
+	}
+	/* Parameter */
+    a[1] = ini->I0;                 ia[1] = 1;
+    a[2] = ini->defocus*1e-10;      ia[2] = 1;
+    a[3] = ini->Cs*1e-3;            ia[3] = 1;
+    a[4] = ini->ratioOfAmpToPhase;  ia[4] = 1;
+    a[5] = ini->Ain*1e-3;           ia[5] = 1;
+    a[6] = ini->Cc*1e-3;            ia[6] = 1;
+    a[7] = ini->dE;                 ia[7] = 1;
+    a[8] = ini->BofVibration*1e-10; ia[8] = 1;
+    a[9] = ini->WhiteNoise;         ia[9] = 1;
+    a[10]= ini->WhiteNoise2;        ia[10] = 1;
+    a[11]= ini->BofMTF*1e-10;       ia[11] = 1;
+	if(ini->flagMolecEnvTable) {
+    	a[12]= 0;   ia[12] = 0;
+	} else {
+    	a[12]= ini->MolecEnv*1e-10; ia[12] = 1;
+	}
+	/* fixed */
+    a[13] = ini->kV*1e3;                 ia[13] = 0;
+    a[14] = 511*1e3;                     ia[14] = 0;
+    a[15] = wavelengthOfElectron(ini->kV*1e3); ia[15] = 0;
+	fprintf(stderr, "lambda: %g\n", a[15]); 
+	/* Parameter */	
+	a[16] = ini->Magnification;     ia[16] = 1;
+
+	__lctfDetermineCTF = *ini;
+
+    alambda = -1;
+	oldalambda = 1e-6;
+	for(count=0; count<20; count++) {
+		fprintf(stdout, "count: %d\n", count); fflush(stdout);
+    	mrqmin(spacing->data+imin-1, scatter->data+imin-1, sig->data+imin-1, n, a, ia, ma, covar, alpha, &chisq, angularDistributionFunctionOfSignalAndNoise, &alambda);
+		fprintf(stdout, "chisq: %15.6g\n", chisq);
+		fprintf(stdout, "alambda: %15.6g\n", alambda);
+		for(i=1; i<=ma; i++) {
+			fprintf(stdout, "a[%d]: %15.6g\n", i, a[i]); 
+		}
+		if(alambda<1e-6) {
+			break;
+		} else if(oldalambda<alambda) {
+			count--; 
+		}
+		oldalambda = alambda;
+		fflush(stdout);
+	}
+	fprintf(stdout, "Fitting End: %15.6g\n", chisq);
+    res->I0                = a[1];
+    res->defocus           = a[2]*1e10;
+    res->Cs                = a[3]*1e+3;
+    res->ratioOfAmpToPhase = a[4];
+    res->Ain               = a[5]*1e+3;
+    res->Cc                = a[6]*1e+3;
+    res->dE                = a[7];
+    res->BofVibration      = a[8]*1e10;
+    res->WhiteNoise        = a[9];
+    res->WhiteNoise2       = a[10];
+    res->BofMTF            = a[11]*1e10;
+	if(ini->flagMolecEnvTable) {
+	} else {
+    	res->MolecEnv      = a[12]*1e10;
+	}
+	res->Magnification     = a[16];  
+
+	alambda = 0;
+    mrqmin(spacing->data+imin-1, scatter->data+imin-1, sig->data+imin-1, n, a, ia, ma, covar, alpha, &chisq, angularDistributionFunctionOfSignalAndNoise, &alambda);
+	fprintf(stdout, "chisq: %15.6g\n", chisq);
+	fprintf(stdout, "alambda: %15.6g\n", alambda);
+	for(i=1; i<=ma; i++) {
+		fprintf(stdout, "a[%d]: %15.6g\n", i, a[i]); 
+	}
+    var->I0                = sqrt(covar[1][1]);
+    var->defocus           = sqrt(covar[2][2])*1e10;
+    var->Cs                = sqrt(covar[3][3])*1e+3;
+    var->ratioOfAmpToPhase = sqrt(covar[4][4]);
+    var->Ain               = sqrt(covar[5][5])*1e+3;
+    var->Cc                = sqrt(covar[6][6])*1e+3;
+    var->dE                = sqrt(covar[7][7]);
+    var->BofVibration      = sqrt(covar[8][8])*1e10;
+    var->WhiteNoise        = sqrt(covar[9][9]);
+    var->WhiteNoise2       = sqrt(covar[10][10]);
+    var->BofMTF            = sqrt(covar[11][11])*1e10;
+	if(ini->flagMolecEnvTable) {
+	} else {
+    	res->MolecEnv      = sqrt(covar[12][12])*1e10;
+	}
+	var->Magnification     = sqrt(covar[16][16]);
+}
+
+/*
+	Differential Method
+		ThonRing Point:	ScatteringDifferential	:0	score+
+							:+or-	score-
+*/
+/*
+	LimitValue
+		determination	   MaximumValue		:return 	+1
+				or minimumValue		:return		-1
+				   NotLimitValue	:return		 0
+*/
+static int  __LimitValue(floatVector* function,long i,long around)
+{
+	float	before,after;
+	int	flag;
+
+	before	=function->data[i]-function->data[i-around];
+	after	=function->data[i+around]-function->data[i];
+
+	if(before > 0.0){
+		if(after <= 0){
+			flag = 1;
+		}
+		else{
+			flag = 0;
+		}
+	}
+	else if(before < 0.0){
+		if(after >= 0){
+			flag = -1;
+		}
+		else{
+			flag = 0;
+		}
+	}
+	else{
+		if(after > 0.0){
+			flag = -1;
+		}
+		else{
+			flag = +1;
+		}
+	}
+	return(flag);
+}
+
+
+static int  __SquareLimitValue(floatVector* function,long i,long around)
+{
+	float	before,after;
+	int	flag;
+
+	before	= SQR(function->data[i])-SQR(function->data[i-around]);
+	after	= SQR(function->data[i+around])-SQR(function->data[i]);
+	//fprintf(stdout,"%ld %f %f ",i,before,after);
+
+	if(before > 0.0){
+		if(after <= 0){
+			flag = 1;
+		}
+		else{
+			flag = 0;
+		}
+	}
+	else if(before < 0.0){
+		if(after >= 0){
+			flag = -1;
+		}
+		else{
+			flag = 0;
+		}
+	}
+	else{
+		if(after > 0.0){
+			flag = -1;
+		}
+		else{
+			flag = +1;
+		}
+	}
+	//fprintf(stdout,"%ld\n",flag);
+	return(flag);
+}
+
+static float __Median(floatVector* function, long i, long around){
+	
+	float sequence[around*2 + 1];
+	float tmp;
+	int   j,k;
+
+	k = 0;
+	for(j=i-around;j<=i+around;j++){
+		sequence[k] = function->data[j];
+		k++;
+	}
+	
+	for(j=0;j<around*2+1;j++){
+		for(k=j+1;k<around*2+1;k++){
+			if(sequence[j]>sequence[k]){
+				tmp = sequence[j];
+				sequence[j] = sequence[k];
+				sequence[k] = tmp;
+			}
+		}
+	}
+	return(sequence[around]);
+}
+
+void __MedianCurve(floatVector* function,floatVector* MedianCurve ,long around){
+	
+	long i;
+	for(i=0;i<function->size;i++){
+		if(i!=0 && i!=function->size-1){
+			if(i<around){
+				around = i;
+			}
+			else if(i>function->size-1-around){
+				around = function->size-1-i;
+			}
+			MedianCurve->data[i] = __Median(function,i,around);
+		}
+			
+		else{
+			MedianCurve->data[i] = function->data[i];
+		}
+	}
+		
+}
+
+
+void
+lctfDeterminationbyDifferentialMethods(ctfInfo* res, mrcImage* mrc, ctfInfo* ini, long mode)
+{
+	floatVector* scatter;
+	floatVector* spacing;
+	floatVector* ctf;
+	floatVector* MedianCurve;
+	long         i;
+	long         Differentialaround;
+	long         Medianaround;
+	long         ThonRing;
+	float        E;
+	float	     maxE=0;
+	float        ME;			/*M......with MedianCurve*/
+	float        MmaxE=0;
+	ctfInfo      tmp;
+	float        Mres;
+	
+	Differentialaround = 1;
+	Medianaround = 3;
+	
+	scatter = lmrcFSInfoScatteringAngularDistributionAverage(mrc);
+	spacing = lmrcFSInfoSpacing(mrc);
+	DEBUGPRINT2("%f %f\n", scatter->data[1], spacing->data[1]);
+	ctf     = floatVectorInit(NULL, spacing->size);
+	tmp     = *ini;
+	*res    = *ini;
+
+	MedianCurve = floatVectorInit(NULL,spacing->size);
+
+	for(tmp.defocus=0; tmp.defocus<2*ini->defocus; tmp.defocus+=ini->defocus/1000.0) {
+		for(i=0;i<spacing->size;i++){
+			ctf->data[i] = ctfFunction(&tmp, spacing->data[i],mode);
+		}
+		__MedianCurve(scatter,MedianCurve,Medianaround);
+		DEBUGPRINT1("%f\n", ctf->data[1]);
+		E = 0.0;
+		ME= 0.0;
+		ThonRing = 0;
+		for(i=(0+Differentialaround); i<(spacing->size-Differentialaround); i++) {
+			if(tmp.CutLow < spacing->data[i]
+			&&spacing->data[i] < tmp.CutHigh ) {
+				/*DifferentialMethod*/
+				if(__SquareLimitValue(ctf,i,Differentialaround) == -1){
+					ThonRing += 1;
+					if(__LimitValue(scatter,i,Differentialaround) == -1){
+						E+=1.0;
+					}
+					else{
+						E-=1.0;
+					}
+
+					if(__LimitValue(MedianCurve,i,Differentialaround) == -1){
+						ME+=1.0;
+					}
+					else{
+						ME-=1.0;
+					}
+					
+				}
+                	}
+            	}
+        	if(maxE<E) {
+			fprintf(stdout, "Max: %f %f %f\n", tmp.defocus, E, maxE);
+			maxE = E;
+			res->defocus = tmp.defocus;
+		}
+
+		if(MmaxE<ME){
+			fprintf(stdout, "MMAX: %f %f %f\n", tmp.defocus,ME,MmaxE);
+			MmaxE = ME;
+			Mres         = tmp.defocus;
+		}
+        	fprintf(stdout, "%10.6e %3ld  %3.0f %3.0f\n", tmp.defocus,ThonRing, E,ME);
+	}
+	fprintf(stdout,"%f %f\n",res->defocus,Mres);
+	
+	/*for smooth test*/
+	for(i=0;i<spacing->size;i++){
+		ctf->data[i]  = ctfFunction(res, spacing->data[i],mode);
+	}
+	fprintf(stdout,"\n\n%f\n",res->defocus);
+	for(i=0;i<spacing->size;i++){
+		if(tmp.CutLow < spacing->data[i]
+		&&spacing->data[i] < tmp.CutHigh ) {
+			fprintf(stdout,"%10.6e %10.6e %10.6e\n",spacing->data[i],SQR(ctf->data[i]),scatter->data[i]);
+		}
+	}
+}
+

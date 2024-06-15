@@ -1,0 +1,29 @@
+<HTML>
+<HEAD>
+<TITLE>mrcImageSolventFlattening</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageSolventFlattening</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageSolventFlattening
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-rmax               rmax                (190       ).as(Real                ) ] :Optional  :rmax [A]
+    [-sd                 Range               (0         ).as(Real                ) ] :Optional  :Assign voxels below MeanOfSolvent+Range*SDofSolvent as Solvent
+    [-density            density             (0         ).as(Real                ) ] :Optional  :embed mean lower than density value
+    [-Floating                                                                     ] :Optional  :data minus mean of Solvent
+    [-oparam[eter]       OutParam            (stdout    ).as(outFile             ) ] :Optional  :Output: Parameters
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+-m 0: mean of all density
+   1: mean of sphere surface density at rmax
+   2: mean of cylinder surface density at rmax
+   6: mean of 2D Edge X=0 or N.x-1
+-SD range : assign the voxels whose density is less than maen + range*SD as solvent range 
+-density is stronger than -m
+</PRE>
+</BODY>
+</HTML>

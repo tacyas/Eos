@@ -1,0 +1,10 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input:Moving","Essential","1","1","In","inFile::Array","NULL"
+"-o","-o[utput]","Output","Optional","1","1","Out","outFile::ASCII","NULL"
+"-O","-O[utput]","Output","Optional","1","1","OutName","String","Movie_%04d.mrc"
+"-n","-n","numberOfMovie","Optional","1","1","Num","Integer","10"
+"-N","-N","Output:mrcImageSize","Optional","3","1","Nx","Integer","256","2","Ny","Integer","256","3","Nz","Integer","256"
+"-L","-L","Output:mrcImageLength","Optional","3","1","Lx","Real","1.0","2","Ly","Real","1.0","3","Lz","Real","1.0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

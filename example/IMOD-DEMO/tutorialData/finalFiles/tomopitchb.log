@@ -1,0 +1,35 @@
+
+ MODEL FILES OR TIMES MUST OCCUR IN ORDER OF DECREASING SAMPLE COORDINATE
+
+
+
+ Analysis of positions from time index  1:
+ unrotated lines imply added Z shift of   18.6; thickness of  95.9, set to   96
+ slope =  0.0014: to make level, add   0.1 to total angle offset
+  rotated  lines imply added Z shift of   18.3; thickness of  95.9, set to   96
+
+
+ Analysis of positions from time index  2:
+ unrotated lines imply added Z shift of   19.0; thickness of  94.0, set to   96
+ slope = -0.0009: to make level, add  -0.1 to total angle offset
+  rotated  lines imply added Z shift of   19.2; thickness of  94.0, set to   96
+
+
+ Analysis of positions from time index  3:
+ unrotated lines imply added Z shift of   18.7; thickness of  94.5, set to   96
+ slope =  0.0003: to make level, add   0.0 to total angle offset
+  rotated  lines imply added Z shift of   18.6; thickness of  94.5, set to   96
+
+
+ Analysis of positions from all time indexes:
+ unrotated lines imply added Z shift of   18.6; thickness of  95.9, set to   96
+ slope =  0.0002: to make level, add   0.0 to total angle offset
+  rotated  lines imply added Z shift of   18.5; thickness of  95.9, set to   96
+
+ Pitch between samples can be corrected with an added X-axis tilt of   0.06
+ In this case, to make level, add   0.0 to total angle offset
+ x-tilted  lines imply added Z shift of   18.7; thickness of  95.9, set to   96
+
+ X axis tilt -  Original:    0.00   Added:    0.06   Total:    0.06
+ Angle offset - Original:   -2.12   Added:    0.01   Total:   -2.11
+ Z shift -      Original:     0.0   Added:    18.7   Total:    18.7

@@ -1,0 +1,16 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputCorrelationMapList","Optional","1","1","In","inFile","NULL"
+"-ic","-i[nput]c[ommonLines]","InputCommonLinesList","Optional","1","1","InC","inFile","NULL"
+"-icc","-i[nput]c[orrect]c[ommonLines]","InputCorrectCommonLinesList","Optional","1","1","InCC","inFile","NULL"
+"-o","-o[utput]","OutputFilteredCommonLinesList","Essential","1","1","Out","outFile","NULL"
+"-oa","-o[utput]a[ll]","OutputAllCommonLinesList","Optional","1","1","OutA","outFile","NULL"
+"-odr","-o[utput]d[etecting]r[ate]","OutputDetectingRate","Optional","1","1","OutDR","outFile","NULL"
+"-odra","-o[utput]d[etecting]r[ate]a[ll]","OutputDetectingRateALL","Optional","1","1","OutDRA","outFile","NULL"
+"-oph","-o[utput]p[eaks]h[istgram]","OutputPeaksHistgram","Optional","1","1","OutPH","outFile","NULL"
+"-en","-e[stimation]n[umber]","EstimationNumber","Optional","1","1","en","Integer","1"
+"-th","-th[resholdLevel]","ThresholdLevel","Optional","1","1","th","Integer","1"
+"-histgramCreate","-histgramCreate[Flag]","HistgramCreateFlag","Optional","0"
+"-extend","-extend[VotingFlag]","ExtendVotingFlag","Optional","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

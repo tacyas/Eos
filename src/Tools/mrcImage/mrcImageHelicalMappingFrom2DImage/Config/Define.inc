@@ -1,0 +1,4 @@
+OBJECTNAME = mrcImageHelicalMappingFrom2DImage
+EXTRA_LIB  =
+EXTRA_CCOPTS =
+EXTRA_INC =

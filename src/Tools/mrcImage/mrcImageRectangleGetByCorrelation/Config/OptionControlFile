@@ -1,0 +1,9 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-r","-r[eference]","ReferenceFile","Optional","1","1","Ref","inFile","NULL"
+"-Nx","-Nx[Number of x]","Nx:Default If Nx of inputfile is even Nx ,else Nx-1","Optional","1","1","Nx","Integer","0"
+"-Ny","-Ny[Number of y]","Ny:Default If Ny of inputfile is even Ny ,else Ny-1","Optional","1","1","Ny","Integer","0"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

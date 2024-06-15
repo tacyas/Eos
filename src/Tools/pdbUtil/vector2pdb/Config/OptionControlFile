@@ -1,0 +1,14 @@
+# OptionControlFile
+# FileFormat
+"-v","-v[ector]","Input: vector","Optional","3","1","vx","Real","1","2","vy","Real","0","3","vz","Real","0"
+"-polar","-polar[vector]","Input: vector[degree]","Optional","2","1","phi","Real","0","2","theta","Real","0"
+"-polarz","-polarz[axis]","Input: z-axis for polar","Optional","3","1","zx","Real","0","2","zy","Real","0","3","zz","Real","1"
+"-polarx","-polarx[axis]","Input: x-axis for polar","Optional","3","1","xx","Real","1","2","xy","Real","0","3","xz","Real","0"
+"-ori","-ori[ginal]","Input: origin","Optional","3","1","sx","Real","0","2","sy","Real","3","0","sz","Real","0"
+"-step","-step","Input: step [A]","Optional","1","1","step","Real","1.6"
+"-o","-o[utput]","Output: pdbFile","Optional","1","1","Out","outFile","stdout"
+"-n","-n","Input: Number Of CA","Optional","1","1","n","Integer","20"
+"-ID","-ID","Input: Chain ID","Optional","1","1","ID","Character","A"
+"-Res","-Res","Input: Chain ID","Optional","1","1","Res","String","GLY"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

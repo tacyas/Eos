@@ -1,0 +1,328 @@
+#!/usr/local/bin/wish -f
+proc fileSaveSureWin { path } {
+	global fileSave
+	global fileSaveSureDone
+	
+	set t [ toplevel .fileSaveSureWin -bd 4 -class FileSaveSureWin ]
+	fileSaveSureWinResources
+	message $t.msg -aspect 1000 -text "Are you sure ??"
+	pack $t.msg -side top -fill x
+
+	set fileSave(path) $path
+	frame $t.top
+	set e [ entry $t.top.path  -textvariable fileSave(path) ]
+	pack $t.top -side top -fill x
+	pack $t.top.path -side top -fill x -expand true
+
+	frame $t.buttons -bd 10
+	frame $t.buttons.ok -bd 2 -relief sunken 
+	set ok     [ button $t.buttons.ok.b   -command { fileSaveSureOK } ]
+	set cancel [ button $t.buttons.cancel -command { fileSaveSureCancel } ]	
+	pack $t.buttons -side top -fill both
+	pack $t.buttons.ok $t.buttons.cancel -side left -padx 10 -pady 5
+	pack $t.buttons.ok.b -padx 4 -pady 4
+	
+	set fileSaveSureDone 0
+	tkwait variable fileSaveSureDone
+	destroy $t
+}
+
+proc fileSaveSureOK { } {
+	global fileSave
+	global fileSaveSureDone
+
+	set fileSaveSureDone 1
+	set fileSave(done) 1
+	return
+}
+
+proc fileSaveSureCancel { } {
+	global fileSaveSure
+
+	set fileSaveSureDone 1
+	return
+}
+
+proc fileSaveSureWinResources {} {
+	option add *FileSaveSureWin*path.relief          sunken startup
+	option add *FileSaveSureWin*path.background      white startup
+	option add *FileSaveSureWin*path.foreground      black startup
+
+	option add *FileSaveSureWin*l.text               File: startup
+	option add *FileSaveSureWin*ok*text              OK    startup
+	option add *FileSaveSureWin*ok*underline         0     startup
+	option add *FileSaveSureWin*cancel.text       Cancel startup
+	option add *FileSaveSureWin*cancel.underline  0      startup
+
+	option add *FileSaveSureWin*list.width        20      startup
+	option add *FileSaveSureWin*list.height       10      startup
+
+}
+
+proc fileSave {{why "File Save"}
+				 {default {}} {mustExist 1}} {
+	global fileSave
+
+	set fileSave(curDir) [ pwd ]
+	set t [ toplevel .fileSave -bd 4 -class FileSave ]
+	fileSaveResources
+
+	# Title 
+	message $t.msg -aspect 1000 -text $why
+	pack $t.msg -side top -fill x
+
+	# Create a read-only entry for the current directory
+	set fileSave(dirEntry) [ entry $t.dir -width 15 -relief flat -state disabled ]
+	pack $t.dir -side top -fill x
+
+	# Create an entry for the pathname
+	# The value is kept in fileSave(path)
+	frame $t.top
+	set e [entry $t.top.path -textvariable fileSave(path)]
+	pack $t.top -side top -fill x
+
+	# The label on the entry is defined with an X resource 
+	label $t.top.l -padx 0
+	pack $t.top.l -side left
+	pack $t.top.path -side right -fill x -expand true
+
+	# Create a list box to hold the directory contents
+	set lb [ listbox $t.list -yscrollcommand [ list $t.scroll set ] ]
+	scrollbar $t.scroll -command [ list $lb yview ]
+
+	# Create the OK and Cancel buttons
+	# The bottun text is defined with an X resource
+	# The OK button has a rim to indicate it is the default
+	frame $t.buttons -bd 10
+	frame $t.buttons.ok -bd 2 -relief sunken
+	set ok     [ button $t.buttons.ok.b   -command fileSaveOK ]
+	set cancel [ button $t.buttons.cancel -command fileSaveCancel ]
+
+	# pack the list, scrollbar, and button box
+	# in a horizontal stack below the upper widgets
+	pack $t.list    -side left -fill both -expand true
+	pack $t.scroll  -side left -fill y  
+	pack $t.buttons -side left -fill both
+	pack $t.buttons.ok $t.buttons.cancel -side top -padx 10 -pady 5
+	pack $t.buttons.ok.b -padx 4 -pady 4
+
+	fileSaveBindings $t $e $lb $ok $cancel
+
+	# Initialize variables and List the directory
+	if { [ string length $default] == 0 } {
+		set fileSave(path) {}
+		set dir [ pwd ]
+	} else {
+		set fileSave(path) [ file tail $default ]
+		set dir [ file dirname $default ]
+	}
+	set fileSave(dir) {}
+	set fileSave(done) 0
+	set fileSave(mustExist) $mustExist
+
+	# Wait for the listbox to be visible so 
+	# we can provide feedback during the listing
+	tkwait visibility .fileSave.list
+	fileSaveList $dir
+
+	tkwait variable fileSave(done)
+	destroy $t
+	return [ relativePathGet $fileSave(curDir) $fileSave(path) ]
+}
+
+proc fileSaveResources {} {
+	option add *FileSave*path.relief          sunken startup
+	option add *FileSave*path.background      white startup
+	option add *FileSave*path.foreground      black startup
+
+	option add *FileSave*l.text               File: startup
+	option add *FileSave*ok*text              OK    startup
+	option add *FileSave*ok*underline         0     startup
+	option add *FileSave*cancel.text       Cancel startup
+	option add *FileSave*cancel.underline  0      startup
+
+	option add *FileSave*list.width        20      startup
+	option add *FileSave*list.height       10      startup
+
+}
+
+proc fileSaveBindings { t e lb ok can } {
+	# t   - toplevel
+	# e   - name entry
+	# lb  - listbox
+	# ok  - OK button
+	# can - Cancel button
+	foreach w [ list $e $lb $ok $can ] {
+		bindtags $w [list $t [winfo class $w] $w]
+	}
+	bind $t <Control-c> fileSaveCancel
+
+	bind $e <Return> fileSaveOK
+	bind $e <space> fileSaveComplete
+
+	bind $lb <space>           "fileSaveTake %W; focus $e"
+	bind $lb <Button-1>        "fileSaveClick %W %y ;  focus $e"
+	bind $lb <Return>          "fileSaveTake %W; fileSaveOK"
+	bind $lb <Double-Button-1> "fileSaveClick %W %y; fileSaveOK"
+
+	bind $e <Tab>  "focus $lb; $lb select set 0"
+	bind $lb <Tab> "focus $e"
+
+	foreach but [list $ok $can] {
+		set char [string tolower [ string index [$but cget -text] [$but cget -underline]]]
+		bind $t <Alt-$char> "focus $but; break"
+	}
+	bind $ok <Tab>  "focus $can"
+	bind $can <Tab> "focus $ok"
+
+	focus $e
+}
+
+proc fileSaveList { dir {files {}}} {
+	global fileSave
+
+	set fileSave(dir) $dir
+	set e $fileSave(dirEntry)
+	$e config -state normal
+	$e delete 0 end
+	$e insert 0 $dir
+	$e config -state disabled
+
+	$e xview moveto 1
+
+	.fileSave.list delete 0 end
+	if ![file isdirectory $dir] {
+		.fileSave.list insert 0 "Bad Directory"
+		return
+	}
+	.fileSave.list insert 0 Listing...
+	update idletasks
+
+	.fileSave.list delete 0
+	if {[string length $files] == 0} {
+		set files [glob -nocomplain $fileSave(dir)/* ]
+		.fileSave.list insert end ../
+	}
+
+	set dirs {}
+	set others {}
+	foreach f [lsort $files] {
+		if [file isdirectory $f] {
+			lappend dirs [file tail $f]/
+		} else {
+			lappend others [file tail $f]
+		}
+	}
+	foreach f [concat $dirs $others] {
+		.fileSave.list insert end $f
+	}
+}
+
+proc fileSaveOK {} {
+	global fileSave
+
+	# Trim ../ (the parent) out of the pathname
+	if { [ regsub {^\.\.\/?} $fileSave(path) {} newpath ] != 0 } {
+		set fileSave(path) $newpath
+		set fileSave(dir) [ file dirname $fileSave(dir)]
+		fileSaveOK
+		return
+	}
+	set path [string trimright $fileSave(dir)/$fileSave(path) /]
+	if [file isdirectory $path] {
+		set fileSave(path) {}
+		fileSaveList $path
+		return
+	}
+	if [file exists $path] {
+		fileSaveSureWin $path
+		return
+	} 
+	# Neither a file or a directory.
+	# See if glob will find something
+	fileSaveSureWin $path
+	if [catch {glob $path} files] {
+		if [catch {glob $fileSave(path)} path] {
+			fileSaveComplete
+			return
+		} else {
+			set fileSave(dir) [file dirname $fileSave(path)]
+			set fileSave(path) [file tail $fileSave(path)]
+			fileSaveOK
+			return
+		}
+	} else {
+		if { [llength [split $files] ] == 1 } {
+			set fileSave(path) $files
+			fileSaveOK
+		} else {
+			set fileSave(dir) [file dirname [lindex $files 0]]
+			fileSaveList $fileSave(dir) $files
+			return
+		}
+	}
+}
+
+proc fileSaveCancel {} {
+	global fileSave
+	set fileSave(done) 1
+	set fileSave(path) {}
+}
+
+proc fileSaveClick { lb y } {
+	global fileSave
+	set fileSave(path) [$lb get [ $lb nearest $y ] ]
+}
+
+proc fileSaveTake { lb } {
+	global fileSave
+	set fileSave(path) [$lb get [$lb curSaveion]]
+}
+
+proc fileSaveComplete {} {
+	global fileSave
+
+	set fileSave(path) [ string trim $fileSave(path) \t\ ]
+
+	if { [string match /* $fileSave(path) ]} {
+		set dir [file dirname $fileSave(path)]
+		set tail [file tail $fileSave(path)]
+	} elseif [string match ~* %fileSave(path)] {
+		if [ catch {file dirname $fileSave(path)} dir ] {
+			return ; # Bad User
+		}
+		set tail [ file tail $fileSave(path) ]
+	} else {
+		set path $fileSave(dir)/$fileSave(path)
+		set dir  [file dirname $path]
+		set tail [file tail $path]
+	}
+	set files [glob -nocomplain $dir/$tail*]
+	if { [llength [ split $files]] == 1} {
+		set fileSave(dir) $dir
+		set fileSave(path) [file tail $files]
+	} else {
+		if {[llength [split $files]] == 1} {
+			set l [expr [string length $tail]-1]
+			set miss 0
+			set file1 [file tail [lindex $files 0]]
+			while { $miss == 0 } {
+				incr l
+				if {$l == [string length $file1]} {
+					break
+				}
+				set new [string range $file1 0 $l]
+				foreach f $files {
+					if ![string match $new* [file tail $f]] {
+						set miss 1
+						incr l -1
+						break
+					}
+				}
+			}
+			set fileSave(path) [string range $file1 0 $l]
+		}
+		fileSaveList $dir $files
+	}
+}
+

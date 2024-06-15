@@ -1,0 +1,40 @@
+<HTML>
+<HEAD>
+<TITLE>mrcImageGaussSphere</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageGaussSphere</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageGaussSphere
+Options:
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-E[uler]A[ngle]     EA                  (YOYS      ).as(String              ) 
+                         Rot1                (0.0       ).as(Real                ) 
+                         Rot2                (0.0       ).as(Real                ) 
+                         Rot3                (0.0       ).as(Real                ) ] :Optional  :Input: Gauss Sphere: Rotation
+    [-centre             ShiftX              (0.0       ).as(Real                ) 
+                         ShiftY              (0.0       ).as(Real                ) 
+                         ShiftZ              (0.0       ).as(Real                ) ] :Optional  :Input: Gauss Sphere: Centre
+    [-sigmax             sigmax              (10        ).as(Real                ) ] :Optional  :sigmax[A]
+    [-sigmay             sigmay              (20        ).as(Real                ) ] :Optional  :sigmay[A]
+    [-sigmaz             sigmaz              (30        ).as(Real                ) ] :Optional  :sigmaz[A]
+    [-sigma_range        sigma_range         (3         ).as(Real                ) ] :Optional  :x times
+    [-weight             weight              (10        ).as(Real                ) ] :Optional  :weight
+    [-size               size                (5         ).as(Real                ) ] :Optional  :Pixel Size[A]
+    [-W[idth]            Width               (0         ).as(Real                ) ] :Optional  :Width[A]
+    [-H[ight]            Height              (0         ).as(Real                ) ] :Optional  :Height[A]
+    [-S[ection]          Section             (0         ).as(Real                ) ] :Optional  :Section[A]
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (2         ).as(Integer             ) ] :Optional  :Mode
+Gauss Sphere is cutted at sigma_range*sigma 
+Gauss Sphere = weight * exp ( - ((x^2 / sigmax^2)+(y^2 / sigmay^2)+(z^2 / sigmaz^2)) 
+mrcImageFileSize is (sigma_range*sigmax*2) x (sigma_range*sigmay*2) x (sigma_range*sigmaz*2) 
+-----------------------------------------------------------------------------------
+-EA: for rotation 
+-----------------------------------------------------------------------------------
+mode 0 char 
+mode 2 float 
+</PRE>
+</BODY>
+</HTML>

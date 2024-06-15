@@ -1,0 +1,59 @@
+#!/bin/sh
+#
+# %M% %Y% %I%
+#
+# The latest update : %G% at %U%
+#
+#%Z% protoTestMakefileCreate Function
+#%Z%
+#
+#%Z% Usage : protoTestMakefileCreate SourceFileName
+#
+#%Z% Attention
+#%Z%
+#%Z% Parameter: 
+#%Z%     Essential:
+#%Z%         SourceFileName
+#%Z%     Optional:
+#%Z%
+
+usage()
+{
+	echo "Usage: protoTestMakefileCreate"
+}
+
+NameRead()
+{
+	ans="N"
+	while [ $ans != "Y" -a $ans != "y" ]
+	do
+		echo $1
+		read Name
+		echo "$Name is good ?"
+		read ans
+	done
+}
+# Store Flags
+FlagsCharacter="-"
+
+case $# in 
+	0)
+		;;
+	*)
+		while [ `echo $1 | cut -c1` = ${FlagsCharacter} ]
+		do
+			if [ `echo $1 | cut -c2` = "h" ] 
+			then
+				usage
+			else
+				parms="${parms} $1"
+				shift 
+			fi
+		done
+		;;
+esac
+
+#
+currentDir=`pwd`
+
+cat ${EOS_HOME}/sbin/protoTestMakefile.Template > Makefile

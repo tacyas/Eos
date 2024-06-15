@@ -1,0 +1,7 @@
+<HTML>
+<BODY>
+<H1>IsOdd(x)</H1><BR>
+<H3>in genUtil.h</H3><BR>
+<H3> #define SSWITCHEND } #define IsOdd(x) ((x)%2==1?1:0) #define IsEven(x) ((x)%2==0?1:0) #ifdef M68 #define BYTE4SET(x3,x2,x1,x0) ((((x0)<< 0)&0x000f) \ |(((x1)<< 8)&0x00f0) \ |(((x2)<<16)&0x0f00) \ |(((x3)<<24)&0xf000)) #define BYTE4GETBYTE(x,byte) (((x)>>(byte*8))&0x000f) #else #define BYTE4SET(x3,x2,x1,x0) ((((x3)<< 0)&0x000f) \ |(((x2)<< 8)&0x00f0) \ |(((x1)<<16)&0x0f00) \ |(((x0)<<24)&0xf000)) #define BYTE4GETBYTE(x,byte) (((x)>>((3-byte)*8))&0x000f) #define USAGEPRINT(x) fprintf(stderr,x); </H3>
+</HTML>
+</BODY>

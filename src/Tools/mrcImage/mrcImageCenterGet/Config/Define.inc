@@ -1,0 +1,4 @@
+OBJECTNAME = mrcImageCenterGet
+EXTRA_LIB  =
+EXTRA_CCOPTS =
+EXTRA_INC =

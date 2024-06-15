@@ -1,0 +1,13 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile: Correlation Map","Optional","1","1","Out","outFile","NULL"
+"-O","-O[utput]","OutputDataFile: Correlation Map for Refinement","Optional","1","1","Out2","outFile","NULL"
+"-r","-r[eference]","ReferenceDataFile","Essential","1","1","Ref","inFile","NULL"
+"-corInfo","-cor[relation]Info","Output: Correlation Info","Optional","1","1","OutCor","outFile","stdout"
+"-a","-a[verage]","OutputDataFile: Averaged File","Optional","1","1","Avg","outFile","NULL"
+"-s","-s[hit]","OutputDataFile: Shifted InputFile","Optional","1","1","Shift","outFile","NULL"
+"-refine","-refine","Refinemnet: Step Range[pixelUnit]","Optional","3","1","RefineStep","Real","0.25","2","RefineRange","Real","3.0","3","RefineMode","Integer","2"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"
+"-M","-M[ode2]","Mode2","Optional","1","1","mode2","Integer","0"

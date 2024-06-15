@@ -1,0 +1,8 @@
+.onlineHelp EOS llExtractCtrlFileCreate "Introduction to llExtractCtrlFileCreate"
+.
+.section 1 "Introduction to llExtractCtrlFileCreate"
+.
+.\" This is the help page associated with the Help button on
+.\" the toplevel window of llExtractCtrlFileCreate
+If you are reading this text,
+you should report it as a bug :-)

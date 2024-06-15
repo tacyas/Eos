@@ -1,0 +1,110 @@
+#!/bin/sh
+#
+# %M% %Y% %I%
+#
+# The latest update : %G% at %U%
+#
+#%Z% modifytool Function
+#%Z%
+#
+#%Z% Usage : modifytool SourceFileName
+#
+#%Z% Attention
+#%Z%
+#%Z% Parameter: 
+#%Z%     Essential:
+#%Z%         SourceFileName
+#%Z%     Optional:
+#%Z%
+
+usage()
+{
+	echo "Usage: modifytool actin srcClassName srcToolName dstClassName dstToolName"
+	echo "           actin: rename Change Name"
+	echo " "
+	echo "    modifytool rename srcClassName srcToolName dstClassName dstToolName"
+	echo "    modifytool -h"
+	exit
+}
+
+NameRead()
+{
+	ans="N"
+	while [ $ans != "Y" -a $ans != "y" ]
+	do
+		echo $1
+		read Name
+		echo "$Name is good ?"
+		read ans
+	done
+}
+
+# Store Flags
+FlagsCharacter="-"
+nindex=$#
+params=$*
+
+case $# in 
+	0)
+		usage
+		;;
+	*)
+		while [ `echo $1` ]
+		do
+			if [ `echo $1 | cut -c1` = ${FlagsCharacter} ] 
+			then
+				if [ `echo $1 | cut -c2` = "h" ]
+				then
+					usage
+				fi
+			fi
+			shift
+		done
+		;;
+esac
+
+case $nindex in 
+	0)
+		echo "Enter Action: "
+		read action
+		;;
+	*)
+		action=`echo $params| cut -d' ' -f1`
+		echo $action
+		case $action in
+			rename)
+				srcClass=`echo $params| cut -d' ' -f2`	
+				srcTool=`echo $params| cut -d' ' -f3`	
+				dstClass=`echo $params| cut -d' ' -f4`	
+				dstTool=`echo $params| cut -d' ' -f5`	
+
+				echo "rename $srcClass/$srcTool to $dstClass/$dstTool"
+				;;
+			*)
+				usage
+				;;
+		esac
+		;;
+esac
+
+#
+currentDir=`pwd`
+#
+#
+#
+if -f ${EOS_HOME}/bin/$srcTools ;
+then
+	rm ${EOS_HOME}/bin/$srcTools
+fi
+#rm  ${EOS_HOME}/bin/*/$srcTools
+
+mv ${EOS_HOME}/src/Tools/$srcClass/$srcTool ${EOS_HOME}/src/Tools/$dstClass/$dstTool
+cd  ${EOS_HOME}/src/Tools/$dstClass
+nameList=`ls -1 $dstTool/*/$srcTool*`
+for name in $nameList ;
+do
+	dstname=`echo $name|sed -e s/$srcTool/$dstTool/`
+	echo "$name -> $dstname"
+	mv $name $dstname
+done
+

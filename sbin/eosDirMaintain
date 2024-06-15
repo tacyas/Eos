@@ -1,0 +1,87 @@
+#!/bin/sh
+#
+# %M% %Y% %I%
+#
+# The latest update : %G% at %U%
+#
+#%Z% EosDirMaintain Function
+#%Z%
+#
+#%Z% Usage : EosDirMaintain SourceFileName
+#
+#%Z% Attention
+#%Z%
+#%Z% Parameter: 
+#%Z%     Essential:
+#%Z%         SourceFileName
+#%Z%     Optional:
+#%Z%
+
+EosDir="\
+	/work4/work4/tacyas/Eos \
+	/work15/Eos07/Eos \
+	"
+
+usage()
+{
+	echo "Usage: EosDirMaintain"
+}
+
+NameRead()
+{
+	ans="N"
+	while [ $ans != "Y" -a $ans != "y" ]
+	do
+		echo $1
+		read Name
+		echo "$Name is good ?"
+		read ans
+	done
+}
+# Store Flags
+FlagsCharacter="-"
+
+case $# in 
+	0)
+		;;
+	*)
+		while [ `echo $1 | cut -c1` = ${FlagsCharacter} ]
+		do
+			if [ `echo $1 | cut -c2` = "h" ] 
+			then
+				usage
+			else
+				parms="${parms} $1"
+				shift 
+			fi
+		done
+		;;
+esac
+
+case $# in
+	0) # No filename 
+		;;
+	*) #
+		usage
+		exit
+		;;
+esac
+#
+currentDir=`pwd`
+
+echo "Eos Home Directory"
+echo $EOS_HOME
+
+echo "Each backup directory"
+
+echo "Remove core files" 
+for dir in ${EosDir}
+do
+	echo $dir
+	coreList=`find $dir -name core`
+	for file in ${coreList}
+	do
+		rm $file
+	done
+done
+

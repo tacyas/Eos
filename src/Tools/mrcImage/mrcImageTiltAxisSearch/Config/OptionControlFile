@@ -1,0 +1,13 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","In: MRC","Optional","1","1","In","inFile","NULL"
+"-I","-I[nput]","In: MRC","Optional","1","1","InList","inFileList","NULL"
+"-r","-r[ef]","Ref: MRC","Essential","1","1","Ref","inFile","NULL"
+"-o","-o[utput]","Output: Correlation","Essential","1","1","Out","outFile","NULL"
+"-O","-O[utput]","Output: Estimated","Optional","1","1","Out2","outFile","stdout"
+"-range","-range","Search Range [degree]","Optional","3","1","thetaMin","Real","-90","2","thetaMax","Real","+90","1","thetaDelta","Real","1"
+"-w","-w[idth]","Projection Range[MIn(Nx,Ny)*Width] around centre","Optional","1","1","Width","Real","0.5"
+"-M","-M[ode]","Interpolation Mode","Optional","1","1","Mode","Integer","2"
+"-CM","-C[orrelation]M[ode]","Correlation Mode","Optional","1","1","CorrelationMode","Integer","17"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

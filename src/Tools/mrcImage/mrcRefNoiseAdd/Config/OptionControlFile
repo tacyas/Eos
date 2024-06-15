@@ -1,0 +1,10 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-s","-s[trength]","Strength of Noise.Unit is standard deviation of input reference.","Optional","1","1","Noise","Real","1.0"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"
+"-h","-h[igh]","High threshold to calclate S.D.  Default is max of input file.","Optional","1","1","H","Real","0"
+"-l","-l[ow]","Low threshold to calclate S.D.  Default is min of input file.","Optional","1","1","L","Real","0"
+

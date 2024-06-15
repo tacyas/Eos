@@ -1,0 +1,137 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageRealValueAdd</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageRealValueAdd<br></h2></b></font>
+	<h4></h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>オプション</th>
+				<th>必須項目/選択項目</th>
+				<th>NULL</th>
+				<th>デフォルト</th>
+			</tr>
+			<tr>
+				<td>-i</td>
+				<td>必須</td>
+				<td>入力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-o</td>
+				<td>必須</td>
+				<td>出力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-v</td>
+				<td>必須</td>
+				<td>入力データに加える値を設定</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-h</td>
+				<td>選択</td>
+				<td>ヘルプを表示</td>
+				<td>　</td>
+			</tr>
+		</table>
+
+	<h4>******実行例******</h4>
+	
+<!-- 入力ファイル説明 -->
+	
+	<caption><font color="blue">------入力ファイルの詳細------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="b120.png" border="0" alt="b120.png(2730 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				65.5929<br>
+				5.45036<br>
+				12.3043<br>
+				0.153804<br></p>
+			</td>
+		</tr>
+	</table>
+
+<!-- 出力結果 -->
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-v------</font></caption><br>
+	<div>-v=1の場合</div>
+	<table>
+		<tr>
+			<td><img src="outdata-v1.png" border="0" alt="outdata-v1.png(2730 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">1<br>
+				66.5929<br>
+				6.45036<br>
+				12.3043<br>
+				0.153804<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<div>-v=10の場合</div>
+	<table>
+		<tr>
+			<td><img src="outdata-v10.png" border="0" alt="outdata-v10.png(2730 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">10<br>
+				75.5929<br>
+				15.4504<br>
+				12.3043<br>
+				0.153804<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<div>-v=50の場合</div>
+	<table>
+		<tr>
+			<td><img src="outdata-v50.png" border="0" alt="outdata-v50.png(2730 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">50<br>
+				115.593<br>
+				55.4504<br>
+				12.3043<br>
+				0.153804<br></p>
+			</td>
+		</tr>
+	</table>
+
+
+</body>
+</html>

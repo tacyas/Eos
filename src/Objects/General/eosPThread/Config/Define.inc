@@ -1,0 +1,3 @@
+OBJECTNAME = eosPThread
+EXTRA_INC =
+EXTRA_CCOPTS =

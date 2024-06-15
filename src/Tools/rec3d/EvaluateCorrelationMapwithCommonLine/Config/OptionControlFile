@@ -1,0 +1,10 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputCorrelationMapList","Essential","1","1","In","inFile","NULL"
+"-ic","-i[nput]c[ommonLine]","InputCommonLineDataFile","Essential","1","1","InC","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-PM","-P[eakArea]M[ode]","PeakDetectAreaMode","Optional","1","1","Pm","Integer","0"
+"-PN","-P[eak]N[umber]","PeakNumber","Optional","1","1","PN","Integer","10"
+"-PDT","-PDT[hres]","PeakDetectThreshold_ForMode0","Optional","1","1","PDT","Real","0.2"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

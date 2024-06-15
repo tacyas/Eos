@@ -1,0 +1,8 @@
+.onlineHelp EOS mrc2hdf "Introduction to mrc2hdf"
+.
+.section 1 "Introduction to mrc2hdf"
+.
+.\" This is the help page associated with the Help button on
+.\" the toplevel window of mrc2hdf
+If you are reading this text,
+you should report it as a bug :-)

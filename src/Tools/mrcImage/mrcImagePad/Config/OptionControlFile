@@ -1,0 +1,14 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input DataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","Output DataFile","Essential","1","1","Out","outFile","NULL"
+"-W","-W[idth]","Width[pixel]","Optional","1","1","Width","Integer","0"
+"-H","-H[eight]","Height[pixel]","Optional","1","1","Height","Integer","0"
+"-V","-V[alue]","Padding Value(float on avgrage density)","Optional","1","1","Value","Real","0.0"
+"-EV","-E[xpected]V[alue]","Expected Value for Background","Optional","1","1","ExpectedValue","Real","0.0"
+"-AW","-AW","Averaging Window Size [A]","Optional","1","1","AvgWnd","Real","2000.0"
+"-AWMin","-AWMin","Averaging Window Size[pixel]","Optional","1","1","AWMin","Real","20"
+"-AWMax","-AWMax","Averaging Window Size[pixel]","Optional","1","1","AWMax","Real","22"
+"-Tilt","-Tilt","TiltImage: TiltAxisAngle TiltAngle","Optional","2","1","TiltAxisAngle","Real","0","2","TiltAngle","Real","0"
+"-c","-c[onfig]","Configuration File","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

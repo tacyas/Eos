@@ -1,0 +1,27 @@
+-F 4.3 1 0 52x1+0+0 +0+0 'Cantata' cantata
+  -M 1 1 52x1+0+0 +1+0 ' ' subform
+    -P 1 0 52x1+0+1 +0+0 ' ' mrcImageCTFCompensation
+      -D 1 0 9x1+0+0 'Options' _gui_options
+        -H 1  6x1+0+0 'License' 'license' $BOOTSTRAP/repos/license/License license
+        -E
+        -R 1 0 1 5x1+35+0 'Run' 'execute operation' $EOS/bin/mrcImageCTFCompensation
+        -H 1  5x1+41+0 'Help' 'help page' $EOS/src/Tools/mrcImage/mrcImageCTFCompensation/doc/mrcImageCTFCompensation.doc help
+        -Q 1 0 5.25x1+47+0 'Close'
+        -I 1 0 1 1 0 1 -1x1+1+1.500000 ' ' 'In' 'InputFile' i
+        -O 1 0 1 1 0 1 -1x1+1+3.000000 ' ' 'Out' 'OutputDataFile' o
+        -I 1 0 1 0 0 1 -1x1+1+4.500000 ' ' 'Info' 'InformationFile(Essense only)' info
+        -I 1 0 1 0 0 1 -1x1+1+6.000000 ' ' 'Info2' 'InformationFile2(Display2 ctfinfo format)' info2
+        -f 1 0 1 0 0 -1x1+1+7.500000 0 0 200.000000 0 0 0 'kV' 'AccVol[kV]' kV
+        -f 1 0 1 0 0 -1x1+1+9.000000 0 0 2.100000 0 0 0 'Cs' 'Cs[mm]' Cs
+        -f 1 0 1 0 0 -1x1+1+10.500000 0 0 27000.000000 0 0 0 'Defocus' 'Defocus[A]:under(+)' df
+        -f 1 0 1 0 0 -1x1+1+12.000000 0 0 0.100000 0 0 0 'WhiteNoise' 'WhiteNoise(N/S)' white
+        -f 1 0 1 0 0 -1x1+1+13.500000 0 0 0.100000 0 0 0 'WhiteNoiseRaising' 'WhiteNoiseRaising(A)' whiteRaise
+        -I  1 0 0 1 0 1 -1x1+1+15 ' ' '0.1' 'SinWinRmin' Windowing by sine function from Rmin[/A] to Rmax[/A].Default: No Window.
+        -f 1 0 1 0 0 -1x1+1+16.500000 0 0 0.100000 0 0 0 'Amp' 'The ratio of amplitude contrast to phase contrast' A
+        -I  1 0 0 1 0 1 -1x1+1+18 ' ' '0' 'dfMin' With Astigmatism
+        -t 1 0 1 0 0 6x1+1+19 'NoAstig' 'Without Astigmatism' NoAstig
+        -I 1 0 1 0 0 1 -1x1+1+21.000000 ' ' 'configFile' 'ConfigurationFile' c
+        -i 1 0 1 0 0 -1x1+1+22.500000 0 0 0 0 0 'mode' 'Mode' m
+    -E
+  -E
+-E

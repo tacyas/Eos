@@ -1,0 +1,16 @@
+Wish = \
+Canvas.wish \
+Colormap.wish \
+CommandEntry.wish \
+VariousButton.wish \
+bltGraph.wish \
+commandUtil.wish \
+ctfInfo.wish \
+defaultLoad.wish \
+fileSave.wish \
+fileSelect.wish \
+fileUtil.wish \
+graphFeature.wish \
+seqFileSelect.wish \
+tclUtil.wish \
+

@@ -1,0 +1,36 @@
+<HTML>
+<HEAD>
+<TITLE>mrcImageHoughTransform</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageHoughTransform</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageHoughTransform
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile::mrcImage    ) ] :Essential :Input
+    [-o[utput]           Out                 (NULL      ).as(outFile::mrcImage   ) ] :Essential :Output
+    [-d[elta]Theta       DeltaTheta          (1.0       ).as(Real                ) ] :Optional  :DeltaTheta[degree]
+    [-d[elta]Rho         DeltaRho            (1.0       ).as(Real                ) ] :Optional  :DeltaRho[pixel]
+    [-M[ode]             HoughMode           (0         ).as(Integer             ) ] :Optional  :HoughTransformMode
+    [-width              widthMin            (0         ).as(Real                ) 
+                         widthMax            (0         ).as(Integer             ) ] :Optional  :Width[pixel]
+    [-widthOut           widthOut            (0         ).as(Real                ) ] :Optional  :Width[pixel]
+    [-I[nterpolation]M[ode]InterpolationMode   (0         ).as(Integer             ) ] :Optional  :mrcImageMode: HowToGet
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+0: Lines
+    0: Nearest
+    1: Linear
+1: TwoLines
+    0: Nearest(centre) + InterpolationMode
+    1: Linear(centre)  + InterpolationMode
+3: Rectangles (not yet)
+4: FilledRectangles (not yet)
+5: Circles (not yet)
+6: FilledCircles (not yet)
+7: GivenStructure (not yet)
+</PRE>
+</BODY>
+</HTML>

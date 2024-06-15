@@ -1,0 +1,8 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: Matrix3D","Optional","1","1","In","inFile","stdin"
+"-o","-o[utput]","Output: File","Optional","1","1","Out","outFile","stdout"
+"-EM","-E[uler]M[ngle]","Input: Mode","Optional","1","1","EulerMode","String","ZONS"
+"-Check","-Check","Input: Check Threshold","Optional","1","1","Threshold","Real","1e-4"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

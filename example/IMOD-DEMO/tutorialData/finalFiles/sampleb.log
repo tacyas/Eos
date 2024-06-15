@@ -1,0 +1,726 @@
+
+ FORMATTED  ro  file opened: BBb.xf
+
+ RO image file on unit   1 : BBb.st     Size=        62466
+
+ Number of columns, rows, sections .........    512    512     61
+ Map mode ..................................    1
+ Start cols, rows, sects, grid x,y,z .......    0    0    0     512   512    61
+ Pixel spacing (Angstroms)..................  20.20      20.20      20.20    
+ Cell angles ...............................   90.000   90.000   90.000
+ Fast, medium, slow axes ...................    X    Y    Z
+ Origin on x,y,z ...........................  0.000      0.000      0.000    
+ Minimum density ...........................   532.00    
+ Maximum density ...........................   5902.0    
+ Mean density ..............................   3953.5    
+ tilt angles (original,current) ............  0.0   0.0   0.0   0.0   0.0   0.0
+ Space group,# extra bytes,idtype,lens .....       0     122       0       0
+
+     4 Titles :
+SerialEM: Digitized by Gatan Camera on TF30             30-Sep-03  13:39:31    
+          Tilt axis rotation angle = -12.5                                     
+REDUCEMONT: recut and reduced by factor of  2            3-Nov-03  15:45:19    
+clip: resized image.                                     3-Nov-03  15:47:36    
+
+
+ NEW image file on unit   2 : BBb.ali
+ section   input min&max       output min&max  &  mean
+     0   1421.21   5388.93   1421.21   5388.93   3326.57
+     1   1540.56   5369.79   1540.56   5369.79   3383.19
+     2   1740.46   5647.19   1740.46   5647.19   3651.25
+     3   1809.21   5581.86   1809.21   5581.86   3659.65
+     4   1890.24   5400.98   1890.24   5400.98   3699.44
+     5   1999.38   5327.46   1999.38   5327.46   3727.35
+     6   1689.67   5308.61   1689.67   5308.61   3759.76
+     7   1765.72   5306.59   1765.72   5306.59   3790.85
+     8   1627.05   5284.55   1627.05   5284.55   3788.60
+     9   1600.22   5203.24   1600.22   5203.24   3786.17
+    10   1894.96   5147.15   1894.96   5147.15   3763.06
+    11   2231.30   5141.71   2231.30   5141.71   3754.84
+    12   2176.65   5056.36   2176.65   5056.36   3745.91
+    13   1976.55   5014.75   1976.55   5014.75   3739.84
+    14   2079.55   4817.43   2079.55   4817.43   3638.96
+    15   1563.16   4925.04   1563.16   4925.04   3727.18
+    16   2219.36   4863.34   2219.36   4863.34   3726.03
+    17   1760.22   4859.35   1760.22   4859.35   3731.76
+    18   2043.99   4783.25   2043.99   4783.25   3730.01
+    19   2036.19   4630.26   2036.19   4630.26   3739.81
+    20   2072.29   4579.76   2072.29   4579.76   3740.13
+    21   2192.40   4645.57   2192.40   4645.57   3746.82
+    22   2186.47   4555.87   2186.47   4555.87   3744.96
+    23   2299.92   4615.35   2299.92   4615.35   3749.02
+    24   1833.01   4600.96   1833.01   4600.96   3747.75
+    25   1940.41   4583.50   1940.41   4583.50   3748.56
+    26   2170.57   4579.79   2170.57   4579.79   3746.56
+    27   2142.64   4546.92   2142.64   4546.92   3747.11
+    28   2287.53   4545.97   2287.53   4545.97   3750.93
+    29   1988.63   4532.06   1988.63   4532.06   3742.01
+    30   2242.68   4583.04   2242.68   4583.04   3747.83
+    31   1697.48   4569.60   1697.48   4569.60   3746.13
+    32   2085.49   4595.97   2085.49   4595.97   3755.51
+    33   1835.41   4578.26   1835.41   4578.26   3742.61
+    34   1948.16   4487.94   1948.16   4487.94   3718.00
+    35   2155.70   4533.26   2155.70   4533.26   3741.98
+    36   1925.57   4527.84   1925.57   4527.84   3737.88
+    37   1764.22   4513.42   1764.22   4513.42   3723.40
+    38   1865.88   4513.32   1865.88   4513.32   3730.32
+    39   1892.62   4550.85   1892.62   4550.85   3719.42
+    40   1972.11   4521.94   1972.11   4521.94   3713.57
+    41   1794.06   4590.80   1794.06   4590.80   3710.08
+    42   1525.13   4596.40   1525.13   4596.40   3708.07
+    43   1629.76   4566.29   1629.76   4566.29   3704.88
+    44   1570.40   4560.43   1570.40   4560.43   3700.01
+    45   1506.04   4533.95   1506.04   4533.95   3688.18
+    46   1339.73   4625.56   1339.73   4625.56   3679.34
+    47   1793.09   4843.76   1793.09   4843.76   3675.50
+    48   1646.24   4792.41   1646.24   4792.41   3655.42
+    49   1716.62   4862.11   1716.62   4862.11   3655.02
+    50   1620.97   4853.56   1620.97   4853.56   3646.47
+    51   1655.47   4871.97   1655.47   4871.97   3640.00
+    52   1808.59   4939.18   1808.59   4939.18   3635.96
+    53   1963.39   4938.19   1963.39   4938.19   3618.40
+    54   1742.86   4964.52   1742.86   4964.52   3621.25
+    55   1852.91   5073.80   1852.91   5073.80   3621.29
+    56   1505.15   5067.34   1505.15   5067.34   3609.49
+    57   1761.10   5190.75   1761.10   5190.75   3611.37
+    58   1736.82   5221.51   1736.82   5221.51   3592.01
+    59   1780.23   5183.68   1780.23   5183.68   3541.54
+    60   1875.50   5237.62   1875.50   5237.62   3496.80
+
+
+ THREE-D RECONSTRUCTION FROM SERIES OF PROJECTIONS  ABOUT A COMMON TILT AXIS
+ ----------------------------------------------------------------------------
+
+
+
+ Name of input file:  Name of output file: 
+ RO image file on unit   1 : BBb.ali     Size=         7322
+
+ Number of columns, rows, sections .........    512     60     61
+ Map mode ..................................    1
+ Start cols, rows, sects, grid x,y,z .......    0    0    0     512    60    61
+ Pixel spacing (Angstroms)..................  20.20      20.20      20.20    
+ Cell angles ...............................   90.000   90.000   90.000
+ Fast, medium, slow axes ...................    X    Y    Z
+ Origin on x,y,z ...........................  0.000      0.000      0.000    
+ Minimum density ...........................   1339.7    
+ Maximum density ...........................   5647.2    
+ Mean density ..............................   3692.2    
+ tilt angles (original,current) ............  0.0   0.0   0.0   0.0   0.0   0.0
+ Space group,# extra bytes,idtype,lens .....       0     122       0       0
+
+     5 Titles :
+SerialEM: Digitized by Gatan Camera on TF30             30-Sep-03  13:39:31    
+          Tilt axis rotation angle = -12.5                                     
+REDUCEMONT: recut and reduced by factor of  2            3-Nov-03  15:45:19    
+clip: resized image.                                     3-Nov-03  15:47:36    
+NEWSTACK: Images copied, transformed                    19-Oct-06  21:15:07    
+
+
+ DATA LINE ------- : IMAGEBINNED 1                                                                   
+
+ DATA LINE ------- : FULLIMAGE 512 512                                                               
+
+ DATA LINE ------- : LOG 0.0                                                                         
+
+ Taking logarithm of input data plus     0.000
+
+ DATA LINE ------- : MODE 1                                                                          
+
+ Data mode of output file is  1
+
+ DATA LINE ------- : PERPENDICULAR                                                                   
+
+ Output map is sectioned perpendicular to the tilt axis
+
+ DATA LINE ------- : RADIAL 0.35 0.05                                                                
+
+ Radial weighting function parameters IRMAX = 179  IWIDE =  25
+
+ DATA LINE ------- : SCALE 1.39 500.0                                                                
+
+ Output map densities incremented by    1.39 and then multiplied by  500.00
+
+ DATA LINE ------- : SUBSETSTART 0 226                                                               
+
+ DATA LINE ------- : THICKNESS 200                                                                   
+
+ DATA LINE ------- : SLICE 25 34 1                                                                   
+
+ DATA LINE ------- : TILTFILE BBb.tlt                                                                
+
+ FORMATTED  ro  file opened: BBb.tlt
+
+ DATA LINE ------- : XAXISTILT 0.0                                                                   
+
+ Global alpha tilt of   0.0 will be applied
+
+ DATA LINE ------- : DONE                                                                            
+
+
+ ------------------------------------------------------------------------------
+
+ Rows  26 to  35, (at intervals of   1) of the projection planes will be reconstructed.
+
+ Thickness of reconstructed slice is 200 divisions.
+
+ Full aligned stack will be assumed to be   512 by   512 pixels
+
+ Aligned stack will be assumed to be a subset starting at     0   226
+  Tilt angles were entered from a tilt file
+
+ NEW image file on unit   2 : midb.rec
+
+ Projection angles:
+
+   -56.29   -54.30   -52.30   -50.29   -48.32   -46.34   -44.35   -42.37
+   -40.41   -38.45   -36.49   -34.52   -32.57   -30.60   -28.64   -26.68
+   -24.71   -22.74   -20.73   -18.73   -16.72   -14.72   -12.71   -10.71
+    -8.79    -6.87    -4.95    -3.03    -1.12     0.89     2.90     4.92
+     6.93     8.94    10.95    12.91    14.86    16.82    18.77    20.72
+    22.68    24.69    26.70    28.71    30.72    32.72    34.67    36.61
+    38.55    40.49    42.43    44.46    46.48    48.51    50.53    52.50
+    54.47    56.44    58.41    60.44    62.48
+
+
+ ------------------------------------------------------------------------------
+
+ No fast back projection: No license to use USFFT libraries
+ available or specified
+
+
+
+ STACK LOADING
+ -------------
+
+ Total stack size             120000000
+
+ Radial weighting                 34892
+   function       
+
+ Output slice                    102400
+
+   10 Transposed projections     764160
+
+ Stretching buffer                76416
+
+
+
+ Header on reconstructed map file
+ --------------------------------
+
+
+
+ Number of columns, rows, sections .........    512    200     10
+ Map mode ..................................    1
+ Start cols, rows, sects, grid x,y,z .......    0    0    0     512   200    10
+ Pixel spacing (Angstroms)..................  20.20      20.20      20.20    
+ Cell angles ...............................   90.000   90.000   90.000
+ Fast, medium, slow axes ...................    X    Y    Z
+ Origin on x,y,z ...........................  5171.      2020.     -25.00    
+ Minimum density ...........................  -2530.1    
+ Maximum density ...........................   1982.7    
+ Mean density ..............................   691.83    
+ tilt angles (original,current) ............  0.0   0.0   0.0  90.0   0.0   0.0
+ Space group,# extra bytes,idtype,lens .....       0       0       0       0
+
+     6 Titles :
+SerialEM: Digitized by Gatan Camera on TF30             30-Sep-03  13:39:31    
+          Tilt axis rotation angle = -12.5                                     
+REDUCEMONT: recut and reduced by factor of  2            3-Nov-03  15:45:19    
+clip: resized image.                                     3-Nov-03  15:47:36    
+NEWSTACK: Images copied, transformed                    19-Oct-06  21:15:07    
+TILT: Tomographic reconstruction                        19-Oct-06  21:15:07    
+
+
+
+ To scale output to bytes (10-245), use SCALE       6.819    27.14528
+
+
+ Reconstruction of   10 slices complete.
+
+ ------------------------------------------------------------------------------
+
+ FORMATTED  ro  file opened: BBb.xf
+
+ RO image file on unit   1 : BBb.st     Size=        62466
+
+ Number of columns, rows, sections .........    512    512     61
+ Map mode ..................................    1
+ Start cols, rows, sects, grid x,y,z .......    0    0    0     512   512    61
+ Pixel spacing (Angstroms)..................  20.20      20.20      20.20    
+ Cell angles ...............................   90.000   90.000   90.000
+ Fast, medium, slow axes ...................    X    Y    Z
+ Origin on x,y,z ...........................  0.000      0.000      0.000    
+ Minimum density ...........................   532.00    
+ Maximum density ...........................   5902.0    
+ Mean density ..............................   3953.5    
+ tilt angles (original,current) ............  0.0   0.0   0.0   0.0   0.0   0.0
+ Space group,# extra bytes,idtype,lens .....       0     122       0       0
+
+     4 Titles :
+SerialEM: Digitized by Gatan Camera on TF30             30-Sep-03  13:39:31    
+          Tilt axis rotation angle = -12.5                                     
+REDUCEMONT: recut and reduced by factor of  2            3-Nov-03  15:45:19    
+clip: resized image.                                     3-Nov-03  15:47:36    
+
+
+ NEW image file on unit   2 : BBb.ali
+ section   input min&max       output min&max  &  mean
+     0   1904.03   5413.56   1904.03   5413.56   3851.55
+     1   1897.14   5401.99   1897.14   5401.99   3916.30
+     2   2266.86   5767.30   2266.86   5767.30   4238.18
+     3   2658.65   5743.47   2658.65   5743.47   4249.10
+     4   2755.17   5873.81   2755.17   5873.81   4292.11
+     5   2917.19   5745.31   2917.19   5745.31   4318.16
+     6   2671.71   5791.37   2671.71   5791.37   4351.74
+     7   2986.90   5759.60   2986.90   5759.60   4379.50
+     8   2645.36   5742.70   2645.36   5742.70   4370.20
+     9   2529.28   5674.59   2529.28   5674.59   4353.17
+    10   2474.06   5597.74   2474.06   5597.74   4315.40
+    11   2293.58   5534.50   2293.58   5534.50   4289.80
+    12   2393.31   5480.62   2393.31   5480.62   4260.56
+    13   2424.38   5467.32   2424.38   5467.32   4240.80
+    14   2458.54   5263.47   2458.54   5263.47   4113.29
+    15   2606.66   5339.46   2606.66   5339.46   4198.91
+    16   2893.47   5307.51   2893.47   5307.51   4174.98
+    17   2625.18   5294.62   2625.18   5294.62   4172.67
+    18   2683.25   5282.44   2683.25   5282.44   4152.67
+    19   2036.94   5185.87   2036.94   5185.87   4145.07
+    20   2335.24   5148.77   2335.24   5148.77   4130.99
+    21   1963.96   5141.24   1963.96   5141.24   4127.21
+    22   2227.73   5155.14   2227.73   5155.14   4113.86
+    23   2428.92   5117.99   2428.92   5117.99   4107.98
+    24   2228.03   5061.78   2228.03   5061.78   4098.71
+    25   2739.64   5027.66   2739.64   5027.66   4092.47
+    26   2292.95   5015.50   2292.95   5015.50   4086.69
+    27   2713.77   5028.41   2713.77   5028.41   4083.26
+    28   2257.77   4965.11   2257.77   4965.11   4084.57
+    29   2622.02   4958.12   2622.02   4958.12   4078.31
+    30   2376.88   4981.75   2376.88   4981.75   4070.02
+    31   2341.25   5014.99   2341.25   5014.99   4075.15
+    32   2246.98   4992.23   2246.98   4992.23   4080.54
+    33   2576.52   4923.57   2576.52   4923.57   4068.08
+    34   2542.67   4927.56   2542.67   4927.56   4040.23
+    35   2197.64   5014.66   2197.64   5014.66   4067.58
+    36   2487.65   4970.38   2487.65   4970.38   4064.58
+    37   2608.75   4978.03   2608.75   4978.03   4052.20
+    38   2083.82   5029.49   2083.82   5029.49   4061.54
+    39   2302.33   5040.84   2302.33   5040.84   4057.46
+    40   2576.24   5031.00   2576.24   5031.00   4053.90
+    41   2706.67   5068.60   2706.67   5068.60   4055.95
+    42   2597.27   5096.55   2597.27   5096.55   4060.30
+    43   2623.28   5126.53   2623.28   5126.53   4066.94
+    44   2201.93   5156.68   2201.93   5156.68   4069.95
+    45   2456.93   5140.38   2456.93   5140.38   4067.18
+    46   2516.58   5211.24   2516.58   5211.24   4076.10
+    47   2107.32   5201.14   2107.32   5201.14   4085.22
+    48   1993.66   5213.35   1993.66   5213.35   4078.11
+    49   2682.17   5244.25   2682.17   5244.25   4098.32
+    50   2646.85   5313.25   2646.85   5313.25   4104.73
+    51   2432.74   5381.65   2432.74   5381.65   4110.94
+    52   2468.16   5395.16   2468.16   5395.16   4125.79
+    53   2159.72   5410.06   2159.72   5410.06   4121.64
+    54   1638.93   5448.79   1638.93   5448.79   4144.13
+    55   2123.96   5527.28   2123.96   5527.28   4161.16
+    56   2196.27   5551.52   2196.27   5551.52   4165.91
+    57   2394.88   5595.43   2394.88   5595.43   4180.27
+    58   2170.51   5655.37   2170.51   5655.37   4169.80
+    59   2101.21   5596.86   2101.21   5596.86   4119.57
+    60   2202.67   5639.13   2202.67   5639.13   4070.59
+
+
+ THREE-D RECONSTRUCTION FROM SERIES OF PROJECTIONS  ABOUT A COMMON TILT AXIS
+ ----------------------------------------------------------------------------
+
+
+
+ Name of input file:  Name of output file: 
+ RO image file on unit   1 : BBb.ali     Size=         7322
+
+ Number of columns, rows, sections .........    512     60     61
+ Map mode ..................................    1
+ Start cols, rows, sects, grid x,y,z .......    0    0    0     512    60    61
+ Pixel spacing (Angstroms)..................  20.20      20.20      20.20    
+ Cell angles ...............................   90.000   90.000   90.000
+ Fast, medium, slow axes ...................    X    Y    Z
+ Origin on x,y,z ...........................  0.000      0.000      0.000    
+ Minimum density ...........................   1638.9    
+ Maximum density ...........................   5873.8    
+ Mean density ..............................   4134.6    
+ tilt angles (original,current) ............  0.0   0.0   0.0   0.0   0.0   0.0
+ Space group,# extra bytes,idtype,lens .....       0     122       0       0
+
+     5 Titles :
+SerialEM: Digitized by Gatan Camera on TF30             30-Sep-03  13:39:31    
+          Tilt axis rotation angle = -12.5                                     
+REDUCEMONT: recut and reduced by factor of  2            3-Nov-03  15:45:19    
+clip: resized image.                                     3-Nov-03  15:47:36    
+NEWSTACK: Images copied, transformed                    19-Oct-06  21:15:08    
+
+
+ DATA LINE ------- : IMAGEBINNED 1                                                                   
+
+ DATA LINE ------- : FULLIMAGE 512 512                                                               
+
+ DATA LINE ------- : LOG 0.0                                                                         
+
+ Taking logarithm of input data plus     0.000
+
+ DATA LINE ------- : MODE 1                                                                          
+
+ Data mode of output file is  1
+
+ DATA LINE ------- : PERPENDICULAR                                                                   
+
+ Output map is sectioned perpendicular to the tilt axis
+
+ DATA LINE ------- : RADIAL 0.35 0.05                                                                
+
+ Radial weighting function parameters IRMAX = 179  IWIDE =  25
+
+ DATA LINE ------- : SCALE 1.39 500.0                                                                
+
+ Output map densities incremented by    1.39 and then multiplied by  500.00
+
+ DATA LINE ------- : SUBSETSTART 0 402                                                               
+
+ DATA LINE ------- : THICKNESS 200                                                                   
+
+ DATA LINE ------- : SLICE 25 34 1                                                                   
+
+ DATA LINE ------- : TILTFILE BBb.tlt                                                                
+
+ FORMATTED  ro  file opened: BBb.tlt
+
+ DATA LINE ------- : XAXISTILT 0.0                                                                   
+
+ Global alpha tilt of   0.0 will be applied
+
+ DATA LINE ------- : DONE                                                                            
+
+
+ ------------------------------------------------------------------------------
+
+ Rows  26 to  35, (at intervals of   1) of the projection planes will be reconstructed.
+
+ Thickness of reconstructed slice is 200 divisions.
+
+ Full aligned stack will be assumed to be   512 by   512 pixels
+
+ Aligned stack will be assumed to be a subset starting at     0   402
+  Tilt angles were entered from a tilt file
+
+ NEW image file on unit   2 : topb.rec
+
+ Projection angles:
+
+   -56.29   -54.30   -52.30   -50.29   -48.32   -46.34   -44.35   -42.37
+   -40.41   -38.45   -36.49   -34.52   -32.57   -30.60   -28.64   -26.68
+   -24.71   -22.74   -20.73   -18.73   -16.72   -14.72   -12.71   -10.71
+    -8.79    -6.87    -4.95    -3.03    -1.12     0.89     2.90     4.92
+     6.93     8.94    10.95    12.91    14.86    16.82    18.77    20.72
+    22.68    24.69    26.70    28.71    30.72    32.72    34.67    36.61
+    38.55    40.49    42.43    44.46    46.48    48.51    50.53    52.50
+    54.47    56.44    58.41    60.44    62.48
+
+
+ ------------------------------------------------------------------------------
+
+ No fast back projection: No license to use USFFT libraries
+ available or specified
+
+
+
+ STACK LOADING
+ -------------
+
+ Total stack size             120000000
+
+ Radial weighting                 34892
+   function       
+
+ Output slice                    102400
+
+   10 Transposed projections     764160
+
+ Stretching buffer                76416
+
+
+
+ Header on reconstructed map file
+ --------------------------------
+
+
+
+ Number of columns, rows, sections .........    512    200     10
+ Map mode ..................................    1
+ Start cols, rows, sects, grid x,y,z .......    0    0    0     512   200    10
+ Pixel spacing (Angstroms)..................  20.20      20.20      20.20    
+ Cell angles ...............................   90.000   90.000   90.000
+ Fast, medium, slow axes ...................    X    Y    Z
+ Origin on x,y,z ...........................  5171.      2020.     -25.00    
+ Minimum density ...........................  -2578.5    
+ Maximum density ...........................   1694.0    
+ Mean density ..............................   688.70    
+ tilt angles (original,current) ............  0.0   0.0   0.0  90.0   0.0   0.0
+ Space group,# extra bytes,idtype,lens .....       0       0       0       0
+
+     6 Titles :
+SerialEM: Digitized by Gatan Camera on TF30             30-Sep-03  13:39:31    
+          Tilt axis rotation angle = -12.5                                     
+REDUCEMONT: recut and reduced by factor of  2            3-Nov-03  15:45:19    
+clip: resized image.                                     3-Nov-03  15:47:36    
+NEWSTACK: Images copied, transformed                    19-Oct-06  21:15:08    
+TILT: Tomographic reconstruction                        19-Oct-06  21:15:09    
+
+
+
+ To scale output to bytes (10-245), use SCALE       6.896    28.67200
+
+
+ Reconstruction of   10 slices complete.
+
+ ------------------------------------------------------------------------------
+
+ FORMATTED  ro  file opened: BBb.xf
+
+ RO image file on unit   1 : BBb.st     Size=        62466
+
+ Number of columns, rows, sections .........    512    512     61
+ Map mode ..................................    1
+ Start cols, rows, sects, grid x,y,z .......    0    0    0     512   512    61
+ Pixel spacing (Angstroms)..................  20.20      20.20      20.20    
+ Cell angles ...............................   90.000   90.000   90.000
+ Fast, medium, slow axes ...................    X    Y    Z
+ Origin on x,y,z ...........................  0.000      0.000      0.000    
+ Minimum density ...........................   532.00    
+ Maximum density ...........................   5902.0    
+ Mean density ..............................   3953.5    
+ tilt angles (original,current) ............  0.0   0.0   0.0   0.0   0.0   0.0
+ Space group,# extra bytes,idtype,lens .....       0     122       0       0
+
+     4 Titles :
+SerialEM: Digitized by Gatan Camera on TF30             30-Sep-03  13:39:31    
+          Tilt axis rotation angle = -12.5                                     
+REDUCEMONT: recut and reduced by factor of  2            3-Nov-03  15:45:19    
+clip: resized image.                                     3-Nov-03  15:47:36    
+
+
+ NEW image file on unit   2 : BBb.ali
+ section   input min&max       output min&max  &  mean
+     0    804.54   5473.61    804.54   5473.61   3566.64
+     1   1682.04   5501.78   1682.04   5501.78   3640.13
+     2   2003.97   5874.24   2003.97   5874.24   3924.94
+     3   1957.65   5839.22   1957.65   5839.22   3936.99
+     4   2331.62   5810.43   2331.62   5810.43   3980.97
+     5   2066.82   5816.91   2066.82   5816.91   4012.50
+     6   2284.03   5784.42   2284.03   5784.42   4054.71
+     7   1652.89   5822.31   1652.89   5822.31   4092.12
+     8   2445.20   5800.63   2445.20   5800.63   4084.23
+     9   1926.16   5721.87   1926.16   5721.87   4083.14
+    10   2024.53   5558.26   2024.53   5558.26   4055.47
+    11   2333.42   5476.20   2333.42   5476.20   4037.98
+    12   2230.89   5430.98   2230.89   5430.98   4012.76
+    13   2061.41   5379.11   2061.41   5379.11   4004.07
+    14   2172.81   5219.53   2172.81   5219.53   3904.47
+    15   1835.19   5234.08   1835.19   5234.08   3983.10
+    16   2158.29   5192.00   2158.29   5192.00   3961.98
+    17   1728.09   5207.06   1728.09   5207.06   3976.70
+    18   1920.13   5132.33   1920.13   5132.33   3962.20
+    19   1645.19   5082.00   1645.19   5082.00   3955.73
+    20   1381.50   5096.00   1381.50   5096.00   3952.31
+    21   1387.90   5005.02   1387.90   5005.02   3949.95
+    22   1972.31   4957.41   1972.31   4957.41   3942.87
+    23   1771.90   4920.98   1771.90   4920.98   3941.01
+    24   1837.51   4876.66   1837.51   4876.66   3934.33
+    25   2389.88   4834.51   2389.88   4834.51   3931.54
+    26   2317.84   4796.97   2317.84   4796.97   3924.75
+    27   2206.92   4822.35   2206.92   4822.35   3922.35
+    28   2224.58   4800.00   2224.58   4800.00   3920.45
+    29   2286.75   4836.96   2286.75   4836.96   3921.13
+    30   2363.63   4744.81   2363.63   4744.81   3909.94
+    31   2244.49   4812.00   2244.49   4812.00   3920.85
+    32   2385.84   4749.43   2385.84   4749.43   3919.40
+    33   2309.78   4773.10   2309.78   4773.10   3909.26
+    34   2206.81   4777.25   2206.81   4777.25   3887.59
+    35   2446.76   4806.44   2446.76   4806.44   3907.74
+    36   1893.68   4844.62   1893.68   4844.62   3907.36
+    37   2010.77   4757.04   2010.77   4757.04   3888.59
+    38   2107.21   4788.21   2107.21   4788.21   3895.19
+    39   2208.58   4898.20   2208.58   4898.20   3891.77
+    40   2316.36   4821.90   2316.36   4821.90   3882.79
+    41   2175.35   4952.00   2175.35   4952.00   3886.42
+    42   1806.66   4990.31   1806.66   4990.31   3886.03
+    43   2036.99   4997.12   2036.99   4997.12   3885.33
+    44   2224.63   5061.02   2224.63   5061.02   3890.77
+    45   1136.79   5108.28   1136.79   5108.28   3886.97
+    46   2238.52   5149.94   2238.52   5149.94   3882.89
+    47   2220.07   5140.66   2220.07   5140.66   3885.30
+    48   2183.18   5159.99   2183.18   5159.99   3871.64
+    49   2078.03   5423.50   2078.03   5423.50   3898.27
+    50   2037.33   5274.46   2037.33   5274.46   3888.88
+    51   2256.52   5286.99   2256.52   5286.99   3883.12
+    52   2257.79   5380.00   2257.79   5380.00   3893.55
+    53   1995.49   5362.52   1995.49   5362.52   3867.07
+    54   1915.48   5433.16   1915.48   5433.16   3879.74
+    55   1808.64   5590.72   1808.64   5590.72   3904.14
+    56   2023.35   5593.49   2023.35   5593.49   3893.18
+    57   2112.21   5629.73   2112.21   5629.73   3900.59
+    58   1952.70   5666.02   1952.70   5666.02   3884.40
+    59   1704.63   5603.00   1704.63   5603.00   3841.31
+    60   1938.21   5617.91   1938.21   5617.91   3793.81
+
+
+ THREE-D RECONSTRUCTION FROM SERIES OF PROJECTIONS  ABOUT A COMMON TILT AXIS
+ ----------------------------------------------------------------------------
+
+
+
+ Name of input file:  Name of output file: 
+ RO image file on unit   1 : BBb.ali     Size=         7322
+
+ Number of columns, rows, sections .........    512     60     61
+ Map mode ..................................    1
+ Start cols, rows, sects, grid x,y,z .......    0    0    0     512    60    61
+ Pixel spacing (Angstroms)..................  20.20      20.20      20.20    
+ Cell angles ...............................   90.000   90.000   90.000
+ Fast, medium, slow axes ...................    X    Y    Z
+ Origin on x,y,z ...........................  0.000      0.000      0.000    
+ Minimum density ...........................   804.54    
+ Maximum density ...........................   5874.2    
+ Mean density ..............................   3919.6    
+ tilt angles (original,current) ............  0.0   0.0   0.0   0.0   0.0   0.0
+ Space group,# extra bytes,idtype,lens .....       0     122       0       0
+
+     5 Titles :
+SerialEM: Digitized by Gatan Camera on TF30             30-Sep-03  13:39:31    
+          Tilt axis rotation angle = -12.5                                     
+REDUCEMONT: recut and reduced by factor of  2            3-Nov-03  15:45:19    
+clip: resized image.                                     3-Nov-03  15:47:36    
+NEWSTACK: Images copied, transformed                    19-Oct-06  21:15:09    
+
+
+ DATA LINE ------- : IMAGEBINNED 1                                                                   
+
+ DATA LINE ------- : FULLIMAGE 512 512                                                               
+
+ DATA LINE ------- : LOG 0.0                                                                         
+
+ Taking logarithm of input data plus     0.000
+
+ DATA LINE ------- : MODE 1                                                                          
+
+ Data mode of output file is  1
+
+ DATA LINE ------- : PERPENDICULAR                                                                   
+
+ Output map is sectioned perpendicular to the tilt axis
+
+ DATA LINE ------- : RADIAL 0.35 0.05                                                                
+
+ Radial weighting function parameters IRMAX = 179  IWIDE =  25
+
+ DATA LINE ------- : SCALE 1.39 500.0                                                                
+
+ Output map densities incremented by    1.39 and then multiplied by  500.00
+
+ DATA LINE ------- : SUBSETSTART 0 50                                                                
+
+ DATA LINE ------- : THICKNESS 200                                                                   
+
+ DATA LINE ------- : SLICE 25 34 1                                                                   
+
+ DATA LINE ------- : TILTFILE BBb.tlt                                                                
+
+ FORMATTED  ro  file opened: BBb.tlt
+
+ DATA LINE ------- : XAXISTILT 0.0                                                                   
+
+ Global alpha tilt of   0.0 will be applied
+
+ DATA LINE ------- : DONE                                                                            
+
+
+ ------------------------------------------------------------------------------
+
+ Rows  26 to  35, (at intervals of   1) of the projection planes will be reconstructed.
+
+ Thickness of reconstructed slice is 200 divisions.
+
+ Full aligned stack will be assumed to be   512 by   512 pixels
+
+ Aligned stack will be assumed to be a subset starting at     0    50
+  Tilt angles were entered from a tilt file
+
+ NEW image file on unit   2 : botb.rec
+
+ Projection angles:
+
+   -56.29   -54.30   -52.30   -50.29   -48.32   -46.34   -44.35   -42.37
+   -40.41   -38.45   -36.49   -34.52   -32.57   -30.60   -28.64   -26.68
+   -24.71   -22.74   -20.73   -18.73   -16.72   -14.72   -12.71   -10.71
+    -8.79    -6.87    -4.95    -3.03    -1.12     0.89     2.90     4.92
+     6.93     8.94    10.95    12.91    14.86    16.82    18.77    20.72
+    22.68    24.69    26.70    28.71    30.72    32.72    34.67    36.61
+    38.55    40.49    42.43    44.46    46.48    48.51    50.53    52.50
+    54.47    56.44    58.41    60.44    62.48
+
+
+ ------------------------------------------------------------------------------
+
+ No fast back projection: No license to use USFFT libraries
+ available or specified
+
+
+
+ STACK LOADING
+ -------------
+
+ Total stack size             120000000
+
+ Radial weighting                 34892
+   function       
+
+ Output slice                    102400
+
+   10 Transposed projections     764160
+
+ Stretching buffer                76416
+
+
+
+ Header on reconstructed map file
+ --------------------------------
+
+
+
+ Number of columns, rows, sections .........    512    200     10
+ Map mode ..................................    1
+ Start cols, rows, sects, grid x,y,z .......    0    0    0     512   200    10
+ Pixel spacing (Angstroms)..................  20.20      20.20      20.20    
+ Cell angles ...............................   90.000   90.000   90.000
+ Fast, medium, slow axes ...................    X    Y    Z
+ Origin on x,y,z ...........................  5171.      2020.     -25.00    
+ Minimum density ...........................  -2947.0    
+ Maximum density ...........................   1879.8    
+ Mean density ..............................   697.17    
+ tilt angles (original,current) ............  0.0   0.0   0.0  90.0   0.0   0.0
+ Space group,# extra bytes,idtype,lens .....       0       0       0       0
+
+     6 Titles :
+SerialEM: Digitized by Gatan Camera on TF30             30-Sep-03  13:39:31    
+          Tilt axis rotation angle = -12.5                                     
+REDUCEMONT: recut and reduced by factor of  2            3-Nov-03  15:45:19    
+clip: resized image.                                     3-Nov-03  15:47:36    
+NEWSTACK: Images copied, transformed                    19-Oct-06  21:15:09    
+TILT: Tomographic reconstruction                        19-Oct-06  21:15:10    
+
+
+
+ To scale output to bytes (10-245), use SCALE       7.678    25.37877
+
+
+ Reconstruction of   10 slices complete.
+
+ ------------------------------------------------------------------------------

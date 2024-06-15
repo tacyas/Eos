@@ -1,0 +1,155 @@
+#!../I686LINUX/smolet
+set PlaneActor(current) 	0 
+set PlaneActor(range) 	    60	
+set angle   			 0 
+
+proc actorCreate { } { 
+	global PlaneActor
+
+	puts "actorCreate Start" ; flush stdout	
+	set i 1
+	if [catch {open FileList2 r} file1] {
+		puts stderr "Cannot open FileList: $file1"
+	} else {
+		while {[gets $file1 line] >= 0} {
+
+			vtkTIFFReader tmpImage$i; set ImageIn($i) tmpImage$i 
+			$ImageIn($i) SetFileName $line
+
+			vtkTexture tmpTexture$i; set Texture($i) tmpTexture$i
+			$Texture($i) SetInput [$ImageIn($i) GetOutput]
+			$Texture($i) InterpolateOn
+	
+			vtkPlaneSource tmpPlane$i ; set Plane($i) tmpPlane$i
+	
+			vtkPolyDataMapper tmpPlaneMapper$i; set PlaneMapper($i) tmpPlaneMapper$i
+			$PlaneMapper($i) SetInput [ $Plane($i) GetOutput]
+	
+ 			vtkActor tmpPlaneActor$i; set PlaneActor($i) tmpPlaneActor$i
+			$PlaneActor($i) SetMapper $PlaneMapper($i)
+			$PlaneActor($i) SetTexture $Texture($i)
+			$PlaneActor($i) SetPosition 0 0 [expr $i*0.2]
+	
+			#vtkImageActor Actor$i
+			#Actor$i SetInput [ImageIn$i GetOutput]
+			#Actor$i SetZSlice $j
+			#ren1 AddActor Actor$i
+			incr i
+		}
+	}	
+
+	set PlaneActor(number) $i 
+	close $file1
+
+	puts "actorCreate End"; flush stdout
+}
+
+proc ActorSelect {angle} {
+	global PlaneActor 
+
+	puts "Start ActorSelect : $angle"
+	flush stdout
+
+	for { set a 1 } { $a <= $PlaneActor(number) } {incr a } {
+		catch { ren1 AddActor $PlaneActor($a) }
+	}
+#	set min [expr $PlaneActor(current)-$PlaneActor(range)] ; if {$min <= 0 } { set min 1 }
+#	set max [expr $PlaneActor(current)+$PlaneActor(range)] ; if {$PlaneActor(number) < $max } { set max $PlaneActor(number)  } 
+#
+#	set minn [expr $angle-$PlaneActor(range)] ; if {$min <= 0 } { set min 1 }
+#	set maxn [expr $angle+$PlaneActor(range)] ; if {$PlaneActor(number) < $max } { set max $PlaneActor(number)  } 
+#
+#	if { $minn < $min } {
+#		for {set a $max } {$maxn <  $a && $min<= $a } {incr a -1 } {
+#			puts "remove $a"
+#			catch { ren1 RemoveActor $PlaneActor($a) }
+#		}
+#		for { set j $minn } {$j < $min && $j <= $maxn } { incr j } {
+#			puts "add $j"
+#			catch { ren1 AddActor $PlaneActor($j) }
+#		}
+#	} else {
+#		for {set a $min } {$a < $minn && $a <= $max } {incr a} {
+#			puts "remove $a" 	
+#			catch { ren1 RemoveActor $PlaneActor($a) }
+#		}
+#		for { set j $maxn } {$max < $j && $minn <= $j } { incr j -1 } {
+#			puts "add $j"
+#			catch { ren1 AddActor $PlaneActor($j) }
+#		}
+#	}
+
+	set PlaneActor(current) $angle
+
+	#ren1 ResetCameraClippingRange
+	#[ren1 GetRenderWindow] Render 
+	ren1 ResetCamera
+	[ren1 GetRenderWindow] Render 
+	puts "End ActorSelect "
+	flush stdout
+}												 
+
+#::vtk::bind_tk_render_widget $desktop(vtkw)
+
+#message .msg -justify center -text "Hello smolet world!!"
+
+#scale .scale -from 0 -to 121 -length 400 -variable angle -orient horizontal -label "tilt angle" -tickinterval 5 -showvalue true 
+#pack .ren .scale .msg 
+
+#wm withdraw .
+proc leftButtonFunc { } {
+	puts "leftButtonFunc"
+}
+
+proc desktopInit { } {
+	global vtkw
+	global renWin
+
+	vtkRenderWindow renWin
+	set vtkw [ vtkTkRenderWidget .ren -width 600 -height 600 -rw renWin ]
+	#::vtk::bind_tk_render_widget $vtkw
+
+	vtkRenderer ren1
+	renWin AddRenderer ren1
+
+	vtkRenderWindowInteractor iren
+	iren SetRenderWindow renWin
+
+	ren1 SetBackground 0.5 0.5 0.5
+	renWin SetSize 600 600 
+
+	set camera1 [ ren1 GetActiveCamera]
+	ren1 ResetCameraClippingRange
+	renWin Render
+	$camera1 SetObliqueAngles 60 90 
+
+	vtkInteractorStyleJoystickCamera myStyle
+	iren SetInteractorStyle myStyle
+	#myStyle SetLeftButtonPressMethod { leftButtonFunc }
+
+	scale .scale -from 0 -to 121 -length 400  \
+		-variable angle -orient horizontal    \
+		-label "tilt angle" -tickinterval 5   \
+		-showvalue true -command { ActorSelect }
+	set ff [ frame .readBox ]
+	button $ff.b    -text readBox                -command  { readBoxFileList }  
+	entry  $ff.file -textvariable readBoxFile   
+	bind   $ff.file	<Return> {readBoxFileList }
+	pack $ff.b $ff.file -side left
+
+	set ff [ frame .writeBox ]
+	button $ff.b    -text writeBox               -command { writeBoxFileList } 
+	entry  $ff.file -textvariable writeBoxFile   
+	bind $ff.file <Return> {writeBoxFileList }  
+	pack $ff.b $ff.file -side left
+
+	pack .ren .scale .readBox .writeBox
+	#pack .scale
+}
+
+actorCreate
+desktopInit
+
+#::vtk::bind_tk_render_widget $vtkw
+
+tkwait window .

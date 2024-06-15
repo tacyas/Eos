@@ -1,0 +1,12 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: DCD","Essential","1","1","In","inFile","NULL"
+"-ip","-i[nput]p[db]","Input: PDB","Optional","1","1","InPDB","inFile","NULL"
+"-o","-o[utput]","Output: ASCII","Essential","1","1","Out","outFile","NULL"
+"-op","-o[utput]p[db]","Output: PDB","Optional","1","1","OutPDB","outFile","NULL"
+"-r","-r[ange]","Input: Start End Delta","Optional","3","1","rStart","Integer","10","2","rEnd","Integer","100","3","rDelta","Integer","10"
+"-s","-s[tart]","Input: Start","Optional","1","1","Start","Integer","10"
+"-e","-e[nd]","Input: End","Optional","1","1","End","Integer","100"
+"-d","-d[elta]","Input: Delta(Interval)","Optional","1","1","Delta","Integer","10"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

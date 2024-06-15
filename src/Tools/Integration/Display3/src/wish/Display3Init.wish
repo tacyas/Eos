@@ -1,0 +1,29 @@
+#!../Display3.HP 
+proc display3Init {} {
+	global fileNameIn
+	global CommandPut
+	global CONTOUR
+    global contourSurface 
+
+	set tcl_precision 17 
+
+	set contourSurface(current) 0
+	set contourSurface(number)  1 
+	set contourSurface([subst $contourSurface(current)],contour) $CONTOUR
+
+	display3MenuSet	
+	display3DesktopSet
+
+	if [ info exists fileNameIn ] {
+		fileOpen 
+	} else {
+		set fileNameIn ./
+		wm title . Display3
+	}
+
+	if [ info exists CommandPut(name) ] {
+		set CommandPut(fpt) [open  CommandPut w ]
+	} else {
+		set CommandPut(fpt) stdout
+	}
+}

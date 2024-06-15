@@ -1,0 +1,30 @@
+#ifndef XXXXX 
+#define XXXX 
+
+#include <stdio.h>
+
+/* constant begin */
+
+
+/* constant end */
+
+/* struct begin */
+
+
+/* struct end */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* prototype begin */
+
+
+
+/* prototype end */
+
+#ifdef __cplusplus
+};
+#endif
+
+#endif  /* XXXX */ 

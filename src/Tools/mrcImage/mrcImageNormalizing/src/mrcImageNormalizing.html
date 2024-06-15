@@ -1,0 +1,46 @@
+<HTML>
+<HEAD>
+<TITLE>mrcImageNormalizing</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageNormalizing</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageNormalizing
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-A                  A                   (1.0       ).as(Real                ) ] :Optional  :A
+    [-B                  B                   (0.0       ).as(Real                ) ] :Optional  :B
+    [-ContourMin         ContourMin          (0.0       ).as(Real                ) ] :Optional  :ContourMin: density value
+    [-ContourMax         ContourMax          (10.0      ).as(Real                ) ] :Optional  :ContourMax: density value
+    [-ContourSolvent     ContourSolvent      (0.0       ).as(Real                ) ] :Optional  :ContourSolvent
+    [-Low[ValueArea]     thresOfLowValueArea (0.1       ).as(Real                ) ] :Optional  :LowValueArea: rate
+    [-High[ValueArea]    thresOfHighValueArea(0.9       ).as(Real                ) ] :Optional  :HighValueArea: rate
+    [-param[eter]o[utput]ParamOut            (stdout    ).as(outFile             ) ] :Optional  :ConfigurationFile
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- mode -----
+----- Mode for lmrcImageNormalizing -----
+  0: Double Exponential: Solvent and Object
+         Fitting histgram to double exponentials as Solvent and Object  
+		   data = A*(data-MeanOfSolvent)/(MeanOfObject-MeanOfSolvent) + B 
+  1: Min-Max: Background and Object
+		   data = A*(data-Min)/(Max-Min) + B 
+  2: Contour
+		   data = A*(data-ContourMin)/(ContourMax-ContourMin) + B 
+  3: Contour and Solvent
+		   if data < ContourSolvent, data = ContourSolvent.  After this, calculate the below. 
+		   data = A*(data-ContourMin)/(ContourMax-ContourMin) + B 
+  4: No Estimation
+		   data = A*data + B 
+  5: Assume the density as gaussion.
+		   data = A*Normalized(data) + B , where normalized means (average=0, SD=1)
+  6: Min-75percent: Background and Object(75)
+		   data = A*(data-Min)/(75percent-Min)x0.75 + B 
+  7: LowValueArea to HighValueArea: 
+		   data = A*(data-MeanOfLowValueArea)/(meanOfHighValue-meanOfLowValueArea) + B, using LowValueArea and HighValueArea
+----- HighValueArea and LowValueArea for 007 -----
+</PRE>
+</BODY>
+</HTML>

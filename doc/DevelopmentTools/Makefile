@@ -1,0 +1,2 @@
+all:
+	htmlDirList    > .list.html

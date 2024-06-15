@@ -1,0 +1,14 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-dang","-dang","Delta Angle[degree]","Optional","1","1","dang","Real","10"
+"-zmin","-zmin","Z Minimum[A]","Optional","1","1","zmin","Real","0"
+"-zmax","-zmax","Z Maximum[A]","Optional","1","1","zmax","Real","100"
+"-dz","-dz","Delta Z[A]","Optional","1","1","dz","Real","10"
+"-rmin","-rmin","Radius Minimum[A]","Optional","1","1","rmin","Real","0"
+"-rmax","-rmax","Radius Maximum[A]","Optional","1","1","rmax","Real","200"
+"-threshold","-threshold","Set threshold value.  Averaged density is more than threshold value","Optional","1","1","threshold","Real","0"
+"-dr","-dr","Delta Radius[A]","Optional","1","1","dr","Real","10"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

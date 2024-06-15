@@ -1,0 +1,137 @@
+#!/usr/local/bin/bltwish
+#
+#
+proc llDataPrintGraphCreate { } {
+	global llMax 	
+	global truePitch 
+	global nRMax
+	global Rmax
+	global Rmin
+	global NN
+	global NL
+	global nFrame
+	global Mode
+	set nF 0
+	for {set i 0} { $i < $llMax } {incr i 1} {
+		global vR$i
+		global vA$i
+		global vP$i
+
+		set nF      [expr $i/($nFrame(column)*$nFrame(row))]
+		set nRow    [expr $i%$nFrame(row)]
+		set nColumn [expr ($i%($nFrame(column)*$nFrame(row)))/$nFrame(row)]
+
+#		puts "$nF $nRow $nColumn\n"
+#		if [ catch { frame .graphFrame } ] {
+#		}
+
+		if [ catch { frame .graphFrames($nF) } ] {
+			#puts "test nF:$nF, nR:$nRow, nC:$nColumn\n"
+		}
+		set graph .graph($i)
+		if [ catch { graph $graph } ] {
+		}
+		$graph configure \
+			-title "($NN($i), $NL($i))" \
+			-background white
+	
+		# Amplitude
+		if [ catch { $graph element create Amplitude \
+		 	-x vR$i \
+		 	-y vA$i } ] {
+		} else {
+			$graph pen create AmplitudePen
+			$graph pen configure AmplitudePen "activeLine" \
+				-color blue \
+				-type  line \
+				-linewidth 0.01i \
+				-pixels 0 
+			$graph pen create AmplitudesPen
+			$graph pen configure AmplitudesPen "activeLine" \
+				-color blue \
+				-symbol circle \
+				-pixels 0.001i \
+				-type line 
+		}
+
+		# Phase Axis
+		if [ catch { $graph element create Phase \
+		 	-x vR$i \
+		 	-y vP$i } ] {
+		} else {
+			$graph pen create PhasePen
+			$graph pen configure PhasePen "activeLine" \
+				-color red \
+				-symbol circle \
+				-pixels 0.02i \
+				-linewidth 0 \
+				-type line 
+		}
+
+		#
+		#
+		#
+		switch $Mode {
+			Single {
+				$graph element configure Amplitude -pen AmplitudePen 
+
+				$graph element configure Phase -pen PhasePen \
+			 		-mapy y2
+			}
+			Multi {
+				$graph element configure Amplitude -pen AmplitudesPen 
+
+				$graph element configure Phase -pen PhasePen \
+			 		-mapy y2
+			}
+		}	
+		table .graphFrames($nF) $graph $nRow,$nColumn -fill both
+		table configure  .graphFrames($nF) c$nColumn \
+			-width 4i 
+#			-width  [ $graph extents plotwidth ] 
+		table configure  .graphFrames($nF) r$nRow \
+			-height 2i 
+#			-height [ $graph extents plotheight ]
+#		table configure .graphFrames($nF) \
+#			-columns $nFrame(column) \
+#			-rows $nFrame(row) 
+#		.graphFrames($nF) configure -visual best 
+#
+
+		Blt_ZoomStack    $graph
+		Blt_Crosshairs   $graph
+		Blt_ActiveLegend $graph
+		Blt_ClosestPoint $graph
+
+#
+# Axis Configuration
+#
+		if { $Rmax < $Rmin } {
+			set tmp $Rmax
+			set Rmax $Rmin
+			set Rmin $tmp
+		}
+		$graph xaxis configure \
+			-color black \
+			-title "" \
+			-loose false \
+			-min $Rmin \
+			-max $Rmax 
+
+		$graph yaxis configure \
+	 		-color black \
+			-title "" \
+			-loose true
+
+		$graph y2axis configure \
+	 		-color black \
+			-title "" \
+			-loose false \
+			-stepsize 90 \
+			-min -30 \
+			-max 390
+
+		$graph legend configure -hide yes
+	}
+	set nFrame(max) $nF
+}

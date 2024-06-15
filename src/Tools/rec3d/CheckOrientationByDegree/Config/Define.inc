@@ -1,0 +1,4 @@
+OBJECTNAME = CheckOrientationByDegree
+EXTRA_LIB  =
+EXTRA_CCOPTS =
+EXTRA_INC =

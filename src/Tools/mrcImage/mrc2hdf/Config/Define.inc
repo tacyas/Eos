@@ -1,0 +1,2 @@
+OBJECTNAME = mrc2hdf
+EXTRA_LIB  =

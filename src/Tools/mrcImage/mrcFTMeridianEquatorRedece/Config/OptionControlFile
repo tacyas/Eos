@@ -1,0 +1,9 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-oF","-o[utput]F[ft]","OutputDataFile","Optional","1","1","OutFFT","outFile","NULL"
+"-X","-X","Max X to put zero (pixel).  Default is no operation.","Optional","1","1","MaxX","Integer","-1"
+"-Y","-Y","Max Y to put zero (pixel).  Default is no operation.","Optional","1","1","MaxY","Integer","-1"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

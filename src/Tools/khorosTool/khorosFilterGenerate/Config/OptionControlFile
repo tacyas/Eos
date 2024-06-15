@@ -1,0 +1,10 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-nx","-nx","N.x","Optional","1","1","nx","Integer","256"
+"-ny","-ny","N.y","Optional","1","1","ny","Integer","256"
+"-w","-w","Width","Optional","1","1","w","Real","3.0"
+"-h","-h","Height","Optional","1","1","h","Real","3.0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

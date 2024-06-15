@@ -1,0 +1,216 @@
+include ../Config/Define.inc
+include ../../Config/Define.inc
+include ../../../Config/Define.inc
+include ../../../../Config/Define.inc
+
+DSTDIR=../../../../../bin
+DSTDOC=../../../../../doc
+
+INCFILES   = 
+
+LIBFILES   = \
+			$(LIBPREFIX)Memory$(LIBSUFFIX) \
+			$(LIBPREFIX)String$(LIBSUFFIX) \
+			$(LIBPREFIX)File$(LIBSUFFIX) \
+			$(LIBPREFIX)Vector$(LIBSUFFIX) \
+			$(LIBPREFIX)SpecialNumber$(LIBSUFFIX) \
+			$(LIBPREFIX)Matrix3D$(LIBSUFFIX) \
+			$(LIBPREFIX)mrcImage$(LIBSUFFIX) \
+			$(LIBPREFIX)largeIP$(LIBSUFFIX) \
+			$(LIBPREFIX)llData$(LIBSUFFIX) \
+			$(LIBPREFIX)ltlgData$(LIBSUFFIX) \
+			$(LIBPREFIX)pdbFile$(LIBSUFFIX) \
+			$(LIBPREFIX)ctfInfo$(LIBSUFFIX) \
+			$(LIBPREFIX)Contour$(LIBSUFFIX) \
+			$(LIBPREFIX)psFile$(LIBSUFFIX) \
+			$(LIBPREFIX)Memory$(LIBSUFFIX) \
+			$(LIBPREFIX)String$(LIBSUFFIX) \
+			$(LIBPREFIX)File$(LIBSUFFIX) \
+			$(LIBPREFIX)Matrix3D$(LIBSUFFIX) \
+			$(LIBPREFIX)Map2D$(LIBSUFFIX) \
+			$(LIBPREFIX)Vector$(LIBSUFFIX) \
+			$(LIBPREFIX)SpecialNumber$(LIBSUFFIX) \
+			$(LIBPREFIX)Random$(LIBSUFFIX) \
+			$(LIBPREFIX)Contour$(LIBSUFFIX) \
+			$(LIBPREFIX)psFile$(LIBSUFFIX) \
+			$(LIBPREFIX)mrcImage$(LIBSUFFIX) \
+			$(LIBPREFIX)khorosData$(LIBSUFFIX) \
+
+MODULES    = \
+			$(OBJECTNAME).o \
+			util.o \
+			init.o \
+			argCheck.o \
+			usage.o 
+
+REALMODULES    = \
+			$(OSTYPE)/$(OBJECTNAME).o \
+			$(OSTYPE)/util.o \
+			$(OSTYPE)/init.o \
+			$(OSTYPE)/argCheck.o \
+			$(OSTYPE)/usage.o 
+
+VPATH=.:..:$(OSTYPE)
+
+#$(OSTYPE)/$(OBJECTNAME).o :$(OBJECTNAME).c
+util.o:util.c 
+#$(OSTYPE)/init.o:init.c
+#$(OSTYPE)/argCheck.o:argCheck.c 
+#$(OSTYPE)/usage.o:usage.c
+
+all: $(OBJECTNAME).$(OSTYPE)
+
+$(OBJECTNAME).$(OSTYPE) :  $(MODULES) $(LIBFILES)
+	@echo "Linking $(OBJECTNAME) .... "
+	@if [ -f $(OBJECTNAME).c ] ; \
+	then \
+		$(CC) $(CCOPTS) $(REALMODULES) $(LIBFILES) $(EXTRA_LIB) $(KHOROS_LIBS) -o $@ $(STANDARDLIB) $(HOSTDEPENDENTLIB) ; \
+	else \
+		echo $(CXX) ;\
+		$(CXX) $(CCOPTS) $(REALMODULES) $(LIBFILES) $(EXTRA_LIB) $(KHOROS_LIBS) -o $@ $(STANDARDLIB) $(HOSTDEPENDENTLIB) ; \
+	fi
+	@if [ -x /usr/cxsoft/bin/mlibu ]  ;\
+	then \
+		echo "using mlib"; \
+		echo /usr/cxsoft/bin/mlibu $@ ; \
+	fi
+
+put:
+	@if [ -w $(OBJECTNAME).c ]; \
+	then \
+		sccsPut $(OBJECTNAME).c; \
+	else \
+		echo "Source files are not editable."; \
+	fi
+	@if [ -w wish/$(OBJECTNAME).wish ]; \
+	then \
+		cd wish; sccsPut $(OBJECTNAME).wish; \
+	else \
+		echo "Source files (wish) are not editable."; \
+	fi
+	@if [ -w ../Config/OptionControlFile ]; \
+	then \
+		cd ../Config; sccsPut OptionControlFile; \
+	else \
+		echo "OptionControlFile are not editable."; \
+	fi
+
+edit:
+	@if [ -r $(OBJECTNAME).c ]; \
+	then \
+		sccsEdit $(OBJECTNAME).c; \
+	else \
+		echo "Source files are already editable"; \
+	fi
+	@if [ -r wish/$(OBJECTNAME).wish ]; \
+	then \
+		cd wish; sccsEdit $(OBJECTNAME).wish; \
+	else \
+		echo "Source files (wish) are already editable."; \
+	fi
+	@if [ -r ../Config/OptionControlFile ]; \
+	then \
+		cd ../Config; sccsEdit OptionControlFile; \
+	else \
+		echo "OptionControlFile are already editable."; \
+	fi
+	
+unedit:
+	@if [ -w $(OBJECTNAME).c ]; \
+	then \
+		sccsUnedit $(OBJECTNAME).c; \
+	else \
+		echo "Source files are not editable"; \
+	fi
+	@if [ -w wish/$(OBJECTNAME).wish ]; \
+	then \
+		cd wish; sccsUnedit $(OBJECTNAME).wish; \
+	else \
+		echo "Source files (wish) are not editable."; \
+	fi
+	@if [ -w ../Config/OptionControlFile ]; \
+	then \
+		cd ../Config; sccsUnedit OptionControlFile; \
+	else \
+		echo "OptionControlFile are not editable."; \
+	fi
+	
+clean : 
+	rm -f *.o */*.o *.bak *.HP *.M68 core
+
+install: install-bin install-doc install-wish install-khoros
+
+install-bin:$(DSTDIR)/$(OSTYPE)/$(OBJECTNAME).$(OSTYPE) 
+
+$(DSTDIR)/$(OSTYPE)/$(OBJECTNAME).$(OSTYPE):$(OBJECTNAME).$(OSTYPE) $(DSTDIR)/$(OBJECTNAME) 
+	@if [ ! -d $(DSTDIR)/$(OSTYPE) ]; \
+	then \
+		mkdir $(DSTDIR)/$(OSTYPE); \
+	fi
+	@if [ -x $(DSTDIR)/$(OSTYPE)/$(OBJECTNAME).$(OSTYPE) ]; \
+	then \
+		$(RM) -f $(DSTDIR)/$(OSTYPE)/$(OBJECTNAME).$(OSTYPE); \
+	fi
+	@$(INSTALL) -m 555 $(OBJECTNAME).$(OSTYPE) $(DSTDIR)/$(OSTYPE)
+	@chmod 555 $(DSTDIR)/$(OSTYPE)/$(OBJECTNAME).$(OSTYPE) 
+	@chgrp Eos $(DSTDIR)/$(OSTYPE)/$(OBJECTNAME).$(OSTYPE)
+
+install-wish:
+	@if [ -d wish ]; \
+	then \
+		$(CP) wish/*.wish $(DSTDIR)/wish/ ;\
+		$(CHMOD) 775 $(DSTDIR)/wish/*.wish  ;\
+	fi
+install-khoros:
+	@echo Installing to khoros
+	@if [ ! -d ../../../../../objects/script/$(OBJECTNAME) ]; \
+	then \
+		echo kgenobj ;\
+		kgenobj -tb Eos -oname $(OBJECTNAME) -type script -pane -cantata true -cat Eos -subcat $(CLASSNAME) -description $(OBJECTNAME) -bname $(OBJECTNAME) -form  -lang ksh ; \
+	fi
+	@kset -tb Eos -oname $(OBJECTNAME) -icon $(OBJECTNAME)
+	@cd ../../../../../objects/script/$(OBJECTNAME)/uis/; ln -f -s ../../../../src/Tools/$(CLASSNAME)/$(OBJECTNAME)/src/$(OBJECTNAME).pane $(OBJECTNAME).pane
+install-doc: html 
+	@if [ ! -d $(DSTDOC)/SmallTools ]; \
+	then \
+		mkdir $(DSTDOC)/SmallTools ;\
+	fi
+	@if [ -f $(DSTDOC)/SmallTools/$(OBJECTNAME).html ]; \
+	then \
+		$(RM) -f $(DSTDOC)/SmallTools/$(OBJECTNAME).html ;\
+	fi
+	@$(CP) $(OBJECTNAME).html  $(DSTDOC)/SmallTools/$(OBJECTNAME).html
+	@$(CHMOD) 444 $(DSTDOC)/SmallTools/$(OBJECTNAME).html
+	@if [ -f ../doc/*.html ]; \
+	then \
+		$(CP) ../doc/*.html  $(DSTDOC)/SmallTools/ ;\
+	fi
+	@$(CHMOD) 444 $(DSTDOC)/SmallTools/$(OBJECTNAME).html
+	@if [ -f $(DSTDOC)/SmallTools/Makefile ]; \
+	then \
+		cd $(DSTDOC)/SmallTools; $(MAKE); \
+	fi
+
+html: $(OBJECTNAME).html
+
+configFileRead:
+	@ctrl2configFileRead $(CLASSNAME) $(OBJECTNAME) ../Config/OptionControlFile
+
+$(OBJECTNAME).html: $(OBJECTNAME).$(OSTYPE)
+	@echo creating html
+	@$(OBJECTNAME).$(OSTYPE) -html 2> $(OBJECTNAME).html.tmp
+	@sed -e s/\.$(OSTYPE)// $(OBJECTNAME).html.tmp > $(OBJECTNAME).html
+	@$(RM) $(OBJECTNAME).html.tmp
+
+$(DSTDIR)/$(OBJECTNAME): $(OBJECTNAME).$(OSTYPE)
+	@ln -s -f ../sbin/MachineIndependent $@
+
+depend:
+	@echo dependency checking now 
+	@$(DEPENDCOMMAND) $(INCLUDEDIR) *.c  > $(OSTYPE)/.Depend
+
+update:../Config/OptionControlFile
+	maketool $(CLASSNAME) $(OBJECTNAME) update
+
+include $(OSTYPE)/.Depend
+include ../Config/Target.inc

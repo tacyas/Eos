@@ -1,0 +1,73 @@
+/*
+# lpdbSelectedAtom.c  1.1
+# The latest update : 03/20/98 at 13:51:43
+#
+#@(#) lpdbSelectedAtom ver 1.1
+#@(#) Created by 
+#@(#)
+#@(#) Usage : lpdbSelectedAtom 
+#@(#) Attention
+#@(#)
+*/
+static char __sccs_id[] = "@(#)lpdbSelectedAtom ver1.1; Date:98/03/20 @(#)";
+#include <stdio.h>
+#include <stdlib.h>
+#include "String.h"
+#include "../inc/pdbFile.h"
+#include "./lpdbSelectedAtom.h"
+
+pdbFileParaTypeInteger
+lpdbSelectedCa(pdbFile* pdbSelect, pdbFile* pdb, FILE* fpt)
+{
+	pdbRecord* tmptop;
+	pdbRecord* tmpprev;
+	pdbRecord* tmpnext;
+	char s[STRING_MAX_LENGTH];
+	pdbFileParaTypeInteger start;
+	pdbFileParaTypeInteger end;
+	pdbFileParaTypeInteger residue;
+	char* stmp;
+	long  current;
+	pdbFileParaTypeInteger flag;
+
+	flag = 0;
+	fseek(fpt, 0L, SEEK_SET);
+
+	while(NULL!=stringGetFromFile(s, "", fpt, stdout, 3)) {
+		start = stringGetNthIntegerData(s, 1, " ,#");
+		current = ftell(fpt);
+
+		if(NULL==stringGetFromFile(s, "", fpt, stdout, 3)) { /* No next line */
+			end = start;
+		} else {            								 /* Exist a next line */
+			stmp = stringGetNthWord(s, 1, " ,#");
+			if('|'==stmp[0]) {                               /* Read the next line for reading a end residue */
+				if(NULL==stringGetFromFile(s, "", fpt, stdout, 3)) { /* No next line */
+					fprintf(stderr, "Selected Residue File Format is wrong\n");
+					exit(EXIT_FAILURE);
+				} else { 											 /* The next line exists. */
+					end = stringGetNthIntegerData(s, 1, " ,#");
+				}
+			} else {										/* No residue */	
+				end = start;
+				fseek(fpt, current, SEEK_SET);
+			}
+		}
+
+		pdbFileTop(pdb);
+		do {
+			if(pdbFileIsCA(pdb) && (   start<=pdb->PDB->ResidueSequenceNumber
+								    && pdb->PDB->ResidueSequenceNumber<=end)) {
+				if(0==flag) {
+					pdbFileNew(pdbSelect);
+					flag++;
+				} else {
+					pdbFileAppend(pdbSelect);
+					flag++;
+				}
+				pdbFileOneRecordCopy(pdbSelect, pdb);	
+			}
+		} while(NULL!=pdbFileNext(pdb));
+	}
+	return flag;
+}

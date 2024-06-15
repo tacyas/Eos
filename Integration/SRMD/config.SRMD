@@ -1,0 +1,5 @@
+thisProtein=1YX9
+thisProteinPSFDir=../psf/
+thisProteinPSF=1YX9.psf
+Potential=1YX9.pdb
+SRMDBaseDir=/home/people/risachan/Eos/Integration/SRMD/

@@ -1,0 +1,33 @@
+#
+proc llDataPrintPreferenceWinCreate { } {
+	global Rmax
+	global Rmin
+	global NN
+	global NL
+	global truePitch
+	global llMax
+	global nFrame
+
+	set w .pref
+	if [ catch { toplevel $w -bd 4 } ] {
+		raise $w
+	} else {
+		wm title $w "Preference"		
+
+		set R [ frame $w.sR ]
+		CommandEntry $R.sRmax Rmax 20 {llDataPrintGraphCreate} -textvar Rmax
+		CommandEntry $R.sRmin Rmin 20 {llDataPrintGraphCreate} -textvar Rmin
+		pack $R.sRmin $R.sRmax -side left -fill x
+
+		set R [ frame $w.nF ]
+		button $R.prev -text prev -command llDataPrintPrevGraphWatch
+		CommandEntry $R.current Frame 20 { llDataPrintDesktopSet 1 } -textvar nFrame(current)
+		button $R.next -text next -command llDataPrintNextGraphWatch
+		pack $R.prev $R.current $R.next -side left -fill x
+
+		set R [ frame $w.layerLine ]
+		#CheckButtonsCreate $R left {test test} {test2 test2}
+
+		pack $w.sR $w.nF $w.layerLine -side top -fill x
+	}
+}

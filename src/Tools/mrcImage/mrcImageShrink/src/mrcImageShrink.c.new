@@ -1,0 +1,114 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>                  
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+#include "mrcImage.h"
+
+void lmrcImageShrinklocal(mrcImage* dst, mrcImage* src, mrcImageParaTypeIntegerCoord S, long mode);
+
+int
+main(int argc, char* argv[]) 
+{
+        mrcImageShrinkInfo info;
+	mrcImage dst;
+	mrcImage src;
+	mrcImageParaTypeIntegerCoord S;
+	
+	init0(&info);
+	argCheck(&info, argc, argv);
+	init1(&info);
+	
+        mrcFileRead(&src, info.In, "in main", 0);
+	if (info.flagS){
+	  S.x = S.y = S.z = info.S ;
+	} else {
+	  S.x = info.Sx;
+	  S.y = info.Sy;
+	  S.z = info.Sz;
+	}
+	if (src.HeaderN.x == 1){
+	  S.x = 1;
+	}
+	if (src.HeaderN.y == 1){
+	  S.y = 1;
+	}
+	if (src.HeaderN.z == 1){
+	  S.z = 1;
+	}
+        lmrcImageShrinklocal(&dst, &src, S, 0);
+	mrcFileWrite(&dst, info.Out, "in main", 0);
+}
+
+
+void
+additionalUsage()
+{
+	fprintf(stderr, "---- Note -----\n");
+	fprintf(stderr, "If S = 2, N.x -> N.x/2 and Length.x -> 2*Length.x.\n");
+	fprintf(stderr, "Image 0 0 1 1 -> Image 0   1 \n");
+	fprintf(stderr, "      0 0 1 1                \n");
+	fprintf(stderr, "      0 0 1 1          0   1 \n");
+	fprintf(stderr, "      0 0 1 1                \n");
+	fprintf(stderr, "Option S is stronger than option Sx, Sy, Sz\n");
+}
+
+void
+lmrcImageShrinklocal(mrcImage* dst, mrcImage* src, mrcImageParaTypeIntegerCoord S, long mode)
+{
+	float x, y, z;
+	double data, sum;
+	long mx, my, mz, srcx, srcy, srcz;
+
+	mx = src->HeaderN.x%S.x;
+	my = src->HeaderN.y%S.y;
+	mz = src->HeaderN.z%S.z;
+
+	if(0 != mx) {
+		fprintf(stderr, "mode(Nx:%d,Sx:%d) != 0. Nx := Nx - mode(Nx,Sx):%ld\n", src->HeaderN.x, S.x, mx);
+	}
+	if(0 != my) {
+		fprintf(stderr, "mode(Ny:%d,Sy:%d) != 0. Ny := Ny - mode(Ny,Sy):%ld\n", src->HeaderN.y, S.y, my);
+	}
+	if(0 != mz) {
+		fprintf(stderr, "mode(Nz:%d,Sz:%d) != 0. Nz := Nz - mode(Nz,Sz):%ld\n", src->HeaderN.z, S.z, mz);
+	}
+
+	dst->Header = src->Header;
+	dst->HeaderN.x = src->HeaderN.x/S.x;
+	dst->HeaderN.y = src->HeaderN.y/S.y;
+	dst->HeaderN.z = src->HeaderN.z/S.z;
+
+	dst->HeaderLength.x = src->HeaderLength.x*S.x;
+	dst->HeaderLength.y = src->HeaderLength.y*S.y;
+	dst->HeaderLength.z = src->HeaderLength.y*S.z;
+	mrcInit(dst, NULL);
+
+	for(x=0; x<dst->HeaderN.x; x++) {
+	  for(y=0; y<dst->HeaderN.y; y++) {
+	    for(z=0; z<dst->HeaderN.z; z++) {
+	      mrcPixelDataSet(dst, x, y, z, 0.0, mrcPixelMag);
+	    }
+	  }
+	}
+	for(x=0; x<dst->HeaderN.x ; x++) {
+	  for(y=0; y<dst->HeaderN.y; y++) {
+	    for(z=0; z<dst->HeaderN.z; z++) {
+	      sum = 0.0;
+	      for(srcx = x*S.x; srcx < (x+1)*S.x; srcx++) { 
+		for(srcy = y*S.y; srcy < (y+1)*S.y; srcy++) { 
+		  for(srcz = z*S.z; srcz < (z+1)*S.z; srcz++) { 
+		    mrcPixelDataGet(src, (float)srcx, (float)srcy, (float)srcz, &data, mrcPixelMag, mrcPixelHowNearest);
+		    sum += data;
+		  }
+		}		
+	      }
+	      sum = sum/((double)(S.x * S.y * S.z));
+	      mrcPixelDataSet(dst, (float)x, (float)y, (float)z, sum, mrcPixelMag);
+	    }
+	  }
+	}
+}
+
+

@@ -1,0 +1,19 @@
+#define DoNotAutoRecreate NO
+
+#include EOS_INCLUDE
+
+OBJECT_TYPE = script
+
+TOOLBOX_NAME = eos
+
+OBJECT_NAME = llDataCTFCompensate
+
+BINARY_NAME = llDataCTFCompensate
+
+INSTPGMFLAGS =
+
+SCRIPTS = \
+	llDataCTFCompensate.ksh
+
+#define KKSH_DEF
+#include <Script.template>

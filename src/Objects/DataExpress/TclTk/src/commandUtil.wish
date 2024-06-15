@@ -1,0 +1,16 @@
+#
+#
+#
+proc eosCommandExecute { mode fpt cmd } {
+	switch $mode {
+		foreground  {
+			eval exec $cmd
+		}
+		background {
+			eval exec "$cmd  &" 
+		}
+		information {
+			puts $fpt "$cmd"
+		}
+	}
+}

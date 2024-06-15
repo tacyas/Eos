@@ -1,0 +1,11 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input:MRC(FFT)","Optional","1","1","inMRC","inFile","NULL"
+"-o","-o[utput]","Input/Output: ctfinfo","Optional","1","1","outCTF","appendFile","stdout"
+"-Rmax","-Rmax","Rmax [A-1] ","Optional","1","1","Rmax","Real","0.2"
+"-Imax","-Imax","Intensity: min-max","Optional","1","1","Imax","Real","0.2"
+"-Imin","-Imin","Intensity: min-max","Optional","1","1","Imin","Real","0.02"
+"-AutoRange","-AutoRange","Intensity: min-max","Optional","0"
+"-Log","-Log","Log of Intensity","Optional","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

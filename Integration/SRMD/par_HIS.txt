@@ -1,0 +1,117 @@
+
+BONDS
+!
+!V(bond) = Kb(b - b0)**2
+!
+!Kb: kcal/mole/A**2
+!b0: A
+!
+!atom type Kb          b0
+!
+!HIS BOND
+
+N_1  C_2    1000.0  1.489 ! Nobs =    1
+C_2  C_3    1000.0  1.528 ! Nobs =    1
+C_2  C_5    1000.0  1.532 ! Nobs =    1
+C_3  O_4    1000.0  1.244 ! Nobs =    1
+C_3  O_11   1000.0  1.241 ! Nobs =    1
+C_5  C_6    1000.0  1.497 ! Nobs =    1
+C_6  N_7    1000.0  1.378 ! Nobs =    1
+C_6  C_8    1000.0  1.354 ! Nobs =    1
+N_7  C_9    1000.0  1.321 ! Nobs =    1
+C_8  N_10   1000.0  1.372 ! Nobs =    1
+C_9  N_10   1000.0  1.321 ! Nobs =    1
+
+ANGLES
+!
+!V(angle) = Ktheta(Theta - Theta0)**2
+!
+!V(Urey-Bradley) = Kub(S - S0)**2
+!
+!Ktheta: kcal/mole/rad**2
+!Theta0: degrees
+!Kub: kcal/mole/A**2 (Urey-Bradley)
+!S0: A
+!
+!atom types     Ktheta    Theta0   Kub     S0
+!
+!HIS ANGLES
+
+N_1  C_2  C_3     500.0   112.51 ! Nobs =    1
+N_1  C_2  C_5     500.0   109.04 ! Nobs =    1
+C_3  C_2  C_5     500.0   111.26 ! Nobs =    1
+C_2  C_3  O_4     500.0   117.84 ! Nobs =    1
+C_2  C_3  O_11    500.0   119.30 ! Nobs =    1
+O_4  C_3  O_11    500.0   122.84 ! Nobs =    1
+C_2  C_5  C_6     500.0   113.14 ! Nobs =    1
+C_5  C_6  N_7     500.0   122.76 ! Nobs =    1
+C_5  C_6  C_8     500.0   131.02 ! Nobs =    1
+N_7  C_6  C_8     500.0   106.10 ! Nobs =    1
+C_6  N_7  C_9     500.0   109.31 ! Nobs =    1
+C_6  C_8  N_10    500.0   107.27 ! Nobs =    1
+N_7  C_9  N_10    500.0   108.43 ! Nobs =    1
+C_8  N_10 C_9     500.0   108.88 ! Nobs =    1
+
+
+DIHEDRALS
+!
+!V(dihedral) = Kchi(1 + cos(n(chi) - delta))
+!
+!Kchi: kcal/mole
+!n: multiplicity
+!delta: degrees
+!
+!atom types             Kchi    n   delta
+!
+!HIS DIHEDRALS
+
+N_1  C_2  C_5  C_6     750.0 0   -60.00 ! Nobs =    1 ... Value =   -66.29
+C_2  C_5  C_6  N_7     750.0 0    60.00 ! Nobs =    1 ... Value =    69.41
+C_5  C_6  N_7  C_9     750.0 0   180.00 ! Nobs =    1 ... Value =  -176.07
+C_8  C_6  N_7  C_9     750.0 0     0.00 ! Nobs =    1 ... Value =     0.43
+C_5  C_6  C_8  N_10    750.0 0   180.00 ! Nobs =    1 ... Value =   175.62
+N_7  C_6  C_8  N_10    750.0 0     0.00 ! Nobs =    1 ... Value =    -0.47
+C_6  N_7  C_9  N_10    750.0 0     0.00 ! Nobs =    1 ... Value =    -0.21
+C_6  C_8  N_10 C_9     750.0 0     0.00 ! Nobs =    1 ... Value =     0.36
+N_7  C_9  N_10 C_8     750.0 0     0.00 ! Nobs =    1 ... Value =    -0.09
+
+IMPROPER
+!
+!V(improper) = Kpsi(psi - psi0)**2
+!
+!Kpsi: kcal/mole/rad**2
+!psi0: degrees
+!note that the second column of numbers (0) is ignored
+!
+!atom types           Kpsi                   psi0
+!
+!HIS IMPROPER
+
+C_2  N_1  C_3  C_5     750.0 0   35.000 ! Nobs =    1 ... Value =   33.915
+C_3  C_2  O_4  O_11    750.0 0    0.000 ! Nobs =    1 ... Value =   -0.800
+C_6  C_5  N_7  C_8     750.0 0    0.000 ! Nobs =    1 ... Value =    2.277
+
+NONBONDED nbxmod  5 atom cdiel shift vatom vdistance vswitch -
+cutnb 14.0 ctofnb 12.0 ctonnb 10.0 eps 1.0 e14fac 1.0 wmin 1.5 
+                !adm jr., 5/08/91, suggested cutoff scheme
+!
+!V(Lennard-Jones) = Eps,i,j[(Rmin,i,j/ri,j)**12 - 2(Rmin,i,j/ri,j)**6]
+!
+!epsilon: kcal/mole, Eps,i,j = sqrt(eps,i * eps,j)
+!Rmin/2: A, Rmin,i,j = Rmin/2,i + Rmin/2,j
+!
+!atom  ignored    epsilon      Rmin/2   ignored   eps,1-4       Rmin/2,1-4
+!
+
+N_1  0.2384  2.8509    0.2384  2.8509 ! assuming Nitrogen
+C_2  0.1200  3.7418    0.1000  3.3854 ! assuming Carbon
+C_3  0.1200  3.7418    0.1000  3.3854 ! assuming Carbon
+O_4  0.1591  2.8509    0.1591  2.8509 ! assuming Oxygen
+C_5  0.1200  3.7418    0.1000  3.3854 ! assuming Carbon
+C_6  0.1200  3.7418    0.1000  3.3854 ! assuming Carbon
+N_7  0.2384  2.8509    0.2384  2.8509 ! assuming Nitrogen
+C_8  0.1200  3.7418    0.1000  3.3854 ! assuming Carbon
+C_9  0.1200  3.7418    0.1000  3.3854 ! assuming Carbon
+N_10 0.2384  2.8509    0.2384  2.8509 ! assuming Nitrogen
+O_11 0.1591  2.8509    0.1591  2.8509 ! assuming Oxygen
+

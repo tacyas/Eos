@@ -1,0 +1,8 @@
+.onlineHelp EOS mrcImageBandPassFilter "Introduction to mrcImageBandPassFilter"
+.
+.section 1 "Introduction to mrcImageBandPassFilter"
+.
+.\" This is the help page associated with the Help button on
+.\" the toplevel window of mrcImageBandPassFilter
+If you are reading this text,
+you should report it as a bug :-)

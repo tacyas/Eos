@@ -1,0 +1,230 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageMasking</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageMasking<br></h2></b></font>
+	<h4>マスク処理</h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+		<table border="1">
+			<div align="left">
+				<tr>
+					<th>オプション</th>
+					<th>必須項目/選択項目</th>
+					<th>説明</th>
+					<th>デフォルト</th>
+				</tr>
+				<tr>
+					<td>-i</td>
+					<td>必須</td>
+					<td>入力ファイル設定</td>
+					<td>NULL</td>
+				</tr>
+				<tr>
+					<td>-o</td>
+					<td>必須</td>
+					<td>出力ファイル設定</td>
+					<td>NULL</td>
+				</tr>
+				<tr>
+					<td>-nx</td>
+					<td>選択</td>
+					<td>ｘ軸の幅を設定</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>-ny</td>
+					<td>選択</td>
+					<td>ｙ軸の幅を設定</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>-nz</td>
+					<td>選択</td>
+					<td>ｚ軸の幅を設定</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>-cx</td>
+					<td>選択</td>
+					<td>ｘ軸の中心を設定</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>-cy</td>
+					<td>選択</td>
+					<td>ｙ軸の中心を設定</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>-cz</td>
+					<td>選択</td>
+					<td>ｚ軸の中心を設定</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>-Shape</td>
+					<td>選択</td>
+					<td>形を選択</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>-Normalize</td>
+					<td>選択</td>
+					<td></td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>-h</td>
+					<td>選択</td>
+					<td>ヘルプを表示</td>
+					<td>　</td>
+				</tr>
+			</div>
+		</table>
+
+<!-- モード説明 -->
+
+	<br>
+	<caption><b>-Shapeの詳細</b></caption>
+	<table border="1">
+		<div align="left">
+			<tr>
+				<th>Shape</th>
+				<th>説明</th>
+			</tr>
+			<tr>
+				<td>0</td>
+				<td>円形</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>正方形</td>
+			</tr>
+		</div>
+	</table>
+
+	<br>	
+	<h4>******実行例******</h4>
+	
+<!-- 入力ファイル説明 -->
+
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="b120-2.png" border="0" alt="b120-2.png(6742 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-65.0178<br>
+				94.4699<br>
+				4.85274<br>
+				20.4635<br>
+				0.255794<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>※今回の入力画像は２次元のデータなので、オプション-nz,-czは実行できない</div>
+
+<!-- 実行結果 -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション必須項目のみ実行した場合------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="outdata.png" border="0" alt="outdata.png(5807 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-65.2676<br>
+				94.2201<br>
+				4.60291<br>
+				19.0052<br>
+				0.237565<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-nx,-ny------</font></caption><br>
+	<div>nx=50,ny=50で実行</div>
+	<table>
+		<tr>
+			<td><img src="outdata-n50.png" border="0" alt="outdata-n50.png(2040 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-70.9428<br>
+				47.3741<br>
+				-1.07227<br>
+				6.73167<br>
+				0.0841459<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-cx,-cy------</font></caption><br>
+	<div>nx=50,ny=50,cx=30,cy=30で実行</div>
+	<table>
+		<tr>
+			<td><img src="outdata-n50c30.png" border="0" alt="outdata-n50c30.png(3047 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-66.2815<br>
+				93.2062<br>
+				3.61881<br>
+				14.4149<br>
+				0.180186<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-Shape------</font></caption><br>
+	<div>nx=50,ny=50,cx=30,cy=30,Shape=1で実行</div>
+	<table>
+		<tr>
+			<td><img src="outdata-n50c30-Shape1.png" border="0" alt="outdata-n50c30-Shape1.png(3537 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-65.7765<br>
+				93.7112<br>
+				4.09402<br>
+				15.6837<br>
+				0.196047<br></p>
+			</td>
+		</tr>
+	</table>
+
+
+</body>
+</html>

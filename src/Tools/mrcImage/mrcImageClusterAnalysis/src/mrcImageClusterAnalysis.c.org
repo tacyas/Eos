@@ -1,0 +1,177 @@
+/*
+# %M% %Y% %I%
+# The latest update : %G% at %U%
+#
+#%Z% mrcImageClusterAnalysis ver %I%
+#%Z% Created by 
+#%Z%
+#%Z% Usage : mrcImageClusterAnalysis
+#%Z% Attention
+#%Z%
+*/
+static char __sccs_id[] = "%Z%mrcImageClusterAnalysis ver%I%; Date:%D% %Z%";
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>                  
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+
+#define DEBUG
+#include "genUtil.h"
+#include "mrcImage.h"
+#include "nr2.h"
+#include "mrcRefUtil.h"
+#include "lmrcImageMultiplying.h"
+
+/* prototypes */
+void lmrcImageClusterAnalysis(mrcImage* in, int N, int mode);
+void lmrcImageClusterMerge(mrcImage* in1, mrcImage* in2, int* index, int* averagednum, int m, int n, int* N);
+float lmrcImageDistanceCalc(mrcImage* in1, mrcImage* in2, int mode);
+float lmrcImageDistanceCalcByWardMethod(mrcImage* in1, mrcImage* in2, int num1, int num2, int mode);
+
+
+int
+main(int argc, char* argv[]) 
+{
+/* variables */
+	mrcImageClusterAnalysisInfo info;
+	long i;
+	mrcImage* in;
+
+/* input patameters ,file open */
+	init0(&info);
+	argCheck(&info, argc, argv);
+	init1(&info);
+
+/* begin */
+	DEBUGPRINT("Program Start\n");
+	if ( ( in = (mrcImage *)malloc(sizeof(mrcImage)*info.flagIn) ) == NULL){
+	  fprintf(stderr, "Enough memory is not available!\n");
+	  exit(EXIT_FAILURE);
+	}
+	for (i=0; i<info.flagIn; i++){
+	  mrcFileRead(&in[i], info.In[i], "in main file", 0);
+	}
+	lmrcImageClusterAnalysis(in, info.flagIn, info.mode);
+	exit(EXIT_SUCCESS);
+}
+
+void
+additionalUsage()
+{
+	fprintf(stderr, "----- Additional Usage -----\n");
+}
+
+void lmrcImageClusterAnalysis(mrcImage* in, int N, int mode)
+{
+  float** distance;
+  int* index;
+  int* averagednum;
+  int n,m,minn,minm,clusternum;
+  float min,startmin;
+
+  startmin=1000;
+  
+  clusternum=N;
+  distance = matrix(0, N-1, 0, N-1);
+  index = ivector(0, N-1);
+  averagednum = ivector(0, N-1);
+
+  for (n=0; n<N; n++) {
+    index[n] = n;
+    averagednum[n] = 1;
+  }
+  while (clusternum > 1){
+    min=startmin;
+    for (n=0; n<clusternum; n++){
+      for (m=0; m<n; m++){
+	if (mode != 2){
+	  distance[n][m] = lmrcImageDistanceCalc(&in[index[n]], &in[index[m]], mode);
+	} else {
+	  distance[n][m] = lmrcImageDistanceCalcByWardMethod(&in[index[n]], &in[index[m]], averagednum[index[n]], averagednum[index[m]], mode);
+	}
+	if (min > distance[n][m]){
+	  min = distance[n][m];
+	  minn=n;
+	  minm=m;
+	}
+      }
+    }
+    fprintf(stdout, "%d %d %g \n",index[minm],index[minn],min);
+    lmrcImageClusterMerge(&in[index[minm]], &in[index[minn]], index, averagednum, minm, minn, &clusternum);
+  }
+}
+
+void lmrcImageClusterMerge(mrcImage* in1, mrcImage* in2, int* index, int* averagednum, int m, int n, int* N)
+{
+  int io,ii;
+  mrcImage in1mul,in2mul;
+  float avrm,avrn;
+  mrcImageParaTypeRealCoord dum;
+
+  avrm = (float)averagednum[index[m]] / (averagednum[index[m]] + averagednum[index[n]]);
+  avrn = (float)averagednum[index[n]] / (averagednum[index[m]] + averagednum[index[n]]);
+  lmrcImageMultiplying(&in1mul, in1, avrm, in1->HeaderMode);
+  lmrcImageMultiplying(&in2mul, in2, avrn, in2->HeaderMode);
+  llmrcImageAdd(&in1mul, &in2mul);
+  dum.x = dum.y =dum.z =0 ;
+  lmrcImageCopy(in1, &in1mul, dum);
+  averagednum[index[m]] += averagednum[index[n]];
+  io=0;
+  for (ii=0; ii<*N; ii++){
+    if (ii != n){
+      index[io] = index[ii];
+      io++;
+    }
+  }
+  *N = *N - 1;
+}
+
+float lmrcImageDistanceCalc(mrcImage* in1, mrcImage* in2, int mode)
+{
+  double data,data1,data2;
+  int x,y,z;
+  
+  switch (mode) {
+  case 0:
+    data = -lmrcImageCorrelationinSpace(in1, in2, 0);
+    break;
+
+  case 1:
+    data=0;
+    for (z=0; z<in1->HeaderN.z; z++){
+      for (y=0; y<in1->HeaderN.y; y++){
+	for (x=0; x<in1->HeaderN.x; x++){
+	  mrcPixelDataGet(in1 ,x ,y ,z ,&data1 ,mrcPixelRePart ,mrcPixelHowNearest);
+	  mrcPixelDataGet(in2 ,x ,y ,z ,&data2 ,mrcPixelRePart ,mrcPixelHowNearest);
+	  data += (data2-data1)*(data2-data1);
+	}
+      }
+    }
+    if (data !=0 ){
+      data = sqrt(data);
+    }
+    break;
+  }
+  return(data);
+}
+
+float lmrcImageDistanceCalcByWardMethod(mrcImage* in1, mrcImage* in2, int num1, int num2, int mode)
+{
+  double data,data1,data2;
+  int x,y,z;
+  data=0;
+  for (z=0; z<in1->HeaderN.z; z++){
+    for (y=0; y<in1->HeaderN.y; y++){
+      for (x=0; x<in1->HeaderN.x; x++){
+	mrcPixelDataGet(in1 ,x ,y ,z ,&data1 ,mrcPixelRePart ,mrcPixelHowNearest);
+	mrcPixelDataGet(in2 ,x ,y ,z ,&data2 ,mrcPixelRePart ,mrcPixelHowNearest);
+	data += (data2-data1)*(data2-data1);
+      }
+    }
+  }
+  data *= (float)(num1*num2)/(num1+num2);
+  return(data);
+}
+

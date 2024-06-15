@@ -1,0 +1,30 @@
+include ../../../../Config/Define.inc
+include ../../../Config/Define.inc
+include ../../Config/Define.inc
+include ../Config/Define.inc
+
+OBJECTS = fileOpen.o  \
+		  fileInit.o \
+		  fileInfo.o 
+
+LIBNAME = lib$(OBJECTNAME).$(OSTYPE).a
+INCLUDE_FILE = ../inc/$(OBJECTNAME).h
+LIBDSTDIR = $(EOS_HOME)/lib
+
+all: $(LIBNAME)
+
+$(LIBNAME): $(OBJECTS)
+	$(AR) r $(LIBNAME) $(OBJECTS)
+	
+install : $(LIBDSTDIR)/$(LIBNAME)
+
+$(LIBDSTDIR)/$(LIBNAME): $(LIBNAME)
+	$(INSTALL) -c -m 444 $(LIBNAME) $(LIBDSTDIR) 
+
+
+clean:
+	rm *.o *.a
+
+fileOpen.o : fileOpen.c $(INCLUDE_FILE)
+fileInit.o : fileInit.c $(INCLUDE_FILE)
+fileInfo.o : fileInfo.c $(INCLUDE_FILE)

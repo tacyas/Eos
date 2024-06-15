@@ -1,0 +1,2 @@
+*.c text=auto
+hostdepend/*/* -text

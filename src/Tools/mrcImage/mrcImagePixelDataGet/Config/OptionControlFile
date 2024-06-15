@@ -1,0 +1,12 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: mrcImage","Essential","1","1","In","inFile::mrcImage","NULL"
+"-o","-o[utput]","OutputDataFile","Optional","1","1","Out","outFile::ASCII","stdout"
+"-x","-x","Input: x","Optional","1","1","x","Real","0.0"
+"-y","-y","Input: y","Optional","1","1","y","Real","0.0"
+"-z","-z","Input: z","Optional","1","1","z","Real","0.0"
+"-In","-In[put]","Input:eosPoint","Optional","1","1","InCoord","inFile::ASCII","stdin"
+"-cuda","-cuda","cudaDeviceID","Optional","1","1","cudaDeviceID","Integer","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-om","-o[utput]m[ode]","Mode:Output","Optional","1","1","outMode","Integer","0"
+"-m","-m[ode]","Mode:Interpolation","Optional","1","1","mode","Integer","0"

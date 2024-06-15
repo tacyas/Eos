@@ -1,0 +1,247 @@
+/*
+# powerspectraTangentLine : $Revision$  
+# $Date$ 
+# Created by $Author$
+# Usage : powerspectraTangentLine 
+# Attention
+#   $Loccker$
+#  	$State$ 
+#
+*/
+/* $Log$ */
+static char __sccs_id[] = "%Z%lctfDetermination ver%I%; Date:%D% %Z%";
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include "./powerspectraTangentLine.h"
+#define DEBUG
+#include "genUtil.h"
+#include "Vector.h"
+#include "nr2.h"
+#include "Memory.h"
+
+typedef struct stepInfo{
+	float min;
+	float max;
+	float step;
+	long  Number;
+}stepInfo;
+
+typedef struct iterationInfo{
+	long  degree;
+	long  CutLowSize;
+	long  CutHighSize;
+	float CutLine;
+	float Emin;
+	float Emax;
+}iterationInfo;
+	
+
+double __power(double x,int a)
+{
+	int i;
+	double y = 1.0;
+	
+	for(i=0 ; i<a ; i++){
+		y *= x;
+	}
+	return(y);
+}
+
+void __stepNumberCulc(stepInfo *sInfo, long degree)
+{
+	long i;
+	for(i=0 ; i<= degree ; i++){
+		sInfo[i].Number =  (long) ((sInfo[i].max - sInfo[i].min )/ sInfo[i].step);
+		if(sInfo[i].Number < 1){
+			sInfo[i].Number = 1;
+		}
+	}
+}
+
+void
+__CoefficientDetermine(floatVector* spacing ,floatVector* Plog ,floatVector* tmpcoefficient ,stepInfo* sInfo,iterationInfo* iInfo)
+{
+	long i,j,k,l;
+	long AdvanceRatio = 1;
+	long Number[iInfo->degree+1];
+	unsigned long long int  belowN;
+	unsigned long long int fewerN;
+	unsigned long n;
+	unsigned long long int  sum = 1;
+	float coefficient[iInfo->degree+1];
+	float E;
+	float minTangent;
+	floatVector* Tangent;
+	
+	fprintf(stdout,"degree:%2ld CutLine:%f\n",iInfo->degree,iInfo->CutLine);
+	
+	Tangent = floatVectorInit(NULL,spacing->size);
+	
+	iInfo-> Emax;
+	for(j=0 ; j<=iInfo->degree ; j++){
+		sum *= sInfo[j].Number;
+		fprintf(stdout,"StepCondition[%2ld] Min:%lf Max:%f StepSize:%f StepNumber%ld\n",j,sInfo[j].min,sInfo[j].max,sInfo[j].step,sInfo[j].Number);
+	}
+	fprintf(stdout,"sum:%llu\n",sum);
+	
+	for(n=0 ; n< sum; n++){	
+		E = 0.0;
+		minTangent = 0.0;
+		for(j=0 ; j<=iInfo->degree ; j++){
+			fewerN = 1;
+			for(k=0 ; k<j ; k++){
+				fewerN *= sInfo[k].Number; 
+			}
+			belowN = fewerN * sInfo[j].Number;
+			coefficient[j] = (long)((n % belowN)/fewerN)* sInfo[j].step + sInfo[j].min;
+			minTangent += coefficient[j]*__power(spacing->data[iInfo->CutHighSize],j); /*for CutLine test*/
+		}
+
+		if(minTangent < iInfo->CutLine){	/*for CutLine test*/
+			E = iInfo->Emax;
+		}
+		
+		for(i=iInfo->CutLowSize ; i<=iInfo->CutHighSize ; i++){
+			Tangent->data[i] = coefficient[0];
+			for(j=1 ; j<=iInfo->degree ; j++){
+				Tangent->data[i] += coefficient[j]*__power(spacing->data[i],j);
+			}
+			E += fabs(Tangent->data[i] - Plog->data[i]);
+			
+			if((Tangent->data[i] - Plog->data[i]) > 0 || Tangent->data[i] < iInfo->CutLine || E>iInfo->Emin){
+				E = iInfo->Emax;
+				break;
+			}
+		}
+		
+
+/*
+		for(j=0 ; j<= iInfo->degree ; j++){
+			fprintf(stdout,"%2ld:%+10.3e ",j,coefficient[j]);
+		}
+		fprintf(stdout,"E=%10.3e Emin=%10.3e \n",E,iInfo->Emin);
+*/
+		if(E <= iInfo->Emin){
+			for(j=0 ; j<=iInfo->degree ; j++){
+				tmpcoefficient->data[j] = coefficient[j];
+				//fprintf(stdout,"%2ld:%+10.3e ",j,tmpcoefficient->data[j]);
+			}
+			//fprintf(stdout,"E=%10.3e Emin=%10.3e \n",E,iInfo->Emin);
+			iInfo->Emin = E;
+		}
+/*
+		for(j=0 ; j<=iInfo->degree ; j++){
+			fprintf(stdout,"%2ld:%+10.3e ",j,coefficient[j]);
+		}
+		fprintf(stdout,"E=%10.3e Emin=%10.3e \n",E,iInfo->Emin);
+*/
+		if((n % (sum/(unsigned long long int)sInfo[iInfo->degree].Number)) == 0){
+			//fprintf(stderr,"degree:%2ld AdvanceRatio(%4ld/%4ld) HighestDegree:%+10.3e\n",iInfo->degree,AdvanceRatio,sInfo[iInfo->degree].Number,coefficient[iInfo->degree]);
+			AdvanceRatio += 1;
+		}
+	}
+
+	fprintf(stdout,"result: ");
+	for(j=0 ; j<=iInfo->degree ; j++){
+		fprintf(stdout,"%2ld:%+10.3e ",j,tmpcoefficient->data[j]);
+	}
+	fprintf(stdout,"Emin=%10.3e\n\n",iInfo->Emin);
+}
+
+void
+TangentLine(floatVector* spacing, floatVector* scatter, floatVector* Tangent,ctfInfo* ini,lctfDetermineInfo* linfo,  long mode)
+{	
+	long i,j;
+	floatVector* tmpcoefficient;
+	float E;
+	float Pmax = 0.0;
+	float tmp;
+	long CutLowSize = 0;
+	long CutHighSize = 0;
+	floatVector* Plog;
+	stepInfo sInfo[linfo->degree+1];
+	iterationInfo iInfo;
+	
+	Plog = floatVectorInit(NULL,spacing->size);
+	iInfo.CutLine = 0.0;
+	iInfo.degree = linfo->degree;
+	
+	for(i=0;i<=linfo->degree;i++){
+		sInfo[i].step = linfo->step;
+		sInfo[i].min = linfo->min;
+		sInfo[i].max = linfo->max;
+	}
+	__stepNumberCulc(sInfo,linfo->degree);
+	
+	iInfo.CutLowSize = 0;
+	iInfo.CutHighSize =0;
+	iInfo.Emax = 0.0;
+
+	tmpcoefficient = floatVectorInit(NULL,linfo->degree);
+	
+	for(i=0;i<spacing->size;i++){
+		Plog->data[i] = log10(scatter->data[i]);
+
+		if(Pmax < Plog->data[i]){
+			Pmax = Plog->data[i];
+		}
+		
+		if(spacing->data[i] < ini->CutLow){
+			iInfo.CutLowSize = i+1;
+		}
+		if(spacing->data[i] < ini->CutHigh){
+			iInfo.CutHighSize = i;
+		}
+
+		if((spacing->data[i] > ini->CutLow) && (spacing->data[i] < ini->CutHigh)){
+			iInfo.Emax += Plog->data[i];
+		}
+	}
+	iInfo.Emin = iInfo.Emax;
+	fprintf(stdout,"Cutlow:%5.4f CutHigh:%5.4f\n",spacing->data[iInfo.CutLowSize],spacing->data[iInfo.CutHighSize]);	
+
+	iInfo.degree = 0;
+	sInfo[0].step = 0.01;
+	 __stepNumberCulc(sInfo,linfo->degree);	
+	__CoefficientDetermine(spacing,Plog,tmpcoefficient,sInfo,&iInfo);
+	sInfo[0].step = linfo->step;
+	iInfo.CutLine = tmpcoefficient->data[0] -0.1;
+/*
+	iInfo.degree = 2;	
+	sInfo[1].step = sInfo[1].step * 10;
+	sInfo[2].step = sInfo[2].step * 100;
+	 __stepNumberCulc(sInfo,linfo->degree);
+	 __CoefficientDetermine(spacing,Plog,tmpcoefficient,sInfo,&iInfo);
+	 sInfo[0].min = tmpcoefficient->data[0];
+	 sInfo[0].max = tmpcoefficient->data[0];
+	 sInfo[1].step = sInfo[1].step/10;
+	 sInfo[2].step = sInfo[2].step/100;
+
+*/
+	for(i=2 ; i<=linfo->degree ; i++){
+		
+		iInfo.degree = i;
+		sInfo[i-1].step = sInfo[i-1].step * 100;
+		sInfo[i].step = sInfo[i].step * 100;
+	 	__stepNumberCulc(sInfo,linfo->degree);
+		__CoefficientDetermine(spacing,Plog,tmpcoefficient,sInfo,&iInfo);
+	 	sInfo[i-2].min = tmpcoefficient->data[i-2];
+	 	sInfo[i-2].max = tmpcoefficient->data[i-2];
+	 	sInfo[i-1].step = sInfo[i-1].step/100;
+	 	sInfo[i].step = sInfo[i].step/100;
+	}
+	
+	__stepNumberCulc(sInfo,linfo->degree);
+	__CoefficientDetermine(spacing,Plog,tmpcoefficient,sInfo,&iInfo);
+
+/*
+	for(i=iInfo.CutLowSize ; i<iInfo.CutHighSize ; i++){
+		Tangent->data[i] = tmpcoefficient->data[0];
+		for(j=1 ; j<=iInfo.degree ; j++){
+			Tangent->data[i] += tmpcoefficient->data[j] * __power(spacing->data[i],j);
+		}
+		fprintf(stdout,"%f %f %f\n",spacing->data[i],Plog->data[i],Tangent->data[i]);
+	}
+*/
+}

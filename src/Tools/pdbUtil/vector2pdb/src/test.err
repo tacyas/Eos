@@ -1,0 +1,61 @@
+Program Start
+ATOM  
+ATOM  
+ATOM      0  GLY     A   0       0.000   0.000   0.000  1.00  0.00   0          
+ATOM  
+ATOM  
+ATOM      1  GLY     A   1       1.600   4.800   0.000  1.00  0.00   0          
+ATOM  
+ATOM  
+ATOM      2  GLY     A   2       3.200   9.600   0.000  1.00  0.00   0          
+ATOM  
+ATOM  
+ATOM      3  GLY     A   3       4.800  14.400   0.000  1.00  0.00   0          
+ATOM  
+ATOM  
+ATOM      4  GLY     A   4       6.400  19.200   0.000  1.00  0.00   0          
+ATOM  
+ATOM  
+ATOM      5  GLY     A   5       8.000  24.000   0.000  1.00  0.00   0          
+ATOM  
+ATOM  
+ATOM      6  GLY     A   6       9.600  28.800   0.000  1.00  0.00   0          
+ATOM  
+ATOM  
+ATOM      7  GLY     A   7      11.200  33.600   0.000  1.00  0.00   0          
+ATOM  
+ATOM  
+ATOM      8  GLY     A   8      12.800  38.400   0.000  1.00  0.00   0          
+ATOM  
+ATOM  
+ATOM      9  GLY     A   9      14.400  43.200   0.000  1.00  0.00   0          
+ATOM  
+ATOM  
+ATOM     10  GLY     A  10      16.000  48.000   0.000  1.00  0.00   0          
+ATOM  
+ATOM  
+ATOM     11  GLY     A  11      17.600  52.800   0.000  1.00  0.00   0          
+ATOM  
+ATOM  
+ATOM     12  GLY     A  12      19.200  57.600   0.000  1.00  0.00   0          
+ATOM  
+ATOM  
+ATOM     13  GLY     A  13      20.800  62.400   0.000  1.00  0.00   0          
+ATOM  
+ATOM  
+ATOM     14  GLY     A  14      22.400  67.200   0.000  1.00  0.00   0          
+ATOM  
+ATOM  
+ATOM     15  GLY     A  15      24.000  72.000   0.000  1.00  0.00   0          
+ATOM  
+ATOM  
+ATOM     16  GLY     A  16      25.600  76.800   0.000  1.00  0.00   0          
+ATOM  
+ATOM  
+ATOM     17  GLY     A  17      27.200  81.600   0.000  1.00  0.00   0          
+ATOM  
+ATOM  
+ATOM     18  GLY     A  18      28.800  86.400   0.000  1.00  0.00   0          
+ATOM  
+ATOM  
+ATOM     19  GLY     A  19      30.400  91.200   0.000  1.00  0.00   0          

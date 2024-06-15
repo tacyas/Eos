@@ -1,0 +1,51 @@
+<HTML>
+<HEAD>
+<TITLE> 3DReconstructionHelical </TITLE>
+</HEAD>
+<BODY BGCOLOR="ffffcc">
+<CENTER>
+<H1> 3D Reconstruction using Helical Symmetry </H1>
+Japanese version<BR>
+Last Modified <!--#echo var="LAST_MODIFIED" -->
+</CENTER>
+<H1>らせん対称性を用いた三次元再構成法</H1>
+<H2> Contents </H2>
+<OL>
+	<LI> <A HREF="#手順">手順</A>
+	<LI> <A HREF="#Makefile">Makefileの例</A>
+</OL>
+
+<H2><A NAME="手順">手順</A></H2>
+<OL>
+<LI>f(x,y)(投影像）を得る
+
+<LI>F(X,Y)(Fourier Pattern)を得る
+
+<LI>Layer Line (G(R))の抽出
+
+<LI>Intramolecule Averaging
+
+<LI>Intermolecule Averaging
+
+<LI>g(r)を得る：Fourier Bessel 変換
+
+<LI>rho(x,y,z)を得る：Fourier合成
+</OL>
+>
+<H2><A NAME="Makefile">Makefileの例</A></H2>
+<OL>
+	<LI><A HREF="MakefileFor3DReconstructionHelical">
+	3D ReconstructionHelicalMake version 1 </A>
+<!--#config timefmt=": Last Modified %y/%m/%d"  -->
+<!--#flastmod file="./MakefileFor3DReconstructionHelical"  -->
+</OL>
+<H2> Lists </H2>
+<OL>
+<LI> MakefileFor3DReconstructionHelical
+<PRE>
+<!--#include file="MakefileFor3DReconstructionHelical" -->
+</PRE>
+
+</OL>
+</BODY>
+</HTML>

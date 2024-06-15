@@ -1,0 +1,6 @@
+make[1]: *** No rule to make target `a.hogehoge'.  Stop.
+make: *** [HOGE] Error 2
+make[1]: Warning: File `a.hoge' has modification time 65 s in the future
+make[1]: warning:  Clock skew detected.  Your build may be incomplete.
+make[1]: Warning: File `a.hogehoge' has modification time 11 s in the future
+make[1]: warning:  Clock skew detected.  Your build may be incomplete.

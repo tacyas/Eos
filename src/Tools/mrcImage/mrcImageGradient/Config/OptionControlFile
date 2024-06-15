@@ -1,0 +1,9 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input::mrcImage","Essential","1","1","In","inFile::mrcImage","NULL"
+"-o","-o[utput]","Output::MagOfGrad","Optional","1","1","Out","outFile::mrcImage","NULL"
+"-oDx","-o[utput]Dx","Output::GradX","Optional","1","1","OutDx","outFile::mrcImage","NULL"
+"-oDy","-o[utput]Dy","Output::GradY","Optional","1","1","OutDy","outFile::mrcImage","NULL"
+"-oDz","-o[utput]Dz","Output::GradZ","Optional","1","1","OutDz","outFile::mrcImage","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

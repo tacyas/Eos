@@ -1,0 +1,37 @@
+have_library: checking for main() in -lGL... -------------------- no
+
+"gcc -o conftest -I/usr/local/include/ruby-1.9.1/x86_64-linux -I/usr/local/include/ruby-1.9.1/ruby/backward -I/usr/local/include/ruby-1.9.1 -I. -I/home/people/tacyas/Eos/include     -O3 -ggdb -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration conftest.c  -L. -L/usr/local/lib -Wl,-R/usr/local/lib -L/usr/lib -Wl,-R/usr/lib -L/home/people/tacyas/Eos/lib/X86LINUX64 -Wl,-R/home/people/tacyas/Eos/lib/X86LINUX64 -L/home/people/tacyas/Eos/util/X86LINUX64/lib -Wl,-R/home/people/tacyas/Eos/util/X86LINUX64/lib -L.  -rdynamic -Wl,-export-dynamic     -Wl,-R -Wl,/usr/local/lib -L/usr/local/lib -lruby-static  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+/usr/local/lib/ruby/1.9.1/mkmf.rb:317: warning: Insecure world writable dir /net/fs08/workFS08 in PATH, mode 040777
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: int main() {return 0;}
+/* end */
+
+"gcc -o conftest -I/usr/local/include/ruby-1.9.1/x86_64-linux -I/usr/local/include/ruby-1.9.1/ruby/backward -I/usr/local/include/ruby-1.9.1 -I. -I/home/people/tacyas/Eos/include     -O3 -ggdb -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration conftest.c  -L. -L/usr/local/lib -Wl,-R/usr/local/lib -L/usr/lib -Wl,-R/usr/lib -L/home/people/tacyas/Eos/lib/X86LINUX64 -Wl,-R/home/people/tacyas/Eos/lib/X86LINUX64 -L/home/people/tacyas/Eos/util/X86LINUX64/lib -Wl,-R/home/people/tacyas/Eos/util/X86LINUX64/lib -L.  -rdynamic -Wl,-export-dynamic     -Wl,-R -Wl,/usr/local/lib -L/usr/local/lib -lruby-static -lGL  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+/usr/bin/ld: cannot find -lGL
+collect2: ld はステータス 1 で終了しました
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: /*top*/
+4: int main() {return 0;}
+5: int t() { void ((*volatile p)()); p = (void ((*)()))main; return 0; }
+/* end */
+
+"gcc -o conftest -I/usr/local/include/ruby-1.9.1/x86_64-linux -I/usr/local/include/ruby-1.9.1/ruby/backward -I/usr/local/include/ruby-1.9.1 -I. -I/home/people/tacyas/Eos/include     -O3 -ggdb -Wall -Wextra -Wno-unused-parameter -Wno-parentheses -Wno-long-long -Wno-missing-field-initializers -Wpointer-arith -Wwrite-strings -Wdeclaration-after-statement -Wimplicit-function-declaration conftest.c  -L. -L/usr/local/lib -Wl,-R/usr/local/lib -L/usr/lib -Wl,-R/usr/lib -L/home/people/tacyas/Eos/lib/X86LINUX64 -Wl,-R/home/people/tacyas/Eos/lib/X86LINUX64 -L/home/people/tacyas/Eos/util/X86LINUX64/lib -Wl,-R/home/people/tacyas/Eos/util/X86LINUX64/lib -L.  -rdynamic -Wl,-export-dynamic     -Wl,-R -Wl,/usr/local/lib -L/usr/local/lib -lruby-static -lGL  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+/usr/bin/ld: cannot find -lGL
+collect2: ld はステータス 1 で終了しました
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: /*top*/
+4: int main() {return 0;}
+5: int t() { main(); return 0; }
+/* end */
+
+--------------------
+

@@ -1,0 +1,479 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageROI</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageROI<br></h2></b></font>
+	<h4>関心領域設定</h4>
+	
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+	<table border="1">
+		<div align="left">
+		<tr>
+			<th>オプション</th>
+			<th>必須項目/選択項目</th>
+			<th>説明</th>
+			<th>デフォルト</th>
+		</tr>
+		<tr>
+			<td>-i</td>
+			<td>必須</td>
+			<td>入力ファイル設定</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-o</td>
+			<td>必須</td>
+			<td>出力ファイル設定</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-r</td>
+			<td>選択</td>
+			<td>切り取る範囲を座標で設定</td>
+			<td>blx(0.0),bly(0.0),brx(0.0),bry(0.0)<br>
+			trx(0.0),try(0.0),tlx(0.0),tly(0.0)</td>
+		</tr>
+		<tr>
+			<td>-x</td>
+			<td>選択</td>
+			<td>入力ファイルの幅を設定（画像数は変わらない）</td>
+			<td>処理前の幅(1.0/* Default is set by -r */)</td>
+		</tr>
+		<tr>
+			<td>-y</td>
+			<td>選択</td>
+			<td>入力ファイルの高さを設定（画素数は変わらない）</td>
+			<td>処理前の高さ(1.0/* Default is set by -r */)</td>
+		</tr>
+		<tr>
+			<td>-a</td>
+			<td>選択</td>
+			<td>画像の傾きの角度を設定</td>
+			<td>0.0</td>
+		</tr>
+		<tr>
+			<td>-W</td>
+			<td>選択</td>
+			<td>出力ファイルの幅を設定（画素数も同様に変化する）</td>
+			<td>1.0</td>
+		</tr>
+		<tr>
+			<td>-H</td>
+			<td>選択</td>
+			<td>出力ファイルの高さを設定（画素数も同様に変化する）</td>
+			<td>1.0</td>
+		</tr>
+		<tr>
+			<td>-Shift</td>
+			<td>選択</td>
+			<td>関心領域をシフトする</td>
+			<td>ShiftX(0.0),ShiftY(0.0)</td>
+		</tr>
+		<tr>
+			<td>-truePitch</td>
+			<td>選択</td>
+			<td>螺旋状の幅の設定</td>
+			<td>430.0</td>
+		</tr>
+		<tr>
+			<td>-dY</td>
+			<td>選択</td>
+			<td>truePitchの数を設定</td>
+			<td>0.0</td>
+		</tr>
+		<tr>
+			<td>-Ly</td>
+			<td>選択</td>
+			<td>y軸のtruePitch開始位置を設定</td>
+			<td>5.0</td>
+		</tr>
+		<tr>
+			<td>-S</td>
+			<td>選択</td>
+			<td>拡大・収縮させる</td>
+			<td>1</td>
+		</tr>
+		<tr>
+			<td>-m</td>
+			<td>選択</td>
+			<td>モード</td>
+			<td>0</td>
+		</tr>
+			<tr>
+			<td>-h</td>
+			<td>選択</td>
+			<td>ヘルプを表示</td>
+			<td>　</td>
+		</tr>
+	</table>
+	
+<!-- モード説明 -->
+
+	<br>
+	<caption><b>モードの詳細</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>モード</th>
+				<th>説明</th>
+			</tr>
+			<tr>
+				<td>0</td>
+				<td>最短距離法</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>線形補間法</td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td>３次補間法</td>
+			</tr>
+			<tr>
+				<td>3</td>
+				<td>多項式法</td>
+			</tr>
+			</div>
+		</table>
+		
+	<h4>******実行例******</h4>	
+	
+<!-- 入力ファイル説明 -->
+
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="input.png"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				255<br>
+				82.357<br>
+				119.241<br>
+				1.49051<br></p>
+			</td>
+			<td>ノイズを加えたものを使用<br>
+				　　－－－－－－＞</td>
+			<td><img src="input.noiseadd.png" border="0" alt="input.noiseadd.png(3040 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				255<br>
+				96.8606<br>
+				123.396<br>
+				1.54245<br></p>
+			</td>
+		</tr>
+	</table>	
+
+<!-- オプション必須項目のみの場合 -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション必須項目のみの場合の出力結果画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="inputnoise.png"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				255<br>
+				96.8606<br>
+				123.396<br>
+				1.54245<br></p>
+			</td>
+			<td>※特に変わりがない</td>
+		</tr>
+	</table>
+
+<!-- 各オプションでの処理 -->
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-rを使用------</font></caption><br>
+	<div>-r 10 10 70 20 70 70 10 60で切り取る</div>
+	<table>
+		<tr>
+			<td><img src="inputnoise1.m0r2.png" border="0" alt="inputnoise1.m0r2.png(2066 byte)" width="62" height="51"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				255<br>
+				123.636<br>
+				126.999<br>
+				2.2585<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-x,-yを使用------</font></caption><br>
+	<table>
+		<tr><td>-x=100,-y=100の時</td></tr>
+		<tr>
+			<td><img src="inputnoise.x100y100.png" border="0" alt="inputnoise.x100y100.png(3518 byte)" width="100" height="100"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				255<br>
+				82.5123<br>
+				118.972<br>
+				1.18972<br></p>
+			</td>
+		</tr>
+		<tr><td>-x=50,-y=50の時</td></tr>
+		<tr>
+			<td><img src="inputnoise.x50y50.png" border="0" alt="inputnoise.x50y50.png(1839 byte)" width="50" height="50"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				255<br>
+				125.118<br>
+				127.03<br>
+				2.5406<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-aを使用------</font></caption><br>
+	<table>
+		<tr><td>-a=30の時</td></tr>
+		<tr>
+			<td><img src="inputnoise.a30.png" border="0" alt="inputnoise.a30.png(3088 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				255<br>
+				102.184<br>
+				124.572<br>
+				1.55715<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-W,-Hを使用------</font></caption><br>
+	<table>
+		<tr><td>-W=100,-H=100の時</td></tr>
+		<tr>
+			<td><img src="inputnoise.w100h100.png" border="0" alt="inputnoise.w100h100.png(3566 byte)" width="100" height="100"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				255<br>
+				95.808<br>
+				123.128<br>
+				1.23128<br></p>
+			</td>
+		</tr>
+		<tr><td>-W=50,-H=50の時</td></tr>
+		<tr>
+			<td><img src="inputnoise.w50h50.png" border="0" alt="inputnoise.w50h50.png(1791 byte)" width="50" height="50"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				255<br>
+				95.5624<br>
+				123.048<br>
+				2.46095<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-Shiftを使用------</font></caption><br>
+	<table>
+		<tr><td>-Shift=10の時</td></tr>
+		<tr>
+			<td><img src="inputnoise.shift1010.png" border="0" alt="inputnoise.shift1010.png(3053 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				255<br>
+				96.8606<br>
+				124.572<br>
+				1.55715<br></p>
+			</td>
+		</tr>
+		<tr><td>-Shift=30の時</td></tr>
+		<tr>
+			<td><img src="inputnoise.Shift3030.png" border="0" alt="inputnoise.Shift3030.png(3066 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				255<br>
+				96.8606<br>
+				123.396<br>
+				1.54245<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-Sを使用------</font></caption><br>
+	<table>
+		<tr><td>-S=2の時</td></tr>
+		<tr>
+			<td><img src="inputnoise.S2.png" border="0" alt="inputnoise.S2.png(4129 byte)" width="159" height="159"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				255<br>
+				97.5262<br>
+				123.5572<br>
+				0.777089<br></p>
+			</td>
+		</tr>
+		<tr><td>-S=3の時</td></tr>
+		<tr>
+			<td><img src="inputnoise.S3.png" border="0" alt="inputnoise.S2.png(4129 byte)" width="238" height="238"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				255<br>
+				97.7599<br>
+				123.612<br>
+				0.519379<br></p>
+			</td>
+		</tr>
+	</table>
+	
+<!-- モード0～3での処理 -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------モード０～３での処理------</font></caption><br>
+	<div>入力ファイルは-rで処理した画像を使用（変化がわかりやすかった為）</div>
+	<table>
+		<tr><td>モード：０</td></tr>
+		<tr>
+			<td><img src="inputnoise1.m0r2.png" border="0" alt="inputnoise1.m0r2.png(2066 byte)" width="62" height="51"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				255<br>
+				96.8606<br>
+				123.396<br>
+				1.54245<br></p>
+			</td>
+		</tr>
+		<tr><td>モード：１</td></tr>
+		<tr>
+			<td><img src="inputnoise1.m1r2.png" border="0" alt="inputnoise1.m1r2.png(3460 byte)" width="62" height="51"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				255<br>
+				123.29<br>
+				103.921<br>
+				1.84808<br></p>
+			</td>
+		</tr>
+		<tr><td>モード：２</td></tr>
+		<tr>
+			<td><img src="inputnoise1.m2r2.png" border="0" alt="inputnoise1.m2r2.png(4007 byte)" width="62" height="51"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-89.3528<br>
+				354.475<br>
+				123.427<br>
+				120.789<br>
+				2.14806<br></p>
+			</td>
+		</tr>
+		<tr><td>モード：３</td></tr>
+		<tr>
+			<td><img src="inputnoise1.m3r2.png" border="0" alt="inputnoise1.m3r2.png(3860 byte)" width="62" height="51"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-44414.5<br>
+				632802<br>
+				133351<br>
+				142680<br>
+				2537.36<br></p>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

@@ -1,0 +1,62 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>                  
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+#undef DEBUG 
+#include "genUtil.h"
+#include "mrcImage.h"
+#include "ctfInfo.h"
+
+void
+main(int argc, char* argv[]) 
+{
+	long status;
+	mrcImageCTFObservationInfo info;
+	mrcImage src;
+	mrcImage dstfft;
+	mrcImage dst;
+	mrcImage fft;
+	ctfInfo CTFInfo;
+	float X, Y, R, CTF, Weight, dX, dY;
+	double re, im;
+
+	init0(&info);
+    argCheck(&info, argc, argv);
+    init1(&info);
+
+	CTFInfo.Cs = info.Cs;
+	CTFInfo.defocus = info.Defocus;
+	CTFInfo.kV = info.kV;
+	if(info.flagSinWinRmin && info.flagSinWinRmax) {
+		CTFInfo.flagWin = 1;
+		CTFInfo.CutLow  = info.SinWinRmin;
+		CTFInfo.CutHigh = info.SinWinRmax;
+	}
+	mrcFileRead(&src, info.In, "in main", 0);
+	if(IsImage(&src, "in main", 0)) {
+		lfft2d(&fft, &src);
+	} else if(IsFT(&src, "in main", 0)) {
+		fft = src;
+	} else {
+		fprintf(stderr, "Not supported mode : %ld\n", src.HeaderMode);
+		exit(EXIT_FAILURE);
+	}
+
+	lmrcImageCTFObservation(&dstfft, &fft, &CTFInfo, info.mode);
+
+	if(IsFT(&dstfft, "in main", 0)) {
+		lfft2d(&dstfft, &dst);
+	} else {
+		fprintf(stderr, "Something wrong !! Programing Miss !!\n");
+		exit(EXIT_FAILURE);
+	}
+	mrcFileWrite(&dst, info.Out, "in main", 0);
+	exit(EXIT_SUCCESS);
+}
+
+void
+additionalUsage()
+{
+}

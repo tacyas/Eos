@@ -1,0 +1,87 @@
+#!/bin/sh
+#
+# protoShellCreate  1.7
+#
+# The latest update : 09/16/95 at 13:11:12
+#
+#@(#) A new SCCS file is created if no SCCS. If one have SCCS, delta commands.
+#@(#)
+#
+#@(#) sccsPut SourceFileName
+#
+#@(#) Attention
+#@(#)
+#@(#) Parameter: 
+#@(#) Essential:
+#@(#) SourceFileName
+#@(#) Optional:
+#@(#)
+
+usage()
+{
+	echo "Usage: protoShellCreate [protoTypeShellProgramName]"
+	exit
+}
+
+# Store Flags
+FlagsCharacter="-"
+
+case $# in 
+	0)
+		;;
+	*) # if option
+		while [ `echo $1 | cut -c1` = ${FlagsCharacter} ]
+		do
+			if [ `echo $1 | cut -c2` = "h" ]
+			then
+				usage
+			else
+				parms="${parms} $1"
+				shift 
+			fi
+		done
+		;;
+esac	
+
+
+case $# in
+	0) # No filename 
+		echo "Enter SourceFileName"
+		read filename
+		;;
+	1) # 
+		filename=$1
+		;;
+	*) #
+		filename="$*"
+		;;
+esac
+
+#
+EosSCCSHome=$EOS_HOME/sccs
+currentDir=`pwd`
+
+for file in ${filename}
+do
+	FullName=${currentDir}/${file}	
+	Name=`basename ${FullName}`
+	Dir=`dirname ${FullName}`
+	
+	if [ -f ${FullName} ]
+	then
+		echo "${file} exits. Do you overwrite it ? (y/n)"
+		read ans
+		case $ans in 
+			'y'|'Y')
+			;;
+			'n'|'N')
+				exit
+			;;
+			*)
+				exit
+			;;
+		esac
+	fi
+    cat ${EOS_HOME}/sbin/protoShellCreate.Template | sed -e s/\$\{Name\}/${filename}/g > ${FullName} 
+	chmod +x ${FullName}
+done

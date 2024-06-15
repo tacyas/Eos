@@ -1,0 +1,154 @@
+#
+#
+#
+proc roiAreaSelectStart { c x y } {
+	global Roi
+	set Roi(Action)    Selecting 
+}
+
+proc roiAreaSelectMotion { c x y } {
+	global Roi
+	if { $Roi(Action) == "Selecting" 
+	  || $Roi(Action) == "Select" } {
+	} else {
+		puts "Something wrong"
+	}
+}
+
+proc roiAreaSelectEnd { c x y } {
+	global Roi
+
+	switch $Roi(MultiShape) {
+		On {
+			# Examining a ROI to be selected 
+			for { set i [ expr $Roi(TotalN)-1 ] } { 0 <= $i } { incr i -1 } {
+				if { [ info exists Roi($i,Shape) ] } {
+					switch [ set Roi($i,Shape) ] {
+						Rectangle {
+							set x0 [ set Roi($i,x0) ]
+							set y0 [ set Roi($i,y0) ]
+							set x1 [ set Roi($i,x1) ]
+							set y1 [ set Roi($i,y1) ]
+							set x2 [ set Roi($i,x2) ]
+							set y2 [ set Roi($i,y2) ]
+							set x3 [ set Roi($i,x3) ]
+							set y3 [ set Roi($i,y3) ]
+							# v: a vector for a selected point
+							set vx  [expr $x  - $x0 ]
+							set vy  [expr $y  - $y0 ]
+							# v1: a vector for p1 
+							set v1x [expr $x1 - $x0 ]
+							set v1y [expr $y1 - $y0 ]
+							set v1  [expr sqrt($v1x*$v1x + $v1y*$v1y)]
+							# v2: a vector for p2
+							set v3x [expr $x3 - $x0 ]
+							set v3y [expr $y3 - $y0 ]
+							set v3  [expr sqrt($v3x*$v3x + $v3y*$v3y)]
+							# t: parameters for v-v1, v-v3	
+							set tx  [expr ($vx*$v1x + $vy*$v1y)/($v1*$v1) ]
+							set ty  [expr ($vx*$v3x + $vy*$v3y)/($v3*$v3) ]
+							# Check: 
+							if { 0 <= $tx && $tx <= 1 \
+							  && 0 <= $ty && $ty <= 1 } {
+							  	puts "Select $i"
+								roiAreaSelectOK $i
+								return
+							} else {
+								puts "Not selected: $i"
+							}
+						}
+						TiltRectangle {
+							set x0 [ set Roi($i,x0) ]
+							set y0 [ set Roi($i,y0) ]
+							set x1 [ set Roi($i,x1) ]
+							set y1 [ set Roi($i,y1) ]
+							set x2 [ set Roi($i,x2) ]
+							set y2 [ set Roi($i,y2) ]
+							set x3 [ set Roi($i,x3) ]
+							set y3 [ set Roi($i,y3) ]
+							# v: a vector for a selected point
+							set vx  [expr $x  - $x0 ]
+							set vy  [expr $y  - $y0 ]
+							# v1: a vector for p1 
+							set v1x [expr $x1 - $x0 ]
+							set v1y [expr $y1 - $y0 ]
+							set v1  [expr sqrt($v1x*$v1x + $v1y*$v1y)]
+							# v2: a vector for p2
+							set v3x [expr $x3 - $x0 ]
+							set v3y [expr $y3 - $y0 ]
+							set v3  [expr sqrt($v3x*$v3x + $v3y*$v3y)]
+							# t: parameters for v-v1, v-v3	
+							set tx  [expr ($vx*$v1x + $vy*$v1y)/($v1*$v1) ]
+							set ty  [expr ($vx*$v3x + $vy*$v3y)/($v3*$v3) ]
+							# Check: 
+							if { 0 <= $tx && $tx <= 1 \
+							  && 0 <= $ty && $ty <= 1 } {
+							  	puts "Select $i"
+								roiAreaSelectOK $i
+								return
+							} else {
+								puts "Not selected: $i"
+							}
+						}
+						default {
+							puts "Not supported shape"
+						}
+					}
+				} else {
+					puts "$i does not exist."
+				}
+			}
+			if { $i <0 } {
+				puts "Cannot Select"
+				set Roi(Action) Select
+			} else {
+				puts "Something wrong"
+			}
+		}
+		Off {
+			puts "Warning: When MultiShape is off, this routine is useless."
+		}
+	}
+}
+
+proc roiAreaSelectOK { i } {
+	global Roi
+
+	puts "select $i-th object"
+
+	switch [ set Roi($i,Shape) ] {
+		Rectangle {
+				global rectanglePoints
+				set rectanglePoints(x0) [ set Roi($i,x0) ]
+				set rectanglePoints(y0) [ set Roi($i,y0) ]
+				set rectanglePoints(x1) [ set Roi($i,x1) ]
+				set rectanglePoints(y1) [ set Roi($i,y1) ]
+				set rectanglePoints(x2) [ set Roi($i,x2) ]
+				set rectanglePoints(y2) [ set Roi($i,y2) ]
+				set rectanglePoints(x3) [ set Roi($i,x3) ]
+				set rectanglePoints(y3) [ set Roi($i,y3) ]
+		}
+		TiltRectangle {
+				global rectanglePoints
+				set rectanglePoints(x0) [ set Roi($i,x0) ]
+				set rectanglePoints(y0) [ set Roi($i,y0) ]
+				set rectanglePoints(x1) [ set Roi($i,x1) ]
+				set rectanglePoints(y1) [ set Roi($i,y1) ]
+				set rectanglePoints(x2) [ set Roi($i,x2) ]
+				set rectanglePoints(y2) [ set Roi($i,y2) ]
+				set rectanglePoints(x3) [ set Roi($i,x3) ]
+				set rectanglePoints(y3) [ set Roi($i,y3) ]
+		}
+		default {
+			puts "Not supported shape"
+		}
+	}
+	set Roi(CurrentID)		$i
+	set Roi(CurrentObject) 	[ set Roi($i,Object) ]
+	set Roi(CurrentColor) 	$Roi(SelectColor)
+	$Roi(Canvas) itemconfigure $Roi(CurrentObject) -fill $Roi(SelectColor) 
+	
+	set Roi(Action) Move
+	return
+}
+

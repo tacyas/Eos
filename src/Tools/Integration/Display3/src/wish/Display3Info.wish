@@ -1,0 +1,353 @@
+# %M% %Y% %I%
+# The latest update : %G% at %U%
+#
+#%Z% Display3Info.wish ver %I%
+#%Z% Created by 
+#%Z%
+#%Z% Usage : Display3Info.wish
+#%Z% Attention
+#%Z%
+
+proc display3CameraInformationWinCreate { } {
+	global fileNameIn
+	global renWin
+	global acamera
+
+	if [ catch { toplevel .display3CameraInfo -bd 4 -class Display3Info } ] {
+		raise .display3CameraInfo
+		return 
+	} else {
+		set w .display3CameraInfo
+		frame $w.frame
+		set f $w.frame
+
+		frame $f.topmenu
+		set ff $f.topmenu
+		message $ff.msg -relief raised -justify center \
+			-text "Display 3\nInformation about Camera" -width 400
+		button $ff.b -text "InformationGet" -command {
+		cameraAutomaticallyInformationAboutPositionGetAndSet
+		cameraAutomaticallyViewAngleGetAndSet
+		}
+		pack $ff.msg 
+		pack $ff.b 
+		pack $ff
+
+		frame $f.locationsetmessage
+		set ff $f.locationsetmessage
+		label $ff.lb -text "Camera Located from Origin :"
+		pack $ff.lb
+
+		frame $ff.locationsetx
+		set fff $ff.locationsetx
+		label $fff.lbx -text "X-value"
+		entry $fff.x  -textvariable acamera(positionX)
+		bind $fff.x <Double-Button-1> { cameraMove }
+		button $fff.xmoveMinus10 -text "-10"
+		bind $fff.xmoveMinus10 <Button1-Motion> { cameraSlide -10 0 0 }
+		button $fff.xmoveMinus1 -text "-1"
+		bind $fff.xmoveMinus1 <Button1-Motion> { cameraSlide -1 0 0 }
+		button $fff.xmovePlus1 -text "+1"
+		bind $fff.xmovePlus1 <Button1-Motion> { cameraSlide 1 0 0 }
+		button $fff.xmovePlus10 -text "+10"
+		bind $fff.xmovePlus10 <Button1-Motion> { cameraSlide 10 0 0 }
+		pack $fff.lbx
+		pack $fff.x
+		pack $fff.xmoveMinus10 -side left
+		pack $fff.xmoveMinus1 -side left
+		pack $fff.xmovePlus1 -side left
+		pack $fff.xmovePlus10 -side left
+		pack $fff -side left
+
+		frame $ff.locationsety
+		set fff $ff.locationsety
+		label $fff.lby -text "Y-value"
+		entry $fff.y  -textvariable acamera(positionY)
+		bind $fff.y <Double-Button-1> { cameraMove }
+		button $fff.ymoveMinus10 -text "-10"
+		bind $fff.ymoveMinus10 <Button1-Motion> { cameraSlide 0 -10 0 }
+		button $fff.ymoveMinus1 -text "-1"
+		bind $fff.ymoveMinus1 <Button1-Motion> { cameraSlide 0 -1 0 }
+		button $fff.ymovePlus1 -text "+1"
+		bind $fff.ymovePlus1 <Button1-Motion> { cameraSlide 0 1 0 }
+		button $fff.ymovePlus10 -text "+10"
+		bind $fff.ymovePlus10 <Button1-Motion> { cameraSlide 0 10 0 }
+		pack $fff.lby
+		pack $fff.y
+		pack $fff.ymoveMinus10 -side left
+		pack $fff.ymoveMinus1 -side left
+		pack $fff.ymovePlus1 -side left
+		pack $fff.ymovePlus10 -side left
+		pack $fff -side left
+
+		frame $ff.locationsetz
+		set fff $ff.locationsetz
+		label $fff.lbz -text "Z-value"
+		entry $fff.z  -textvariable acamera(positionZ)
+		bind $fff.z <Double-Button-1> { cameraMove }
+		button $fff.zmoveMinus10 -text "-10"
+		bind $fff.zmoveMinus10 <Button1-Motion> { cameraSlide 0 0 -10 }
+		button $fff.zmoveMinus1 -text "-1"
+		bind $fff.zmoveMinus1 <Button1-Motion> { cameraSlide 0 0 -1 }
+		button $fff.zmovePlus1 -text "+1"
+		bind $fff.zmovePlus1 <Button1-Motion> { cameraSlide 0 0 1 }
+		button $fff.zmovePlus10 -text "+10"
+		bind $fff.zmovePlus10 <Button1-Motion> { cameraSlide 0 0 10 }
+		pack $fff.lbz
+		pack $fff.z
+		pack $fff.zmoveMinus10 -side left
+		pack $fff.zmoveMinus1 -side left
+		pack $fff.zmovePlus1 -side left
+		pack $fff.zmovePlus10 -side left
+		pack $fff -side left
+
+		pack $ff 
+
+		frame $f.focalsetmessage
+		set ff $f.focalsetmessage
+		label $ff.lb -text "Camera Focus Point :"
+		pack $ff.lb
+
+		frame $ff.focalsetx
+		set fff $ff.focalsetx
+		label $fff.lbx -text "X-value"
+		entry $fff.x  -textvariable acamera(focalPointX)
+		bind $fff.x <Double-Button-1> { cameraMove }
+		button $fff.xmoveMinus10 -text "-10"
+		bind $fff.xmoveMinus10 <Button1-Motion> { cameraFocalSlide -10 0 0 }
+		button $fff.xmoveMinus1 -text "-1"
+		bind $fff.xmoveMinus1 <Button1-Motion> { cameraFocalSlide -1 0 0 }
+		button $fff.xmovePlus1 -text "+1"
+		bind $fff.xmovePlus1 <Button1-Motion> { cameraFocalSlide 1 0 0 }
+		button $fff.xmovePlus10 -text "+10"
+		bind $fff.xmovePlus10 <Button1-Motion> { cameraFocalSlide 10 0 0 }
+		pack $fff.lbx
+		pack $fff.x
+		pack $fff.xmoveMinus10 -side left
+		pack $fff.xmoveMinus1 -side left
+		pack $fff.xmovePlus1 -side left
+		pack $fff.xmovePlus10 -side left
+		pack $fff -side left
+
+		frame $ff.focalsety
+		set fff $ff.focalsety
+		label $fff.lby -text "Y-value"
+		entry $fff.y  -textvariable acamera(focalPointY)
+		bind $fff.y <Double-Button-1> { cameraMove }
+		button $fff.ymoveMinus10 -text "-10"
+		bind $fff.ymoveMinus10 <Button1-Motion> { cameraFocalSlide 0 -10 0 }
+		button $fff.ymoveMinus1 -text "-1"
+		bind $fff.ymoveMinus1 <Button1-Motion> { cameraFocalSlide 0 -1 0 }
+		button $fff.ymovePlus1 -text "+1"
+		bind $fff.ymovePlus1 <Button1-Motion> { cameraFocalSlide 0 1 0 }
+		button $fff.ymovePlus10 -text "+10"
+		bind $fff.ymovePlus10 <Button1-Motion> { cameraFocalSlide 0 10 0 }
+		pack $fff.lby
+		pack $fff.y
+		pack $fff.ymoveMinus10 -side left
+		pack $fff.ymoveMinus1 -side left
+		pack $fff.ymovePlus1 -side left
+		pack $fff.ymovePlus10 -side left
+		pack $fff -side left
+
+		frame $ff.focalsetz
+		set fff $ff.focalsetz
+		label $fff.lbz -text "Z-value"
+		entry $fff.z  -textvariable acamera(focalPointZ)
+		bind $fff.z <Double-Button-1> { cameraMove }
+		button $fff.zmoveMinus10 -text "-10"
+		bind $fff.zmoveMinus10 <Button1-Motion> { cameraFocalSlide 0 0 -10 }
+		button $fff.zmoveMinus1 -text "-1"
+		bind $fff.zmoveMinus1 <Button1-Motion> { cameraFocalSlide 0 0 -1 }
+		button $fff.zmovePlus1 -text "+1"
+		bind $fff.zmovePlus1 <Button1-Motion> { cameraFocalSlide 0 0 1 }
+		button $fff.zmovePlus10 -text "+10"
+		bind $fff.zmovePlus10 <Button1-Motion> { cameraFocalSlide 0 0 10 }
+		pack $fff.lbz
+		pack $fff.z
+		pack $fff.zmoveMinus10 -side left
+		pack $fff.zmoveMinus1 -side left
+		pack $fff.zmovePlus1 -side left
+		pack $fff.zmovePlus10 -side left
+		pack $fff -side left
+
+		pack $ff 
+		
+		frame $f.viewAngleSet
+		set ff $f.viewAngleSet
+		label $ff.lb -text "View Angle" 
+		entry $ff.e  -textvariable acamera(viewAngle)  -width 10 
+		scale $ff.s -from 0 -to 90 -showvalue yes -tickinterval 90 \
+		 -orient horizontal -variable acamera(viewAngle) -resolution 0.1 -command {cameraViewAngleSet}\
+		 -length 180
+		pack $ff.lb -anchor w
+		pack $ff.e  -side left
+		pack $ff.s  -fill x -expand true
+		pack $ff -fill x -expand true -pady 15
+
+		frame $f.viewUp
+		set ff $f.viewUp
+		label $ff.lb -text "View-Up Direction"
+		entry $ff.ex  -textvariable acamera(viewUpX) -width 5 -state disabled
+		entry $ff.ey  -textvariable acamera(viewUpY) -width 5 -state disabled
+		entry $ff.ez  -textvariable acamera(viewUpZ) -width 5 -state disabled
+		pack  $ff.lb -anchor w
+		pack $ff.ex $ff.ey $ff.ez -side left -fill x -expand true
+		pack $ff -fill x -pady 15 -expand true
+
+		frame $f.bottommenu
+		set ff $f.bottommenu
+		menubutton $ff.mb -text "Mysterious Exit Menu" -menu $ff.mb.m
+		menu $ff.mb.m 
+		$ff.mb.m add command -label "baibai" -command {exit 0}
+		$ff.mb.m add separator
+		$ff.mb.m add command -label "sayonara" -command {exit 0}
+		pack $ff.mb 
+		pack $ff 
+
+		pack $f  -fill x -expand true
+
+	}
+}
+
+proc display3ObjectInformationWinCreate { } {
+
+	global ren1
+	global renWin
+	global Roi
+	global object
+	global acamera
+	global rotation
+	global cf1
+
+	if [ catch { toplevel .display3ObjectInfo -bd 4 -class Display3Info } ] {
+		raise .display3ObjectInfo
+		return 
+	} else {
+		set w .display3ObjectInfo
+		frame $w.frame
+		set f $w.frame
+
+		frame $f.topmenu
+		set ff $f.topmenu
+		message $ff.msg -relief raised -justify center \
+			-text "Display 3\nInformation about Object" -width 400
+#	-font "times-italic-14"
+		button $ff.b -text "owari" -command {exit 0}
+		label $ff.lb -text "Object Rotated Around Three-Dimension-Axis :"
+		pack $ff.msg 
+		pack $ff.b 
+		pack $ff.lb
+		pack $ff
+
+		set rotation(value,1) 0.0
+		set rotation(axis,1) 1
+		frame $f.angleset1
+		set ff $f.angleset1
+			frame $ff.axisset
+			set fff $ff.axisset
+			label $fff.lb -text "1st Rotation : Around"
+			radiobutton $fff.rb1 -text "X-Axis" -variable rotation(axis,1) -value 1
+			radiobutton $fff.rb2 -text "Y-Axis" -variable rotation(axis,1) -value 2
+			radiobutton $fff.rb3 -text "Z-Axis" -variable rotation(axis,1) -value 3
+			pack $fff.lb -anchor w -side left
+			pack $fff.rb1 -side left
+			pack $fff.rb2 -side left
+			pack $fff.rb3 -side left
+			pack $fff
+
+			frame $ff.valueset
+			set fff $ff.valueset
+			entry $fff.ex  -textvariable angle1 -width 10
+			bind $fff.ex <Double-Button-1> {objectRotate 1 $angle1}
+			scale $fff.sx -from -180 -to 180 -showvalue yes -tickinterval 90 \
+			 -orient horizontal -variable angle1 -resolution 0.1 -command {objectRotate 1}\
+			 -length 360
+			pack $fff.ex -anchor w
+			pack $fff.sx  -fill x -expand true
+			pack $fff -fill x -expand true -pady 15
+		pack $ff -fill x -expand true -pady 15
+
+		set rotation(value,2) 0.0
+		set rotation(axis,2) 2
+		frame $f.angleset2
+		set ff $f.angleset2
+			frame $ff.axisset
+			set fff $ff.axisset
+			label $fff.lb -text "2nd Rotation : Around"
+			radiobutton $fff.rb1 -text "X-Axis" -variable rotation(axis,2) -value 1
+			radiobutton $fff.rb2 -text "Y-Axis" -variable rotation(axis,2) -value 2
+			radiobutton $fff.rb3 -text "Z-Axis" -variable rotation(axis,2) -value 3
+			pack $fff.lb -anchor w -side left
+			pack $fff.rb1 -side left
+			pack $fff.rb2 -side left
+			pack $fff.rb3 -side left
+			pack $fff
+
+			frame $ff.valueset
+			set fff $ff.valueset
+			entry $fff.ey  -textvariable angle2 -width 10
+			bind $fff.ey <Double-Button-1> {objectRotate 2 $angle2}
+			scale $fff.sy -from -180 -to 180 -showvalue yes -tickinterval 90 \
+	 		 -orient horizontal -variable angle2 -resolution 0.1 -command {objectRotate 2}\
+			 -length 360
+			pack $fff.ey  -anchor w
+			pack $fff.sy -fill x -expand true
+			pack $fff -fill x -expand true -pady 15
+		pack $ff -fill x -expand true -pady 15
+
+		set rotation(value,3) 0.0
+		set rotation(axis,3) 3
+		frame $f.angleset3
+		set ff $f.angleset3
+			frame $ff.axisset
+			set fff $ff.axisset
+			label $fff.lb -text "3rd Rotation : Around"
+			radiobutton $fff.rb1 -text "X-Axis" -variable rotation(axis,3) -value 1
+			radiobutton $fff.rb2 -text "Y-Axis" -variable rotation(axis,3) -value 2
+			radiobutton $fff.rb3 -text "Z-Axis" -variable rotation(axis,3) -value 3
+			pack $fff.lb -anchor w -side left
+			pack $fff.rb1 -side left
+			pack $fff.rb2 -side left
+			pack $fff.rb3 -side left
+			pack $fff
+
+			frame $ff.valueset
+			set fff $ff.valueset
+			entry $fff.ez  -textvariable angle3  -width 10
+			bind $fff.ez <Double-Button-1> {objectRotate 3 $angle3}
+			scale $fff.sz -from -180 -to 180 -showvalue yes -tickinterval 90 \
+			-orient horizontal -variable angle3 -resolution 0.1 -command {objectRotate 3}\
+			-length 360
+			pack $fff.ez -anchor w
+			pack $fff.sz -fill x -expand true
+			pack $fff -fill x -expand true -pady 15
+		pack $ff -fill x -expand true -pady 15
+
+		frame $f.contourSet
+		set ff $f.contourSet
+		entry $ff.e -textvariable cf1(contour) -width 10
+		bind $ff.e <KeyPress-Return> {contourSet}
+		bind $ff.e <Double-Button-1> {contourSet}
+		button $ff.b -text "Contour Set" -command contourSet
+		pack $ff.b -side left
+		pack $ff.e -fill x -expand true
+		pack $ff -fill x -expand true -pady 15	
+
+		pack $ff -fill x
+		frame $f.bottommenu
+		set ff $f.bottommenu
+		menubutton $ff.mb -text "Mysterious Exit Menu" -menu $ff.mb.m
+		menu $ff.mb.m 
+		$ff.mb.m add command -label "Good Luck!" -command {exit}
+		$ff.mb.m add separator
+		$ff.mb.m add command -label "So Long" -command {exit 0}
+
+		pack $ff.mb 
+		pack $ff 
+
+		pack $f  -fill x -expand true
+
+	}
+}	
+

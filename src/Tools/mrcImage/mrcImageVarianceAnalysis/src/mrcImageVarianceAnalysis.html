@@ -1,0 +1,43 @@
+<HTML>
+<HEAD>
+<TITLE>mrcImageVarianceAnalysis</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageVarianceAnalysis</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageVarianceAnalysis
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFileList          ) ] :Optional  :In: InputList
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Optional  :Output: Variance Probability
+    [-v[arianceAnalysis] OutV                (NULL      ).as(outFile             ) ] :Optional  :Output: Variance Analysis
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+-i inFileList
+>>>>> Within inFileList
+In1 
+In2 
+... 
+>>>>> Within In1 etc. A + B*density 
+filename1-1 A B 
+.....
+---- Variance Analysis-----
+-- Algorithm
+   VarianceRatio := VarinceBetweenClasses/(SumOfVarianceWithinEachClass)
+                  VarinceBetweenClasses: variance between classes
+                  VarinceWithClasses:    variance within each class 
+                  
+   
+   ---- General Information -----
+   Kai-distribution: Kai^2 = SumOf (Xi - AvgOfXi)^2/sigma^2  
+                           = s^2*(n-1)/sigma^2  : degree of freedom n-1 
+                             when variables Xi are due to N(u, sigma^2)
+   Kai-distribution: Kai^2 = Kai1^2 + Kai2^2 : degree of freedom m1 + m2
+   F-distribution: F = (Kai1^2/k1)/(Kai2^2/k2)           : degree of freedom : (k1, k2)
+                       (s1^2/sigma1^2)/(s2^2/sigma2^2)   : degree of freedom : (k1-1, k2-1)
+   If sigma1 == sigma2, then                    
+                       s1^2/s2^2  (Variance Ratio)       : degree of freedom : (k1-1, k2-1)
+</PRE>
+</BODY>
+</HTML>

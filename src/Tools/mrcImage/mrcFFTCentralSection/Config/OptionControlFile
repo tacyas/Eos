@@ -1,0 +1,11 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: mrc(3D)","Essential","1","1","In","inFile::mrcImage","NULL"
+"-t","-t[emplate]","Input: mrcFFT(2D)","Optional","1","1","Template","inFile::mrcImage","NULL"
+"-o","-o[utput]","Output: mrcFFT(2D)","Essential","1","1","Out","outFile::mrcImage","NULL"
+"-oI","-o[utput]I[mage]","Output: mrcImage(2D)","Optional","1","1","OutImage","outFile::mrcImage","NULL"
+"-EA","-E[uler]A[ngle]","EulerAngle","Optional","4","1","EAMode","String","YOYS","2","Rot1","Real","0.0","3","Rot2","Real","0.0","4","Rot3","Real","0.0"
+"-trans","-trans[late]","Traslation(2D)","Optional","2","1","TransX","Real","0.0","2","TransY","Real","0.0"
+"-InterpMode","-InterpMode","Interpolation Mode","Optional","1","1","InterpMode","Integer","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

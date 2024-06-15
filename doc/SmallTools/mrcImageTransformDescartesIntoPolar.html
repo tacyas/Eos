@@ -1,0 +1,34 @@
+<HTML>
+<HEAD>
+<TITLE>mrcImageTransformDescartesIntoPolar</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageTransformDescartesIntoPolar</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageTransformDescartesIntoPolar
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-dr                 dr                  (1         ).as(Real                ) ] :Optional  :Delta r of outputfile[A].
+    [-dtheta             dtheta              (1         ).as(Real                ) ] :Optional  :Delta theta of outputfile.[degree]
+    [-dphi               dphi                (1         ).as(Real                ) ] :Optional  :Delta phi of outputfile.[degree]
+    [-zaxis              zx                  (0         ).as(Real                ) 
+                         zy                  (0         ).as(Real                ) 
+                         zz                  (1         ).as(Real                ) ] :Optional  :vector of z-axis
+    [-xaxis              xx                  (1         ).as(Real                ) 
+                         xy                  (0         ).as(Real                ) 
+                         xz                  (0         ).as(Real                ) ] :Optional  :vector of x-axis
+    [-centre             cx                  (0         ).as(Real                ) 
+                         cy                  (0         ).as(Real                ) 
+                         cz                  (0         ).as(Real                ) ] :Optional  :centre of image
+    [-rweight                                                                      ] :Optional  :r-weighted
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+>>>>> -m 
+         0 : Image centre is gravity of centre of image.
+         1 : Image centre is defined by the options of -axis -centre. 
+</PRE>
+</BODY>
+</HTML>

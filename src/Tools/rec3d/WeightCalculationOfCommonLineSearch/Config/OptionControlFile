@@ -1,0 +1,8 @@
+# OptionControlFile
+# FileFormat
+"-I","-I[nput]","InputDataFileList","Essential","1","1","In","inFileList","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-LTM","-L[ength]T[hreshold]M[ode]","Length threshold mode in LengthCorrelation","Essential","1","1","LengthThresholdMode","Integer","0"
+"-LTR","-L[ength]T[hreshold]R[atio]","Length threshold ratio in LengthCorrelation : -LTM=0","Optional","1","1","LengthThresholdRatio","Real","0.25"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

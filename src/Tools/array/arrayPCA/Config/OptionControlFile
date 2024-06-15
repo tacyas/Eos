@@ -1,0 +1,7 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input:Array","Optional","1","1","In","inFile::ASCII","stdin"
+"-o","-o[utput]","Output: PCA","Optional","1","1","Out","outFile::ASCII","stdout"
+"-O","-O[utput]","Output: Transform","Optional","1","1","Out2","outFile::ASCII","stdout"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

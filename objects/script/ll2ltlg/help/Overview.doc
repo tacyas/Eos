@@ -1,0 +1,8 @@
+.onlineHelp EOS ll2ltlg "Introduction to ll2ltlg"
+.
+.section 1 "Introduction to ll2ltlg"
+.
+.\" This is the help page associated with the Help button on
+.\" the toplevel window of ll2ltlg
+If you are reading this text,
+you should report it as a bug :-)

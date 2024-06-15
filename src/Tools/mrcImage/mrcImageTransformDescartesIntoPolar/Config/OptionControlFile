@@ -1,0 +1,13 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-dr","-dr","Delta r of outputfile[A].","Optional","1","1","dr","Real","1"
+"-dtheta","-dtheta","Delta theta of outputfile.[degree]","Optional","1","1","dtheta","Real","1"
+"-dphi","-dphi","Delta phi of outputfile.[degree]","Optional","1","1","dphi","Real","1"
+"-zaxis","-zaxis","vector of z-axis","Optional","3","1","zx","Real","0","2","zy","Real","0","3","zz","Real","1"
+"-xaxis","-xaxis","vector of x-axis","Optional","3","1","xx","Real","1","2","xy","Real","0","3","xz","Real","0"
+"-centre","-centre","centre of image","Optional","3","1","cx","Real","0","2","cy","Real","0","3","cz","Real","0"
+"-rweight","-rweight","r-weighted","Optional","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

@@ -1,0 +1,583 @@
+/*
+# %M% %Y% %I%
+# The latest update : %G% at %U%
+#
+#%Z% lllDataFitOfSeparatedLL ver %I%
+#%Z% Created by 
+#%Z%
+#%Z% Usage : lllDataFitOfSeparatedLL
+#%Z% Attention
+#%Z%
+*/
+static char __sccs_id[] = "%Z%lllDataFitOfSeparatedLL ver%I%; Date:%D% %Z%";
+#include <math.h>
+#include <stdlib.h>
+
+#undef DEBUG
+#undef DEBUG2
+#undef DEBUG3
+#include "genUtil.h"
+
+#include "../inc/llData.h"
+#include "lllDataFit.h"
+#include "File.h"
+#include "mrcImage.h"
+
+/*
+	llDataFitOfSeparatedLL(
+		llData* llref,   LayerLineData Pointer to be treated
+		llData* llp,     LayerLineData Pointer to be treated
+		llDataFitOfSeparatedLLtedParam* p);  
+*/
+
+#define STEP      (6.0)
+#define STEP2     (STEP/2.0)
+#define COUNT_MAX (4)
+#define END_VALUE (1e-4)
+
+extern inline void __lllDataFitOfSeparatedLL0(llData* llref, llData* llp, llDataParamToFit* p, long mode);
+extern inline void __lllDataFitOfSeparatedLLPValue0(llData* llref, llDataBoth* llp, llDataParamToFit* p, long mode);
+extern inline void __lllDataFitOfSeparatedLLQValue0(llData* llref, llDataBoth* llp, llDataParamToFit* p, long mode);
+extern inline void __lllDataFitOfSeparatedLLRValue0(llData* llref, llDataBoth* llp, llDataParamToFit* p, long mode);
+extern inline void __lllDataFitOfSeparatedLL1(llData* llref, llDataBoth* llp, llDataParamToFit* cond, 
+												llDataParamToFit* res, char* filename, long mode);
+extern inline int  __lllDataFitOfSeparatedLLCheck0(llDataParamToFit* fit, llDataParamToFit* p, long mode);
+
+void
+lllDataFitOfSeparatedLL(llData* llref, llDataBoth* llp, llDataFittedParam* p, long mode)
+{
+    /* Search */
+	fprintf(stdout, "----- lllDataFitOfSeparatedLL Start ----\n");
+	if(!llref->RValueSet) {
+		llDataRValueSet(llref, 0);
+	}
+	if(!llp->Nea.RValueSet) {
+		llDataRValueSet(&(llp->Nea), 0);
+	}
+	if(!llp->Far.RValueSet) {
+		llDataRValueSet(&(llp->Far), 0);
+	}
+
+	if(!llref->ZValueSet) {
+		llDataZValueSet(llref, 0);
+	}
+	if(!llp->Nea.ZValueSet) {
+		llDataZValueSet(&(llp->Nea), 0);
+	}
+	if(!llp->Far.ZValueSet) {
+		llDataZValueSet(&(llp->Far), 0);
+	}
+
+	if(!p->Para.flagLLTable) {
+		p->Para.flagLLTable = llref->llMax;
+		llDataTableBetweenTwollDataCreate(llref, &(llp->Nea), 0);
+	}
+
+	if(p->Para.flagCTF) {
+		if(!p->Para.flagllCTF) {
+			llDataInitWithReference(&(p->Para.llCTF), llref);
+			lllDataFitllCTFSet(&(p->Para.llCTF), p->Para.CTF, 0);
+			p->Para.flagllCTF = 1; 
+		}
+	}
+
+	llDataFandPHISet(&(llp->Nea));
+	llDataFandPHISet(&(llp->Far));
+    if(0xf&mode&PVALUE_MODE) {
+		fprintf(stdout, "----- Normal Pole ----------------------------------\n");
+        p->Para.Pole = llDataPoleNormal;
+        __lllDataFitOfSeparatedLL1(llref, llp, &(p->Para), &(p->PPara), (char*)p->fitFileName, mode&(PVALUE_MODE|lllDataFitFitProcessPrint));
+
+		fprintf(stdout, "----- Anti Pole   ----------------------------------\n");
+        p->Para.Pole = llDataPoleAnti;
+        __lllDataFitOfSeparatedLL1(llref, llp, &(p->Para), &(p->PParaInv), (char*)p->fitFileNameAnti, mode&(PVALUE_MODE|lllDataFitFitProcessPrint));
+
+		if(p->PPara.R <= p->PParaInv.R) {
+            p->Para.phi.Value = p->PPara.phi.Value;
+            p->Para.r.Value   = p->PPara.r.Value;
+            p->Para.z.Value   = p->PPara.z.Value;
+            p->Para.Pole      = llDataPoleNormal;
+            p->Para.R         = p->PPara.R;
+        } else {
+            p->Para.phi.Value = p->PParaInv.phi.Value;
+            p->Para.r.Value   = p->PParaInv.r.Value;
+            p->Para.z.Value   = p->PParaInv.z.Value;
+            p->Para.Pole      = llDataPoleAnti;
+            p->Para.R         = p->PParaInv.R;
+        }
+        fprintf(stdout, "PValue : %15.6f %15.6f\n", p->PPara.R*DEGREE, p->PParaInv.R*DEGREE);
+        fprintf(stdout, "BestFitOfSeparatedLL: %15.6f %s %15.6f %15.6f %15.6f %2d\n",
+                p->Para.R*DEGREE,
+				"Param:",
+                p->Para.phi.Value*DEGREE,
+                p->Para.z.Value,
+                p->Para.r.Value,
+                p->Para.Pole);
+    }
+
+    if(0xf&mode&QVALUE_MODE) {
+		DEBUGPRINT("Normal Pole\n");
+        p->Para.Pole = llDataPoleNormal;
+        __lllDataFitOfSeparatedLL1(llref, llp, &(p->Para), &(p->QPara), (char*)p->fitFileName, mode&(QVALUE_MODE|lllDataFitFitProcessPrint));
+		DEBUGPRINT("Anti Pole\n");
+        p->Para.Pole = llDataPoleAnti;
+        __lllDataFitOfSeparatedLL1(llref, llp, &(p->Para), &(p->QParaInv), (char*)p->fitFileName, mode&(PVALUE_MODE|lllDataFitFitProcessPrint));
+
+		if(p->QPara.R <= p->QParaInv.R) {
+            p->Para.phi.Value = p->QPara.phi.Value;
+            p->Para.r.Value = p->QPara.r.Value;
+            p->Para.z.Value = p->QPara.z.Value;
+            p->Para.Pole = llDataPoleNormal;
+            p->Para.R = p->QPara.R;
+        } else {
+            p->Para.phi.Value = p->QParaInv.phi.Value;
+            p->Para.r.Value = p->QParaInv.r.Value;
+            p->Para.z.Value = p->QParaInv.z.Value;
+            p->Para.Pole = llDataPoleAnti;
+            p->Para.R = p->QParaInv.R;
+        }
+        fprintf(stdout, "QValue: %f %f\n", p->QPara.R*DEGREE, p->QParaInv.R*DEGREE);
+        fprintf(stdout, "BestFitOfSeparatedLL: %15.6f %16s %15.6f %15.6f %15.6f %2d \n",
+                p->Para.R*DEGREE,
+				"Param:",
+                p->Para.phi.Value*DEGREE,
+                p->Para.z.Value,
+                p->Para.r.Value,
+                p->Para.Pole);
+    }
+
+    if(0xf&mode&RVALUE_MODE) {
+		DEBUGPRINT("Normal Pole\n");
+        p->Para.Pole = llDataPoleNormal;
+        __lllDataFitOfSeparatedLL1(llref, llp, &(p->Para), &(p->RPara), (char*)p->fitFileName, mode&(RVALUE_MODE|lllDataFitFitProcessPrint));
+		DEBUGPRINT("Anti Pole\n");
+        p->Para.Pole = llDataPoleAnti;
+        __lllDataFitOfSeparatedLL1(llref, llp, &(p->Para), &(p->RParaInv), (char*)p->fitFileName, mode&(PVALUE_MODE|lllDataFitFitProcessPrint));
+
+		if(p->RPara.R <= p->RParaInv.R) {
+            p->Para.phi.Value = p->RPara.phi.Value;
+            p->Para.r.Value = p->RPara.r.Value;
+            p->Para.z.Value = p->RPara.z.Value;
+            p->Para.Pole = llDataPoleNormal;
+            p->Para.R = p->RPara.R;
+        } else {
+            p->Para.phi.Value = p->RParaInv.phi.Value;
+            p->Para.r.Value = p->RParaInv.r.Value;
+            p->Para.z.Value = p->RParaInv.z.Value;
+            p->Para.Pole = llDataPoleAnti;
+            p->Para.R = p->RParaInv.R;
+        }
+        fprintf(stdout, "RValue: %f %f\n", p->RPara.R, p->RParaInv.R);
+        fprintf(stdout, "BestFitOfSeparatedLL: %15.6f %15s %15.6f %15.6f %15.6f %2d\n",
+                p->Para.R*DEGREE,
+				"Param:",
+                p->Para.phi.Value*DEGREE,
+                p->Para.z.Value,
+                p->Para.r.Value,
+                p->Para.Pole);
+    }
+}
+
+void
+lllDataFitOfSeparatedLLWithFile(llData* llref, llDataBoth* llp, llDataFittedParam* p, char* filename, long mode)
+{
+	char filename2[1024];
+
+	sprintf(filename2, "%s.anti", filename);
+
+	p->flagFitFile = 1;	
+	p->fitFileName = filename;
+	p->fitFileNameAnti = filename2;
+	
+	lllDataFitOfSeparatedLL(llref, llp, p, mode);
+}
+/*
+	P: Initial parameter
+	R: Result
+*/
+void
+__lllDataFitOfSeparatedLL1(llData* llref, llData* llp, llDataParamToFit* P, llDataParamToFit* R, char* filename, long mode)
+{
+  	llDataParaTypeReal iphi, iz, ir;
+	llDataParamToFit tmp;
+	llDataParamToFit otmp;
+    llDataParaTypeInteger count;
+   	mrcImage mrc;
+
+	DEBUGPRINT("___lllDataAxisFitOfSeparatedLL1 Start\n");
+    /* Initialization */
+    tmp = *R = *P; /* Order is important */ 
+
+	/* First Trial */
+    tmp.r.Value   = P->r.Max;
+    tmp.phi.Value = P->phi.Max;
+    tmp.z.Value   = P->z.Max;
+	__lllDataFitOfSeparatedLL0(llref, llp, &tmp, mode);
+	*R = tmp;
+
+	/* Parameter Set */
+	if(NULL!=filename) {
+		DEBUGPRINT1("fittedParam file name: %s\n", filename);
+		mrc.HeaderN.x = fabs((tmp.phi.Max - tmp.phi.Min)/tmp.phi.Delta) + 1.0;
+		mrc.HeaderN.y = fabs((tmp.z.Max   - tmp.z.Min)  /tmp.z.Delta)   + 1.0;
+		mrc.HeaderN.z = fabs((tmp.r.Max   - tmp.r.Min)  /tmp.r.Delta)   + 1.0;
+		mrc.HeaderMode = mrcFloatImage;
+		mrc.HeaderLength.x = tmp.phi.Delta*DEGREE;
+		mrc.HeaderLength.y = tmp.z.Delta;
+		mrc.HeaderLength.z = tmp.r.Delta;
+		mrc.HeaderStartN.x = tmp.phi.Min*DEGREE;
+		mrc.HeaderStartN.y = tmp.z.Min;
+		mrc.HeaderStartN.z = tmp.r.Min;
+		mrcInit(&mrc, NULL);
+	}
+
+    count = 0;
+    while(count<COUNT_MAX) {
+		otmp = tmp;
+
+		DEBUGPRINT1("Iteration : %ld\n", count); 
+	    for(tmp.r.Value=tmp.r.Min, ir=0; tmp.r.Value<=tmp.r.Max; tmp.r.Value+=tmp.r.Delta, ir++) {
+		    for(tmp.phi.Value=tmp.phi.Min, iphi=0; tmp.phi.Value<=tmp.phi.Max; tmp.phi.Value+=tmp.phi.Delta, iphi++) {
+   				for(tmp.z.Value=tmp.z.Min, iz=0; tmp.z.Value<=tmp.z.Max; tmp.z.Value+=tmp.z.Delta, iz++) {
+   	    			__lllDataFitOfSeparatedLL0(llref, llp, &tmp, mode);
+
+					if(NULL != filename 
+					&&    0 == count) {
+						mrcPixelDataSet(&mrc, iphi, iz, ir, (double)tmp.R, mrcPixelRePart);
+					}
+
+					__lllDataFitOfSeparatedLLCheck0(R, &tmp, mode);
+	           	}
+    	    }
+	    }
+        if(R->R <= otmp.R) { /* otmp is old R */
+			if(otmp.R - R->R < END_VALUE) {
+				break;
+			} 
+        } else {
+            fprintf(stderr, "Something wrong in fitting : R %f old %f\n", R->R, otmp.R);
+			break;
+        }
+
+		tmp.phi.Value = R->phi.Value;
+		tmp.z.Value   = R->z.Value;
+		tmp.r.Value   = R->r.Value;
+		lllDataNewFitOfSeparatedLLtedParameterSet0(&(tmp.phi));
+		lllDataNewFitOfSeparatedLLtedParameterSet0(&(tmp.z));
+		lllDataNewFitOfSeparatedLLtedParameterSet0(&(tmp.r));
+		count++;
+    }
+
+	if(NULL!=filename) {
+		DEBUGPRINT1 ("Write: %s\n", filename);
+		mrcFileWrite(&mrc, filename, "in lllDataFitOfSeparatedLL", 0); 
+	}
+}
+
+/*
+
+*/
+inline int
+__lllDataFitOfSeparatedLLCheck0(llDataParamToFit* minimum, llDataParamToFit* current, long mode)
+{
+    if(current->R<=minimum->R) {
+		*minimum = *current;
+    	if(mode&lllDataFitFitProcessPrint) {
+       		fprintf(stdout, "%15.6f %15.6f %15.6f %15.6f %02d\n", 
+						(float)current->R*DEGREE, 
+						(float)current->phi.Value*DEGREE, 
+						(float)current->z.Value, 
+						(float)current->r.Value,
+						(float)current->Pole);
+    	}
+        return 1;
+    } else {
+        return 0;
+    }
+}    
+
+/*
+	lllDataFitOfSeparatedLL0(
+		llData* llref,	# Reference llData;
+		llData* llp,    # llData to be fit
+		llDataFitOfSeparatedLLtedParam* p # FitOfSeparatedLLting Parameter
+		);
+	
+	Calculation of Residue in *p
+*/
+
+inline void
+__lllDataFitOfSeparatedLL0(llData* llref, llData* llp, llDataParamToFit* p, long mode)
+{
+    if(mode&PVALUE_MODE) {
+        __lllDataFitOfSeparatedLLPValue0(llref, llp, p, mode);
+    }
+    if(mode&QVALUE_MODE) {
+        __lllDataFitOfSeparatedLLQValue0(llref, llp, p, mode);
+    }
+    if(mode&RVALUE_MODE) {
+        __lllDataFitOfSeparatedLLRValue0(llref, llp, p, mode);
+    }
+}
+
+void
+__lllDataFitOfSeparatedLLPValue0(llData* llref, llData* llp, llDataParamToFit* Para, long mode)
+{
+    long lp, lref, R;
+    llDataParaTypeReal dtheta, Sum, refp, pp, pp2, F, Z, weight;
+	llDataParaTypeInteger nn, pole;
+	llDataParaTypeInteger RMax;
+	llDataParaTypeReal  RR, ctfWeight;
+
+	ctfWeight = 1.0;
+    Para->R = Sum = 0;
+    for(lref=0; lref<llref->llMax; lref++) {
+		lp = Para->llTable[lref];
+		if(lp < llp->llMax) {
+            if(llref->LL[lref].nl==llref->LL[lp].nl 
+			&& llref->LL[lref].nn==llref->LL[lp].nn 
+			&& llref->LL[lref].Weight != 0.0) { /* Reference Layer Number = Layer Number */
+		        Z  = llp->LL[lref].Z;
+				nn = llref->LL[lref].nn;
+                if(llDataPoleNormal == llp->Pole) {
+                    if(llDataPoleNormal == Para->Pole) {
+                        pole = llDataPoleNormal;
+                    } else {
+                        pole = llDataPoleAnti;
+                    }
+                } else {
+                    if(llDataPoleAnti == Para->Pole) {
+                        pole = llDataPoleAnti;
+                    } else {
+                        pole = llDataPoleNormal;
+                    }
+                }
+				RMax = MIN(llref->LL[lref].nR, llp->LL[lp].nR);
+		    	for(R=0; R<RMax; R++) {
+                    weight = llref->LL[lref].Weight;
+    		        F      = fabs((llref->LL[lref].data[R].F+llp->LL[lp].data[R].F)/2.0*weight);
+					if(0 < F
+					 &&0 < llref->LL[lref].data[R].F) {
+						if(Para->flagCTF) {
+							if(Para->flagllCTF) {
+								switch(Para->ctfCompensationMode) {
+									case 0: 
+									case 1: {
+										ctfWeight = Para->llCTF.LL[lref].data[R].F;
+										break;
+									}
+									default: {
+										fprintf(stderr, "Not supported ctfCompensationMode in lllDataFitOfSeparatedLL\n");
+										break;
+									}
+								}
+							} else {
+								switch(Para->ctfCompensationMode) {
+									case 0: 
+									case 1: {
+										ctfWeight = fabs(ctfFunction(&(Para->CTF), 
+											llref->LL[lref].data[R].R, 0));  
+										break;
+									}
+									default: {
+										fprintf(stderr, "Not supported ctfCompensationMode in lllDataFitOfSeparatedLL\n");
+										break;
+									}
+								}
+							}
+						} else {
+							ctfWeight = 1.0;
+							Para->ctfCutOff = 0.0;
+						}
+					    if(Para->ctfCutOff < ctfWeight) {
+							/* Phase Transform */ 
+				            refp = nearSidePhaseGet(llref->LL[lref].data[R].PHI, nn, llref->LL[lref].Side, llref->Pole);
+							pp   = nearSidePhaseGet(  llp->LL[lp  ].data[R].PHI, nn,   llp->LL[lp  ].Side,     pole);
+            				pp2  = NORMAL_PHASE(pp - nn*Para->phi.Value + 2*M_PI*Z*Para->z.Value);
+                    		/* Phase Residual Calculation */
+            				dtheta = NORMAL_PHASE(refp - pp2);
+							dtheta = fabs(MIN(2*M_PI-dtheta, dtheta));
+                    		Sum     += F*ctfWeight;
+			            	Para->R += F*ctfWeight*dtheta*dtheta;
+						}
+					}
+    			}
+	    	}	
+        }
+    }
+#ifdef DEBUG2
+	DEBUGPRINT2("R: %f Sum:%f\n", Para->R, Sum);
+#endif
+    if(Sum>0) {
+		if(0<Para->R) {
+    		Para->R = sqrt(Para->R/Sum);
+		} else {
+			Para->R = 0;
+		}
+    } else {
+        Para->R = M_PI;
+    }
+}
+
+void
+__lllDataFitOfSeparatedLLQValue0(llData* llref, llData* llp, llDataParamToFit* Para, long mode)
+{
+    long lp, lref, R;
+    llDataParaTypeReal dtheta, Sum, refp, pp, pp2, F, Z, weight;
+	llDataParaTypeInteger nn, pole, RMax;
+	llDataParaTypeReal  RR, ctfWeight;
+
+	
+	ctfWeight = 1.0;
+    Para->R =  Sum = 0;
+    for(lref=0; lref<llref->llMax; lref++) {
+		lp = Para->llTable[lref];
+		if(lp < llp->llMax) {
+            if(  llref->LL[lref].nl==llref->LL[lp].nl 
+			  && llref->LL[lref].nn==llref->LL[lp].nn 
+			  && llref->LL[lref].Weight!=0.0) { /* Reference Layer Number = Layer Number */
+		        Z  = llp->LL[lref].Z;
+				nn = llref->LL[lref].nn;
+				DEBUGPRINT2("nn: %d, Z: %f\n", nn, Z);
+                if(llDataPoleNormal == llp->Pole) {
+                    if(llDataPoleNormal == Para->Pole) {
+                        pole = llDataPoleNormal;
+                    } else {
+                        pole = llDataPoleAnti;
+                    }
+                } else {
+                    if(llDataPoleAnti == Para->Pole) {
+                        pole = llDataPoleAnti;
+                    } else {
+                        pole = llDataPoleNormal;
+                    }
+                }
+				RMax = MIN(llref->LL[lref].nR, llp->LL[lp].nR);
+		    	for(R=0; R<RMax; R++) {
+                    weight = llref->LL[lref].Weight;
+    		        F      = fabs((llref->LL[lref].data[R].F+llp->LL[lp].data[R].F)/2.0*weight);
+					if(0.0 < F 
+					 &&0.0 < llref->LL[lref].data[R].F) {
+						if(Para->flagCTF) {
+							RR = sqrt(SQR(Z) + SQR(llref->LL[lref].data[R].RR)); 
+							switch(Para->ctfCompensationMode) {
+								case 0: 
+								case 1: {
+									ctfWeight = fabs(ctfFunction(&(Para->CTF),
+													llref->LL[lref].data[R].R, 0)); 
+									break;
+								}
+								default: {
+									fprintf(stderr, "Not supported ctfCompensationMode in lllDataFitOfSeparatedLL\n");
+									break;
+								}
+							}
+						} else {
+							ctfWeight = 1.0;
+							Para->ctfCutOff = 0.0;
+						}
+					 	if(Para->ctfCutOff < ctfWeight) {
+							/* Phase Transform */ 
+				            refp = nearSidePhaseGet(llref->LL[lref].data[R].PHI, nn, llref->LL[lref].Side, llref->Pole);
+							pp   = nearSidePhaseGet(  llp->LL[lp].data[R].PHI,   nn, llp->LL[lp].Side,     pole);
+            				pp2  = pp - nn*Para->phi.Value + 2*M_PI*Z*Para->z.Value;
+                    		/* Phase Residual Calculation */
+            				dtheta = fabs(fmod(refp - pp2, 2*M_PI));
+							dtheta = fabs(MIN(2*M_PI-dtheta, dtheta));
+                    		Sum     += F*ctfWeight;
+				    	    Para->R += F*ctfWeight*dtheta;
+						}
+					}
+    			}
+	    	}	
+        }
+    }
+    if(Sum>0) {
+    	Para->R = sqrt(Para->R/Sum);
+    } else {
+        Para->R = M_PI/2.0;
+    }
+}
+
+void
+__lllDataFitOfSeparatedLLRValue0(llData* llref, llData* llp, llDataParamToFit * Para, long mode)
+{
+    long lp, lref, R;
+    llDataParaTypeReal dtheta, Sum, refp, pp, pp2, F, Z, weight;
+	llDataParaTypeInteger nn, pole;
+	llDataParaTypeInteger RMax;
+	double Residue;
+	llDataParaTypeReal  RR, ctfWeight;
+
+	ctfWeight = 1.0;
+    Para->R = Sum = 0;
+    for(lref=0; lref<llref->llMax; lref++) {
+		lp = Para->llTable[lref];
+		if(lp < llp->llMax) {
+            if(llref->LL[lref].nl==llref->LL[lp].nl 
+			 &&llref->LL[lref].nn==llref->LL[lp].nn 
+			 &&llref->LL[lref].Weight!=0.0) { /* Reference Layer Number = Layer Number */
+		        Z  = llp->LL[lref].Z;
+				nn = llref->LL[lref].nn;
+                if(llDataPoleNormal == llp->Pole) {
+                    if(llDataPoleNormal == Para->Pole) {
+                        pole = llDataPoleNormal;
+                    } else {
+                        pole = llDataPoleAnti;
+                    }
+                } else {
+                    if(llDataPoleAnti==Para->Pole){
+                        pole = llDataPoleAnti;
+                    } else {
+                        pole = llDataPoleNormal;
+                    }
+                }
+				RMax = MIN(llref->LL[lref].nR, llp->LL[lp].nR);
+		    	for(R=0; R<RMax; R++) {
+					/* Phase Transform */ 
+                    weight = llref->LL[lref].Weight;
+    		        F      = fabs((llref->LL[lref].data[R].F+llp->LL[lp].data[R].F)/2.0*weight);
+					if(0.0 < F 
+					 &&0.0 < llref->LL[lref].data[R].F) {
+						if(Para->flagCTF) {
+							switch(Para->ctfCompensationMode) {
+								case 0: 
+								case 1: {
+									ctfWeight = fabs(ctfFunction(&(Para->CTF), 
+										llref->LL[lref].data[R].R, 0));  
+									break;
+								}
+								default: {
+									fprintf(stderr, "Not supported ctfCompensationMode in lllDataFitOfSeparatedLL\n");
+									break;
+								}
+							}
+						} else {
+							ctfWeight = 1.0;
+							Para->ctfCutOff = 0.0;
+						}
+					 	if(Para->ctfCutOff < ctfWeight) {
+				        	refp = nearSidePhaseGet(llref->LL[lref].data[R].PHI, nn, llref->LL[lref].Side, llref->Pole);
+							pp   = nearSidePhaseGet(  llp->LL[lp].data[R].PHI,   nn, llp->LL[lp].Side,     pole);
+            				pp2  = pp - nn*Para->phi.Value + 2*M_PI*Z*Para->z.Value;
+                    		/* Phase Residual Calculation */
+            				dtheta = fabs(fmod(refp - pp2, 2*M_PI));
+							dtheta = fabs(MIN(2*M_PI-dtheta, dtheta));
+
+                    		Sum     += F*ctfWeight*weight;
+                    		Para->R +=   ctfWeight*weight
+								*sqrt(SQR(llref->LL[lref].data[R].F*cos(refp) - llp->LL[lp].data[R].F*cos(pp2))
+                                     +SQR(llref->LL[lref].data[R].F*sin(refp) - llp->LL[lp].data[R].F*sin(pp2)));
+						}
+					}
+    			}
+	    	}	
+        }
+    }
+    if(Sum>0) {
+    	Para->R = Para->R/Sum/2.0;
+    } else {
+        Para->R = 1.0;
+    }
+}
+

@@ -1,0 +1,298 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageCenterDensityChange</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageCenterDensityChange<br></h2></b></font>
+	<h4></h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>オプション</th>
+				<th>必須項目/選択項目</th>
+				<th>NULL</th>
+				<th>デフォルト</th>
+			</tr>
+			<tr>
+				<td>-i</td>
+				<td>必須</td>
+				<td>入力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-o</td>
+				<td>必須</td>
+				<td>出力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-rmin</td>
+				<td>選択</td>
+				<td>半径の最小値を設定</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-rmax</td>
+				<td>選択</td>
+				<td>半径の最大値を設定</td>
+				<td>90</td>
+			</tr>
+			<tr>
+				<td>-ratio</td>
+				<td>選択</td>
+				<td>比率の設定</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-M</td>
+				<td>選択</td>
+				<td>モード</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-h</td>
+				<td>選択</td>
+				<td>ヘルプを表示</td>
+				<td>　</td>
+			</tr>
+		</table>
+		
+<!-- モード詳細 -->
+
+	<br>
+	<br>
+	<caption><b>モードの詳細</b></caption>
+	<table border="1">
+	<div align="left">
+		<tr>
+			<th>モード</th>
+			<th>説明</th>
+		</tr>
+		<tr>
+			<td>0</td>
+			<td>密度をr=0からr=rminに変える<br>
+			また、rminからrmaxまで徐々に密度をつないでいく</td>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>rmaxより、rminからrmaxまで徐々に密度をつないでいく</td>
+		</tr>
+	</div>
+	</table>
+
+	<h4>******実行例******</h4>
+
+<!-- 入力ファイル説明 -->
+	
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="b120-2.png" border="0" alt="b120-2.png(6742 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-65.0178<br>
+				94.4699<br>
+				4.85274<br>
+				20.4635<br>
+				0.255794<br></p>
+			</td>
+		</tr>
+	</table>
+
+<!-- 出力結果 -->
+	
+	<br>
+	<br>
+	<caption><font color="blue">------必須項目のオプションのみの場合------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="b120-2.out.png" border="0" alt="b120-2.out.png(6602 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-46.3548<br>
+				47.1617<br>
+				0.978803<br>
+				10.6117<br>
+				0.132646<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-rmin -rmax------</font></caption><br>
+	<div>rmin=0,rmax=20で実行</div>
+	<table>
+		<tr>
+			<td><img src="b120-2.out-rmin0rmax20.png" border="0" alt="b120-2.out-rmin0rmax20.png(6691 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-65.0178<br>
+				90.3544<br>
+				3.91091<br>
+				18.9057<br>
+				0.236321<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<div>rmin=0,rmax=40で実行</div>
+	<table>
+		<tr>
+			<td><img src="b120-2.out-rmin0rmax40.png" border="0" alt="b120-2.out-rmin0rmax40.png(6760 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-65.0178<br>
+				63.9001<br>
+				2.31387<br>
+				16.5103<br>
+				0.206379<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<div>rmin=10,rmax=100で実行</div>
+	<table>
+		<tr>
+			<td><img src="b120-2.out-rmin10rmax100.png" border="0" alt="b120-2.out-rmin10rmax100.png(6462 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-41.1337<br>
+				40.9722<br>
+				0.47082<br>
+				8.72736<br>
+				0.109092<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<div>rmin=30,rmax=100で実行</div>
+	<table>
+		<tr>
+			<td><img src="b120-2.out-rmin30rmax100.png" border="0" alt="b120-2.out-rmin30rmax100.png(5696 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-39.4606<br>
+				36.8629<br>
+				-0.0582201<br>
+				6.94833<br>
+				0.0868542<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-ratio------</font></caption><br>
+	<div>ratio=5で実行</div>
+	<table>
+		<tr>
+			<td><img src="b120-2.out-ratio5.png" border="0" alt="b120-2.out-ratio5.png(6414 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-179.995<br>
+				441.288<br>
+				20.3485<br>
+				69.0916<br>
+				0.863645<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<div>ratio=10で実行</div>
+	<table>
+		<tr>
+			<td><img src="b120-2.out-ratio10.png" border="0" alt="b120-2.out-ratio10.png(6344 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-330.137<br>
+				874.81<br>
+				39.7182<br>
+				131.379<br>
+				1.64224<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-Mode------</font></caption><br>
+	<div>Mode=0で実行</div>
+	<table>
+		<tr>
+			<td><img src="b120-2.out.png" border="0" alt="b120-2.out.png(6602 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-46.3548<br>
+				47.1617<br>
+				0.978803<br>
+				10.6117<br>
+				0.132646<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>Mode=1で実行</div>
+	<table>
+		<tr>
+			<td><img src="b120-2.out-M1.png" border="0" alt="b120-2.out-M1.png(6559 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-46.3548<br>
+				47.1617<br>
+				0.953994<br>
+				10.4203<br>
+				0.130254<br></p>
+			</td>
+		</tr>
+	</table>
+
+</body>
+</html>

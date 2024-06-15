@@ -1,0 +1,552 @@
+#ifndef MRC_IMAGE_H
+#define MRC_IMAGE_H
+/*
+# %M% %Y% %I%
+# The latest update : %G% at %U%
+#
+#%Z% mrcImage.h ver %I%
+#%Z% Created by tacyas
+#%Z%
+#%Z% Usage : mrcImage.h 
+#%Z% Attention
+#%Z%
+*/
+
+/* mrcImage.h
+*    Language:   C or CC(c++)
+*    Editor  :   tacyas.tkyemg.u_tokyo
+*    Date    :   1990-1992
+*    Modified:   1995
+*/
+
+/*        
+*	Header File for MRC Format
+*	Edited by Tac
+*/
+
+#include <stdio.h>
+#include <math.h>
+#include "genUtil.h"
+
+/* Status Mask */
+#ifdef M68
+typedef unsigned long mrcStatusMask;  
+#else
+typedef unsigned int mrcStatusMask;  
+#endif
+
+#define  mrcStatusMask_ExitFailure  ((mrcStatusMask)0x80000000L)
+#define  mrcStatusMask_Warning      ((mrcStatusMask)0x40000000L)
+#define  mrcStatusMask_Information  ((mrcStatusMask)0x20000000L)
+#define  mrcStatusMask_Message      ((mrcStatusMask)0x10000000L)
+#define  mrcStatusMask_1B           ((mrcStatusMask)0x08000000L)
+#define  mrcStatusMask_1A           ((mrcStatusMask)0x04000000L)
+#define  mrcStatusMask_19           ((mrcStatusMask)0x02000000L)
+#define  mrcStatusMask_18           ((mrcStatusMask)0x01000000L)
+#define  mrcStatusMask_17           ((mrcStatusMask)0x00800000L)
+#define  mrcStatusMask_16           ((mrcStatusMask)0x00400000L)
+#define  mrcStatusMask_15           ((mrcStatusMask)0x00200000L)
+#define  mrcStatusMask_14           ((mrcStatusMask)0x00100000L)
+#define  mrcStatusMask_ReferMRCInfo ((mrcStatusMask)0x00080000L)
+#define  mrcStatusMask_Mode         ((mrcStatusMask)0x00040000L)
+#define  mrcStatusMask_ReferMemory  ((mrcStatusMask)0x00020000L)
+#define  mrcStatusMask_ReferFile    ((mrcStatusMask)0x00010000L)
+
+/* Status */
+#ifdef M68
+typedef unsigned long mrcStatusType;
+#else
+typedef unsigned int mrcStatusType;
+#endif
+
+/* Status OK */
+#define  MRC_Status_OK              ((mrcStatusType)0x00000000L)
+
+/* ReferFile */                     
+#define  MRC_FileCanNotOpened       ((mrcStatusType)0x00010000L)
+#define  MRC_ImageHeaderCanNotRead  ((mrcStatusType)0x00010001L)
+#define  MRC_ImageDataCanNotRead    ((mrcStatusType)0x00010002L)
+#define  MRC_ImageHeaderCanNotWrite ((mrcStatusType)0x00010003L)
+#define  MRC_ImageDataCanNotWrite   ((mrcStatusType)0x00010004L)
+#define  MRC_FileCanNotClosed       ((mrcStatusType)0x00010005L)
+
+/* ReferMemory */
+#define  MRC_MemoryNotAllocate      ((mrcStatusType)0x00020000L)
+
+/* ReferMode */
+#define  MRC_ModeNotSupported       ((mrcStatusType)0x00040000L)
+#define  MRC_ModeZNot1FFTMode       ((mrcStatusType)0x00040001L)
+
+/* ReferMRCInfo */
+#define  MRC_SizeOfZero             ((mrcStatusType)0x00080000L)
+
+typedef union MRC_Status_t {
+    mrcStatusType all;
+    struct Content {
+        unsigned char level;
+        unsigned char category;
+        short detail;
+	} status;
+} MRC_Status_t;
+#ifdef M68
+typedef long  mrcImageParaTypeInteger;
+#else
+typedef int mrcImageParaTypeInteger;
+#endif
+
+typedef float mrcImageParaTypeReal;
+
+typedef struct mrcImageParaTypeIntegerCoord {
+	mrcImageParaTypeInteger x;
+	mrcImageParaTypeInteger y;
+	mrcImageParaTypeInteger z;
+} mrcImageParaTypeIntegerCoord;
+
+typedef struct mrcImageParaTypeRealCoord {
+	mrcImageParaTypeReal x;
+	mrcImageParaTypeReal y;
+	mrcImageParaTypeReal z;
+} mrcImageParaTypeRealCoord;
+
+/* 
+*  MRC Image Header
+*  Edited by Tac
+*/
+/* Header Size */
+
+#define MRC_HEADER (1024)
+#define MRC_TAILER (1024)
+
+/* Image Data Type */
+/* for compatibility */
+typedef mrcImageParaTypeInteger mrcImageMode;
+#define MRC_char_image	    	 ((mrcImageMode)0)
+#define	MRC_short_image	    	 ((mrcImageMode)1)
+#define	MRC_float_image	    	 ((mrcImageMode)2)
+#define	MRC_complex_short_ft     ((mrcImageMode)3)
+#define	MRC_complex_float_ft     ((mrcImageMode)4)
+#define	MRC_long_image	         ((mrcImageMode)101)
+#define	MRC_double_image	     ((mrcImageMode)102)
+#define	MRC_complex_long_ft      ((mrcImageMode)103)
+#define	MRC_complex_double_ft    ((mrcImageMode)104)
+#define	MRC_complex_short_fft    ((mrcImageMode)1003)
+#define	MRC_complex_float_fft    ((mrcImageMode)1004)
+#define	MRC_complex_long_fft     ((mrcImageMode)1103)
+#define	MRC_complex_double_fft   ((mrcImageMode)1104)
+#define MRC_NotSuppotedMode      ((mrcImageMode)0xffffffffL)
+
+#define mrcCharImage	    	 ((mrcImageMode)0)
+#define	mrcShortImage	    	 ((mrcImageMode)1)
+#define	mrcFloatImage	    	 ((mrcImageMode)2)
+#define	mrcComplexShortFT        ((mrcImageMode)3)
+#define	mrcComplexFloatFT        ((mrcImageMode)4)
+#define	mrcLongImage	         ((mrcImageMode)101)
+#define	mrcDoubleImage	         ((mrcImageMode)102)
+#define	mrcComplexLongFT         ((mrcImageMode)103)
+#define	mrcComplexDoubleFT       ((mrcImageMode)104)
+#define	mrcComplexShortFFT       ((mrcImageMode)1003)
+#define	mrcComplexFloatFFT       ((mrcImageMode)1004)
+#define	mrcComplexLongFFT        ((mrcImageMode)1103)
+#define	mrcComplexDoubleFFT      ((mrcImageMode)1104)
+#define mrcNotSuppotedMode       ((mrcImageMode)0xffffffffL)
+
+#define MRC_MAX_LABEL_N   (10)
+#define MRC_MAX_LABEL_LEN (80)
+#define MRC_MAX_EXTRA     (29)
+
+/* Image Header */
+typedef struct _mrcImageHeader {
+	mrcImageParaTypeIntegerCoord        N;	    /* Data Numbers */
+	mrcImageMode                        Mode;   /* Data Type */
+	mrcImageParaTypeIntegerCoord        StartN; /* First in map */
+	mrcImageParaTypeIntegerCoord        M;	    /* Number of Intervals */
+	mrcImageParaTypeRealCoord           Length; /* Cell Dimensions : Angstrom */
+	mrcImageParaTypeReal                Alpha;  /* Cell Angle : Degree */
+	mrcImageParaTypeReal                Beta;
+	mrcImageParaTypeReal                Gamma;
+	mrcImageParaTypeInteger             MAPC;   /* Which Axis Corresponds to Columns */
+	mrcImageParaTypeInteger             MAPR;   /* Which Axis Corresponds to Rows */
+	mrcImageParaTypeInteger             MAPS;   /* Which Axis Corresponds to Sections */
+	mrcImageParaTypeReal                AMin;   /* Minimum Density Value */
+	mrcImageParaTypeReal                AMax;   /* Maximum Density Value */
+	mrcImageParaTypeReal                AMean;  /* Mean Density Value */
+	mrcImageParaTypeInteger             ISPG;   /* Space Group */
+	mrcImageParaTypeInteger             NSYMBT; /* Number of bytes */
+	mrcImageParaTypeReal                EXTRA[MRC_MAX_EXTRA]; /* Extra, user defined storage space */
+    mrcImageParaTypeReal                OriginX;
+    mrcImageParaTypeReal                OriginY;
+    mrcImageParaTypeInteger             LabelN;
+    char                                Label[MRC_MAX_LABEL_N][MRC_MAX_LABEL_LEN];
+} _mrcImageHeader;
+
+typedef union mrcImageHeader {
+  unsigned char           All[MRC_HEADER];
+  mrcImageParaTypeInteger Int[MRC_HEADER/4];
+  mrcImageParaTypeReal    Real[MRC_HEADER/4];
+  _mrcImageHeader         Cont;
+} mrcImageHeader;
+
+
+/*
+	Tailer
+*/
+#define  mrcImageTailerMode2DProjection 0
+
+typedef struct _mrcImageTailer {
+	char                 		Code[4]; 
+	mrcImageParaTypeInteger		Mode;  
+	char                        EulerAngleMode[4];
+	mrcImageParaTypeReal 		Rot1;   
+	mrcImageParaTypeReal 		Rot2;
+	mrcImageParaTypeReal 		Rot3;
+	mrcImageParaTypeInteger 	Mirror;
+} _mrcImageTailer;
+
+
+typedef union mrcImageTailer {
+  unsigned char           All[MRC_TAILER];
+  mrcImageParaTypeInteger Int[MRC_TAILER/4];
+  mrcImageParaTypeReal    Real[MRC_TAILER/4];
+  _mrcImageTailer         Cont;
+} mrcImageTailer;
+
+/* 
+*  mrcImage Structure 
+*/
+typedef struct mrcImage {
+    mrcImageHeader          Header;
+    mrcImageParaTypeInteger BytePerImage;
+    mrcImageParaTypeInteger BytePerBand;
+    mrcImageParaTypeInteger BandPerPixel;
+    mrcImageParaTypeInteger PixelPerImage;
+    mrcStatusType           Status;
+    char*           Image;
+    unsigned char*  ImageCharImage;
+    unsigned short* ImageShortImage;
+    unsigned long*  ImageLongImage;
+    float*          ImageFloatImage;
+    double*         ImageDoubleImage;
+	mrcImageTailer*         Tailer;	
+	mrcImageParaTypeInteger numTailer;
+} mrcImage;
+
+typedef struct mrcImageInformation {
+    double mean;
+    double meanOfSphereSurface;
+    double meanOfCylinderSurface;
+    double max;
+	mrcImageParaTypeIntegerCoord maxCoord;
+    double min;
+	mrcImageParaTypeIntegerCoord minCoord;
+    double sd;
+    double se;
+	double rmax;
+	long flagrmax;
+	int mode;
+} mrcImageInformation;
+
+typedef enum mrcImageInformationMode {
+	meanOfAll = 0,
+    meanOfSphereSurface = 1,
+    meanOfCylinderSurface = 2
+} mrcImageInformationMode;
+
+/* 
+*  Define
+*/
+#define HeaderN       Header.Cont.N       
+#define HeaderMode    Header.Cont.Mode    
+#define HeaderStartN  Header.Cont.StartN  
+#define HeaderM       Header.Cont.M       
+#define HeaderLength  Header.Cont.Length  
+#define HeaderAlpha   Header.Cont.Alpha   
+#define HeaderBeta    Header.Cont.Beta    
+#define HeaderGamma   Header.Cont.Gamma   
+#define HeaderMAPC    Header.Cont.MAPC    
+#define HeaderMAPR    Header.Cont.MAPR    
+#define HeaderMAPS    Header.Cont.MAPS    
+#define HeaderAMin    Header.Cont.AMin    
+#define HeaderAMax    Header.Cont.AMax    
+#define HeaderAMean   Header.Cont.AMean   
+#define HeaderISPG    Header.Cont.ISPG    
+#define HeaderNSYMBT  Header.Cont.NSYMBT  
+#define HeaderEXTRA   Header.Cont.EXTRA
+#define HeaderOriginX Header.Cont.OriginX 
+#define HeaderOriginY Header.Cont.OriginY  
+#define HeaderLabelN  Header.Cont.LabelN
+#define HeaderLabel   Header.Cont.Label
+
+typedef enum mrcPixelDataType {
+    mrcPixelRePart = 0,
+    mrcPixelImPart,
+    mrcPixelMag,
+    mrcPixelPow,
+    mrcPixelLogMag,
+    mrcPixelLogPow,
+    mrcPixelPhase
+} mrcPixelDataType;
+
+typedef enum mrcPixelDataHowToGet {
+    mrcPixelHowNearest = 0,
+    mrcPixelHowLinear,
+    mrcPixelHowPolySig,
+    mrcPixelHowCubicConv
+} mrcPixelDataHowToGet;
+
+typedef struct lmrcImageSmoothingInfo  {
+	long mode;
+	mrcImageParaTypeReal sx; /* Filter kernel size */
+	mrcImageParaTypeReal sy;
+	mrcImageParaTypeReal sz;
+} lmrcImageSmoothingInfo;
+
+typedef struct lmrcImageCVEInfo {
+	long sx; /* CVE domain size. */
+	long sy; /* Apr.30,1996 */
+	long sz;
+} lmrcImageCVEInfo;
+
+typedef struct lmrcImageTfunctionInfo {
+	long sx; /* Tfunction domain size. */
+	long sy; /* June 11,1996 */
+	long sz;
+} lmrcImageTfunctionInfo;
+
+typedef struct lmrcImageHighlightInfo {
+	long mode;
+	float Bias; /* May 1,1996 */
+	float Grad;
+} lmrcImageHighlightInfo;
+
+typedef struct lmrcImageLowPassFilterInfo 
+{
+	long mode; /* June 4,1996 */
+	float hvp, width;
+} lmrcImageLowPassFilterInfo;
+
+typedef struct lmrcImageHighPassFilterInfo 
+{
+	long mode; /* June 5,1996 */
+	float hvp, width;
+} lmrcImageHighPassFilterInfo;
+
+typedef struct lmrcImageBandPassFilterInfo 
+{
+	long mode; /* June 5,1996 */
+	float hvl, hvh, wl, wh;
+} lmrcImageBandPassFilterInfo;
+
+/* Utility Routines */
+#ifdef __cplusplus
+extern "C" {
+#endif
+/* in mrcInit.c */
+extern mrcStatusType mrcInit(mrcImage* mrc, char* filaname);
+extern mrcStatusType mrcHiddenDataSet(mrcImage* mrc, long mode);
+extern void mrcImageFree(mrcImage* mrc, char* message);
+extern void mrcTailerInit(mrcImage* mrc, long mode);
+/* in mrcRead.c */
+extern mrcStatusType mrcFileRead  (mrcImage* mrc, char* filename, char* message, long mode);
+extern mrcStatusType mrcImageRead (mrcImage* mrc, char* filename, char* message, long mode);
+extern mrcStatusType mrcHeaderRead(mrcImage* mrc, char* filename, char* message, long mode);
+extern mrcStatusType mrcTailerRead(mrcImage* mrc, char* filename, char* message, long mode);
+/* in mrcWrite.c */
+#define mrcFileWriteModeGet(x)     BYTE4GETBYTE(x,0)
+#define mrcImageWriteModeGet(x)    BYTE4GETBYTE(x,1)
+#define mrcHeaderWriteModeGet(x)   BYTE4GETBYTE(x,2)
+#define mrcTailerWriteModeGet(x)   BYTE4GETBYTE(x,3)
+
+#define	mrcFileWriteMode_InfoPrint         1
+#define	mrcFileWriteMode_NoCallForStatData 2
+
+extern mrcStatusType mrcFileWrite  (mrcImage* mrc, char* filename, char* message, long mode);
+extern mrcStatusType mrcImageWrite (mrcImage* mrc, char* filename, char* message, long mode);
+extern mrcStatusType mrcHeaderWrite(mrcImage* mrc, char* filename, char* message, long mode);
+extern mrcStatusType mrcTailerWrite(mrcImage* mrc, char* filename, char* message, long mode);
+/* in mrcWrite.c */
+extern mrcStatusType mrcFileWriteLowerResolution(mrcImage* mrc, char* filename, char* message, long sample , long mode);
+/* in mrcGet.c */
+extern inline double mrcImageDataGetbyAU(mrcImage* mrc,
+			      mrcImageParaTypeReal x /* Angstrom */,
+			      mrcImageParaTypeReal y /* Angstrom */,
+			      mrcImageParaTypeReal z /* Angstrom */,
+			      double* data,
+			      mrcPixelDataType mode,
+			      mrcPixelDataHowToGet how);
+extern inline double mrcPixelDataGet(mrcImage* mrc,
+			      mrcImageParaTypeReal x /* Pixel Unit */,
+			      mrcImageParaTypeReal y /* Pixel Unit */, 
+			      mrcImageParaTypeReal z /* Pixel Unit */,
+			      double* data,
+			      mrcPixelDataType mode,
+			      mrcPixelDataHowToGet how);
+/* in mrcImageSet.c */
+extern void mrcInfoSet(mrcImage* mrc, FILE* fptIn, FILE* fptOut, mrcImageParaTypeInteger mode);
+/* in mrcSet.c */
+extern inline double mrcImageDataSetbyAU(mrcImage* mrc,
+			      mrcImageParaTypeReal x /* Angstrom */,
+			      mrcImageParaTypeReal y /* Angstrom */,
+			      mrcImageParaTypeReal z /* Angstrom */,
+			      double data,
+			      mrcPixelDataType mode);
+extern inline double mrcPixelDataSet(mrcImage* mrc,
+			      mrcImageParaTypeReal x /* Pixel Unit */,
+			      mrcImageParaTypeReal y /* Pixel Unit */,
+			      mrcImageParaTypeReal z /* Pixel Unit */,
+			      double data,
+			      mrcPixelDataType mode);
+extern void mrcStatDataSet(mrcImage* mrc, mrcImageParaTypeInteger mode);
+
+/* in mrcImageInfo.c */
+extern void lmrcImageXSection(mrcImage* proj, mrcImage* img, double Y);
+extern void lmrcImageYSection(mrcImage* proj, mrcImage* img, double X);
+extern void lmrcImageXProjection(mrcImage* proj, mrcImage* img);
+extern void lmrcImageYProjection(mrcImage* proj, mrcImage* img);
+extern void lmrcImageZProjection(mrcImage* proj, mrcImage* img);
+extern void lmrcImageXYProjection(mrcImage* proj, mrcImage* img);
+extern void lmrcImageYZProjection(mrcImage* proj, mrcImage* img);
+extern void lmrcImageZXProjection(mrcImage* proj, mrcImage* img);
+extern void lmrcImageHistgram(double** hist, unsigned long nlevel, mrcImage* img);
+extern void lmrcImageInformation(mrcImageInformation* info, mrcImage* img);
+
+/* in mrcImageCopy.c */
+extern void lmrcImageCopy(mrcImage* dst, mrcImage* src, mrcImageParaTypeRealCoord to);
+
+/* in mrcUtil.c */
+extern int IsImage(mrcImage* mrc, char* message, mrcImageParaTypeInteger mode);
+extern int IsFT(mrcImage* mrc, char* message, mrcImageParaTypeInteger mode);
+extern int IsFFT(mrcImage* mrc, char* message, mrcImageParaTypeInteger mode);
+extern void mrcImageInfoSet(mrcImage* mrc, FILE* fptIn, FILE* fptOut, long mode);
+
+/* in mrcImageOperation.c */
+extern void lmrcImageDevidedByImage(mrcImage* img, mrcImage* i1, mrcImage* i2);
+extern void lmrcImagetMapForZero(mrcImage* t, mrcImage* avg, mrcImage* se);
+extern void lmrcImageSN(mrcImage* sn, mrcImage* avg, mrcImage* sig);
+extern void lmrcImageDevidedByReal(mrcImage* img, double d);
+extern void lmrcImageAddedByReal(mrcImage* img, double d);
+extern void lmrcImageStdDev(mrcImage* sig, mrcImage* avg, mrcImage* avg2, long num);
+extern void lmrcImageStdErr(mrcImage* sig, mrcImage* avg, mrcImage* avg2, long num);
+extern void lmrcImageAdd(mrcImage* img2, mrcImage* img1, long* num);
+extern void lmrcSQRImageAdd(mrcImage* img2, mrcImage* img1, long* num);
+
+/* in mrcImageToIntImage.c */
+extern void lmrcImageToIntImage(mrcImage* dst, mrcImage* src, mrcImageParaTypeInteger mode);
+extern void lfft2d(mrcImage* fft, mrcImage* img);
+extern void lmrcImageFFT(mrcImage* fft, mrcImage* img, long mode);
+extern void lmrcFFTFGconj(mrcImage* out, mrcImage* in1, mrcImage* in2);
+extern void lmrcFFTFxG(mrcImage* out, mrcImage* in1, mrcImage* in2);
+extern void lmrcImageCorrelation(mrcImage* out, mrcImage* in, mrcImage* ref, long mode);
+extern void lmrcImageCorrelationModePrint(FILE* fpt);
+
+#include "ctfInfo.h"
+extern void lmrcImageCorrelationWithCTFCompensation(mrcImage* out, mrcImage* in, ctfInfo* inctf, mrcImage* ref, ctfInfo* refctf, long mode);
+
+
+/* in mrcError.c */
+extern mrcStatusType mrcError(char* message, char* inRtnName, char* callRtnName, mrcStatusType status);
+extern mrcStatusType mrcErrorMsg(FILE* fpt, char* message, char* inRtnName, char* callRtnName, mrcStatusType status);
+/* in lmrcFFTInfo.c */
+#include "Vector.h"
+extern floatVector* lmrcFSInfoXAxisMag(mrcImage* fft);
+extern floatVector* lmrcFSInfoXAxisPhase(mrcImage* fft);
+extern floatVector* lmrcFSInfoYAxisMag(mrcImage* fft);
+extern floatVector* lmrcFSInfoYAxisPhase(mrcImage* fft);
+/* The returned values are not magnitudes but powers */
+extern floatVector* lmrcFSInfoScatteringAngularDistribution(mrcImage* fft);
+extern floatVector* lmrcFSInfoScatteringAngularDistributionAverage(mrcImage* fft);
+extern floatVector* lmrcFSInfoScatteringAngularDistributionSD(mrcImage* fft);
+extern floatVector* lmrcFSInfoSpacing(mrcImage* fft);
+
+/* in mrcImageCheckSameSize.c */
+extern void lmrcImageCheckSameSize(mrcImage* in, mrcImage* ref);
+
+/* in mrcImageCheckFFT.c */
+extern void lmrcImageCheckFFT(mrcImage* in, mrcImage* ref);
+
+/* in lmrcImageSmoothing */
+extern void lmrcImageSmoothing(mrcImage* dst, mrcImage* src, lmrcImageSmoothingInfo* info, long mode);
+
+/* in lmrcImageCVE */
+extern void lmrcImageCVE(mrcImage* dst, mrcImage* src, lmrcImageCVEInfo* info);
+
+/* in lmrcImageTfunction */
+extern void lmrcImageTfunction(mrcImage* dst, mrcImage* src, lmrcImageTfunctionInfo* info, long mode);
+
+/* in lmrcImageHighlighting */
+extern void lmrcImageHighlightingInfoPrint(FILE* fpt);
+extern void lmrcImageHighlighting(mrcImage* dst, mrcImage* src, lmrcImageHighlightInfo* info);
+
+/* in lmrcImageLowPassFilter */
+extern void lmrcImageLowPassFilter(mrcImage* dst, mrcImage* src, lmrcImageLowPassFilterInfo* info, long mode);
+
+/* in lmrcImageHighPassFilter */
+extern void lmrcImageHighPassFilter(mrcImage* dst, mrcImage* src, lmrcImageHighPassFilterInfo* info, long mode);
+
+/* in lmrcImageBandPassFilter */
+extern void lmrcImageBandPassFilter(mrcImage* dst, mrcImage* src, lmrcImageBandPassFilterInfo* info, long mode);
+
+/* in lmrcImageShrink */
+extern void lmrcImageShrink(mrcImage* dst, mrcImage* src, long S, long mode);
+
+/* in lmrcImageShift */
+extern void lmrcImageShift(mrcImage* out, mrcImage* in, mrcImageParaTypeRealCoord shift, mrcPixelDataHowToGet mode);
+
+/* in lmrcImageMultiCTFCompensation.c */
+#include "ctfInfo.h"
+typedef struct lmrcImageMultiCTFCompensationInfo {
+	long   maxiteration;
+	double okrms;
+	long   diversefactor;
+	double z;
+	long   nhist;
+	FILE*  logfile;
+} lmrcImageMultiCTFCompensationInfo;
+
+extern void lmrcImageMultiCTFCompensationInfoInit(lmrcImageMultiCTFCompensationInfo* info);
+extern void lmrcImageMultiCTFCompensationInfoSet(lmrcImageMultiCTFCompensationInfo* info);
+extern void lmrcImageMultiCTFCompensation(mrcImage* dst, mrcImage* src, ctfInfo* ctf, long nfile, lmrcImageMultiCTFCompensationInfo info, long mode);
+
+
+/* in lmrcImageCTFObservation.c */
+#include "ctfInfo.h"
+extern void lmrcImageCTFObservation(mrcImage* dst, mrcImage* src, ctfInfo* ctf, long mode);
+
+/* in lmrcImageCTFCompensation.c */
+#include "ctfInfo.h"
+extern void lmrcImageCTFCompensation(mrcImage* src, ctfInfo* ctf, long mode);
+
+/* in lmrcImageCTFSN.c */
+typedef struct lmrcImageCTFSNInfo
+{
+	long mode, deg1, deg2;
+	ctfInfo ctf;
+} lmrcImageCTFSNInfo;
+extern void lmrcImageCTFSN(mrcImage *outMrc, const mrcImage *inMrc, lmrcImageCTFSNInfo *info, long mode);
+
+/* in lmrcImageFourierPowerSpectrum.c */
+
+typedef struct mrcImageFourierPowerSpectrum
+{
+	long n;
+	double d, *h;
+} mrcImageFourierPowerSpectrum;
+
+typedef struct lmrcImageFourierPowerSpectrumInfo
+{
+	double dX, dY, dZ;
+} lmrcImageFourierPowerSpectrumInfo;
+
+extern mrcImageFourierPowerSpectrum lmrcImageFourierPowerSpectrumMakeSpectrum(const mrcImage *inFFT, lmrcImageFourierPowerSpectrumInfo *info);
+extern void lmrcImageFourierPowerSpectrumDeleteSpectrum(mrcImageFourierPowerSpectrum theSpectrum);
+extern mrcImageFourierPowerSpectrum lmrcImageFourierPowerSpectrum(const mrcImage *inMrc, lmrcImageFourierPowerSpectrumInfo *info, long mode);
+
+extern void lmrcImageRotation2D(mrcImage* dst, mrcImage* src, double angle, mrcPixelDataHowToGet mode);
+extern void mrcImageSectionGet(mrcImage* dst, mrcImage* src, mrcImageParaTypeReal z, long mode);
+
+extern double lmrcImageMaxDataGet(mrcImage* src, long mode);
+
+#ifdef __cplusplus
+};
+#endif
+
+#endif  /* MRC_IMAGE_H */

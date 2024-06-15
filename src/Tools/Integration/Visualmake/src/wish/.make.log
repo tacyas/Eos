@@ -1,0 +1,15 @@
+make a.hogehoge
+make[1]: Entering directory `/net/pc20/workPC20/Eos/src/Tools/Integration/Visualmake/src/wish'
+make[1]: Leaving directory `/net/pc20/workPC20/Eos/src/Tools/Integration/Visualmake/src/wish'
+make a.hogehoge
+make[1]: Entering directory `/net/pc20/workPC20/Eos/src/Tools/Integration/Visualmake/src/wish'
+cp a.hoge a.hogehoge
+make[1]: Leaving directory `/net/pc20/workPC20/Eos/src/Tools/Integration/Visualmake/src/wish'
+make a.hogehoge
+make[1]: Entering directory `/net/pc20/workPC20/Eos/src/Tools/Integration/Visualmake/src/wish'
+make[1]: `a.hogehoge' is up to date.
+make[1]: Leaving directory `/net/pc20/workPC20/Eos/src/Tools/Integration/Visualmake/src/wish'
+make a.hogehoge
+make[1]: Entering directory `/net/pc20/workPC20/Eos/src/Tools/Integration/Visualmake/src/wish'
+cp a.hoge a.hogehoge
+make[1]: Leaving directory `/net/pc20/workPC20/Eos/src/Tools/Integration/Visualmake/src/wish'

@@ -1,0 +1,338 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageConnectivityNumberCalc</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageConnectivityNumberCalc<br></h2></b></font>
+	<h4>連結数の計算</h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>オプション</th>
+				<th>必須項目/選択項目</th>
+				<th>説明</th>
+				<th>デフォルト</th>
+			</tr>
+			<tr>
+				<td>-i</td>
+				<td>必須</td>
+				<td>入力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-o</td>
+				<td>必須</td>
+				<td>出力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-m</td>
+				<td>選択</td>
+				<td>モードを設定</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-f</td>
+				<td>選択</td>
+				<td>フォームを設定</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-I</td>
+				<td>選択</td>
+				<td>インバース（反転させる）</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-h</td>
+				<td>選択</td>
+				<td>ヘルプを表示</td>
+				<td>　</td>
+			</tr>
+			</div>
+		</table>
+		<br>
+		
+		
+<!-- モード説明 -->
+
+	<br>
+	<caption><b>モードの詳細</b></caption>
+	<table border="1">
+		<div align="left">
+			<tr>
+				<th>モード</th>
+				<th>説明</th>
+			</tr>
+			<tr>
+				<td>0</td>
+				<td>４近似</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>８近似</td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td>18近似</td>
+			</tr>
+		</div>
+	</table>
+	<div>※０と１が２次元の画像用で２は３次元の画像用</div>
+	
+	
+<!-- フォーム説明 -->
+
+	<br>
+	<caption><b>フォームの詳細</b></caption>
+	<table border="1">
+		<div align="left">
+			<tr>
+				<th>フォーム</th>
+				<th>説明</th>
+			</tr>
+			<tr>
+				<td>0</td>
+				<td>変化なし</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>ピクセルデータを１広げる</td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td>ピクセルデータを１薄くする</td>
+			</tr>
+			<tr>
+				<td>3</td>
+				<td>物体を縁取る</td>
+			</tr>
+		</div>
+	</table>
+	
+<!-- インバース説明 -->
+
+	<br>
+	<caption><b>インバースの詳細</b></caption>
+	<table border="1">
+		<div align="left">
+			<tr>
+				<th>インバース</th>
+				<th>説明</th>
+			</tr>
+			<tr>
+				<td>0</td>
+				<td>物体が１の値を持つ</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>背景が１の値を持つ</td>
+			</tr>
+		</div>
+	</table>
+			
+	<br>	
+	<h4>******実行例******</h4>
+
+<!-- 入力ファイル説明 -->
+
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<div>入力画像は２値化の画像で処理する</div>
+	<table>
+		<tr>
+			<td><img src="bin.m0t1.png" border="0" alt="bin.m0t1.png(1137 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				1<br>
+				0.236406<br>
+				0.424874<br>
+				0.00531093<br></p>
+			</td>
+		</tr>
+	</table>
+	
+<!-- 実行結果 -->
+
+	<caption><font color="blue">------オプション　-f------</font></caption><br>
+	<div>フォーム：０</div>
+	<table>
+		<tr>
+			<td><img src="outdata-bin.png" border="0" alt="outdata-bin.png(1137 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				1<br>
+				0.236406<br>
+				0.424874<br>
+				0.00531093<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<div>フォーム：１</div>
+	<table>
+		<tr>
+			<td><img src="outdata-bin-f1.png" border="0" alt="outdata-bin-f1.png(1141 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				1<br>
+				0.260937<br>
+				0.439146<br>
+				0.00548932<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<div>フォーム：２</div>
+	<table>
+		<tr>
+			<td><img src="outdata-bin-f2.png" border="0" alt="outdata-bin-f2.png(1138 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				1<br>
+				0.203281<br>
+				0.40244<br>
+				0.0050305<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<div>フォーム：３</div>
+	<table>
+		<tr>
+			<td><img src="outdata-bin-f3.png" border="0" alt="outdata-bin-f3.png(1203 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				1<br>
+				0.03375<br>
+				0.180585<br>
+				0.00225731<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-I------</font></caption><br>
+	<div>インバース：０</div>
+	<table>
+		<tr>
+			<td><img src="outdata-bin.png" border="0" alt="outdata-bin.png(1137 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				1<br>
+				0.236406<br>
+				0.424874<br>
+				0.00531093<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<div>インバース：１</div>
+	<table>
+		<tr>
+			<td><img src="outdata-bin-I1.png" border="1" alt="outdata-bin-I1.png(1224 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				1<br>
+				0.763594<br>
+				0.424874<br>
+				0.00531093<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-m------</font></caption><br>
+	<div>フォームを１で実行<br>
+	モード：０</div>
+	<table>
+		<tr>
+			<td><img src="outdata-bin-f1.png" border="0" alt="outdata-bin-f1.png(1141 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				1<br>
+				0.260937<br>
+				0.439146<br>
+				0.00548932<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<div>モード：１</div>
+	<table>
+		<tr>
+			<td><img src="outdata-bin-m1f1.png" border="0" alt="outdata-bin-m1f1.png(1147 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				1<br>
+				0.271094<br>
+				0.439146<br>
+				0.00548932<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<br>
+	<div>モード２は３次元画像を処理するときに指定する。<br>
+	今回の画像は２次元のため実行できない。
+	
+	
+	
+	
+	
+</body>
+</html>

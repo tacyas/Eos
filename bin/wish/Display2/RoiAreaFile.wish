@@ -1,0 +1,241 @@
+#!../
+# roiAreaFile
+#
+proc roiMultiAreaInfoSave { } {
+	global Roi
+	if { [ fileCanBeOverwritten $Roi(InformationFile) ] } {
+		set Roi(fptInformationFile) [ open $Roi(InformationFile) w ]
+	} else {
+		puts stderr "Warning: Cannot be overwritten"
+		return  no
+	}	
+	for { set i 0 } { $i < $Roi(TotalN) } { incr i } {
+		#
+		# Create an information file for each roi 
+		#
+		set oneRoiFile [ format $Roi(ROIFile) $i ] 
+		if { [ info exists  Roi($i,Shape) ] } {
+			switch [ set Roi($i,Shape) ] { 
+				Rectangle {
+					set oneRoi \
+						[ format "%s %4s %15.6f %15.6f %15.6f %15.6f %15.6f %15.6f %15.6f %15.6f" \
+							$oneRoiFile \
+							"Rect" \
+							[ set Roi($i,x0) ] [ set Roi($i,y0) ] \
+							[ set Roi($i,x1) ] [ set Roi($i,y1) ] \
+							[ set Roi($i,x2) ] [ set Roi($i,y2) ] \
+							[ set Roi($i,x3) ] [ set Roi($i,y3) ] \
+						] 
+				}
+				TiltRectangle {
+					set oneRoi \
+						[ format "%s %4s %15.6f %15.6f %15.6f %15.6f %15.6f %15.6f %15.6f %15.6f" \
+							$oneRoiFile \
+							"TiltRect" \
+							[ set Roi($i,x0) ] [ set Roi($i,y0) ] \
+							[ set Roi($i,x1) ] [ set Roi($i,y1) ] \
+							[ set Roi($i,x2) ] [ set Roi($i,y2) ] \
+							[ set Roi($i,x3) ] [ set Roi($i,y3) ] \
+						] 
+				}
+				default {
+					puts stderr "Not supported shape at the multi mode: $Roi([subst $i],Shape)"
+				}
+			}
+			puts  $Roi(fptInformationFile) $oneRoi 
+			flush $Roi(fptInformationFile)
+			debugPrint $oneRoi 
+		} else {
+			puts stderr "Roi($i) doesn't exist. The last roi has not made sure yet or the number $i was not determined."
+		}
+	}	
+	close $Roi(fptInformationFile)
+}
+#
+#
+#
+proc roiMultiAreaInfoLoad { } {
+	global Roi
+
+	if { [ file exists $Roi(InformationFile) ] } {
+		set Roi(fptInformationFile) [ open $Roi(InformationFile) r ]
+	} else {
+		puts stderr "Warning: File not found: $Roi(InformationFile) "
+		return  no
+	}
+	for { set i 0 } { $i < $Roi(TotalN) } { incr i } {
+		if { [ info exists Roi([subst $i],Object) ] } {
+			$Roi(Canvas) delete $Roi([subst $i],Object)		
+		}
+	}
+	set Roi(TotalN) 0
+	set i           0
+	gets $Roi(fptInformationFile) s
+	while { ! [ eof $Roi(fptInformationFile) ] } {
+		set oneLineList  $s 
+		set Roi($i,Shape) [ lindex $oneLineList 1 ]
+		switch $Roi([subst $i],Shape) { 
+			Rect {
+				set Roi($i,Shape) Rectangle
+				set Roi($i,x0) [ lindex $oneLineList 2 ]
+				set Roi($i,y0) [ lindex $oneLineList 3 ]
+				set Roi($i,x1) [ lindex $oneLineList 4 ]
+				set Roi($i,y1) [ lindex $oneLineList 5 ]
+				set Roi($i,x2) [ lindex $oneLineList 6 ]
+				set Roi($i,y2) [ lindex $oneLineList 7 ]
+				set Roi($i,x3) [ lindex $oneLineList 8 ]
+				set Roi($i,y3) [ lindex $oneLineList 9 ]
+			}
+			TiltRect {
+				set Roi($i,Shape) Rectangle
+				set Roi($i,x0) [ lindex $oneLineList 2 ]
+				set Roi($i,y0) [ lindex $oneLineList 3 ]
+				set Roi($i,x1) [ lindex $oneLineList 4 ]
+				set Roi($i,y1) [ lindex $oneLineList 5 ]
+				set Roi($i,x2) [ lindex $oneLineList 6 ]
+				set Roi($i,y2) [ lindex $oneLineList 7 ]
+				set Roi($i,x3) [ lindex $oneLineList 8 ]
+				set Roi($i,y3) [ lindex $oneLineList 9 ]
+			}
+			default {
+				puts stderr "Not supported shape at the multi mode: $Roi([subst $i],Shape)"
+			}
+		}
+		incr Roi(TotalN) 
+		incr i
+		gets $Roi(fptInformationFile) s
+	}	
+	close $Roi(fptInformationFile)
+	roiAreaAllRedraw
+}
+#
+#
+#
+proc roiAreaFileSave {  } {
+	global Roi
+	global CommandPut
+
+	switch $Roi(MultiShape) {
+		Off {
+			if { $Roi(OutputFile) == {} } {
+				set Roi(OutputFile) [ fileSave ]
+				if { $Roi(OutputFile) == {} } {
+					return
+				}
+			}	
+			switch $Roi(Shape) {
+				Rectangle {
+					global rectanglePoints
+					if { $Roi(Shrink) == 1 } {
+						set cmd [ list  mrcImageROI -i $Roi(InputFile) -o $Roi(OutputFile) \
+														-m 2 \
+														-r 	$rectanglePoints(x0) $rectanglePoints(y0) \
+															$rectanglePoints(x1) $rectanglePoints(y1) \
+															$rectanglePoints(x2) $rectanglePoints(y2) \
+															$rectanglePoints(x3) $rectanglePoints(y3) \
+															]
+					} else {
+						set cmd [ list  mrcImageROI -i $Roi(ShrinkOriginalFile) -o $Roi(OutputFile) \
+														-S  $Roi(Shrink) \
+														-m  2 \
+														-r 	$rectanglePoints(x0) $rectanglePoints(y0) \
+															$rectanglePoints(x1) $rectanglePoints(y1) \
+															$rectanglePoints(x2) $rectanglePoints(y2) \
+															$rectanglePoints(x3) $rectanglePoints(y3) \
+															]
+					}
+					puts stdout           "$cmd"
+					puts $CommandPut(fpt) "$cmd"
+					eosCommandExecute $Roi(Extract) $CommandPut(fpt) "$cmd"
+				}
+				TiltRectangle {
+					global rectanglePoints
+					if { $Roi(Shrink) == 1 } {
+						set cmd [ list  mrcImageROI -i $Roi(InputFile) -o $Roi(OutputFile) \
+														-m 2 \
+														-r 	$rectanglePoints(x0) $rectanglePoints(y0) \
+															$rectanglePoints(x1) $rectanglePoints(y1) \
+															$rectanglePoints(x2) $rectanglePoints(y2) \
+															$rectanglePoints(x3) $rectanglePoints(y3) \
+													    -M 4		]
+					} else {
+						set cmd [ list  mrcImageROI -i $Roi(ShrinkOriginalFile) -o $Roi(OutputFile) \
+														-S  $Roi(Shrink) \
+														-m  2 \
+														-r 	$rectanglePoints(x0) $rectanglePoints(y0) \
+															$rectanglePoints(x1) $rectanglePoints(y1) \
+															$rectanglePoints(x2) $rectanglePoints(y2) \
+															$rectanglePoints(x3) $rectanglePoints(y3) \
+													    -M 4		]
+					}
+					puts stdout           "$cmd"
+					puts $CommandPut(fpt) "$cmd"
+					eosCommandExecute $Roi(Extract) $CommandPut(fpt) "$cmd"
+				}
+				Spline {
+					global splinePoints
+
+					if { $Roi(Shrink) == 1 } {
+						set cmd [ list mrcImageUnbentROI \
+					  		-i $Roi(InputFile) -o $Roi(OutputFile) \
+					  		-x $splinePoints(Width) -r  ]
+					 } else {
+						set cmd [ list mrcImageUnbentROI \
+					  		-i $Roi(ShrinkOriginalFile) -o $Roi(OutputFile) \
+					  		-S $Roi(Shrink) \
+					  		-x $splinePoints(Width) -r  ]
+					 } 
+					for { set i 0 } { $i <= $splinePoints(N) } { incr i } {
+						append cmd " " $splinePoints(x$i) " " $splinePoints(y$i) " "
+					}
+					puts stdout           "$cmd"
+					puts $CommandPut(fpt) "$cmd"
+					eosCommandExecute $Roi(Extract) $CommandPut(fpt) "$cmd"
+				}
+			}
+			if { $Roi(View) } {
+				if { $Roi(Extract) == "foreground" } {
+					eval exec [ list Display2 -i $Roi(OutputFile) & ] 
+				} else {
+					puts stderr "Not supported because process does not run on foreground"
+				}
+			}
+		}	
+		On {
+			#
+			# Montage File Create Open
+			#
+			if { [ fileCanBeOverwritten $Roi(MontageFile) ] } {
+				#
+			} else {
+				puts stderr "Warning: Cannot be overwritten"
+				return  no
+			}
+			#
+			# Information file check to open
+			#
+			roiMultiAreaInfoSave 
+			#
+			# Command Create
+			#
+			set cmd [ list  mrcImageROIs -i $Roi(InputFile) \
+				-o $Roi(MontageFile) \
+				-I $Roi(InformationFile) \
+				-S $Roi(Shrink) ]
+			puts stdout           "$cmd"
+			puts $CommandPut(fpt) "$cmd"
+			eosCommandExecute $Roi(Extract) $CommandPut(fpt) $cmd
+			if { $Roi(View) } {
+				if { $Roi(Extract) == "foreground" } {
+					eval exec [ list Display2 -i $Roi(MontageFile) & ] 
+				} else {
+					puts stderr "Not supported because process does not run on foreground"
+				}
+			}
+		}		
+		default {
+					puts stderr "Not supported"
+		}	
+	}	
+}
+

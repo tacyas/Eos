@@ -1,0 +1,4 @@
+OBJECTNAME = mrcImageHelicalMaskingBy2DImage
+EXTRA_LIB  =
+EXTRA_CCOPTS =
+EXTRA_INC =

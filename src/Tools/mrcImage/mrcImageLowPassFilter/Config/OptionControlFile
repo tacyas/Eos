@@ -1,0 +1,8 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"
+"-hvp","-h[alf]v[alue]p[oint]","HalfValuePoint[/A]","Optional","1","1","hvp","Real","1.0"
+"-w","-w[idth]","WidthOfDumping","Optional","1","1","width","Real","1.0"

@@ -1,0 +1,8 @@
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile::ASCII","stdout"
+"-N","-N[umber]","Number[pixel]","Optional","2","1","Nx","Integer","256","2","Ny","Integer","256"
+"-R","-R[adius]","Radius[pixel]","Optional","1","1","R","Integer","64"
+"-n","-n[umber]","nOfRadial","Optional","1","1","nRadial","Integer","18"
+"-delta","-delta","Delta[A]","Optional","1","1","Delta","Real","1.72"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-Shape","-Shape","Mode","Optional","1","1","Shape","Integer","0"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

@@ -1,0 +1,7 @@
+# OptionControlFile
+# FileFormat
+"-i1","-i[nput]1","InputDataFile","Essential","1","1","In1","inFile","NULL"
+"-i2","-i[nput]2","InputDataFile","Essential","1","1","In2","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

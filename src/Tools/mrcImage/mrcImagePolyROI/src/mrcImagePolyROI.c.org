@@ -1,0 +1,105 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>                  
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+#include "mrcImage.h"
+
+void
+main(int argc, char* argv[]) 
+{
+    mrcImage in;
+    mrcImage out;
+    THIS_PROGRAM\
+Info info;
+
+	init0(&info);
+    argCheck(&info, argc, argv);
+    init1(&info);
+    mrcFileRead(&in, info.inFileName, "mrc2gmr main routine", 0);
+    lmrcImageROI(&out, &in, &info);
+    mrcFileWrite(&out, info.outFileName, "mrc2gmr main routine", 0);
+}
+                           
+#define SQR(x) ((x)*(x))
+
+extern long IsInPoly(int ix, int iy, THIS_PROGRAM\
+Coord* p, long np);
+
+
+void
+THIS_ROUTINE/**/(mrcImage* out, mrcImage* in, THIS_PROGRAM\
+Info* info)
+{
+    mrcImage mask;
+    double tmp1, tmp2;
+    int ix, iy, i;
+
+#ifdef DEBUG
+    fprintf(stderr, "np %d\n", info->nPoints);
+    for(i=0; i<info->nPoints; i++) {
+        fprintf(stderr, "p[%d]=(%f, %f)\n", i, info->Points[i].x, info->Points[i].y);
+    }
+#endif
+    mask.Header = out->Header = in->Header;
+    mrcInit(out, NULL);
+    mrcInit(&mask, NULL);
+    /* Create Mask */
+    for(ix=0; ix<in->HeaderN.x; ix++) {
+        for(iy=0; iy<in->HeaderN.y; iy++) {
+            if(IsInPoly(ix, iy, info->Points, info->nPoints)) {
+                mrcPixelDataSet(&mask, 
+                    (mrcImageParaTypeReal)ix, (mrcImageParaTypeReal)iy, 0.0,
+                    1.0, mrcPixelMag);
+            } else {
+                mrcPixelDataSet(&mask, 
+                    (mrcImageParaTypeReal)ix, (mrcImageParaTypeReal)iy, 0.0,
+                    0.0, mrcPixelMag);
+            }
+        }
+    }
+    /* Mask Image */
+    for(ix=0; ix<in->HeaderN.x; ix++) {
+        for(iy=0; iy<in->HeaderN.y; iy++) {
+            mrcPixelDataGet(in, 
+                (mrcImageParaTypeReal)ix, (mrcImageParaTypeReal)iy, 0.0,
+                &tmp1, mrcPixelMag, mrcPixelHowNearest);
+            mrcPixelDataGet(&mask, 
+                (mrcImageParaTypeReal)ix, (mrcImageParaTypeReal)iy, 0.0,
+                &tmp2, mrcPixelMag, mrcPixelHowNearest);
+            mrcPixelDataSet(out, 
+                (mrcImageParaTypeReal)ix, (mrcImageParaTypeReal)iy, 0.0,
+                tmp1*tmp2, mrcPixelMag);
+        }
+    }
+#ifdef DEBUG
+    mrcFileWrite(&mask, "mask.tst", "mrc2gmr main routine", 0);
+#endif
+	mrcStatDataSet(out, 0);
+}
+
+/*
+    V1, V2: Vector
+
+    V1.x*V2.y - V1.y*V2.x > 0 : In
+    V1.x*V2.y - V1.y*V2.x = 0 : On Line
+    V1.x*V2.y - V1.y*V2.x < 0 : Out
+*/
+
+long 
+IsInPoly(int ix, int iy, THIS_PROGRAM\
+Coord* p, long np)
+{
+    long i;
+    double tmp;
+    
+    for(i=0; i<np; i++) {
+        if((p[(i+1)%np].x-p[i%np].x)*(iy-p[i%np].y) - (p[(i+1)%np].y-p[i%np].y)*(ix-p[i%np].x)<0) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+

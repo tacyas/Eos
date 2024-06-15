@@ -1,0 +1,13 @@
+.onlineHelp EOS llDataMultiCTFCompensation "LlDataMultiCTFCompensation Help Page"
+.section 1 PROGRAM
+llDataMultiCTFCompensation \- llDataMultiCTFCompensation
+.section 1 DESCRIPTION
+.section 1 "PANE ARGUMENTS"
+.syntax EOS llDataMultiCTFCompensation
+.section 1 EXAMPLES
+.section 1 "SEE ALSO"
+.section 1 RESTRICTIONS 
+.section 1 REFERENCES 
+.section 1 COPYRIGHT
+Copyright (C) 1993 - 1996, Khoral Research, Inc.  All rights reserved.
+

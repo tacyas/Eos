@@ -1,0 +1,106 @@
+#!/bin/sh
+#
+# dotSourceInMakefileCreate  1.1
+#
+# The latest update : 01/03/96 at 21:16:33
+#
+#@(#) dotSourceInMakefileCreate Function
+#@(#)
+#
+#@(#) Usage : dotSourceInMakefileCreate  fullDirectory  Target World
+#
+#@(#) Attention
+#@(#)
+#@(#) Parameter: 
+#@(#)     Essential:
+#@(#)         SourceFileName
+#@(#)     Optional:
+#@(#)
+
+usage()
+{
+	echo "Usage: dotSourceInMakefileCreate BaseDirectoryToBeConsidered [AddedTarget] [AddetedWorld] "
+	exit
+}
+
+NameRead()
+{
+	ans="N"
+	while [ $ans != "Y" -a $ans != "y" ]
+	do
+		echo $1
+		read Name
+		echo "$Name is good ?"
+		read ans
+	done
+}
+# Store Flags
+FlagsCharacter="-"
+
+case $# in 
+	0)
+		;;
+	*)
+		while [ `echo $1 | cut -c1` = ${FlagsCharacter} ]
+		do
+			if [ `echo $1 | cut -c2` = "h" ] 
+			then
+				usage
+			else
+				parms="${parms} $1"
+				shift 
+			fi
+		done
+		;;
+esac
+
+#
+currentDir=`pwd`
+
+for file in ${filename}
+do
+	FullName=${currentDir}/${file}	
+	Name=`basename ${FullName}`
+	Dir=`dirname ${FullName}`
+done
+
+case $# in
+	0) # No filename 
+		Full=./ 
+		;;
+	1) # 
+		Full=$1
+		echo "All world in ${Full} is replaced!!"
+		;;
+	2) # 
+		Full=$1
+		Target=$2
+		echo "${Target} in ${Full} is added !!"
+		;;
+	3) # 
+		Full=$1
+		Target=$2
+		World=$3
+		echo "${Target} in ${Full} is added in ${World}!!"
+		;;
+	*) #
+		usage	
+		;;
+esac
+
+mv -f ${Full}/.Source ${Full}/.Source.org
+ls -1F ${Full} | awk '
+	BEGIN {
+		printf("SOURCE=\\\n")
+		i=0;
+	} 
+	$0 !~ /Test/ && $0 !~ /Closed/ && $0 !~ /Config/ && $0 !~ /CVS/ && /\// {
+		i++; 
+		gsub(/\//, "");
+		printf("%s \\\n", $0);
+	}
+	END {
+		printf("#LastSource\n");
+	}
+' > ${Full}/.Source
+

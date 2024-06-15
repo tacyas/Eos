@@ -1,0 +1,8 @@
+.onlineHelp EOS mrc2viff "Introduction to mrc2viff"
+.
+.section 1 "Introduction to mrc2viff"
+.
+.\" This is the help page associated with the Help button on
+.\" the toplevel window of mrc2viff
+If you are reading this text,
+you should report it as a bug :-)

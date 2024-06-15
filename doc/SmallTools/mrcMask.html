@@ -1,0 +1,26 @@
+<HTML>
+<HEAD>
+<TITLE>mrcMask</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcMask</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcMask
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-s[ize]             sizeX               (1         ).as(Integer             ) 
+                         sizeY               (1         ).as(Integer             ) ] :Optional  :Mask Size (Odd Only) /pixel
+    [-v[ector]1          v1x                 (1         ).as(Real                ) 
+                         v1y                 (0         ).as(Real                ) ] :Essential :Vector1(/A):x y
+    [-v[ector]2          v2x                 (0         ).as(Real                ) 
+                         v2y                 (1         ).as(Real                ) ] :Optional  :Vector2(/A):x y
+    [-in[initial number] inum                (1         ).as(Integer             ) ] :Optional  :Initialn number of data to cut out.For 1D only.
+    [-fn[final number]   num                 (0         ).as(Integer             ) ] :Optional  :Final number of data to cut out.For 1D only.Default:All.
+    [-en[extra number]   exnum               (0         ).as(Integer             ) ] :Optional  :Extra number of data to cut out.For mode 2 only
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+</PRE>
+</BODY>
+</HTML>

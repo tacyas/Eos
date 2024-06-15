@@ -1,0 +1,10 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-Rmax","-Rmax","Input: Rmax","Optional","1","1","Rmax","Real","1.0"
+"-Rmin","-Rmin","Input: Rmin","Optional","1","1","Rmin","Real","1.0"
+"-bpm","-b[ack]p[rojection]m[ode]","BackProjectionMode","Optional","1","1","BackProjectionMode","Integer","1"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"
+"-T","-T[hreshold]","Input: Threshold","Optional","1","1","T","Real","1"

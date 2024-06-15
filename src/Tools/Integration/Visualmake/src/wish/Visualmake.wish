@@ -1,0 +1,72 @@
+#!../I686LINUX/Visualmake
+
+#
+# Modified by Tacyas
+#
+
+
+proc performMakePhonyTarget { Widget }  {
+	set target [ $Widget cget -text ]
+	if { [ catch { eval [ exec make $target 2>> .make.err | tee --append .make.log ] } fid ] }  {
+		puts "some error. \n $fid"
+	} else {
+		puts $target
+	}
+}
+
+proc buttonClickable { chkname btnname value} {
+	global v
+	puts $chkname
+	puts $v($value)
+	set chkvalue [ $chkname cget -state ]
+	puts $chkvalue
+	if { $v($value) == 0 } {
+		$btnname configure -state disabled
+	} else {
+		$btnname configure -state normal
+	}
+}
+
+if [catch {open "Makefile" r} file1] {
+	puts stderr "Cannot open Makefile : $file1 "
+} else {
+	set num 1
+	set lstflg 1
+	while {[gets $file1 line] >=0} {
+		if { [string last "##hidden" "$line" ] !=-1 } {
+			if { $lstflg == 1 } {
+				set lstflg 0
+			} else {
+				set lstflg 1
+			}
+		}
+		if { $lstflg == 1 } {
+			set cmpline [string trim "$line"]
+			switch -regexp $cmpline {
+				{##sep} {
+					frame .sep$num -width 170 -height 2 -borderwidth 1 -relief sunken
+					pack .sep$num -side top  
+					incr num 1
+				}
+				{::} {
+					frame .f$num
+					puts [string trim "$line"] 
+					set target "[string trim "$line" "::"]"
+					set name [string tolower $target ]
+					button .f$num.$name -state disabled -width 15 -text $target -command "performMakePhonyTarget .f$num.$name " 
+					checkbutton .f$num.check$name -variable v($name) -command "buttonClickable .f$num.check$name .f$num.$name $name"
+					pack .f$num
+					pack .f$num.check$name .f$num.$name -side left
+					incr num 1
+				}
+			}
+		}
+	}
+}
+
+	frame .sepmenu -width 170 -height 2 -borderwidth 1 -relief sunken
+	button .variable -text chVar -command { exec ~/Eos/bin/Visualmake ~/Eos/bin/wish/Visualmake/Variable.wish }
+	button .quit -text quit -command { exit }
+	pack .sepmenu -side top
+	pack .quit .variable -side bottom -side right
+	

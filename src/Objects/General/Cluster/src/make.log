@@ -1,0 +1,129 @@
+../inc/Cluster.h(72): error: identifier "clusterLog" is undefined
+  extern clusterLog* clusterLogRead(clusterLog* cluster, FILE* fpt, int mode);
+         ^
+
+../inc/Cluster.h(72): error: identifier "clusterLog" is undefined
+  extern clusterLog* clusterLogRead(clusterLog* cluster, FILE* fpt, int mode);
+                                    ^
+
+../inc/Cluster.h(73): error: identifier "clusterLog" is undefined
+  extern clusterLog* clusterLogReadAll(clusterLog* cluster, FILE* fpt, int mode);
+         ^
+
+../inc/Cluster.h(73): error: identifier "clusterLog" is undefined
+  extern clusterLog* clusterLogReadAll(clusterLog* cluster, FILE* fpt, int mode);
+                                       ^
+
+../inc/Cluster.h(74): error: identifier "clusterLog" is undefined
+  extern clusterLog* clusterLogReadBinary(clusterLog* cluster, int* prevN, int* prevM, char* filename, int mode);
+         ^
+
+../inc/Cluster.h(74): error: identifier "clusterLog" is undefined
+  extern clusterLog* clusterLogReadBinary(clusterLog* cluster, int* prevN, int* prevM, char* filename, int mode);
+                                          ^
+
+../inc/Cluster.h(75): error: identifier "clusterLog" is undefined
+  extern clusterLog* clusterLogReadAllBinary(clusterLog* cluster, char* basename, int mode);
+         ^
+
+../inc/Cluster.h(75): error: identifier "clusterLog" is undefined
+  extern clusterLog* clusterLogReadAllBinary(clusterLog* cluster, char* basename, int mode);
+                                             ^
+
+../inc/Cluster.h(77): error: identifier "clusterLog" is undefined
+  extern clusterLog* clusterLogWriteAllBinary(clusterLog* cluster, char* basename, int mode);
+         ^
+
+../inc/Cluster.h(77): error: identifier "clusterLog" is undefined
+  extern clusterLog* clusterLogWriteAllBinary(clusterLog* cluster, char* basename, int mode);
+                                              ^
+
+../inc/Cluster.h(78): error: identifier "clusterLog" is undefined
+  extern clusterLog* clusterLogWrite(clusterLog* cluster, FILE* fpt, int mode);
+         ^
+
+../inc/Cluster.h(78): error: identifier "clusterLog" is undefined
+  extern clusterLog* clusterLogWrite(clusterLog* cluster, FILE* fpt, int mode);
+                                     ^
+
+../inc/Cluster.h(79): error: identifier "clusterLog" is undefined
+  extern clusterLog* clusterLogWriteAll(clusterLog* cluster, FILE* fpt, int mode);
+         ^
+
+../inc/Cluster.h(79): error: identifier "clusterLog" is undefined
+  extern clusterLog* clusterLogWriteAll(clusterLog* cluster, FILE* fpt, int mode);
+                                        ^
+
+../inc/Cluster.h(80): error: identifier "clusterLog" is undefined
+  extern clusterLog* clusterLogWriteClusterOnly(clusterLog* cluster, FILE* fpt, int mode);
+         ^
+
+../inc/Cluster.h(80): error: identifier "clusterLog" is undefined
+  extern clusterLog* clusterLogWriteClusterOnly(clusterLog* cluster, FILE* fpt, int mode);
+                                                ^
+
+../inc/Cluster.h(81): error: identifier "clusterLog" is undefined
+  extern void clusterLogWritePS(clusterLog* cluster, clusterTreeInfo* linfo, FILE* fpt, int mode);
+                                ^
+
+../inc/Cluster.h(84): error: identifier "clusterLog" is undefined
+  extern void clusterLogClusterNumberSet(clusterLog* bottom, int lastClusterNum, int mode); 
+                                         ^
+
+../inc/Cluster.h(85): error: identifier "clusterLog" is undefined
+  extern void clusterLogClusterNumberSet2(clusterLog* top, int firstClusterNum, int mode); 
+                                          ^
+
+../inc/Cluster.h(87): error: identifier "clusterLog" is undefined
+  extern clusterLog* clusterLogGetDistance(clusterLog* cluster, int N, int M, int clusterNum, double* data);
+         ^
+
+../inc/Cluster.h(87): error: identifier "clusterLog" is undefined
+  extern clusterLog* clusterLogGetDistance(clusterLog* cluster, int N, int M, int clusterNum, double* data);
+                                           ^
+
+../inc/Cluster.h(89): error: identifier "clusterLog" is undefined
+  extern void clusterLogBelowLayerPointerSet(clusterLog * cluster, int mode); 
+                                             ^
+
+../inc/Cluster.h(90): error: identifier "clusterLog" is undefined
+  extern clusterLog* clusterLogBottomGet(clusterLog * cluster, int mode); 
+         ^
+
+../inc/Cluster.h(90): error: identifier "clusterLog" is undefined
+  extern clusterLog* clusterLogBottomGet(clusterLog * cluster, int mode); 
+                                         ^
+
+../inc/Cluster.h(91): error: identifier "clusterLog" is undefined
+  extern int clusterLogClusterSizeGet(clusterLog * cluster, int mode); 
+                                      ^
+
+../inc/Cluster.h(92): error: identifier "clusterLog" is undefined
+  extern void clusterLogClusterSizeSet(clusterLog * cluster, int mode); 
+                                       ^
+
+../inc/Cluster.h(93): error: identifier "clusterLog" is undefined
+  extern void clusterLogBottomSet(clusterLog * cluster, int mode); 
+                                  ^
+
+../inc/Cluster.h(96): error: identifier "clusterLog" is undefined
+  extern void clusterLogInit(clusterLog * cluster, int mode); 
+                             ^
+
+clusterLogInit.c(16): error: identifier "clusterLog" is undefined
+  clusterLogInit(clusterLog* cluster, int mode)
+                 ^
+
+clusterLogInit.c(18): error: expression must have pointer-to-struct-or-union type
+  	if(NULL!=cluster->current) {
+  	         ^
+
+clusterLogInit.c(19): error: expression must have pointer-to-struct-or-union type
+  		clusterLogInitOneRecord(cluster->current);
+  		                        ^
+
+clusterLogInit.c(19): error #165: too few arguments in function call
+  		clusterLogInitOneRecord(cluster->current);
+  		                                        ^
+
+compilation aborted for clusterLogInit.c (code 2)

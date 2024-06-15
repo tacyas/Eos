@@ -1,0 +1,14 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input:mrcImage","Essential","1","1","In","inFile::mrcImage","NULL"
+"-o","-o[utput]","Output:mrcImage","Essential","1","1","Out","outFile::mrcImage","NULL"
+"-O","-O[utput]","Output:Parameters","Optional","1","1","OutParam","outFile::ASCII","stdout"
+"-t","-t[hreshold]","Value of threshold","Optional","1","1","t","Real","0"
+"-dt","-d[elta]t[hreshold]","Difference threshold","Optional","1","1","deltaThreshold","Real","0"
+"-st","-s[igma]t[hreshold]","Sigma threshold(BandPath)","Optional","1","1","sigmaThreshold","Real","0.5"
+"-v","-v[alue]","Value","Optional","1","1","v","Real","0"
+"-near","-near","Near[pixel]: Near-area also binary","Optional","1","1","near","Real","0"
+"-nLevel","-nLevel","nLevel: For creating histgram by Kittler and Ohtsu ","Optional","1","1","nLevel","Integer","256"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-p","-p[tile]","p","Optional","1","1","p","Real","0.5"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

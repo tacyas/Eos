@@ -1,0 +1,8 @@
+.onlineHelp EOS ctfFunction "Introduction to ctfFunction"
+.
+.section 1 "Introduction to ctfFunction"
+.
+.\" This is the help page associated with the Help button on
+.\" the toplevel window of ctfFunction
+If you are reading this text,
+you should report it as a bug :-)

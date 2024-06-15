@@ -1,0 +1,29 @@
+<HTML>
+<HEAD>
+<TITLE>mrcImageBackgroundSubtraction</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageBackgroundSubtraction</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageBackgroundSubtraction
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :Input[Array]
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :Output[Array]
+    [-w[idth]x           widthX              (1         ).as(Real                ) ] :Optional  :WindowX[piX]
+    [-w[idth]y           widthY              (1         ).as(Real                ) ] :Optional  :WindowY[pix]
+    [-w[idth]z           widthZ              (1         ).as(Real                ) ] :Optional  :WindowZ[pix]
+    [-e[dge]x            edgeX               (1         ).as(Real                ) ] :Optional  :EdgeX[pix]
+    [-e[dge]y            edgeY               (1         ).as(Real                ) ] :Optional  :EdgeY[pix]
+    [-e[dge]z            edgeZ               (1         ).as(Real                ) ] :Optional  :EdgeZ[pix]
+    [-trim               Trim                (0         ).as(Real                ) ] :Optional  :trimmedAbnormalValue[0-0.5]
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+-m 0: YLineSubtractAverage using -edgeY and -widthX 
+-m 1: YLineSubtractMedian  using -edgeY and -widthX 
+-m 2: YLineSubtractTrimmedAverage using -edgeY and -widthX, -trim
+-m 3: YLineSubtractHodgesLehmann using -edgeY and -widthX 
+</PRE>
+</BODY>
+</HTML>

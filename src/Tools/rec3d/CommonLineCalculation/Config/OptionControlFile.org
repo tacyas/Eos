@@ -1,0 +1,7 @@
+# OptionControlFile
+# FileFormat
+"-i1","-i[nput]1","InputData1","Essential","4","1","I1RotationalMode","String","NULL","2","I1Angle1","Real","0","3","I1Angle2","Real","0","4","I1Angle3","Real","0"
+"-i2","-i[nput]2","InputData2","Essential","4","1","I2RotationalMode","String","NULL","2","I2Angle1","Real","0","3","I2Angle2","Real","0","4","I2Angle3","Real","0"
+"-o","-o[utput]","OutputDataFile","Optional","1","1","Out","outFile","stdout"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

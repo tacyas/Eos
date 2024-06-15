@@ -1,0 +1,29 @@
+<HTML>
+<HEAD>
+<TITLE>mrcImageMovingModelCreate</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageMovingModelCreate</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageMovingModelCreate
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile::Array       ) ] :Essential :Input:Moving
+    [-o[utput]           Out                 (NULL      ).as(outFile::ASCII      ) ] :Optional  :Output
+    [-O[utput]           OutName             (Movie_%04d.mrc).as(String              ) ] :Optional  :Output
+    [-n                  Num                 (10        ).as(Integer             ) ] :Optional  :numberOfMovie
+    [-N                  Nx                  (256       ).as(Integer             ) 
+                         Ny                  (256       ).as(Integer             ) 
+                         Nz                  (256       ).as(Integer             ) ] :Optional  :Output:mrcImageSize
+    [-L                  Lx                  (1.0       ).as(Real                ) 
+                         Ly                  (1.0       ).as(Real                ) 
+                         Lz                  (1.0       ).as(Real                ) ] :Optional  :Output:mrcImageLength
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+input file type: Array type N:Number of Moving objects
+2 10 N
+intensity sigx sigy sigz startx starty startz vx vy vz
+</PRE>
+</BODY>
+</HTML>

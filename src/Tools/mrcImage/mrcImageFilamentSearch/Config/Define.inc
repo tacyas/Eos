@@ -1,0 +1,4 @@
+OBJECTNAME = mrcImageFilamentSearch
+EXTRA_LIB  =
+EXTRA_CCOPTS =
+EXTRA_INC =

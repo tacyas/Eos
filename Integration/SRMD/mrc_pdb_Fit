@@ -1,0 +1,39 @@
+#!/bin/sh
+ echo "mrc pdb Rhofit & Shapefit"
+
+ thisProtein="xxxxx"
+
+ contour="yyyyy"
+ max=zzzzz
+ i=0
+
+echo "" > data/Rhofit.txt
+echo "" > data/Shapefit.txt
+
+pdbRhoFit_OutPut()
+{
+    pdbRhoFit -ipdb output/$filename.coor -imrc mrc/$thisProtein.mrc -zmin -1 -zmax 1 -zd 1 -xmin 0 -xmax 0 -xd 1 -ymin 0 -ymax 0 -yd 1 -phimin -1 -phimax 1 -phid 1 -psimin 0 -psimax 0 -psid 1 -thetamin 0 -thetamax 0 -thetad 1 -omrc data/fit-r.mrc  -m 1 -otxt data/fit-r.txt -I  -C -$Contour 
+	echo "step.$ii" >> data/Rhofit.txt		
+	awk '{printf("%s\n",$0);}' data/fit-r.txt >> data/Rhofit.txt
+}
+
+pdbShapeFit_OutPut()
+{
+	pdbShapeFit -ipdb output/$filename.coor -imrc mrc/$thisProtein.mrc -zmin -1 -zmax 1 -zd 1 -xmin 0 -xmax 0 -xd 1 -ymin 0 -ymax 0 -yd 1 -phimin -1 -phimax 1 -phid 1 -psimin 0 -psimax 0 -psid 1 -thetamin 0 -thetamax 0 -thetad 1 -omrc data/fit-s.mrc  -m 1 -otxt data/fit-s.txt -I  -C -$Contour
+	echo "step.$ii" >> data/Shapefit.txt
+	awk '{printf("%s\n",$0);}' data/fit-s.txt >> data/Shapefit.txt
+}
+
+while [ $i -le $max ]
+do
+	ii=`echo $i | awk '{printf("%04d",$1);}' `
+i	filename=file.$ii
+
+ #--RhoFit_OutPut
+	pdbRhoFit_OutPut
+
+ #--ShapeFit_OutPut
+	pdbShapeFit_OutPut
+ i=`expr $i + 1`
+done
+	  

@@ -1,0 +1,4 @@
+OBJECTNAME = Polar2Descartes
+EXTRA_LIB  =
+EXTRA_CCOPTS =
+EXTRA_INC =

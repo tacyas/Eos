@@ -1,0 +1,14 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-n","-n[umber]","Number of Density Level","Optional","1","1","Nlab","Integer","8"
+"-max","-max[imum]","Maximum of Density Level","Optional","1","1","max","Integer","0"
+"-min","-min[imum]","Minimum of Density Level","Optional","1","1","min","Integer","0"
+"-m1","-m[ode]1","Dij Modeof Personal Style","Optional","1","1","mode1","Integer","1"
+"-m2","-m[ode]2","Dij Mode of Figure Style","Optional","1","1","mode2","Integer","1"
+"-m3","-m[ode]3","Dij Mode of Dimension Style","Optional","1","1","mode3","Integer","1"
+"-om","-o[ptional]m[ode]","Optional Mode of Noise Reduction","Optional","1","1","omode","Integer","0"
+"-t","-t[imes]","Times of NoiseReduction","Optional","1","1","times","Integer","1"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","mode","Optional","1","1","mode","Integer","0"

@@ -1,0 +1,10 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputFETlistFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputFETmrcformat","Essential","1","1","OutFET","outFile","NULL"
+"-clList","-cl[ine]List","commonlineList","Optional","1","1","comList","inFile","NULL"
+"-O","-O[utput]","OutputMAPmrcformat","Optional","1","1","OutMAP","outFile","NULL"
+"-w","-w[eight]","WeightForDistanceCalc","Optional","1","1","Weight","inFile","NULL"
+"-atm","-atm[ode]","AAtestmode","Optional","1","1","AAtm","Integer","1"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

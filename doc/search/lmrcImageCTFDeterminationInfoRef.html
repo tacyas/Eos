@@ -1,0 +1,28 @@
+<HTML>
+<BODY>
+<H1>lmrcImageCTFDeterminationInfoRef</H1><BR>
+<H3>in lmrcImageCTFDetermination.h</H3><BR>
+<PRE>
+typedef struct <A HREF="lmrcImageCTFDeterminationInfoRef.html">lmrcImageCTFDeterminationInfoRef </A>{ <BR>
+	FILE* fptIn; <BR>
+	char* In; <BR>
+	FILE* fptRef; <BR>
+	char* Ref; <BR>
+	FILE* fptOut; <BR>
+	char* Out; <BR>
+	char MrcOut[100]; <BR>
+	mrcImage* in; <BR>
+	mrcImage* out; <BR>
+	long Width; <BR>
+	float PixelSize; <BR>
+	float truePitch; <BR>
+	float firstDf; <BR>
+	float withinDf; <BR>
+	float firstAoverP; <BR>
+	float withinAoverP; <BR>
+	mrcImageParaTypeReal maxiter; <BR>
+	mrcImageParaTypeReal iter; <BR>
+} lmrcImageCTFDeterminationInfoRef; <BR>
+ 
+</PRE></HTML>
+</BODY>

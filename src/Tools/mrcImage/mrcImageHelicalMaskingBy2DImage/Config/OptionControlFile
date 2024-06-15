@@ -1,0 +1,9 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-dz","-dz[deltaz]","deltaz(A)","Optional","1","1","dz","Real","27.3"
+"-dp","-dp[deltaphi]","deltaphi(degree)","Optional","1","1","dphi","Real","13.84"
+"-M","-M[ask]","2D Image for masking","Essential","1","1","Mask","inFile","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

@@ -1,0 +1,10 @@
+# OptionControlFile
+# FileFormat
+"-I","-I[nput array of file]","InputDataFiles","Optional","1","1","In","inFileListNoOpen","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-Rmax","-Rmax","Rmax[/A]","Optional","1","1","Rmax","Real","0.1"
+"-dR","-dR","dR[/A]","Optional","1","1","dR","Real","0.0001"
+"-Ain","-Ain","IlluminationAperture[mrad]","Optional","1","1","Ain","Real","0.02"
+"-ctfMode","-ctfMode","CTFMode","Optional","1","1","ctfMode","Integer","33"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

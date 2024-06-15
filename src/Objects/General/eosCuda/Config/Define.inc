@@ -1,0 +1,3 @@
+OBJECTNAME = eosCuda
+EXTRA_INC = -I${CUDA_ROOT}/include
+EXTRA_CCOPTS =

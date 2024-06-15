@@ -1,0 +1,11 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Optional","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Optional","1","1","Out","outFile","stdout"
+"-tty","-tty","TTY","Optional","1","1","tty","String","/dev/ttyS1"
+"-speed","-speed","Speed","Optional","1","1","Speed","Integer","4800"
+"-p","-p[osition]","Set Position[um,um]","Optional","2","1","posX","Real","0.0","2","posY","Real","0.0"
+"-I","-I[nteractive]","Interactive[sec]","Optional","1","1","Interactive","Integer","5"
+"-S","-S[erver]","Host port Server[sec]","Optional","2","1","Host","String","tkyemg-pc06","2","Port","Integer","6000"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

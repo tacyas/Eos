@@ -1,0 +1,11 @@
+# OptionControlFile
+# FileFormat
+"-I1","-I[nput]1","InputDataFileList1 : normal correlation","Optional","1","1","In1","inFileListNoOpen","NULL"
+"-I2","-I[nput]2","InputDataFileList2 : derivation1D correlation","Optional","1","1","In2","inFileListNoOpen","NULL"
+"-I3","-I[nput]3","InputDataFileList3 : derivation2D correlation","Optional","1","1","In3","inFileListNoOpen","NULL"
+"-I4","-I[nput]4","InputDataFileList4 : length correlation","Optional","1","1","In4","inFileListNoOpen","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"
+"-M","-M[ode]","Mode : choice of used Correlation","Optional","1","1","Mode","Integer","15"
+"-v","-v[ariance]","variance of Gaussian weight function","Optional","1","1","variance","Real","5"

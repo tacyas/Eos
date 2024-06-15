@@ -1,0 +1,10 @@
+#!../Display2.HP 
+proc display2MenuSet2 {} {
+
+set m [menu .menu.operation.m]
+$m add com -label "fft2d" -command  { 
+	exec fft2dCmd 
+}
+
+}
+

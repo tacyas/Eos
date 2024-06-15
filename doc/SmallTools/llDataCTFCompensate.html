@@ -1,0 +1,35 @@
+<HTML>
+<HEAD>
+<TITLE>llDataCTFCompensate</TITLE>
+</HEAD>
+<BODY>
+<H1>llDataCTFCompensate</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: llDataCTFCompensate
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-I[nput]            In1                 (NULL      ).as(inFile              ) ] :Optional  :InputCTFInformation
+    [-I2[nput]           In2                 (NULL      ).as(inFile              ) ] :Optional  :InputCTFInformation2
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-t[ruePitch]        truePitch           (430.0     ).as(Real                ) ] :Essential :truePitch[A]
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+----- CTFInformation file 1 -----
+RR0 F0 PHI0   : If R.lt.RR0, F0=0; If RR0.le.R.lt.RR1, Linear Interpolation F0, F1
+RR1 F1 PHI1   : If RR1.le.R <RR2,
+.................................................
+RRn Fn PHIn   : If RRn<= R     , F*0     PHI = 0
+----- Control File -----
+In[inFile:NULL]				#InputDataFile
+In1[inFile:NULL]				#InputCTFInformation
+Out[outFile:NULL]				#OutputDataFile
+truePitch[Real:100.0]				#truePitch[A]
+mode[Integer:0]				#Mode
+----- CTFInformation file 2 -----
+dF[A] Cs[mm] Acc[kV] ratioOfAmpToPhase
+----- How to make file 1 or file 2 -----
+llExtractCtfinfFileCreate make these files.
+</PRE>
+</BODY>
+</HTML>

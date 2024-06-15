@@ -1,0 +1,4 @@
+OBJECTNAME = mrcImageStandardDeviation
+EXTRA_LIB  =
+EXTRA_CCOPTS =
+EXTRA_INC =

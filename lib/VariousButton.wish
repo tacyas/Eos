@@ -1,0 +1,80 @@
+#
+#  CheckButtonsCreateWithPack
+#		frameName 
+#       pack              # how to pack : top bottom left right
+#       args              # Check Buttons Variables  { varname text }
+#
+proc CheckButtonsCreateWithPack { frameName title pack args } {
+	set f [ frame $frameName -borderwidth 5 ]
+	label $f.title -text $title
+	pack $f.title -side $pack
+	set b 0
+	foreach item $args {
+		set text [ lindex $item 1]
+		set var  [ lindex $item 0]
+		#puts "$var with $text"
+		checkbutton $f.$b -text $text  -variable $var 
+		pack $f.$b -side $pack
+		incr b
+	}
+}
+
+#
+# RadioButtonsCreateWithPack
+# frameName
+# pack    # how to pack : top botom left right
+# varname # Variable name 
+# args    # Radio Buttons choice
+proc RadioButtonsCreateWithPack { frameName title pack varName args } {
+	set f [ frame $frameName -borderwidth 5 ]
+	label $f.title -text $title
+	pack $f.title -side $pack
+	set b 0
+	foreach item $args {
+		radiobutton $f.$b -variable $varName -text $item -value $item
+		pack $f.$b -side $pack
+		incr b	
+	}
+}
+
+#
+#
+#
+proc RadioButtonsCreateWithPackWithCommand { frameName title cmd pack varName args } {
+	set f [ frame $frameName -borderwidth 5 ]
+	label $f.title -text $title
+	pack $f.title -side $pack
+	set b 0
+	foreach item $args {
+		radiobutton $f.$b -variable $varName -text $item -value $item -command $cmd
+		pack $f.$b -side $pack
+		incr b	
+	}
+}
+
+#
+#
+#
+#
+proc RadioButtonsCreate { f varname args } { 
+	set b 0
+	foreach item $args {
+		radiobutton $f.$b -variable $varname  -text $item -value $item
+		pack $f.$b -side left
+		incr b
+	}
+}
+
+#
+#
+#
+#
+proc CheckButtonsCreate { f args } {
+	set b 0
+	foreach item $args {
+		checkbutton $f.$b -text $item -variable $item 
+		pack $f.$b -side left
+		incr b
+	}
+}
+

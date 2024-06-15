@@ -1,0 +1,5 @@
+OBJECTNAME = molvieMrcViewer
+#EXTRA_LIB  = $(LIBGL) -lasound
+EXTRA_LIB  = $(LIBGL)
+EXTRA_CCOPTS =
+EXTRA_INC =

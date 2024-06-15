@@ -1,0 +1,107 @@
+# %M% %Y% %I%
+# The latest update : %G% at %U%
+#
+#%Z% Display2Image.wish ver %I%
+#%Z% Created by 
+#%Z%
+#%Z% Usage : Display2Image.wish
+#%Z% Attention
+#%Z%
+
+proc fileOpen { fileName { mode 0 } } {
+#	set currentDir [ pwd ]
+#	puts $currentDir
+	wm title     . [file tail $fileName]
+	mainImagePut     .main_canvas     $fileName $mode
+	overviewImagePut .overview_canvas $fileName $mode
+}
+
+proc mainImagePut { c fileName { mode 0 } } {
+	global mainImage
+	global Roi
+
+	if {$mainImage(image) == "No"} {
+		# No Image
+	} else {
+		# One Image Exists 
+		image delete $mainImage(image)
+		image delete $mainImage(backimage)
+	}
+	if {$mainImage(thresHigh) == "No"} {
+		# No Setting
+	} else {
+		mrcInfoSet max $mainImage(thresHigh)
+	}
+	if {$mainImage(thresLow) == "No"} {
+		# No Setting
+	} else {
+		mrcInfoSet min $mainImage(thresLow)
+	}
+
+	if {$mainImage(Inverse) == "Yes" } {
+		mrcInfoSet inverse 1
+	} else {
+		mrcInfoSet inverse 0 
+	}
+	if { $mainImage(flagLog) == 1 } {
+		mrcInfoSet log 	
+	} else {
+		mrcInfoSet mag 	
+	}
+	set mainImage(filename) $fileName
+	set mainImage(image)  [ image create photo -file $fileName -format MRC -height 0 -width 0 -palette 8 ]
+	set mainImage(height) [ mrcInfoGet $fileName Ny ]
+	set mainImage(width)  [ mrcInfoGet $fileName Nx ]
+	set mainImage(nz)     [ mrcInfoGet $fileName Nz ]
+	set mainImage(mode)   [ mrcInfoGet $fileName Mode]
+	set mainImage(lx) 	  [ mrcInfoGet $fileName Lengthx ]
+	if { $mainImage(lx) == 0 } {
+		set mainImage(lx)  -1
+	}
+	set mainImage(ly)     [ mrcInfoGet $fileName Lengthy ]
+	if { $mainImage(ly) == 0 } {
+		set mainImage(ly)  -1
+	}
+	set mainImage(lz)     [ mrcInfoGet $fileName Lengthz ]
+	if { $mainImage(lz) == 0 } {
+		set mainImage(lz)  -1
+	}
+	set mainImage(z)      [ mrcInfoGet $fileName z  ]
+	set mainImage(min)    [ mrcInfoGet $fileName Min ]
+	set mainImage(max)    [ mrcInfoGet $fileName Max ]
+	set mainImage(mean)   [ mrcInfoGet $fileName Mean ]
+	set mainImage(region) [list 0 0 [expr $mainImage(width) ] [expr $mainImage(height) ] ]
+	$c.canvas configure -scrollregion $mainImage(region)
+	$c.canvas create image 0 0 -image $mainImage(image) -anchor nw
+
+	set mainImage(backimage) [image create photo -palette 8 ]
+	$mainImage(backimage) copy $mainImage(image) -from 0 0 $mainImage(width) $mainImage(height) -to 0 0 $mainImage(width) $mainImage(height) 
+
+	if { $Roi(Zoom) != 1 || $Roi(ZoomX) != 1 || $Roi(ZoomY) != 1} {
+		roiAreaZoom $c.canvas
+	}
+	set mainImage(canvas) $c.canvas
+}
+
+proc overviewImagePut { c fileName { mode 0 } }  {
+	global mainImage 
+	global overviewImage
+	global Desktop
+
+	if {$overviewImage(image) == "No"} {
+	} else {
+		image delete $overviewImage(image)
+	}
+	set stepx [ expr $mainImage(width)/$Desktop(overviewCanvasX)]
+	set stepy [ expr $mainImage(height)/$Desktop(overviewCanvasY)]
+	if {$stepx > $stepy } { 
+		set step $stepx 
+	} else { 
+		set step $stepy 
+	} 
+	set overviewImage(image) [ image create photo -palette 8 ]
+	$overviewImage(image) copy $mainImage(image) -from 0 0 $mainImage(width) $mainImage(height) -to 0 0 [expr $Desktop(overviewCanvasX) - 1 ] [expr $Desktop(overviewCanvasY) - 1] -subsample $step
+	$c.canvas create image 0 0 -image $overviewImage(image) -anchor nw
+	set overviewImage(canvas) $c.canvas
+}
+

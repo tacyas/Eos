@@ -1,0 +1,14 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input:MRC","Essential","1","1","In","inFile","NULL"
+"-ip","-ip[db]","Input:PDB","Essential","1","1","InPDB","inFile","NULL"
+"-o","-o[utput]","Output: PDB with Constant Force","Optional","1","1","Out","outFile","stdout"
+"-w","-w[eight]","Input: Weight for Constant Force","Optional","1","1","Weight","Real","1.0"
+"-s","-s[calingFactor]","Input: Scaling Factor for Constant Force","Optional","1","1","ScalingFactor","Real","1.0"
+"-C","-C[ontour]","Input: Contour[if density>Contour, force=0]","Optional","1","1","Contour","Real","0.0"
+"-R","-R[otatemode]","Input: RotateMode","Optional","1","1","Rotate","Integer","0"
+"-RW","-RW[eight]","Input: RotateWeight","Optional","1","1","RWeight","Real","0.1"
+"-S","-S[eed]","Input: Seed","Optional","1","1","Seed","Real","0.0"
+"-nowat","-nowat[er]","No force for WAT (water residue) ","Optional","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

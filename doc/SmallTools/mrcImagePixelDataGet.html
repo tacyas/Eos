@@ -1,0 +1,27 @@
+<HTML>
+<HEAD>
+<TITLE>mrcImagePixelDataGet</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImagePixelDataGet</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImagePixelDataGet
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile::mrcImage    ) ] :Essential :Input: mrcImage
+    [-o[utput]           Out                 (stdout    ).as(outFile::ASCII      ) ] :Optional  :OutputDataFile
+    [-x                  x                   (0.0       ).as(Real                ) ] :Optional  :Input: x
+    [-y                  y                   (0.0       ).as(Real                ) ] :Optional  :Input: y
+    [-z                  z                   (0.0       ).as(Real                ) ] :Optional  :Input: z
+    [-In[put]            InCoord             (stdin     ).as(inFile::ASCII       ) ] :Optional  :Input:eosPoint
+    [-cuda               cudaDeviceID        (0         ).as(Integer             ) ] :Optional  :cudaDeviceID
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-o[utput]m[ode]     outMode             (0         ).as(Integer             ) ] :Optional  :Mode:Output
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode:Interpolation
+----- Additional Usage -----
+-m InterpolationMode ; refer to mrcImageROI 
+-om outputMode
+ +1 : with coordinates
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,128 @@
+#include "./eosInteractorMyStyle.hh"
+#include "./eosStereoModeOn.hh"
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+eosStereoModeOn::eosStereoModeOn(){
+  this->init();
+}
+
+void eosStereoModeOn::init0() {
+  renWinStereo = vtkRenderWindow::New();
+  irenStereo   = vtkRenderWindowInteractor::New();
+  irenStereo->SetRenderWindow(renWinStereo);
+  renWinStereo->SetWindowName("StereoWindow(cross eye mode)");
+  renWinStereo->SetSize(600,300);
+
+  camLeft =vtkCamera::New();
+  camRight=vtkCamera::New();
+
+  renLeft =vtkRenderer::New();
+  renRight=vtkRenderer::New();
+
+  renLeft->SetViewport(0,0,0.5,1.0);
+  renLeft->SetActiveCamera(camRight);
+
+  renRight->SetViewport(0.5,0,1.0,1.0);
+  renRight->SetActiveCamera(camLeft);
+
+  renWinStereo->AddRenderer(renLeft);
+  renWinStereo->AddRenderer(renRight);
+
+  //renWinStereo->SetStereoType(5);
+}
+
+void eosStereoModeOn::init(){
+  init0();
+  myiStereo = eosInteractorMyStyle::New();
+  irenStereo->SetInteractorStyle(myiStereo);
+}
+
+eosStereoModeOn::~eosStereoModeOn(){
+  this->camLeft->Delete();
+  this->camRight->Delete();
+  this->renLeft->Delete();
+  this->renRight->Delete();
+  //this->myiStereo->Delete();
+  XDestroyWindow((Display*)irenStereo->GetRenderWindow()->GetGenericDisplayId(), 
+                 (Window)irenStereo->GetRenderWindow()->GetGenericWindowId());
+				 
+  XFlush((Display*)irenStereo->GetRenderWindow()->GetGenericDisplayId());
+
+  this->irenStereo->Delete();
+  //this->renWinStereo->Delete();
+  
+}
+
+eosStereoModeOn *eosStereoModeOn::New()
+{
+  return new eosStereoModeOn;
+}
+
+void eosStereoModeOn::SetFromMainWindow(vtkRenderWindow* renwin) {
+    renWin = renwin;
+    ren = (vtkRenderer*)renWin->GetRenderers()->GetItemAsObject(0);
+
+    /***** set up cameras *****/
+    cam = ren->GetActiveCamera();
+    camRight->SetFocalPoint(cam->GetFocalPoint());
+    camRight->SetPosition(cam->GetPosition());
+    camRight->SetEyeAngle(cam->GetEyeAngle());
+    camLeft->SetFocalPoint(cam->GetFocalPoint());
+    camLeft->SetPosition(cam->GetPosition());
+    camLeft->SetEyeAngle(cam->GetEyeAngle());
+
+    /***** set up Renderers *****/
+    renLeft->AddLight((vtkLight*)ren->GetLights()->GetItemAsObject(0));
+    renLeft->AddActor((vtkActor*)ren->GetActors()->GetItemAsObject(0));
+    
+    renRight->AddLight((vtkLight*)ren->GetLights()->GetItemAsObject(0));
+    renRight->AddActor((vtkActor*)ren->GetActors()->GetItemAsObject(0));
+
+    /***** create and set up StereoRenderWindow *****/
+  
+    /***** set up StereoInteractor *****/
+
+    /***** call myInteractor *****/
+    //myiStereo->SetStereoWindow();
+
+}
+
+
+vtkRenderer* eosStereoModeOn::GetRendererRight(void)
+{
+  return(this->renRight);
+}
+vtkRenderer* eosStereoModeOn::GetRendererLeft(void)
+{
+  return(this->renLeft);
+}
+vtkRenderWindowInteractor* eosStereoModeOn::GetStereoWindowInteractor(void)
+{
+  return(this->irenStereo);
+}
+
+vtkRenderWindow* eosStereoModeOn::GetStereoWindow(void)
+{
+  return(this->renWinStereo);
+}
+
+vtkCamera* eosStereoModeOn::GetCameraRight(void)
+{
+  return(this->camRight);
+}
+
+vtkCamera* eosStereoModeOn::GetCameraLeft(void)
+{
+  return(this->camLeft);
+}
+
+void eosStereoModeOn::ShowWindow(void)
+{
+  this->irenStereo->Render();
+}
+
+void
+additionalUsage()
+{
+	fprintf(stderr, "----- Additional Usage -----\n");
+}

@@ -1,0 +1,14 @@
+
+proc NotSupportedCommand { } {
+	puts stderr "Not supported command"
+}
+
+proc debugPrint { s } {
+	global debugMode  
+
+	if { $debugMode == 1} {
+		puts stderr $s; flush stderr
+	} else {
+
+	}
+}

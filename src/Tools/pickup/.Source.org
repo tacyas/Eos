@@ -1,0 +1,4 @@
+SOURCE=\
+mrcImageNeuralNetParticleExtraction \
+mrcImageNeuralNetParticleLearning \
+#LastSource

@@ -1,0 +1,11 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: MRC","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","Output: MRC","Essential","1","1","Out","outFile","NULL"
+"-oSE","-o[utput]SE","Output: MRC(SE)","Optional","1","1","OutSE","outFile","NULL"
+"-SE","-S[tructuring]E[lement]","StructuringElement","Optional","1","1","SEmode","Integer","0"
+"-r","-r[adius]","Radius","Optional","1","1","radius","Integer","2"
+"-n","-n","size","Optional","1","1","n","Integer","5"
+"-times","-time","times","Optional","1","1","times","Integer","1"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

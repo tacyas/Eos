@@ -1,0 +1,267 @@
+#!/usr/local/bin/wish -f
+proc fileSelect {{why "File Selection"}
+				 {default {}} {mustExist 1}} {
+	global fileSelect
+
+	set fileSelect(curDir) [ pwd ]
+	set t [ toplevel .fileSelect -bd 4 -class FileSelect ]
+	fileSelectResources
+
+	# Title 
+	message $t.msg -aspect 1000 -text $why
+	pack $t.msg -side top -fill x
+
+	# Create a read-only entry for the current directory
+	set fileSelect(dirEntry) [ entry $t.dir -width 15 -relief flat -state disabled ]
+	pack $t.dir -side top -fill x
+
+	# Create an entry for the pathname
+	# The value is kept in fileSelect(path)
+	frame $t.top
+	set e [entry $t.top.path -textvariable fileSelect(path)]
+	pack $t.top -side top -fill x
+
+	# The label on the entry is defined with an X resource 
+	label $t.top.l -padx 0
+	pack $t.top.l -side left
+	pack $t.top.path -side right -fill x -expand true
+
+	# Create a list box to hold the directory contents
+	set lb [ listbox $t.list -yscrollcommand [ list $t.scroll set ] ]
+	scrollbar $t.scroll -command [ list $lb yview ]
+
+	# Create the OK and Cancel buttons
+	# The bottun text is defined with an X resource
+	# The OK button has a rim to indicate it is the default
+	frame $t.buttons -bd 10
+	frame $t.buttons.ok -bd 2 -relief sunken
+	set ok     [ button $t.buttons.ok.b   -command fileSelectOK ]
+	set cancel [ button $t.buttons.cancel -command fileSelectCancel ]
+
+	# pack the list, scrollbar, and button box
+	# in a horizontal stack below the upper widgets
+	pack $t.list    -side left -fill both -expand true
+	pack $t.scroll  -side left -fill y  
+	pack $t.buttons -side left -fill both
+	pack $t.buttons.ok $t.buttons.cancel -side top -padx 10 -pady 5
+	pack $t.buttons.ok.b -padx 4 -pady 4
+
+	fileSelectBindings $t $e $lb $ok $cancel
+
+	# Initialize variables and List the directory
+	if { [ string length $default] == 0 } {
+		set fileSelect(path) {}
+		set dir [ pwd ]
+	} else {
+		set fileSelect(path) [ file tail $default ]
+		set dir [ file dirname $default ]
+	}
+	set fileSelect(dir) {}
+	set fileSelect(done) 0
+	set fileSelect(mustExist) $mustExist
+
+	# Wait for the listbox to be visible so 
+	# we can provide feedback during the listing
+	tkwait visibility .fileSelect.list
+	fileSelectList $dir
+
+	tkwait variable fileSelect(done)
+	destroy $t
+	return [ relativePathGet $fileSelect(curDir) $fileSelect(path) ]
+}
+
+proc fileSelectResources {} {
+	option add *FileSelect*path.relief          sunken startup
+	option add *FileSelect*path.background      white startup
+	option add *FileSelect*path.foreground      black startup
+
+	option add *FileSelect*l.text               File: startup
+	option add *FileSelect*ok*text              OK    startup
+	option add *FileSelect*ok*underline         0     startup
+	option add *FileSelect*cancel.text       Cancel startup
+	option add *FileSelect*cancel.underline  0      startup
+
+	option add *FileSelect*list.width        20      startup
+	option add *FileSelect*list.height       10      startup
+
+}
+
+proc fileSelectBindings { t e lb ok can } {
+	# t   - toplevel
+	# e   - name entry
+	# lb  - listbox
+	# ok  - OK button
+	# can - Cancel button
+	foreach w [ list $e $lb $ok $can ] {
+		bindtags $w [list $t [winfo class $w] $w]
+	}
+	bind $t <Control-c> fileSelectCancel
+
+	bind $e <Return> fileSelectOK
+	bind $e <space> fileSelectComplete
+
+	bind $lb <space>           "fileSelectTake %W; focus $e"
+	bind $lb <Button-1>        "fileSelectClick %W %y ;  focus $e"
+	bind $lb <Return>          "fileSelectTake %W; fileSelectOK"
+	bind $lb <Double-Button-1> "fileSelectClick %W %y; fileSelectOK"
+
+	bind $e <Tab>  "focus $lb; $lb select set 0"
+	bind $lb <Tab> "focus $e"
+
+	foreach but [list $ok $can] {
+		set char [string tolower [ string index [$but cget -text] [$but cget -underline]]]
+		bind $t <Alt-$char> "focus $but; break"
+	}
+	bind $ok <Tab>  "focus $can"
+	bind $can <Tab> "focus $ok"
+
+	focus $e
+}
+
+proc fileSelectList { dir {files {}}} {
+	global fileSelect
+
+	set fileSelect(dir) $dir
+	set e $fileSelect(dirEntry)
+	$e config -state normal
+	$e delete 0 end
+	$e insert 0 $dir
+	$e config -state disabled
+
+	$e xview moveto 1
+
+	.fileSelect.list delete 0 end
+	if ![file isdirectory $dir] {
+		.fileSelect.list insert 0 "Bad Directory"
+		return
+	}
+	.fileSelect.list insert 0 Listing...
+	update idletasks
+
+	.fileSelect.list delete 0
+	if {[string length $files] == 0} {
+		set files [glob -nocomplain $fileSelect(dir)/* ]
+		.fileSelect.list insert end ../
+	}
+
+	set dirs {}
+	set others {}
+	foreach f [lsort $files] {
+		if [file isdirectory $f] {
+			lappend dirs [file tail $f]/
+		} else {
+			lappend others [file tail $f]
+		}
+	}
+	foreach f [concat $dirs $others] {
+		.fileSelect.list insert end $f
+	}
+}
+
+proc fileSelectOK {} {
+	global fileSelect
+
+	# Trim ../ (the parent) out of the pathname
+	if { [ regsub {^\.\.\/?} $fileSelect(path) {} newpath ] != 0 } {
+		set fileSelect(path) $newpath
+		set fileSelect(dir) [ file dirname $fileSelect(dir)]
+		fileSelectOK
+		return
+	}
+	set path [string trimright $fileSelect(dir)/$fileSelect(path) /]
+	if [file isdirectory $path] {
+		set fileSelect(path) {}
+		fileSelectList $path
+		return
+	}
+	if [file exists $path] {
+		set fileSelect(path) $path
+		set fileSelect(done) 1
+		return
+	}
+	# Neither a file or a directory.
+	# See if glob will find something
+	if [catch {glob $path} files] {
+		if [catch {glob $fileSelect(path)} path] {
+			fileSelectComplete
+			return
+		} else {
+			set fileSelect(dir) [file dirname $fileSelect(path)]
+			set fileSelect(path) [file tail $fileSelect(path)]
+			fileSelectOK
+			return
+		}
+	} else {
+		if {[llength [split $files]] == 1} {
+			set fileSelect(path) $files
+			fileSelectOK
+		} else {
+			set fileSelect(dir) [file dirname [lindex $files 0]]
+			fileSelectList $fileSelect(dir) $files
+		}
+	}
+}
+
+proc fileSelectCancel {} {
+	global fileSelect
+	set fileSelect(done) 1
+	set fileSelect(path) {}
+}
+
+proc fileSelectClick { lb y } {
+	global fileSelect
+	set fileSelect(path) [$lb get [ $lb nearest $y ] ]
+}
+
+proc fileSelectTake { lb } {
+	global fileSelect
+	set fileSelect(path) [$lb get [$lb curSelection]]
+}
+
+proc fileSelectComplete {} {
+	global fileSelect
+
+	set fileSelect(path) [ string trim $fileSelect(path) \t\ ]
+
+	if { [string match /* $fileSelect(path) ]} {
+		set dir [file dirname $fileSelect(path)]
+		set tail [file tail $fileSelect(path)]
+	} elseif [string match ~* %fileSelect(path)] {
+		if [ catch {file dirname $fileSelect(path)} dir ] {
+			return ; # Bad User
+		}
+		set tail [ file tail $fileSelect(path) ]
+	} else {
+		set path $fileSelect(dir)/$fileSelect(path)
+		set dir  [file dirname $path]
+		set tail [file tail $path]
+	}
+	set files [glob -nocomplain $dir/$tail*]
+	if { [llength [ split $files]] == 1} {
+		set fileSelect(dir) $dir
+		set fileSelect(path) [file tail $files]
+	} else {
+		if {[llength [split $files]] == 1} {
+			set l [expr [string length $tail]-1]
+			set miss 0
+			set file1 [file tail [lindex $files 0]]
+			while { $miss == 0 } {
+				incr l
+				if {$l == [string length $file1]} {
+					break
+				}
+				set new [string range $file1 0 $l]
+				foreach f $files {
+					if ![string match $new* [file tail $f]] {
+						set miss 1
+						incr l -1
+						break
+					}
+				}
+			}
+			set fileSelect(path) [string range $file1 0 $l]
+		}
+		fileSelectList $dir $files
+	}
+}
+

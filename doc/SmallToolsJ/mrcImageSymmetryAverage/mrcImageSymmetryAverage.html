@@ -1,0 +1,152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageSymmetryAverage</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageSymmetryAverage<br></h2></b></font>
+	<h4>対称性平均画像</h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+		<table border="1">
+			<div align="left">
+				<tr>
+					<th>オプション</th>
+					<th>必須項目/選択項目</th>
+					<th>説明</th>
+					<th>デフォルト</th>
+				</tr>
+				<tr>
+					<td>-i</td>
+					<td>必須</td>
+					<td>入力ファイル設定</td>
+					<td>NULL</td>
+				</tr>
+				<tr>
+					<td>-o</td>
+					<td>必須</td>
+					<td>出力ファイル設定</td>
+					<td>NULL</td>
+				</tr>
+				<tr>
+					<td>-n</td>
+					<td>選択</td>
+					<td>何対象かを設定</td>
+					<td>8</td>
+				</tr>
+				<tr>
+					<td>-centre</td>
+					<td>選択</td>
+					<td>中心を設定</td>
+					<td>cx=0 cy=0 cz=0</td>
+				</tr>
+				<tr>
+					<td>-h</td>
+					<td>選択</td>
+					<td>ヘルプを表示</td>
+					<td>　</td>
+				</tr>
+			</div>
+		</table>
+
+
+	<br>	
+	<h4>******実行例******</h4>
+
+<!-- 入力ファイル説明 -->
+
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="b120-2.png" border="0" alt="b120-2.png(6742 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-65.0178<br>
+				94.4699<br>
+				4.85274<br>
+				20.4635<br>
+				0.255794<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>
+
+<!-- 実行結果 -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション必須項目のみで実行------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="outdata.png" border="0" alt="outdata.png(6634 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-173.755<br>
+				492.344<br>
+				37.8802<br>
+				99.6392<br>
+				1.24549<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-centre------</font></caption><br>
+	<div>centre=30 30 0で実行</div>
+	<table>
+		<tr>
+			<td><img src="outdata-centre.png" border="0" alt="outdata-centre.png(6913 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-145.926<br>
+				281.264<br>
+				41.4427<br>
+				66.8397<br>
+				0.835496<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-n------</font></caption><br>
+	<div>n=2で実行</div>
+	<table>
+		<tr>
+			<td><img src="outdata-n2.png" border="0" alt="outdata-n2.png(6727 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-89.1051<br>
+				152.327<br>
+				9.70548<br>
+				32.2746<br>
+				0.403432<br></p>
+			</td>
+		</tr>
+	</table>
+
+
+</body>
+</html>

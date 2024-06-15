@@ -1,0 +1,12 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-x","-x","Move X[A]","Optional","1","1","X","Real","0.0"
+"-y","-y","Move Y[A]","Optional","1","1","Y","Real","0.0"
+"-z","-z","Move Z[A]","Optional","1","1","Z","Real","0.0"
+"-originTo","-originTo","move (0,0,0) to (X,Y,Z)","Optional","3","1","toX","Real","0.0","2","toY","Real","0.0","3","toZ","Real","0.0"
+"-toOrigin","-toOrigin","move (X,Y,Z) to (0,0,0)","Optional","3","1","fromX","Real","0.0","2","fromY","Real","0.0","3","fromZ","Real","0.0"
+"-GCtoOrigin","-GCtoOrigin","GC(Gravity Centre) to origin","Optional","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

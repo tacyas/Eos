@@ -1,0 +1,26 @@
+-F 4.3 1 0 52x1+0+0 +0+0 'Cantata' cantata
+  -M 1 1 52x1+0+0 +1+0 ' ' subform
+    -P 1 0 52x1+0+1 +0+0 ' ' mrcImageSinogramCorrelation
+      -D 1 0 9x1+0+0 'Options' _gui_options
+        -H 1  6x1+0+0 'License' 'license' $BOOTSTRAP/repos/license/License license
+        -E
+        -R 1 0 1 5x1+35+0 'Run' 'execute operation' $EOS/bin/mrcImageSinogramCorrelation
+        -H 1  5x1+41+0 'Help' 'help page' $EOS/src/Tools/mrcImage/mrcImageSinogramCorrelation/doc/mrcImageSinogramCorrelation.doc help
+        -Q 1 0 5.25x1+47+0 'Close'
+        -I 1 0 1 1 0 1 -1x1+1+1.500000 ' ' 'In' 'Input: in[sinogram: mrc]' i
+        -I 1 0 1 1 0 1 -1x1+1+3.000000 ' ' 'Ref' 'Input: ref[sinogram: mrc]' r
+        -O 1 0 1 1 0 1 -1x1+1+4.500000 ' ' 'Out' 'OutputDataFile' o
+        -I  1 0 0 1 0 1 -1x1+1+6 ' ' '1.0' 'w0th' Weigth for Mode: 1
+        -f 1 0 1 0 0 -1x1+1+7.500000 0 0 0.000000 0 0 0 'threshold' 'threshold for Mode: 2' T
+        -i 1 0 1 0 0 -1x1+1+9.000000 0 0 0 0 0 'corMode' 'Mode: for Correlation' M
+        -i 1 0 1 0 0 -1x1+1+10.500000 0 0 0 0 0 'LengthMode' 'Length Mode: for LengthCorrelation' LM
+        -i 1 0 1 0 0 -1x1+1+12.000000 0 0 0 0 0 'LengthThresholdMode' 'Length Threshold Mode: for LengthCorrelation' LTM
+        -f 1 0 1 0 0 -1x1+1+13.500000 0 0 1.000000 0 0 0 'LengthThresholdRatio' 'ratio of threshold for LenthMode: 1' LTR
+        -i 1 0 1 0 0 -1x1+1+15.000000 0 0 0 0 0 'LCMode' 'Mode: for LengthCorrelationMode' LCM
+        -f 1 0 1 0 0 -1x1+1+16.500000 0 0 0.000000 0 0 0 'LengthCorrelationThreshold' 'threshold for LengthCorrelation' LCT
+        -f 1 0 1 0 0 -1x1+1+18.000000 0 0 1.000000 0 0 0 'weightLength' 'Weight for LengthCorrelation' wL
+        -I 1 0 1 0 0 1 -1x1+1+19.500000 ' ' 'configFile' 'ConfigurationFile' c
+        -i 1 0 1 0 0 -1x1+1+21.000000 0 0 0 0 0 'mode' 'Mode' m
+    -E
+  -E
+-E

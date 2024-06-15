@@ -1,0 +1,7 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: mrcImage","Essential","1","1","In","inFile::mrcImage","NULL"
+"-o","-o[utput]","Output: ASCII","Optional","1","1","Out","outFile::ASCII","stdout"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","1"
+"-C","-C[ontour]","Contour","Variable","1","1","Contour","Real","1.0"

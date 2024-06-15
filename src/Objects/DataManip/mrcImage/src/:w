@@ -1,0 +1,100 @@
+/*
+# %M% %Y% %I%
+# The latest update : %G% at %U%
+#
+#%Z% lmrcImageCrystalCreate ver %I%
+#%Z% Created by 
+#%Z%
+#%Z% Usage : lmrcImageCrystalCreate 
+#%Z% Attention
+#%Z%
+*/
+#define DEBUG
+#include "genUtil.h"
+#include "lmrcImageCrystalCreate.h"
+
+
+void 
+lmrcImageCrystalCreate(mrcImage* out, mrcImage* in, lmrcImageCrystalCreateInfo* info)
+{
+	mrcImageParaTypeReal x, y, z;
+	mrcImageParaTypeReal orgx, orgy, orgz;
+	mrcImageParaTypeReal realx, realy, realz;
+	mrcImageParaTypeReal ix, iy, iz;
+	mrcImageParaTypeReal da, db, dc;
+	mrcImageParaTypeReal orgda, orgdb, orgdc;
+	mrcImageParaTypeReal La, Lb, Lc;
+  int flagInCrystal;
+	double data;
+
+  DEBUGPRINT("start lmrcImageCrystalCreate\n");
+	out->Header = in->Header;
+  /*
+	out->HeaderN.x *= info->nx;
+	out->HeaderN.y *= info->ny;
+	out->HeaderN.z *= info->nz;
+  */
+  DEBUGPRINT3("A: %f %f %f\n", info->ax, info->ay, info->az);
+  DEBUGPRINT3("B: %f %f %f\n", info->bx, info->by, info->bz);
+  DEBUGPRINT3("C: %f %f %f\n", info->cx, info->cy, info->cz);
+  DEBUGPRINT3("N: %ld %ld %ld\n", info->nx, info->ny, info->nz);
+  out->HeaderN.x = (int)((info->nx*info->ax + info->ny*info->bx + info->nz*info->cx)/out->HeaderLength.x+0.5);  
+  out->HeaderN.y = (int)((info->nx*info->ay + info->ny*info->by + info->nz*info->cy)/out->HeaderLength.y+0.5);  
+  out->HeaderN.z = (int)((info->nx*info->az + info->ny*info->bz + info->nz*info->cz)/out->HeaderLength.z+0.5);  
+  DEBUGPRINT3("inN: %d %d %d\n", in->HeaderN.x, in->HeaderN.y, in->HeaderN.z);
+  DEBUGPRINT3("outN: %d %d %d\n", out->HeaderN.x, out->HeaderN.y, out->HeaderN.z);
+
+	mrcInit(out, NULL);
+
+  La = SQR(info->ax) + SQR(info->ay) + SQR(info->az); if(0<La) { La = sqrt(La); } else { La = 0;} 
+  Lb = SQR(info->bx) + SQR(info->by) + SQR(info->bz); if(0<Lb) { Lb = sqrt(Lb); } else { Lb = 0;} 
+  Lc = SQR(info->cx) + SQR(info->cy) + SQR(info->cz); if(0<Lc) { Lc = sqrt(Lc); } else { Lc = 0;} 
+
+  DEBUGPRINT3("L: %f %f %f\n", La, Lb, Lc);
+
+	for(z=0; z<out->HeaderN.z; z++) {
+	for(y=0; y<out->HeaderN.y; y++) {
+	for(x=0; x<out->HeaderN.x; x++) {
+    realx = (x+in->HeaderStartN.x)*in->HeaderLength.x - info->sx;
+    realy = (y+in->HeaderStartN.y)*in->HeaderLength.y - info->sy;
+    realz = (z+in->HeaderStartN.z)*in->HeaderLength.z - info->sz;
+    da = (realx*info->ax + realy*info->ay + realz*info->az)/La;
+    db = (realx*info->bx + realy*info->by + realz*info->bz)/Lb;
+    dc = (realx*info->cx + realy*info->cy + realz*info->cz)/Lc;
+    //DEBUGPRINT3("d: %f %f %f\n", da, db, dc);
+    DEBUGPRINT6("d: %f %f %f at %f %f %f\n", da, db, dc, realx, realy, realz);
+    if(0<=da && da<=info->nx 
+     &&0<=db && db<=info->ny
+     &&0<=dc && dc<=info->nz) {
+      flagInCrystal = 1;
+    } else {
+      flagInCrystal = 0;
+    }
+    if(flagInCrystal) { // in cyrstal
+        orgda = da - (int)da;
+        orgdb = db - (int)db;
+        orgdc = dc - (int)dc;
+
+        orgx = (orgda*info->ax + orgdb*info->bx + orgdc*info->cx)/in->HeaderLength.x - in->HeaderStartN.x;  
+        orgy = (orgda*info->ay + orgdb*info->by + orgdc*info->cy)/in->HeaderLength.y - in->HeaderStartN.y;  
+        orgz = (orgda*info->az + orgdb*info->bz + orgdc*info->cz)/in->HeaderLength.z - in->HeaderStartN.z;  
+
+				mrcPixelDataGet(in,  orgx, orgy, orgz, &data, mrcPixelRePart, info->pixelMode);
+				mrcPixelDataSet(out,    x,    y,    z,  data, mrcPixelRePart);
+        /*
+				for(ix=0; ix<info->nx; ix++) {
+				for(iy=0; iy<info->ny; iy++) {
+				for(iz=0; iz<info->nz; iz++) {
+					mrcPixelDataSet(out, ix*in->HeaderN.x+x, 
+												 iy*in->HeaderN.y+y, 
+												 iz*in->HeaderN.z+z,
+												 data, mrcPixelRePart);
+				}
+	      }
+	      }
+        */
+    }
+	}
+	}
+	}
+}

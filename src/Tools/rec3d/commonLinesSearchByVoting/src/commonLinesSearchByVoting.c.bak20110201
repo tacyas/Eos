@@ -1,0 +1,887 @@
+/*
+# commonLinesSearchByVoting  
+# 2011/01/20
+# Created by Takamasa ARAKAWA
+# Usage : commonLinesSearchByVoting
+#
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <bits/nan.h>
+#include <time.h>
+#include <ctype.h>
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+
+#define DEBUG
+#include "genUtil.h"
+#include "mrcImage.h"
+//#include "rec3d.h"
+
+
+#define	NEAR	5		/* コモンライン候補の位置の調整 */
+#define	L	360		/* angle resolution */
+#define T	(180 / 2)	/* Define T equally spaced angles between 0° and 180°: a_t = 180t/T, t=0,...,T-1 */
+
+typedef struct CLine {
+	int 	deg;		/* angular degree of common line on projection image */
+	double	cor;		/* correlation value of projection image 1 and 2 */
+	char	*fname;		/* file name of correlation map of image 1 and 2 */
+	double	peak;		/* peak of angular histgram */
+	int	qualify;	/* qualification of correctly detected common line */
+	int	vote;		// 2011/02/11 17:47 投票アルゴリズムの拡張
+} CLine;
+
+// test
+CLine ***C, **cC;
+long cnt = 0, cnt_all = 0;
+
+
+int
+get_pnum(FILE *fpt)
+{
+	/* get number of projection */
+
+	char line[1024], *tp;
+	int temp = 0, num = 0;
+
+	fseek(fpt, 0L, SEEK_SET);
+	while (NULL != stringGetFromFile(line, "", fpt, stdout, 1)) {
+		tp = strtok(line, " \t");
+		tp = strtok(NULL, " \t");
+		if (tp != NULL) {
+			temp = atoi(tp);
+		}
+		num = (temp > num) ? temp : num;
+	}
+
+	return num + 1;
+}
+
+
+void
+correct_en(FILE *fpt, long *en)
+{
+	/* check number of estimation in this file */
+
+	char line[1024], *tp;
+	int max_en, count = 0;
+
+	fseek(fpt, 0L, SEEK_SET);
+	while (NULL != stringGetFromFile(line, "", fpt, stdout, 1)) {
+
+		if (!isdigit(line[0])) {
+			continue;
+		}
+
+		tp = strtok(line, " \t");
+		count = 1;
+
+		while ((tp = strtok(NULL, " \t")) != NULL) {
+			count++;
+		}
+
+		max_en = (count - 3) / 2;
+
+		break;
+	}
+
+	if (*en > (long)max_en) {
+		*en = (long)max_en;
+	}
+}
+
+
+
+void
+pickup_clines_from_cormap(mrcImage *cormap, CLine ***C, int p1, int p2, int en)
+{
+	/* detect common line from correlation map */
+
+	int i, j, k, l, min;
+	long store_flag, near_flag;
+	long first_flag;
+	double data, local_max_data;
+
+	/* initialization ("-1000" has no meaning) */
+	for (k = 0; k < en; k++) {
+		C[p1][p2][k].cor = -1000;
+		C[p1][p2][k].deg = -1000;
+		C[p2][p1][k].deg = -1000;
+	}
+
+	mrcFileRead(cormap, C[p1][p2][0].fname, "in pickup_clines_from_cormap", 0);
+
+//--------------------------------------------------
+/*
+	for (i = 0; i < L/2; i++) {
+	 for (j = 0; j < L; j++){
+
+		mrcPixelDataGet(cormap, i, j, 0, &data, mrcPixelRePart, mrcPixelHowNearest);
+
+		if (isnan(data)) {
+			continue;
+		}
+
+		/* common line is estimated by the number of en(estimation number) * /
+		store_flag = 0;
+		near_flag  = 0;
+		for (k = 0; k < en; k++) {
+			if (data + 1 > C[p1][p2][k].cor) {
+				store_flag = 1; 
+			}
+			if (abs(C[p1][p2][k].deg - i) >= NEAR || abs(C[p2][p1][k].deg - j) >= NEAR) {
+				near_flag++;
+			}
+		}
+		if (store_flag == 1 && near_flag == en) {
+			min = 0;
+			for (k = 1; k < en; k++) {
+				if (C[p1][p2][min].cor > C[p1][p2][k].cor) {
+					min = k;
+				}
+			}
+			C[p1][p2][min].deg = i;
+			C[p2][p1][min].deg = j;
+			C[p1][p2][min].cor = data + 1;
+		}
+	 }
+	}
+
+*/
+	for (i = 0; i < L/2; i+=NEAR) {
+	 for (j = 0; j < L; j+=NEAR){
+
+		first_flag = 1;
+		for (k = 0; k < NEAR && i+k < L/2; k++) {
+		 for (l = 0; l < NEAR && j+l < L; l++) {
+
+			mrcPixelDataGet(cormap, i+k, j+l, 0, &data, mrcPixelRePart, mrcPixelHowNearest);
+
+			if (isnan(data)) {
+				continue;
+			}
+
+			if (first_flag) {
+				local_max_data = data;
+				first_flag = 0;
+				continue;
+			}
+
+			if (data > local_max_data) {
+				local_max_data = data;
+			}
+		 }
+		}
+		data = local_max_data;
+
+		// common line is estimated by the number of en(estimation number)
+		store_flag = 0;
+		for (k = 0; k < en; k++) {
+			if (data + 1 > C[p1][p2][k].cor) {
+				store_flag = 1;
+				break; 
+			}
+		}
+		if (store_flag) {
+			min = 0;
+			for (k = 1; k < en; k++) {
+				if (C[p1][p2][min].cor > C[p1][p2][k].cor) {
+					min = k;
+				}
+			}
+			C[p1][p2][min].deg = i;
+			C[p2][p1][min].deg = j;
+			C[p1][p2][min].cor = data + 1;
+		}
+
+	 }
+	}
+
+//--------------------------------------------------
+
+	mrcImageFree(cormap, "in pickup_clines_from_cormap");
+}
+
+
+void
+read_clines_maps(FILE *fpt, CLine ***C, int pnum, int en) 
+{
+	char line[1024], *tp;
+	int p1, p2, count;
+	mrcImage cormap;
+
+	fprintf(stderr, "file reading.");
+
+	count = 0;
+	fseek(fpt, 0L, SEEK_SET);
+	while (NULL != stringGetFromFile(line, "", fpt, stdout, 1)) {
+
+		/* get projection number */
+		if ((tp = strtok(line, " \t")) != NULL) p1 = atoi(tp);
+		if ((tp = strtok(NULL, " \t")) != NULL) p2 = atoi(tp);
+		if ((tp = strtok(NULL, " \t")) != NULL) {
+			C[p1][p2][0].fname = (char*)memoryAllocate(sizeof(char)*(strlen(tp)+1), "");
+			strcpy(C[p1][p2][0].fname, tp);
+		} else {
+			fprintf(stderr, "ERROR! Map list format is incorrect!\n");
+			fprintf(stderr, "format: p1\tp2\t[deg1\tdeg2\tcor]\tmapname\n");
+			exit(EXIT_FAILURE);
+		}
+
+		/* read cormap, and pick up common lines */
+		pickup_clines_from_cormap(&cormap, C, p1, p2, en);
+
+		if (++count % 1000 == 0) {
+			fprintf(stderr, ".");
+		}
+	}
+}
+
+
+void
+read_clines_file(FILE *fpt, CLine ***C, int pnum, int en) 
+{
+	char line[1024], *tp;
+	int i;
+	int p1, p2;
+
+	fseek(fpt, 0L, SEEK_SET);
+	while (NULL != stringGetFromFile(line, "", fpt, stdout, 1)) {
+
+		if (!isdigit(line[0])) continue;
+
+		if ((tp = strtok(line, " \t")) != NULL) p1 = atoi(tp);
+		if ((tp = strtok(NULL, " \t")) != NULL) p2 = atoi(tp);
+
+		if (p1 >= pnum || p2 >= pnum) continue;
+
+		for (i = 0; i < en; i++) {
+			if ((tp = strtok(NULL, " \t")) != NULL) C[p1][p2][i].deg = atoi(tp);
+			if ((tp = strtok(NULL, " \t")) != NULL) C[p2][p1][i].deg = atoi(tp);
+			if ((tp = strtok(NULL, " \t")) != NULL) C[p1][p2][i].cor = atof(tp);
+		}
+
+		if ((tp= strtok(NULL, " \t")) != NULL) {
+			C[p1][p2][0].fname = (char*)memoryAllocate(sizeof(char)*(strlen(tp)+1), "");
+			strcpy(C[p1][p2][0].fname, tp);
+		}
+
+		if (tp == NULL) {
+			fprintf(stderr, "ERROR! Common lines list format is incorrect!\n");
+			fprintf(stderr, "format: p1\tp2\t[deg1\tdeg2\tcor]\tmapname\n");
+			exit(EXIT_FAILURE);
+		}
+	}
+}
+
+
+void
+print_clines(FILE *fpt, CLine ***C, int num, int en, long filter_flag)
+{
+	int i, j, k;
+
+	if (filter_flag) {
+		en = 1;
+	}
+
+	fprintf(fpt, "p1\tp2\t[deg1\tdeg2\tcor]\tmapname\n");
+
+	for (i = 0; i < num; i++) {
+		for (j = i + 1; j < num; j++) {
+			if (i == j) {
+				continue;
+			}
+
+			if (filter_flag && C[i][j][0].qualify == 0) {
+				continue;
+			}
+
+			fprintf(fpt, "%d\t%d\t", i, j);
+			for (k = 0; k < en; k++) {
+				fprintf(fpt, "%d\t%d\t%lf\t", C[i][j][k].deg, C[j][i][k].deg, C[i][j][k].cor);
+			}
+			fprintf(fpt, "%s\n", C[i][j][0].fname);
+		}
+	}
+}
+
+
+void
+clear_histgram(double *histgram, int n)
+{
+	int i;
+
+	for (i =0 ; i < n; i++) {
+		histgram[i] = 0.0;
+	}
+}
+
+
+double
+peak_of_histgram(double *histgram, int n)
+{
+	int i, peak = 0;
+
+	for (i = 1; i < n; i++) {
+		if (histgram[i] > histgram[peak]) {
+			peak = i;
+		}
+	}
+
+	return histgram[peak];
+}
+
+
+void 
+write_histgram(FILE *fpt, double *histgram, int n, int max)
+{
+	int i;
+
+	for (i = 0; i < n; i++) {
+		fprintf(fpt, "%lf\t%lf\n", (double)(max * i / n), histgram[i]);
+	}
+}
+
+
+FILE*
+fopen_for_histgram(char *fname, char *temp1, char *temp2)
+{
+	FILE* fpt;
+	int i;
+
+	strcpy(temp1, fname);
+	for (i = strlen(temp1); i >= 0; i--) {
+		if (temp1[i] == '.') {
+			temp1[i] = '\0';
+		}
+	}
+	sprintf(temp2, "%s.hist", temp1);
+
+	fpt = fopen(temp2, "w");
+	if (fpt == NULL) {
+		fprintf(stderr, "err fopen\n");
+		exit(EXIT_FAILURE);
+	}
+
+	return fpt;
+}
+
+
+void
+fswap(double *val1, double *val2)
+{
+	double temp = *val1;
+	*val1 = *val2;
+	*val2 = temp;
+}
+
+
+void
+iswap(int *val1, int *val2)
+{
+	int temp = *val1;
+	*val1 = *val2;
+	*val2 = temp;
+}
+
+
+double 
+create_angle_histgram(double *angle_histgram, CLine ***C, int N, int l, int k1, int k2, int en1, int en2, int en3)
+{
+	int k3, flag, t;
+	double a, b, c, val, peak;
+	double a_12, a_t, sig;
+int err = 5;
+	for (k3 = 0; k3 < N; k3++) {
+
+		if (k1 == k3 || k2 == k3) {
+			continue;
+		}
+
+		/* Compute a, b and c */
+		a = cos(2 * M_PI * (C[k3][k2][en2].deg - C[k3][k1][en3].deg) / l);
+		b = cos(2 * M_PI * (C[k2][k3][en2].deg - C[k2][k1][en1].deg) / l);
+		c = cos(2 * M_PI * (C[k1][k3][en3].deg - C[k1][k2][en1].deg) / l);
+
+		/* Check of realizable on the sphere */
+		if (!(1 + 2*a*b*c > a*a + b*b + c*c)) {
+// test
+
+if (
+abs(cC[k3][k2].deg - C[k3][k2][en2].deg) <= err && abs(cC[k3][k1].deg - C[k3][k1][en3].deg) <= err &&
+abs(cC[k2][k3].deg - C[k2][k3][en2].deg) <= err && abs(cC[k2][k1].deg - C[k2][k1][en1].deg) <= err &&
+abs(cC[k1][k3].deg - C[k1][k3][en3].deg) <= err && abs(cC[k1][k2].deg - C[k1][k2][en1].deg) <= err
+) {
+cnt++;
+}
+cnt_all++;
+
+			continue;
+		}
+
+		/* Compute a_12 (note: acos() returns radian value. so transform to degree) */
+		a_12 = acos((a - b*c) / (sqrt(1 - b*b) * sqrt(1 - c*c))) * 180.0 / M_PI;
+
+
+		/* Update the histgram (angle_histgram) using Gaussian smoothing */
+		for (t = 0; t < T; t++) {
+			sig = 180.0 / T;
+			a_t = 180.0 * t / T;
+			val = exp(-(a_t - a_12)*(a_t - a_12) / (2*sig*sig)) / sqrt(2*M_PI * sig*sig);
+			if (!isnan(val)) {
+				angle_histgram[t] += val;
+			}
+		}
+	}
+
+
+	/* Find and store the mode of the histgram: peaks(k1, k2) = max_t angle_histgram[t] */
+	peak = peak_of_histgram(angle_histgram, T);
+
+	return peak;
+}
+
+
+void 
+create_peak_histgram(double *peak_histgram, CLine ***C, int N, int div, int max_peak)
+{
+	int k1, k2;
+
+	clear_histgram(peak_histgram, div);
+
+	for (k1 = 0; k1 < N; k1++) {
+		for (k2 = k1 + 1; k2 < N; k2++) {
+			if (k1 == k2) {
+				continue;
+			}
+			if (max_peak == 0) {
+				continue;
+			}
+			if (div > (int)(div * C[k1][k2][0].peak / max_peak)) {
+				peak_histgram[(int)(div * C[k1][k2][0].peak / max_peak)]++;
+			}
+		}
+	}
+}
+
+
+void 
+create_histgram(CLine ***C, int N, int l, int en, long histgramCreateFlag) 
+{
+	/* C is N*N common lines matrix */
+	/* L is angular resolution number of sinogram line (case of Eos: 360) */
+
+	int div = 50; /* division number of peak histgram */
+
+	int i, j;
+	int k1, k2, k3;
+	int en1, en2, en3;
+	double *peak_histgram, ***angle_histgram, max_peak, peak;
+
+	FILE *fpt;
+	char fname[256], temp[256];
+
+	// 2011/02/11 17:47 投票アルゴリズムの拡張
+	double en_max_peak;
+	int en1_max, en2_max, en3_max;
+
+
+	angle_histgram = (double***)memoryAllocate(sizeof(double**) * N, "create_histgram");
+	for (i = 0; i < N; i++) {
+		angle_histgram[i] = (double**)memoryAllocate(sizeof(double*) * N, "create_histgram");
+		for (j = 0; j < N; j++) {
+			angle_histgram[i][j] = (double*)memoryAllocate(sizeof(double) * T, "create_histgram");
+		}
+	}
+	peak_histgram = (double*)memoryAllocate(sizeof(double) * div, "in create_histgram");
+
+	// 2011/02/11 17:47 投票アルゴリズムの拡張
+	for (k1 = 0; k1 < N; k1++) {
+		for (k2 = 0; k2 < N; k2++) {
+			for (i = 0; i < en; i++) {
+				C[k1][k2][i].vote = 0;
+			}
+		}
+	}
+
+
+	max_peak = 0;
+
+	for (k1 = 0; k1 < N; k1++) {
+		for (k2 = k1 + 1; k2 < N; k2++) {
+
+			if (k1 == k2) {
+				continue;
+			}
+
+			/* Initialize the histgram vector angle_histgram of length T to zero */
+			clear_histgram(angle_histgram[k1][k2], T);
+
+//---------------------------------------------
+// 2011/02/11 17:47 投票アルゴリズムの拡張
+
+
+			for (en1 = 0; en1 < en; en1++) { C[k1][k2][en1].peak = 0;
+			for (en2 = 0; en2 < en; en2++) {
+			for (en3 = 0; en3 < en; en3++) {
+
+				peak = create_angle_histgram(angle_histgram[k1][k2], C, N, l, k1, k2, en1, en2, en3);
+
+				if (peak > C[k1][k2][en1].peak) {
+					if (histgramCreateFlag) {
+						fpt = fopen_for_histgram(C[k1][k2][0].fname, temp, fname);
+						write_histgram(fpt, angle_histgram[k1][k2], T, peak);
+						fclose(fpt);
+					}
+					C[k1][k2][en1].peak = peak;
+				}
+
+			}
+			}
+			}
+			
+/*
+			en_max_peak = 0;
+
+			for (en1 = 0; en1 < en; en1++) { C[k1][k2][en1].peak = 0;
+			for (en2 = 0; en2 < en; en2++) {
+			for (en3 = 0; en3 < en; en3++) {
+
+				peak = create_angle_histgram(angle_histgram[k1][k2], C, N, l, k1, k2, en1, en2, en3, &k3);
+
+				if (peak > C[k1][k2][en1].peak) {
+					if (histgramCreateFlag) {
+						fpt = fopen_for_histgram(C[k1][k2][0].fname, temp, fname);
+						write_histgram(fpt, angle_histgram, T, peak);
+						fclose(fpt);
+					}
+					C[k1][k2][en1].peak = peak;
+				}
+
+				if (peak > en_max_peak) {
+					en1_max = en1;
+					en2_max = en2;
+					en3_max = en3;
+				}
+
+			}
+			}
+			}
+
+			C[k3][k2][en2].deg - C[k3][k1][en3].deg) / l);
+			b = cos(2 * M_PI * (C[k2][k3][en2].deg - C[k2][k1][en1].deg) / l);
+			c = cos(2 * M_PI * (C[k1][k3][en3].deg - C[k1][k2][en1].deg) / l);
+			C[k1][k2][en_max].vote++;
+			C[k1][k2][en_max].vote++;
+			C[k1][k2][en_max].vote++;
+*/
+
+//---------------------------------------------
+
+			fprintf(stdout, "C(%d,%d)\t%lf\n", k1, k2, C[k1][k2][0].peak);
+
+			for (en1 = 1; en1 < en; en1++) {
+				if (C[k1][k2][en1].peak > C[k1][k2][0].peak) {
+					fswap(&C[k1][k2][0].peak, &C[k1][k2][en1].peak);
+					iswap(&C[k1][k2][0].deg,  &C[k1][k2][en1].deg);
+					fswap(&C[k1][k2][0].cor,  &C[k1][k2][en1].cor);
+					fswap(&C[k2][k1][0].peak, &C[k2][k1][en1].peak);
+					iswap(&C[k2][k1][0].deg,  &C[k2][k1][en1].deg);
+					fswap(&C[k2][k1][0].cor,  &C[k2][k1][en1].cor);
+				}
+			}
+
+			if (C[k1][k2][0].peak > max_peak) {
+				max_peak = C[k1][k2][0].peak;
+			}
+		}
+	}
+
+	create_peak_histgram(peak_histgram, C, N, div, max_peak);
+	if (histgramCreateFlag) {
+		fpt = fopen_for_histgram("peaks_histgram.hist", temp, fname);
+		write_histgram(fpt, peak_histgram, div, max_peak);
+		fclose(fpt);
+	}
+
+}
+
+
+void 
+filter_clines(CLine ***C, int num, int th)
+{
+	int i, j, k;
+	int max_i, max_j, flag, max_num;
+	double gamma, percentile;
+
+
+	/* calc threshold */
+	gamma = pow(2, th);
+	percentile = gamma * 100.0 / sqrt(num);
+
+	max_num = (int)((num * num / 2 - num) * percentile / 100);
+
+	/* initialization */
+	for (i = 0; i < num; i++) {
+		for (j = 0; j < num; j++) {
+			C[i][j][0].qualify = 0;
+		}
+	}
+
+	for (k = 0; k <= max_num; k++) {
+
+		if (k >= num * num / 2 - num) {
+			break;
+		}
+
+		flag = 1;
+		for (i = 0; i < num; i++) {
+			for (j = i + 1; j < num; j++) {
+				if (i == j) {
+					continue;
+				}
+
+				if (flag == 1 && C[i][j][0].qualify == 0) {
+					max_i = i;
+					max_j = j;
+					flag = 0;
+				}
+
+				if (C[i][j][0].peak > C[max_i][max_j][0].peak  
+				    && C[i][j][0].qualify == 0) {
+					max_i = i;
+					max_j = j;
+				}
+			}
+		}
+		C[max_i][max_j][0].qualify = 1;
+	}
+}
+
+
+void 
+read_correct_clines(FILE *fpt, CLine **cC, int num)
+{
+	int count, i;
+	int p1, p2;
+	char line[256], *tp;
+
+	count = 0;
+	fseek(fpt, 0L, SEEK_SET);
+	while (NULL != stringGetFromFile(line, "", fpt, stdout, 1)) {
+
+		if (!isdigit(line[0])) continue;
+
+		if ((tp = strtok(line, " \t")) != NULL) p1 = atoi(tp);
+		if ((tp = strtok(NULL, " \t")) != NULL) p2 = atoi(tp);
+		if ((tp = strtok(NULL, " \t")) != NULL) cC[p1][p2].deg = atoi(tp);
+		if ((tp = strtok(NULL, " \t")) != NULL) cC[p2][p1].deg = atoi(tp);
+
+		if (tp == NULL) {
+			fprintf(stderr, "ERROR! Correct Common lines list format is incorrect!\n");
+			fprintf(stderr, " format: p1\tp2\tdeg1\tdeg2\n");
+			exit(EXIT_FAILURE);
+		}
+
+		count++;
+		if (count > num * num - num) {
+			fprintf(stderr, "ERROR! Correct Common lines's number is over ");
+			fprintf(stderr, "(num*num-num): %d!\n", (num*num-num));
+			exit(EXIT_FAILURE);
+		}
+	}
+
+	if (count != (num * num - num) / 2) {
+		fprintf(stderr, "Warning! Correct Common lines's number %d is not (num*num-num)/2=%d.\n", count, (num*num-num)/2);
+	}
+}
+
+
+void
+print_clines_detecting_rate(FILE *fpt, CLine ***C, CLine **cC, int num, int en)
+{
+	int err = 10;
+	int i, j, k, max_cor;
+	int total_nf = 0, total_f = 0;
+	int success_nf = 0, success_nf_all = 0, success_f = 0, success_f_all = 0;
+
+	for (i = 0; i < num; i++) {
+		for (j = i + 1; j < num; j++) {
+
+			if (i == j) {
+				continue;
+			}
+
+			for (k = 0; k < en; k++) {
+				if (abs(cC[i][j].deg - C[i][j][k].deg) <= err && abs(cC[j][i].deg - C[j][i][k].deg) <= err) {
+
+//fprintf(stderr, "(%3d,%3d) [%4d, %4d] \t| [%4d, %4d] \t| diff[ %4d, %4d] \n", i, j, cC[i][j].deg, cC[j][i].deg, C[i][j][k].deg, C[j][i][k].deg, abs(C[i][j][k].deg - cC[i][j].deg), abs(C[j][i][k].deg - cC[j][i].deg));
+
+					if (C[i][j][0].qualify == 1) {
+						success_f_all++;
+					}
+					success_nf_all++;
+
+					break;
+				}
+			}
+
+			if (abs(cC[i][j].deg - C[i][j][0].deg) <= err && abs(cC[j][i].deg - C[j][i][0].deg) <= err) {
+				if (C[i][j][0].qualify == 1) {
+					success_f++;
+				}
+			}
+
+			max_cor = 0;
+			for (k = 1; k < en; k++) {
+				if (C[i][j][k].cor > C[i][j][max_cor].cor) {
+					max_cor = k;
+				}
+			}
+			if (abs(cC[i][j].deg - C[i][j][max_cor].deg) <= err && abs(cC[j][i].deg - C[j][i][max_cor].deg) <= err) {
+				success_nf++;
+			}
+
+			if (C[i][j][0].qualify == 1) {
+				total_f++;
+			}
+			total_nf++;
+		}
+	}
+	fprintf(fpt, "*** Correctly Detecting Rate of Common lines ***\n");
+	fprintf(fpt, "Nofilter: %4d /%5d = %6.3lf %%, %4d /%5d = %6.3lf %% (en all) \n",
+	              success_nf,     total_nf, (double)success_nf     / (double)total_nf * 100, 
+	              success_nf_all, total_nf, (double)success_nf_all / (double)total_nf * 100);
+	fprintf(fpt, "Filtered: %4d /%5d = %6.3lf %%, %4d /%5d = %6.3lf %% (en all) \n", 
+	              success_f,      total_f, ( double)success_f      / (double)total_f * 100,
+	              success_f_all,  total_f, ( double)success_f_all  / (double)total_f * 100);
+}
+
+
+void
+lcommonLinesSearchByVoting(commonLinesSearchByVotingInfo* info)
+{
+// test	CLine ***C, **cC;
+	int max_value, pnum;
+	int i, j;
+
+
+	/* get num of projection from input list file */
+	if (info->flagIn) {
+		pnum = get_pnum(info->fptIn);
+	} else if (info->flagInC) {
+		pnum = get_pnum(info->fptInC);
+	}
+	if (info->flagInC) {
+		correct_en(info->fptInC, &(info->en));
+	}
+	fprintf(stdout, "N = %d\n", pnum);
+
+	/*** memory allocation ***/
+	C = (CLine***)memoryAllocate(sizeof(CLine**) * pnum, "");
+	cC = (CLine**)memoryAllocate(sizeof(CLine*) * pnum, "");
+	for (i = 0; i < pnum; i++) {
+		C[i] = (CLine**)memoryAllocate(sizeof(CLine*) * pnum, "");
+		cC[i] = (CLine*)memoryAllocate(sizeof(CLine) * pnum, "");
+		for (j = 0; j < pnum; j++) {
+			C[i][j] = (CLine*)memoryAllocate(sizeof(CLine) * info->en, "");
+		}
+	}
+
+
+	/* read files in inputList and store into common lines matrix */
+	if (info->flagInC) {
+		read_clines_file(info->fptInC, C, pnum, info->en);
+
+	} else {
+		read_clines_maps(info->fptIn, C, pnum, info->en);
+
+	}
+	fprintf(stdout, "File Reading OK\n");
+
+
+	/* output all common lines matrix */
+	if (info->flagOutA) {
+		print_clines(info->fptOutA, C, pnum, info->en, 0);
+	}
+
+// test
+read_correct_clines(info->fptInCC, cC, pnum);
+
+	/* create angle histgram by voting */
+	create_histgram(C, pnum, L, info->en, info->histgramCreateFlag);
+
+	fprintf(stdout,"Histgram Creation OK\n");
+
+
+	/* declare pairs (k1, k2) with large values of peaks (k1, k2) as good common lines */
+	filter_clines(C, pnum, info->th);
+	print_clines(info->fptOut, C, pnum, info->en, 1);
+
+	fprintf(stdout, "Common Lines Filtering OK\n");
+
+
+	/* read correct common lines file, and print correctly detecting rate */
+	if (info->flagInCC) {
+// test		read_correct_clines(info->fptInCC, cC, pnum);
+		print_clines_detecting_rate(stdout, C, cC, pnum, info->en);
+	}
+}
+
+
+int
+main(int argc, char* argv[]) 
+{
+	commonLinesSearchByVotingInfo info;
+
+	init0(&info);
+	argCheck(&info, argc, argv);
+	init1(&info);
+
+	DEBUGPRINT("Program Start\n");
+
+	lcommonLinesSearchByVoting(&info);
+
+fprintf(stderr, "!!! cnt / cnt_all = %ld / %ld = %lf %%\n", cnt, cnt_all, (double)cnt / (double)cnt_all);
+
+	exit(EXIT_SUCCESS);
+}
+
+
+void
+additionalUsage()
+{
+	fprintf(stderr, "----- Additional Usage -----\n");
+	fprintf(stderr, "Common lines are filtered only top G*100/sqrt(N) %%, where N is the number of projections.\n");
+
+	fprintf(stderr, "-th Option \n");
+	fprintf(stderr, "    : \n");
+	fprintf(stderr, "   -2: G = 2^(-2) \n");
+	fprintf(stderr, "   -1: G = 2^(-1) \n");
+	fprintf(stderr, "    0: G = 2^0 \n");
+	fprintf(stderr, "    1: G = 2^1 \n");
+	fprintf(stderr, "    2: G = 2^2 \n");
+	fprintf(stderr, "    3: G = 2^3 \n");
+	fprintf(stderr, "    4: G = 2^4 \n");
+	fprintf(stderr, "    : \n");
+	
+	fprintf(stderr, "-en Option \n");
+	fprintf(stderr, "    Estimation number of common line in a map. \n");
+	fprintf(stderr, "    Running time is proportional to this number.\n");
+	fprintf(stderr, "    Default; 1: the largest value in a correlation map is detected as common line.\n");
+
+	fprintf(stderr, "MapList Format\n");
+	fprintf(stderr, "    numOfProjection1 numOfProjection2 mapFileName\n");
+	fprintf(stderr, "           :                :              :     \n");
+
+	fprintf(stderr, "CLinesList Format\n");
+	fprintf(stderr, "    numOfProjection1 numOfProjection2 [ degOfProjection1 degOfProjection2 degDiff cor ] mapFileName\n");
+	fprintf(stderr, "           :                :                 :                :            :      :         :     \n");
+
+	fprintf(stderr, "Voting Algorithm by Amit Singer et al (2009),\n");
+	fprintf(stderr, "\"Detecting consistent common lines in cryo-EM by voting \" (doi:10.1016/j.jsb.2009.11.003)\n");
+	fprintf(stderr, "----------------------------\n");
+}

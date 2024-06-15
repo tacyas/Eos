@@ -1,0 +1,46 @@
+<HTML>
+<BODY>
+<H1>tkmrcInfo</H1><BR>
+<H3>in tkImgFmtMRC.h</H3><BR>
+<PRE>
+typedef struct <A HREF="tkmrcInfo.html">tkmrcInfo </A>{ <BR>
+	mrcImage mrc; <BR>
+	char*    fileName;    <BR>
+	long     flagHeader; <BR>
+	long     flagImage;  <BR>
+	long flagnz; <BR>
+	mrcImageParaTypeInteger nz; <BR>
+	long flagz; <BR>
+	mrcImageParaTypeReal z; <BR>
+	long  flagMin; <BR>
+	float Min; <BR>
+	long  flagMax; <BR>
+	float Max; <BR>
+	long  flagLog; <BR>
+	long  flagPower; <BR>
+	long  flagInfo; <BR>
+	mrcImageInformation Info; <BR>
+	long  flagFSInfo; <BR>
+	mrcFSInfo FSInfo; <BR>
+	long  flagContrast; <BR>
+	float Contrast; <BR>
+	long    flagHist; <BR>
+	long    nhist; <BR>
+	double* histgram; <BR>
+	long    flagScattering; <BR>
+	long    flagR; <BR>
+	long    nScattering; <BR>
+	double* scattering; <BR>
+	double* R; <BR>
+	long flagProjX; <BR>
+	mrcImage projX; <BR>
+	long flagProjY; <BR>
+	mrcImage projY; <BR>
+	long flagSectX; <BR>
+	mrcImage sectX; <BR>
+	long flagSectY; <BR>
+	mrcImage sectY; <BR>
+} tkmrcInfo; <BR>
+ 
+</PRE></HTML>
+</BODY>

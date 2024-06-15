@@ -1,0 +1,59 @@
+proc hf2000SpecimenPositionInit {} {
+	global Desktop
+	global Position
+
+	set Desktop(W) 500
+	set Desktop(H) 500
+	Canvas .main $Desktop(W) $Desktop(H) 
+
+	set Desktop(main) .main
+	hf2000PositionGet0
+
+	hf2000SpecimenPositionDesktopSet
+}
+
+proc hf2000SpecimenPositionDesktopSet { } {
+	global Desktop
+	global Position	
+
+	set f [ frame .positionInfo ]
+	CommandEntry $f.x x 4 hf2000PositionSet -textvar Position(x) 
+	CommandEntry $f.y y 4 hf2000PositionSet -textvar Position(y) 
+	pack $f.x $f.y -side left
+	set Desktop(PositionInfo) $f
+
+	pack $Desktop(main) $Desktop(PositionInfo)
+}
+
+proc hf2000PositionSet { } {
+	global Position	
+	
+	hf2000 SpecimenPosition Set $Position(x) $Position(y)
+	hf2000PositionGet
+}
+
+proc hf2000PositionGet { } {
+	global Position
+	global Desktop
+
+	set oldx $Position(x)
+	set oldy $Position(y)
+	hf2000PositionGet0	
+	$Desktop(main).canvas create line \
+		[ expr ($oldx        + 1000)/2000 * $Desktop(W) ]  \
+		[ expr $Desktop(H) - ($oldy        + 1000)/2000 * $Desktop(H) ]  \
+		[ expr ($Position(x) + 1000)/2000 * $Desktop(W) ]  \
+		[ expr $Desktop(H) - ($Position(y) + 1000)/2000 * $Desktop(H) ]  
+}
+
+proc hf2000PositionGet0 { } {
+	global Position
+	global Desktop
+	global Iteractive
+
+	set pos [ hf2000 SpecimenPosition Get ]	
+	set Position(x) [ lindex $pos 0 ]
+	set Position(y) [ lindex $pos 1 ]
+	after [ expr $Iteractive*1000 ] hf2000PositionGet
+}
+

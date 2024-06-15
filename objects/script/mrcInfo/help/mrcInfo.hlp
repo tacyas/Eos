@@ -1,0 +1,13 @@
+.onlineHelp EOS mrcInfo "MrcInfo Help Page"
+.section 1 PROGRAM
+mrcInfo \- mrcInfo
+.section 1 DESCRIPTION
+.section 1 "PANE ARGUMENTS"
+.syntax EOS mrcInfo
+.section 1 EXAMPLES
+.section 1 "SEE ALSO"
+.section 1 RESTRICTIONS 
+.section 1 REFERENCES 
+.section 1 COPYRIGHT
+Copyright (C) 1993 - 1996, Khoral Research, Inc.  All rights reserved.
+

@@ -1,0 +1,67 @@
+MATCHORWARP: RUNNING REFINEMATCH TO TRY TO FIND SINGLE TRANSFORMATION
+
+ FORMATTED  old  file opened: patch.out
+ 50 data points will be used for fit
+  1 patches dropped by outlier elimination:
+     patch position     residual
+  -140.    12.  -199.     0.71
+
+ Mean residual   0.268,  maximum   0.600
+
+ Refining transformation:
+  0.999889  0.000281 -0.000433     0.181
+  0.000068  1.004173 -0.000707     0.024
+ -0.000091  0.001327  0.998649    -0.952
+
+ FORMATTED  new  file opened: patch.resid
+
+ FORMATTED  new  file opened: refine.xf
+ 
+MATCHORWARP: CREATED patch_vector.mod
+ 
+MATCHORWARP: REFINEMATCH FOUND A GOOD TRANSFORMATION: NEXT RUNNING MATCHVOL
+ 
+
+ RO image file on unit   5 : BBb.rec     Size=        98306
+
+ Number of columns, rows, sections .........    512     96    512
+ Map mode ..................................    1
+ Start cols, rows, sects, grid x,y,z .......    0    0    0     512    96   512
+ Pixel spacing (Angstroms)..................  20.20      20.20      20.20    
+ Cell angles ...............................   90.000   90.000   90.000
+ Fast, medium, slow axes ...................    X    Y    Z
+ Origin on x,y,z ...........................  5171.      969.6      0.000    
+ Minimum density ...........................  -3198.8    
+ Maximum density ...........................   2183.0    
+ Mean density ..............................   692.15    
+ tilt angles (original,current) ............  0.0   0.0   0.0  90.0   0.0   0.0
+ Space group,# extra bytes,idtype,lens .....       0       0       0       0
+
+     7 Titles :
+SerialEM: Digitized by Gatan Camera on TF30             30-Sep-03  13:39:31    
+          Tilt axis rotation angle = -12.5                                     
+REDUCEMONT: recut and reduced by factor of  2            3-Nov-03  15:45:19    
+clip: resized image.                                     3-Nov-03  15:47:36    
+NEWSTACK: Images copied, transformed                    20-Oct-06  16:37:31    
+mrctaper: Image tapered down to fill value at edges     20-Oct-06  16:37:35    
+TILT: Tomographic reconstruction                        20-Oct-06  16:37:39    
+
+
+ FORMATTED  ro  file opened: solve.xf
+
+ FORMATTED  ro  file opened: refine.xf
+ Forward matrix:
+  0.005941 -0.014768  0.984344    55.253
+  0.000179  0.997919  0.009326     0.260
+ -1.016831 -0.003832  0.006436   -21.702
+ Inverse matrix:
+  0.006465 -0.003681 -0.983411   -21.698
+ -0.009493  1.001946  0.000121     0.266
+  1.015724  0.015054  0.005937   -55.997
+
+ FORMATTED  new  file opened: inverse.xf
+ Rotations done in  2 layers, with  2 by  1 cubes in each layer
+Finished     1 of     4
+Finished     2 of     4
+Finished     3 of     4
+Finished     4 of     4

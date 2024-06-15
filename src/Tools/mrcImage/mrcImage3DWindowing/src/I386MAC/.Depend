@@ -1,0 +1,87 @@
+argCheck.o: argCheck.c /usr/include/stdio.h /usr/include/_types.h \
+  /usr/include/sys/_types.h /usr/include/sys/cdefs.h \
+  /usr/include/machine/_types.h /usr/include/i386/_types.h \
+  /usr/include/stdlib.h /usr/include/available.h /usr/include/sys/wait.h \
+  /usr/include/sys/signal.h /usr/include/sys/appleapiopts.h \
+  /usr/include/machine/signal.h /usr/include/i386/signal.h \
+  /usr/include/i386/_structs.h /usr/include/sys/_structs.h \
+  /usr/include/machine/_structs.h /usr/include/mach/i386/_structs.h \
+  /usr/include/sys/resource.h /usr/include/machine/endian.h \
+  /usr/include/i386/endian.h /usr/include/sys/_endian.h \
+  /usr/include/libkern/_OSByteOrder.h \
+  /usr/include/libkern/i386/_OSByteOrder.h /usr/include/alloca.h \
+  /usr/include/machine/types.h /usr/include/i386/types.h \
+  /usr/include/i386/_types.h /Users/tacyas/Eos/include/string.h \
+  /usr/include/math.h /usr/include/architecture/i386/math.h \
+  ../inc/config.h ../inc/../inc/mrcImage3DWindowing.h \
+  /Users/tacyas/Eos/include/genUtil.h /Users/tacyas/Eos/include/String.h \
+  /Users/tacyas/Eos/include/File.h /Users/tacyas/Eos/include/Memory.h
+init.o: init.c /usr/include/stdio.h /usr/include/_types.h \
+  /usr/include/sys/_types.h /usr/include/sys/cdefs.h \
+  /usr/include/machine/_types.h /usr/include/i386/_types.h \
+  /usr/include/stdlib.h /usr/include/available.h /usr/include/sys/wait.h \
+  /usr/include/sys/signal.h /usr/include/sys/appleapiopts.h \
+  /usr/include/machine/signal.h /usr/include/i386/signal.h \
+  /usr/include/i386/_structs.h /usr/include/sys/_structs.h \
+  /usr/include/machine/_structs.h /usr/include/mach/i386/_structs.h \
+  /usr/include/sys/resource.h /usr/include/machine/endian.h \
+  /usr/include/i386/endian.h /usr/include/sys/_endian.h \
+  /usr/include/libkern/_OSByteOrder.h \
+  /usr/include/libkern/i386/_OSByteOrder.h /usr/include/alloca.h \
+  /usr/include/machine/types.h /usr/include/i386/types.h \
+  /usr/include/i386/_types.h /Users/tacyas/Eos/include/string.h \
+  /usr/include/math.h /usr/include/architecture/i386/math.h \
+  ../inc/config.h ../inc/../inc/mrcImage3DWindowing.h \
+  /Users/tacyas/Eos/include/genUtil.h /Users/tacyas/Eos/include/String.h \
+  /Users/tacyas/Eos/include/File.h /Users/tacyas/Eos/include/Memory.h
+mrcImage3DWindowing.o: mrcImage3DWindowing.c /usr/include/stdio.h \
+  /usr/include/_types.h /usr/include/sys/_types.h \
+  /usr/include/sys/cdefs.h /usr/include/machine/_types.h \
+  /usr/include/i386/_types.h /usr/include/stdlib.h \
+  /usr/include/available.h /usr/include/sys/wait.h \
+  /usr/include/sys/signal.h /usr/include/sys/appleapiopts.h \
+  /usr/include/machine/signal.h /usr/include/i386/signal.h \
+  /usr/include/i386/_structs.h /usr/include/sys/_structs.h \
+  /usr/include/machine/_structs.h /usr/include/mach/i386/_structs.h \
+  /usr/include/sys/resource.h /usr/include/machine/endian.h \
+  /usr/include/i386/endian.h /usr/include/sys/_endian.h \
+  /usr/include/libkern/_OSByteOrder.h \
+  /usr/include/libkern/i386/_OSByteOrder.h /usr/include/alloca.h \
+  /usr/include/machine/types.h /usr/include/i386/types.h \
+  /usr/include/i386/_types.h /Users/tacyas/Eos/include/string.h \
+  /usr/include/math.h /usr/include/architecture/i386/math.h \
+  ../inc/config.h ../inc/../inc/mrcImage3DWindowing.h \
+  /Users/tacyas/Eos/include/genUtil.h \
+  /Users/tacyas/Eos/include/mrcImage.h \
+  /Users/tacyas/Eos/include/genUtil.h /Users/tacyas/Eos/include/ctfInfo.h \
+  /Users/tacyas/Eos/include/Vector.h
+usage.o: usage.c /usr/include/stdio.h /usr/include/_types.h \
+  /usr/include/sys/_types.h /usr/include/sys/cdefs.h \
+  /usr/include/machine/_types.h /usr/include/i386/_types.h \
+  /usr/include/stdlib.h /usr/include/available.h /usr/include/sys/wait.h \
+  /usr/include/sys/signal.h /usr/include/sys/appleapiopts.h \
+  /usr/include/machine/signal.h /usr/include/i386/signal.h \
+  /usr/include/i386/_structs.h /usr/include/sys/_structs.h \
+  /usr/include/machine/_structs.h /usr/include/mach/i386/_structs.h \
+  /usr/include/sys/resource.h /usr/include/machine/endian.h \
+  /usr/include/i386/endian.h /usr/include/sys/_endian.h \
+  /usr/include/libkern/_OSByteOrder.h \
+  /usr/include/libkern/i386/_OSByteOrder.h /usr/include/alloca.h \
+  /usr/include/machine/types.h /usr/include/i386/types.h \
+  /usr/include/i386/_types.h ../inc/config.h \
+  ../inc/../inc/mrcImage3DWindowing.h
+util.o: util.c /usr/include/stdio.h /usr/include/_types.h \
+  /usr/include/sys/_types.h /usr/include/sys/cdefs.h \
+  /usr/include/machine/_types.h /usr/include/i386/_types.h \
+  /usr/include/stdlib.h /usr/include/available.h /usr/include/sys/wait.h \
+  /usr/include/sys/signal.h /usr/include/sys/appleapiopts.h \
+  /usr/include/machine/signal.h /usr/include/i386/signal.h \
+  /usr/include/i386/_structs.h /usr/include/sys/_structs.h \
+  /usr/include/machine/_structs.h /usr/include/mach/i386/_structs.h \
+  /usr/include/sys/resource.h /usr/include/machine/endian.h \
+  /usr/include/i386/endian.h /usr/include/sys/_endian.h \
+  /usr/include/libkern/_OSByteOrder.h \
+  /usr/include/libkern/i386/_OSByteOrder.h /usr/include/alloca.h \
+  /usr/include/machine/types.h /usr/include/i386/types.h \
+  /usr/include/i386/_types.h ../inc/config.h \
+  ../inc/../inc/mrcImage3DWindowing.h

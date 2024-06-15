@@ -1,0 +1,2 @@
+OBJECTNAME = test3
+EXTRA_LIB  =

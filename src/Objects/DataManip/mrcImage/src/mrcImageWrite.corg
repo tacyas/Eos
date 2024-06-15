@@ -1,0 +1,199 @@
+/*
+# mrcImageWrite.c  1.5
+# The latest update : 01/23/97 at 10:34:52
+#
+#@(#) mrcImageWrite ver 1.5
+#@(#) Created by 
+#@(#)
+#@(#) Usage : mrcImageWrite 
+#@(#) Attention
+#@(#)
+*/
+
+static char __sccs_id[] = "@(#)mrcImageWrite ver1.5; Date:97/03/07 @(#)";
+
+/* 
+*  mrcWriteFile.c
+*  Write MRC formated image file.
+*  int
+*  mrcWriteFile(
+*      mrcImage* mrc,    : mrc Image 
+*      char* filename,   : Name of a file to write
+*      char* message,    : error message
+*      long  mode        : read mode
+*      )
+*     mode 0x00000000: default
+*          0x*******1: print data information to stdout.
+*/
+#undef DEBUG
+#include "genUtil.h"
+#include "Memory.h"
+#include "../inc/mrcImage.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+#define RTN_NAME  "mrcFileWrite"
+
+mrcStatusType
+mrcFileWrite(mrcImage* mrc, char* filename, char* message, long mode)
+{
+    size_t bufsize;
+
+	DEBUGPRINT("mrcFileWrite\n");
+	mrcHiddenDataSet(mrc, 0);
+    if(NULL==mrc) { 
+		fprintf(stderr, "Something Wrong!!");
+    }
+#ifdef M68
+#else
+	bufsize = mrc->BytePerImage;
+	DEBUGPRINT1("Mode: %d\n", mrc->HeaderMode);
+    switch(mrc->HeaderMode) {
+        case mrcCharImage: {
+            memoryByteSwap(mrc->Image, 1, bufsize/1);
+            break;
+        }
+
+        case mrcShortImage:
+        case mrcComplexShortFT: {
+            memoryByteSwap(mrc->Image, 2, bufsize/2);
+            break;
+        }
+
+        case mrcFloatImage:
+        case mrcComplexFloatFT:
+        case mrcLongImage:  {
+            memoryByteSwap(mrc->Image, 4, bufsize/4);
+            break;
+        }
+
+        case mrcDoubleImage:
+        case mrcComplexDoubleFT: {
+            memoryByteSwap(mrc->Image, 8, bufsize/8);
+            break;
+        }
+        default: {
+            fprintf(stderr, "Not supported mode %d in mrcImageWrite\n", mrc->HeaderMode);
+            exit(EXIT_FAILURE);
+            break;
+        }
+    }
+#endif
+    mrcHeaderWrite(mrc, filename, "in mrcWriteFile", mode);
+    mrcImageWrite (mrc, filename, "in mrcWriteFile", mode);
+    mrcTailerWrite(mrc, filename, "in mrcWriteFile", mode);
+    switch(0x0000000f&mode) {
+        case 0 : {
+            return MRC_Status_OK;
+        }
+        case 1 : {
+            mrcInfoPrint(stdout, mrc, 0);
+       	    return MRC_Status_OK;
+        }
+		default: {
+  	   		return mrcError(message, RTN_NAME,
+  			    "mrcReadFile Mode", 
+  	  	        (mrcStatusType)mrcStatusMask_ExitFailure);
+        }
+    }
+}
+#undef RTN_NAME
+
+#define RTN_NAME  "mrcImageWrite"
+mrcStatusType
+mrcImageWrite(mrcImage* mrc, char* filename, char* message, long mode)
+{
+    FILE* fpt;
+    mrcImageParaTypeInteger bufsize;
+
+	DEBUGPRINT("mrcImageWrite Start\n");
+    /* file open */
+    if(NULL==(fpt=fopen(filename, "rb+"))) {
+        return mrcError(message, RTN_NAME, filename, 
+		        (mrcStatusType)mrcStatusMask_ExitFailure|MRC_FileCanNotOpened);
+    }
+    fseek(fpt, MRC_HEADER, SEEK_SET);
+    bufsize = mrc->BytePerImage;
+    if((bufsize)!=fwrite(mrc->Image, sizeof(char), bufsize, fpt)) {
+        return mrcError(message, RTN_NAME, "mrc->Image",
+	          (mrcStatusType)mrcStatusMask_ExitFailure|MRC_ImageDataCanNotWrite);
+    }
+  /* File Close */
+    if(EOF==fclose(fpt)) {
+      return mrcError(message, RTN_NAME, filename, 
+		    (mrcStatusType)mrcStatusMask_ExitFailure|MRC_FileCanNotClosed);
+	}
+	DEBUGPRINT("mrcImageWrite End\n");
+	return 0;
+}
+#undef RTN_NAME
+
+#define RTN_NAME  "mrcHeaderWrite"
+mrcStatusType
+mrcHeaderWrite(mrcImage* mrc, char* filename, char* message, long mode)
+{
+  FILE* fpt;
+
+  /* file open */
+	DEBUGPRINT("mrcHeaderWrite Start\n");
+
+  if(NULL==(fpt=fopen(filename, "rb+"))) {
+    return mrcError(message, RTN_NAME, filename, 
+		    (mrcStatusType)mrcStatusMask_ExitFailure|MRC_FileCanNotOpened);
+  }
+  /* file header open */
+#ifdef M68
+#else
+  memoryByteSwap(mrc->Header.All, 4, MRC_HEADER/4);
+#endif
+
+  if((MRC_HEADER)!=fwrite(mrc->Header.All, sizeof(unsigned char), MRC_HEADER, fpt)) {
+    return mrcError(message, RTN_NAME, filename, 
+             	    (mrcStatusType)mrcStatusMask_ExitFailure
+             	                  |MRC_ImageHeaderCanNotWrite);
+  }
+  if(EOF==fclose(fpt)) {
+    return mrcError(message, RTN_NAME, filename,
+		    (mrcStatusType)mrcStatusMask_ExitFailure
+				  |MRC_ImageHeaderCanNotWrite);
+  }
+	DEBUGPRINT("mrcHeaderWrite End\n");
+  return 0;
+}
+#undef RTN_NAME
+
+#define RTN_NAME  "mrcTailerWrite"
+mrcStatusType
+mrcTailerWrite(mrcImage* mrc, char* filename, char* message, long mode)
+{
+  FILE* fpt;
+  size_t bufsize;
+  long i;
+  /* file open */
+	DEBUGPRINT("mrcTailerWrite Start\n");
+  if(NULL==(fpt=fopen(filename, "rb+"))) {
+    return mrcError(message, RTN_NAME, filename, 
+		    (mrcStatusType)mrcStatusMask_ExitFailure|MRC_FileCanNotOpened);
+  }
+  bufsize = mrc->BytePerImage;
+  fseek(fpt, MRC_HEADER+bufsize, SEEK_SET);
+  for(i=0; i<mrc->numTailer; i++) {
+#ifdef M68
+#else
+    memoryByteSwap(mrc->Tailer[i].All, 4, MRC_TAILER/4);
+#endif /* M68 */
+    if((MRC_TAILER)!=fwrite(mrc->Tailer[i].All, sizeof(char), MRC_TAILER, fpt)) {
+     return mrcError(message, RTN_NAME, filename,
+		             (mrcStatusType)mrcStatusMask_ExitFailure
+				      |MRC_ImageHeaderCanNotWrite);
+	}
+  }
+  if(EOF==fclose(fpt)) {
+    return mrcError(message, RTN_NAME, filename,
+		    (mrcStatusType)mrcStatusMask_ExitFailure
+				  |MRC_ImageHeaderCanNotWrite);
+  }
+	DEBUGPRINT("mrcTailerWrite End\n");
+  return 0;
+}
+#undef RTN_NAME

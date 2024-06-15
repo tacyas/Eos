@@ -1,0 +1,10 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: MRC","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","Output: MRC","Essential","1","1","Out","outFile","NULL"
+"-RR","-R[ing]R[adius]","Input: [A]","Optional","1","1","RingRadius","Real","100.0"
+"-RW","-R[ing]W[idth]","Input: [A]","Optional","1","1","RingWidth","Real","10.0"
+"-thres","-thres[hold]","Input: threshold of IQ","Optional","1","1","Threshold","Real","3.0"
+"-out","-out[Threshold]","Output: Output","Optional","1","1","outFileThres","outFile","stdout"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

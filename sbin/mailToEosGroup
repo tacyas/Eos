@@ -1,0 +1,100 @@
+#!/bin/sh
+#
+# %M% %Y% %I%
+#
+# The latest update : %G% at %U%
+#
+#%Z% mailToEosGroup Function
+#%Z%
+#
+#%Z% Usage : mailToEosGroup SourceFileName
+#
+#%Z% Attention
+#%Z%
+#%Z% Parameter: 
+#%Z%     Essential:
+#%Z%         SourceFileName
+#%Z%     Optional:
+#%Z%
+
+tmpFile="/tmp/mailtToEosGroup.tmp.tmp"
+
+usage()
+{
+	echo "Usage: mailToEosGroup [message] [additional message]"
+}
+
+NameRead()
+{
+	ans="N"
+	while [ $ans != "Y" -a $ans != "y" ]
+	do
+		echo $1
+		read Name
+		echo "$Name is good ?"
+		read ans
+	done
+}
+# Store Flags
+FlagsCharacter="-"
+
+case $# in 
+	0)
+		;;
+	*)
+		while [ `echo $1 | cut -c1` = ${FlagsCharacter} ]
+		do
+			if [ `echo $1 | cut -c2` = "h" ] 
+			then
+				usage
+			else
+				parms="${parms} $1"
+				shift 
+			fi
+		done
+		;;
+esac
+
+rm -f ${tmpFile}
+case $# in
+	0) # 
+		echo "Enter Message"
+		read message1
+		echo "Enter Additional Message"
+		while read message0
+		do
+			echo $message0 >> ${tmpFile}
+		done
+		;;
+	1) # 
+		message1=$1
+		echo "Enter Additional Message: End Of Message^D"
+		while read message0
+		do
+			echo $message0 >> ${tmpFile}
+		done
+		;;
+	2) 	#
+		message1=$1
+		message2=$2
+		echo $message2 >> ${tmpFile}
+		;;
+	*)  #
+		usage
+		;;
+esac
+#
+currentDir=`pwd`
+currentWho=`whoami`
+
+echo "\nby " ${currentWho} >> ${tmpFile}
+echo "by mailToEosGroup" >> ${tmpFile}
+
+cat ${EOS_HOME}/sbin/config/mailing-lists | \
+while read To 
+do
+	#cat ${tmpFile} | elm -s"[Eos] ${message1}" $To
+	cat ${tmpFile} | mail -s "[Eos] ${message1}" $To
+done
+
+rm -f ${tmpFile}

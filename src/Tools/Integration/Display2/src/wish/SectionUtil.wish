@@ -1,0 +1,204 @@
+#
+# SectionUtil
+#
+#
+#
+proc sectionInit {} {
+	global Section	
+
+	set Section(Initialize) 1
+	set Section(flag)  OFF
+	set Section(which) Y
+	set Section(scale) 1 
+	set Section(scaleDelta) 0.1 
+	set Section(at)    0 
+	set Section(atDelta)   1 
+	set Section(mode)  normal 
+	set Section(Num)   0
+	set Section(Current) -1 
+	set Section(Win,Title) "Section Information"
+}
+
+proc sectionRecreateAll {} { 
+	global Section
+	
+	for { set i 0 } { $i < $Section(Num) } { incr i 1 } {
+		set Section(at)    $Section([subst $i],at)
+		set Section(which) $Section([subst $i],which)
+		sectionCreate $i 
+		puts "$i,$Section(at),$Section(which)"
+	}
+}
+
+proc sectionRecreate {} {
+	sectionClear
+	sectionCreate  
+}
+
+proc sectionNextCreate {} {
+	global Section
+
+	set  next [ expr $Section(Current) + 1 ]
+	sectionClear  $next
+	sectionCreate $next
+	set Section(Current) [ expr  $Section(Current) - 1 ]
+}
+
+proc sectionCreate { {Current -1 } } {
+	global Section
+	global Desktop
+	global fileNameIn
+	global mainImage
+	global Roi
+
+	set c $Desktop(mainCanvas).canvas
+	
+	if { 0 <= $Current } {
+		set Section(Current) $Current 
+	} else {
+		set Section(Num) [ expr $Section(Num)+1 ]
+		set Section(Current) [ expr $Section(Num)-1 ]
+	}
+
+	if [ info exists Section([subst $Section(Current)],tag) ] {
+		$c delete $Section([subst $Section(Current)],tag)
+		puts "$Current:$Section(Current) delete in sectionCreate"
+	}
+	set Section($Section(Current),tag)   Section$Section(Current)
+	set Section($Section(Current),at)    $Section(at)
+	set Section($Section(Current),which) $Section(which)
+	puts "$Section(Current),$Section(at),$Section(which) in sectionCreate"
+
+	switch $Section(which) {
+		X {
+			## | section Parallel to y-axis
+			set sectionData [ mrcInfoGet $fileNameIn SectX $Section(at) ]
+			set length $mainImage(height)
+		}
+		Y { 
+			## - section  Parallel to x-axis */
+			set sectionData [ mrcInfoGet $fileNameIn SectY $Section(at) ]
+			set length $mainImage(width)
+		}
+	} 
+
+	set sum [lindex $sectionData 0 ] 
+	set min $sum
+	set max $sum
+	for { set i 1 } { $i < $length } { incr i 1 } {
+		set data [ lindex $sectionData $i ] 
+		set sum  [ expr $sum+$data ]
+		if { $data < $min } {
+			set min $data
+		}
+		if { $max < $data } {
+			set max $data
+		}
+	}	
+	set mean [ expr $sum/$length ]
+	switch $Section(mode) {
+		normal {
+			set offset $mainImage(min) 
+		}
+		min {
+			#puts $min
+			set offset $min
+		}
+		float {
+			#puts $mean
+			set offset $mean
+		}
+		default {
+			set offset 0
+		}
+	}
+
+	switch $Section(which) {
+		Y {
+			switch $mainImage(mode) {
+				R {
+					set offsety [ expr  - $Section(at) + $mainImage(height) - 1.0 ]
+				}
+				default	{
+					set offsety [ expr  - $Section(at) + $mainImage(height) / 2.0 ]	
+				}
+			}	
+			for { set i 0 } { $i < $length } { incr i 1 } {
+				set data [ lindex $sectionData $i ] 
+				lappend p $i \
+					  [ expr -1*( $data - $offset)*$Section(scale) + $offsety ] 
+			}	
+		}
+		X {
+			switch $mainImage(mode) {
+				R { 
+					set offsetx [ expr  $Section(at) ]
+				} 
+				default {
+					set offsetx [ expr  $Section(at) + $mainImage(width)/2.0 ]	
+				}
+			}
+			for { set i 0 } { $i < $length } { incr i 1} {
+				set data [ lindex $sectionData $i ] 
+				lappend p [ expr +1*( $data - $offset)*$Section(scale) + $offsetx ] \
+						  [ expr $length - 1 - $i ] 
+			}
+		}
+	}
+	eval { $c create line } $p { -fill red -tags  $Section([subst $Section(Current)],tag) }
+	$c scale $Section([subst $Section(Current)],tag) 0 0 \
+					[expr $Roi(Zoom)*$Roi(ZoomX)] [ expr $Roi(Zoom)*$Roi(ZoomY) ]
+	$c move  $Section([subst $Section(Current)],tag) \
+					[expr 0.5*$Roi(Zoom)*$Roi(ZoomX)] [ expr +0.5*$Roi(Zoom)*$Roi(ZoomY) ]
+}
+
+proc sectionClearAll { } {
+	global Section
+
+	while { 0 < $Section(Num) } {
+		sectionClear
+	}
+}
+
+proc sectionClear { {Current -1} } {
+	global Desktop
+	global Section
+
+	set c $Desktop(mainCanvas).canvas
+
+	if { 0 <= $Current } {
+		set Section(Current) $Current
+		if { $Section(Num) <= $Current } {
+			if [ info exists Section([subst $Section(Current)],tag) ] {
+				$c delete $Section([subst $Section(Current)],tag);
+				puts "$Current:$Section(Current) delete in sectionClear"
+			}
+		} else {
+			puts "Sorry. Not supported: canceling the middle of lists "	
+		}
+	} else {
+		if { 0 < $Section(Num) } { 
+			if [ info exists Section([subst $Section(Current)],tag) ] {
+				$c delete $Section([subst $Section(Current)],tag);
+			}
+
+			set Section(Num) [ expr $Section(Num)-1 ]
+			set Section(Current) [ expr $Section(Num)-1 ]
+		}
+	} 
+}
+
+proc sectionChange { } {
+	global Section
+
+	set w .sectionInfo
+	set f $w.which
+	set b $f.which 
+	if { $Section(which) == "X" } {
+		set Section(which) Y
+	} else {
+		set Section(which) X
+	}
+	$b configure -text "$Section(which)" -command sectionChange
+}
+

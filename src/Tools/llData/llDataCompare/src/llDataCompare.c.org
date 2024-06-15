@@ -1,0 +1,70 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>                  
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+#include "llData.h"
+
+void
+main(int argc, char* argv[]) 
+{
+    llData*   llIn;    /* Test Data */
+    THIS_PROGRAM_INFO info; 
+    int i, n, l, ll, iR;
+	double R;
+    long      status;
+    FILE* fpt;
+
+	init0(&info);
+    argCheck(&info, argc, argv);
+    init1(&info);
+    
+    /* Input Test llDataFile */
+    llIn=(llData*)memoryAllocate(info.flagInFile*sizeof(llData), "in Main");
+    for(i=0; i<info.flagInFile; i++) {
+        fpt = fileOpen(info.inFileNameList[i], "r");
+        llDataFileRead(fpt, &(llIn[i]), 0);
+        llIn[i].truePitch = info.truePitch;
+        fclose(fpt);
+    }
+	if(info.mode&0x01) { /* The same point data */
+		if(info.flagN*info.flagL*info.flagR) {
+			info.Point = (llComplex*)memoryAllocate(sizeof(llComplex)*info.flagInFile, "in Main");	
+			for(i=0; i<info.flagInFile; i++) {
+				status=0;
+				for(ll=0; ll<llIn[i].llMax; ll++) {
+					if(info.n==llIn[i].LL[ll].nn && info.l==llIn[i].LL[ll].nl) {
+					    for(iR=0; iR < llIn[i].LL[ll].nR - 1; iR++) {
+							if( llIn[i].LL[ll].data[iR].RR <= info.R 
+							 && info.R < llIn[i].LL[ll].data[iR+1].RR ) {
+								info.Point[i] = llIn[i].LL[ll].data[iR];
+								status++;
+								break;
+							}
+						}
+					} 
+				}
+				if(status==0) {
+					fprintf(stderr, "No data was found in %s (%d, %d, %f)\n", info.inFileNameList[i], info.n, info.l, info.R);
+					info.Point[i].RR = -1;
+				}
+			}
+		} else {
+			usage(argv[0]);
+		}
+	}
+
+
+	if(info.mode&0x01) { /* The same point data */
+		for(i=0; i<info.flagInFile; i++) {
+			fprintf(info.fptOut, "%15.6e %15.6e %15.6e %15.6e\n",
+				info.Point[i].Re,
+				info.Point[i].Im,
+				info.Point[i].F,
+				info.Point[i].PHI*DEGREE
+				);
+		}
+	}
+}
+

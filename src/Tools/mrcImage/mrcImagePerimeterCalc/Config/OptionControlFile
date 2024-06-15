@@ -1,0 +1,9 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input(Binary)","Essential","1","1","In","inFile::mrcImage","NULL"
+"-o","-o[utput]","Output","Essential","1","1","Out","outFile::mrcImage","NULL"
+"-oA","-o[utput]A[rea]","Output","Optional","1","1","OutArea","outFile::mrcImage","NULL"
+"-oC","-o[utput]C[hainCode]","Output","Optional","1","1","OutChainCode","outFile::mrcImage","NULL"
+"-oL","-o[utput]L[abel]","Output","Optional","1","1","OutLabel","outFile::mrcImage","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

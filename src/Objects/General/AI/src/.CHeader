@@ -1,0 +1,4 @@
+CHeader = \
+NeuralNet.h \
+lmrcNeuralNet.h \
+

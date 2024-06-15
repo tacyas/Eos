@@ -1,0 +1,6 @@
+# OptionControlFile
+# FileFormat
+"-byte","-byte","Byte","Optional","1","1","byte","Integer","1"
+"-item","-item","Item","Optional","1","1","item","Integer","1"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

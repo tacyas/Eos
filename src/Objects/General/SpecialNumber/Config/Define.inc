@@ -1,0 +1,3 @@
+OBJECTNAME = SpecialNumber
+EXTRA_INC =
+EXTRA_CCOPTS =

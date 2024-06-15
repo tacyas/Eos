@@ -1,0 +1,60 @@
+#!/bin/sh
+#
+# %M% %Y% %I%
+#
+# The latest update : %G% at %U%
+#
+#%Z% eosDistributionTool Function
+#%Z%
+#
+#%Z% Usage : eosDistributionTool 
+#
+#%Z% Attention
+#%Z%
+#%Z% Parameter: 
+#%Z%     Optional:
+#%Z%
+
+usage()
+{
+	echo "Usage: eosDistributionTool"
+}
+
+NameRead()
+{
+	ans="N"
+	while [ $ans != "Y" -a $ans != "y" ]
+	do
+		echo $1
+		read Name
+		echo "$Name is good ?"
+		read ans
+	done
+}
+# Store Flags
+FlagsCharacter="-"
+
+case $# in 
+	0)
+		;;
+	*)
+		while [ `echo $1 | cut -c1` = ${FlagsCharacter} ]
+		do
+			if [ `echo $1 | cut -c2` = "h" ] 
+			then
+				usage
+			else
+				parms="${parms} $1"
+				shift 
+			fi
+		done
+		;;
+esac
+#
+currentDir=`pwd`
+DistributionDir=doc/Distribution
+
+cd $EOS_HOME
+tar cf - bin env repos testsuite doc examples objects sbin | gzip -c > ${DistributionDir}/Executable.tar.gz 
+tar cf - include lib sccs src                              | gzip -c > ${DistributionDir}/Development.tar.gz 
+tar cf - utilities                                         | gzip -c > ${DistributionDir}/Utilities.tar.gz 

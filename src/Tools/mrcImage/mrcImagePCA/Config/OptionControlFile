@@ -1,0 +1,13 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: filelist","Essential","1","1","InList","inFileListNoOpen","NULL"
+"-o","-o[utput]","Output: filelist","Essential","1","1","OutList","outFileListNoOpen","NULL"
+"-EPS","-EPS","EPS: lambda<EPS, stop calculation. ","Optional","1","1","EPS","Real","1e2"
+"-NX","-NX","NX: pixcelNX ","Optional","1","1","NX","Integer","30"
+"-NY","-NY","NY: pixcelNX ","Optional","1","1","NY","Integer","30"
+"-O","-O[utput]","Output: vectorfile","Optional","1","1","Outvector","outFile","NULL"
+"-EPSO","-EPSO[utput]","EPSOutput: caletimefile","Optional","1","1","EPSOutcaletime","outFile","NULL"
+"-E","-E[igenImage]","Output: eigenImage","Optional","1","1","EigenImage","String","eigen"
+"-numE","-numE[igenImage]","Number of eigenImages","Optional","1","1","numOfEigenImage","Integer","10"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

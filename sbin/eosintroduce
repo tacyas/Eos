@@ -1,0 +1,128 @@
+#!/bin/sh
+#
+# eosintroduce  1.1
+#
+# The latest update : 01/03/96 at 21:16:57
+#
+#@(#) eosintroduce Function
+#@(#)
+#
+#@(#) Usage : eosintroduce World Class Name ToBeIntroduced
+#
+#@(#) Attention
+#@(#)
+#@(#) Parameter: 
+#@(#)     Essential:
+#@(#)         SourceFileName
+#@(#)     Optional:
+#@(#)
+
+usage()
+{
+	echo "Usage: eosintroduce World Class Name ToBeIntroduced"
+}
+eosInstall0()
+{
+	case ${EosWorld} in
+		Tools)
+			HomeDir=${EOS_HOME}/src/${EosWorld}/${EosClass}/${EosTool}
+			;;
+		Objects)
+			HomeDir=${EOS_HOME}/src/${EosWorld}/${EosClass}/${EosObject}
+			;;
+		*)
+			echo "Not supported World ${EosWorld}."
+			exit
+			;;
+	esac
+}
+NameRead()
+{
+	ans="N"
+	while [ $ans != "Y" -a $ans != "y" ]
+	do
+		echo $1
+		read Name
+		echo "$Name is good ?"
+		read ans
+	done
+}
+# Store Flags
+FlagsCharacter="-"
+
+case $# in 
+	0)
+		;;
+	*)
+		while [ `echo $1 | cut -c1` = ${FlagsCharacter} ]
+		do
+			if [ `echo $1 | cut -c2` = "h" ] 
+			then
+				usage
+			else
+				parms="${parms} $1"
+				shift 
+			fi
+		done
+		;;
+esac
+#
+currentDir=`pwd`
+DirToBeIntroduced=$currentDir
+case $# in
+	0)
+		sh -c "${EOS_HOME}/sbin/makegeneral All"
+		;;
+	1)
+		sh -c "${EOS_HOME}/sbin/makegeneral $1"
+		;;
+	4)
+		EosWorld=$1
+		EosClass=$2
+		EosObject=$3
+		EosTool=$3
+		DirToBeIntroduced=$4	
+		sh -c "${EOS_HOME}/sbin/makegeneral All $EosWorld $EosClass $EosTool"
+		;;
+	*)
+		usage
+		exit
+		;;
+esac
+#
+#
+
+echo ${EosWorld}/${EosClass}/${EosTool}
+ans="Y"
+echo "May I introduce "${DirToBeIntroduced}" ?"
+read ans
+case $ans in
+	Y|y)
+		;;
+	*)
+		exit
+		;;
+esac	
+
+case ${EosWorld} in
+	Tools)
+		HomeDir=${EOS_HOME}/src/${EosWorld}/${EosClass}/${EosTool}
+		;;
+	Objects)
+		HomeDir=${EOS_HOME}/src/${EosWorld}/${EosClass}/${EosObject}
+		;;
+	*)
+		echo "Not supported World ${EosWorld}."
+		exit
+		;;
+esac
+cp -f ${DirToBeIntroduced}/Config/*   ${HomeDir}/Config
+cp -f ${DirToBeIntroduced}/src/*.c    ${HomeDir}/src
+cp -f ${DirToBeIntroduced}/inc/*.h    ${HomeDir}/inc
+if [ -f ${DirToBeIntroduced}/doc/*.html ]
+then
+	cp -f ${DirToBeIntroduced}/doc/*.html ${HomeDir}/doc
+fi
+cd ${HomeDir}
+make install
+

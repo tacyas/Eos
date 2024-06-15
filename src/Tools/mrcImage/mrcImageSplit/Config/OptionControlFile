@@ -1,0 +1,13 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: mrcImage","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","Output: Basename","Optional","1","1","Out","String",""
+"-s","-s[uffix]","Output: Suffix","Optional","1","1","Suffix","String","%04d%04d%04d.splt"
+"-H","-H[eight]","Input: Height[y]: SplitSize [pixel]","Optional","1","1","Height","Integer","0"
+"-W","-W[idth]","Input: Width[x]: SplitSize [pixel]","Optional","1","1","Width","Integer","0"
+"-S","-S[ection]","Input: Section[z]: SplitSize [pixel]","Optional","1","1","Section","Integer","0"
+"-HA","-H[eight]A[ngstrom]","Input: Height: SplitSize [A]","Optional","1","1","HeightA","Integer","0"
+"-WA","-W[idth]A[ngstrom]","Input: Width: SplitSize [A]","Optional","1","1","WidthA","Integer","0"
+"-SA","-S[ection]A[ngstrom]","Input: Section: SplitSize [A]","Optional","1","1","SectionA","Integer","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

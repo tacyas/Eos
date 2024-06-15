@@ -1,0 +1,40 @@
+ SURFACE ANALYSIS:
+
+ The following parameters are appropriate if fiducials are all on one surface
+
+ Fit of one plane to all fiducials:
+ Adjusted slope = -0.0672
+ Incremental tilt angle change =   3.84
+ Total tilt angle change =         1.73
+
+ The following parameters are provided to indicate the consistency
+ of the fit when fiducials are on two surfaces
+
+ Fit of one plane to points on bottom surface:
+ # of points =     14
+ Z axis intercept =  -35.42
+ Adjusted slope =    0.0098
+ Mean residual =      0.437
+ X axis tilt needed = -0.43
+ Incremental tilt angle change =  -0.56
+ Total tilt angle change =        -2.67
+
+ Fit of one plane to points on top surface:
+ # of points =     11
+ Z axis intercept =   45.35
+ Adjusted slope =   -0.0034
+ Mean residual =      0.875
+ X axis tilt needed =  0.21
+ Incremental tilt angle change =   0.20
+ Total tilt angle change =        -1.91
+
+ The following parameters combine the last two results and are
+ appropriate if fiducials are on two surfaces
+
+ Thickness at Z intercepts =      80.77
+ Average adjusted slope =        0.0040
+ Average X axis tilt needed =     -0.15
+ Incremental tilt angle change =  -0.23
+ Total tilt angle change =        -2.34
+
+

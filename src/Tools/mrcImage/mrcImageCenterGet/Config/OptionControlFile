@@ -1,0 +1,14 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-Nx","-Nx[Number of x]","Nx:Default Nx of inputfile","Optional","1","1","Nx","Integer","0"
+"-Ny","-Ny[Number of y]","Ny:Default Ny of inputfile","Optional","1","1","Ny","Integer","0"
+"-Nz","-Nz[Number of z]","Nz:Default Nz of inputfile","Optional","1","1","Nz","Integer","0"
+"-Cx","-Cx[Center x]","Cetnter x position of extracted image.Default is center of iuput image.","Optional","1","1","Cx","Real","0"
+"-Cy","-Cy[Center y]","Cetnter y position of extracted image.Default is center of iuput image.","Optional","1","1","Cy","Real","0"
+"-Cz","-Cz[Center z]","Cetnter z position of extracted image.Default is center of iuput image.","Optional","1","1","Cz","Real","0"
+"-even","-even","all dimensions of N are even. ","Optional","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"
+"-M","-M[ode2]","Mode2","Optional","1","1","mode2","Integer","0"

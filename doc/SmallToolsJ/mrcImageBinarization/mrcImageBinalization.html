@@ -1,0 +1,613 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageBinalization</title>
+</head>
+<body>
+	<font color="red"><b><h2>mrcImageBinalization<br></h2></b></font>
+	<h4>二値化処理</h4>
+	
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>オプション</th>
+				<th>必須項目/選択項目</th>
+				<th>説明</th>
+				<th>デフォルト</th>
+			</tr>
+			<tr>
+				<td>-i</td>
+				<td>必須</td>
+				<td>入力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-o</td>
+				<td>必須</td>
+				<td>出力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-t</td>
+				<td>選択</td>
+				<td>閾値の値を設定</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-v</td>
+				<td>選択</td>
+				<td>value値を設定</td>
+				<td>0</td>
+			</tr>
+				<tr>
+				<td>-near</td>
+				<td>選択</td>
+				<td>ピクセル数を増やし、画像を大小変化させる</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-nLevel</td>
+				<td>選択</td>
+				<td>kittler法、大津法で使用<br>
+				ヒストグラムの濃度値を設定する</td>
+				<td>256</td>
+			</tr>
+			<tr>
+				<td>-p</td>
+				<td>選択</td>
+				<td>p-tile法で使用<br>
+				ヒストグラムから画素数の全体に対する割合<br>を判断し設定</td>
+				<td>0.5</td>
+			</tr>
+			<tr>
+				<td>-m</td>
+				<td>選択</td>
+				<td>モードを設定</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-h</td>
+				<td>選択</td>
+				<td>ヘルプを表示</td>
+				<td>　</td>
+			</tr>
+			</div>
+		</table>
+		<br>
+		
+		
+<!-- モード説明 -->
+
+	<br>
+	<caption><b>モードの詳細</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>モード</th>
+				<th>説明</th>
+			</tr>
+			<tr>
+				<td>0</td>
+				<td>閾値より下の値：0（黒）<br>
+				閾値より上の値：1（白）</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>閾値より下の値：1（白）<br>
+				閾値より上の値：0（黒）</td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td>閾値より下の値：valueの値を表示<br>
+				閾値より上の値：処理しない</td>
+			</tr>
+			<tr>
+				<td>3</td>
+				<td>閾値より下の値：処理しない<br>
+				閾値より上の値：valueの値を表示</td>
+			</tr>
+				<tr>
+				<td>16</td>
+				<td>kittler法で閾値を設定</td>
+			</tr>
+			<tr>
+				<td>32</td>
+				<td>大津法で閾値を決定</td>
+			</tr>
+			<tr>
+				<td>48</td>
+				<td>p-tile法で閾値を決定<br>
+				pの値の範囲：0.0～1.0</td>
+			</tr>
+			</div>
+		</table>
+		<br>
+		
+	<h4>******実行例******</h4>	
+		
+<!-- 入力ファイル説明 -->
+
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="b120.center.png" border="0" alt="b120.center.png(2730 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				65.5929<br>
+				5.45036<br>
+				12.3043<br>
+				0.153804<br></p>
+			</td>
+		</tr>
+	</table>
+		
+<!-- モード０～３での処理 -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------モード0～3での処理画像------</font></caption><br>
+	<table>
+		<tr><td>モード：0</td></tr>
+		<tr>
+			<td><img src="bin.m0.center.png" border="0" alt="bin.m0.center.png(995 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">1<br>
+				1<br>
+				1<br>
+				0<br>
+				0<br></p>
+			</td>
+			<td>-tでthresholdの値を1に変更<br>
+				　　－－－－－－＞</td>
+			<td><img src="bin.m0t1.center.png" border="0" alt="bin.m0t1.center.png(1137 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				1<br>
+				0.236406<br>
+				0.424874<br>
+				0.00531093<br></p>
+			</td>
+		</tr>
+		<tr><td>モード：1</td></tr>
+		<tr>
+			<td><img src="bin.m1.center.png" border="0" alt="bin.m1.center.png(1245 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				1<br>
+				0.717187<br>
+				0.450366<br>
+				0.00562958<br></p>
+			</td>
+		</tr>
+		<tr><td>モード：2</td></tr>
+		<tr>
+			<td><img src="bin.m2.center.png" border="0" alt="bin.m2.center.png(2730 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				65.5929<br>
+				5.45036<br>
+				12.3043<br>
+				0.153804<br></p>
+			</td>
+		</tr>
+		<tr><td>モード：3</td></tr>
+		<tr>
+			<td><img src="bin.m3.center.png" border="0" alt="bin.m3.center.png(962 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				0<br>
+				0<br>
+				0<br>
+				0<br></p>
+			</td>
+			<td>-vでvalueの値を1に変更<br>
+				　　－－－－－－＞</td>
+			<td><img src="bin.m3v1.center.png" border="0" alt="bin.m3v1.center.png(1149 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				1<br>
+				0.282813<br>
+				0.450366<br>
+				0.00562958<br></p>
+			</td>
+		</tr>
+	</table>
+
+<!-- kittler法での処理 -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------モード：kittler法での処理画像------</font></caption><br>
+	<table>
+		<tr><td>モード：16</td></tr>
+		<tr>
+			<td><img src="bin.m16.center.png" border="0" alt="bin.m16.center.png(1140 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				1<br>
+				0.256719<br>
+				0.436823<br>
+				0.00546029<br></p>
+			</td>
+		</tr>
+		<tr><td>モード：17</td></tr>
+		<tr>
+			<td><img src="bin.m17.center.png" border="0" alt="bin.m17.center.png(1221 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				1<br>
+				0.743281<br>
+				0.436823<br>
+				0.00546029<br></p>
+			</td>
+		</tr>
+		<tr><td>モード：18</td></tr>
+		<tr>
+			<td><img src="bin.m18.center.png" border="0" alt="bin.m18.center.png(2730 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				65.5929<br>
+				5.44815<br>
+				12.3053<br>
+				0.153816<br></p>
+			</td>
+		</tr>
+		<tr><td>モード：19</td></tr>
+		<tr>
+			<td><img src="bin.m19.center.png" border="0" alt="bin.m19.center.png(1431 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				0.255582<br>
+				0.00221558<br>
+				0.0173212<br>
+				0.000216515<br></p>
+			</td>
+		</tr>
+	</table>
+	
+<!-- 大津法での処理 -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------モード：大津法での処理画像------</font></caption><br>
+	<table>
+		<tr><td>モード：32</td></tr>
+		<tr>
+			<td><img src="bin.m32.center.png" border="0" alt="bin.m32.center.png(1143 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				1<br>
+				0.136719<br>
+				0.34355<br>
+				0.00429438<br></p>
+			</td>
+		</tr>
+		<tr><td>モード：33</td></tr>
+		<tr>
+			<td><img src="bin.m33.center.png" border="0" alt="bin.m33.center.png(1197 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				1<br>
+				0.863281<br>
+				0.34355<br>
+				0.00429438<br></p>
+			</td>
+		</tr>
+		<tr><td>モード：34</td></tr>
+		<tr>
+			<td><img src="bin.m34.center.png" border="0" alt="bin.m34.center.png(1946 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				65.5929<br>
+				4.64003<br>
+				12.2803<br>
+				0.153504<br></p>
+			</td>
+		</tr>
+		<tr><td>モード：35</td></tr>
+		<tr>
+			<td><img src="bin.m35.center.png" border="0" alt="bin.m35.center.png(2074 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				17.3948<br>
+				0.810336<br>
+				2.84794<br>
+				0.0355993<br></p>
+			</td>
+		</tr>
+	</table>
+	
+<!-- p-tile法での処理 -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------モード：p-tile法での処理画像------</font></caption><br>
+	<table>
+		<tr><td>モード：48</td></tr>
+		<tr>
+			<td><img src="bin.m48.center.png" border="0" alt="bin.m48.center.png(995 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">1<br>
+				1<br>
+				1<br>
+				0<br>
+				0<br></p>
+			</td>
+			<td>-pで値を0.2に変更<br>
+				　　－－－－－－＞</td>
+			<td><img src="bin.m48p0.2.center.png" border="0" alt="bin.m48p0.2.center.png(1142 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				1<br>
+				0.2025<br>
+				0.401863<br>
+				0.00502329<br></p>
+			</td>
+		</tr>
+		<tr><td>モード：49</td></tr>
+		<tr>
+			<td><img src="bin.m49.center.png" border="0" alt="bin.m49.center.png(962 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				0<br>
+				0<br>
+				0<br>
+				0<br></p>
+			</td>
+			<td>-pで値を0.2に変更<br>
+				　　－－－－－－＞</td>
+			<td><img src="bin.m49p0.2.center.png" border="0" alt="bin.m49p0.2.center.png(1215 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				1<br>
+				0.7975<br>
+				0.401863<br>
+				0.00502329<br></p>
+			</td>
+		</tr>
+		<tr><td>モード：50</td></tr>
+		<tr>
+			<td><img src="bin.m50.center.png" border="0" alt="bin.m50.center.png(2730 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				65.5929<br>
+				5.45036<br>
+				12.3043<br>
+				0.153804<br></p>
+			</td>
+			<td>-pで値を0.1に変更<br>
+				　　－－－－－－＞</td>
+			<td><img src="bin.m50p0.1.center.png" border="0" alt="bin.m50p0.1.center.png(1694 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				65.5929<br>
+				3.87831<br>
+				11.8628<br>
+				0.148285<br></p>
+			</td>
+		</tr>
+		<tr><td>モード：51</td></tr>
+		<tr>
+			<td><img src="bin.m51.center.png" border="0" alt="bin.m51.center.png(962 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				0<br>
+				0<br>
+				0<br>
+				0<br></p>
+			</td>
+			<td>-pで値を0.2に変更<br>
+				　　－－－－－－＞</td>
+			<td><img src="bin.m51p0.2.center.png" border="0" alt="bin.m51p0.2.center.png(1717 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				4.83642<br>
+				0.101284<br>
+				0.511184<br>
+				0.0063898<br></p>
+			</td>
+		</tr>		
+	</table>
+	
+<!-- ピクセル数を増やす -->
+	
+	<br>
+	<br>
+	<caption><font color="blue">------ピクセル数を増やす（オプション　-near)------</font></caption><br>
+
+	<div>値に1を設定・モード16で実行</div>
+	<table>
+		<tr>
+			<td><img src="bin.m0near1t1.center.png" border="0" alt="bin.m0near1t1.center.png(1141 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				1<br>
+				0.260937<br>
+				0.439146<br>
+				0.00548932<br></p>
+			</td>
+			<td>値を10に変更<br>
+				　　－－－－－－＞</td>
+			<td><img src="bin.m0near10t1.center.png" border="0" alt="bin.m0near10t1.center.png(1184 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				1<br>
+				0.532031<br>
+				0.498973<br>
+				0.00623716<br></p>
+			</td>
+		</tr>
+	</table>
+	
+<!-- ヒストグラムの分割数を変える -->
+	
+	<br>
+	<br>
+	<caption><font color="blue">------ヒストグラムの濃度値を設定（オプション　-nLevel)------</font></caption><br>
+
+	<div>値に25を設定・モード16で実行</div>
+	<table>
+		<tr>
+			<td><img src="binm16nLevel25.center.png" border="0" alt="binm16nLevel25.center.png(1157 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				1<br>
+				0.21875<br>
+				0.413399<br>
+				0.00516748<br></p>
+			</td>
+			<td>値を200に変更<br>
+				　　－－－－－－＞</td>
+			<td><img src="binm16nLevel200.center.png" border="0" alt="binm16nLevel200.center.png(1143 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				1<br>
+				0.253437<br>
+				0.434979<br>
+				0.00543724<br></p>
+			</td>
+		</tr>
+	</table>
+
+</body>
+</html>

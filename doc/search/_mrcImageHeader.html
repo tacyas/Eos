@@ -1,0 +1,31 @@
+<HTML>
+<BODY>
+<H1>_mrcImageHeader</H1><BR>
+<H3>in mrcImage.h</H3><BR>
+<PRE>
+typedef struct <A HREF="_mrcImageHeader.html">_mrcImageHeader </A>{ <BR>
+	mrcImageParaTypeIntegerCoord        N;	     <BR>
+	mrcImageMode                        Mode;    <BR>
+	mrcImageParaTypeIntegerCoord        StartN;  <BR>
+	mrcImageParaTypeIntegerCoord        M;	     <BR>
+	mrcImageParaTypeRealCoord           Length;  <BR>
+	mrcImageParaTypeReal                Alpha;   <BR>
+	mrcImageParaTypeReal                Beta; <BR>
+	mrcImageParaTypeReal                Gamma; <BR>
+	mrcImageParaTypeInteger             MAPC;    <BR>
+	mrcImageParaTypeInteger             MAPR;    <BR>
+	mrcImageParaTypeInteger             MAPS;    <BR>
+	mrcImageParaTypeReal                AMin;    <BR>
+	mrcImageParaTypeReal                AMax;    <BR>
+	mrcImageParaTypeReal                AMean;   <BR>
+	mrcImageParaTypeInteger             ISPG;    <BR>
+	mrcImageParaTypeInteger             NSYMBT;  <BR>
+	mrcImageParaTypeReal                EXTRA[MRC_MAX_EXTRA];  <BR>
+    <A HREF="mrcImageParaTypeReal.html">mrcImageParaTypeReal </A>               OriginX; <BR>
+    <A HREF="mrcImageParaTypeReal.html">mrcImageParaTypeReal </A>               OriginY; <BR>
+    <A HREF="mrcImageParaTypeInteger.html">mrcImageParaTypeInteger </A>            LabelN; <BR>
+    char                                Label[MRC_MAX_LABEL_N][MRC_MAX_LABEL_LEN]; <BR>
+} _mrcImageHeader; <BR>
+ 
+</PRE></HTML>
+</BODY>

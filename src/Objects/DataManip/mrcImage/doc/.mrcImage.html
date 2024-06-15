@@ -1,0 +1,94 @@
+<H2> Concept </H2>
+	<A HREF="#include">mrcImage.h</A>
+<H2> Data Structure </H2>
+<H2> Member Function </H2>
+<UL>
+<LI> Momory Control for mrcImage <UL> 
+		<LI>mrcInit
+		<LI>mrcImageFree
+	</UL>
+<LI> File Control for mrcImage-formatted file <UL>
+		<LI>mrcFileRead <UL>
+				<DD> mrcHeaderRead and mrcImageRead	
+				<DD> No initialization is required.
+			<LI>mrcImageRead
+				<DD> Read image following header information	
+			<LI>mrcHeaderRead
+		</UL>
+		<LI>mrcFileWrite
+	</UL>
+
+	<LI> Subtration : in lmrcImageSubtraction.c <DL>
+		<DT>lmrcImageSubtraction(mrcImage* out, mrcImage* in, double value);
+			<DD>out := in  - value      
+		<DT>lmrcImageMeanSubtraction(mrcImage* out, mrcImage* in); 
+			<DD>out := in  - mean of in 
+		<DT>lmrcImageMinSubtraction(mrcImage* out, mrcImage* in); 
+			<DD>out := in  - min  of in 
+		<DT>lmrcImageMaxSubtraction(mrcImage* out, mrcImage* in);
+			<DD>out := in  - max  of in 
+		<DT>lmrcImageSubtractionCalc(mrcImage* out, mrcImage* in1, mrcImage* in2); 
+			<DD>out := in1 - in2        
+	</DL>
+	
+	<LI> Rotation : in lmrcImageRotation.c : mrcImage.h<DL>
+		<DT> 3D: lmrcImageRotation3DFollowingEulerAngle
+			<DD> Rotation of a 3D image
+		<DT> 3D: lmrcImageRotation3DZXY
+			<DD> Rotation ZXY of a 3D image
+		<DT> 2D: lmrcImageRotation2D
+			<DD> Rotation of a 2D image
+		<DT> 2D: lmrcImageRotationPeriodicBoundary
+			<DD> Rotation of a 2D image 
+	</DL>
+    <LI> Correlation : in lmrcImageCorrelation <DL>
+		<DT>double lmrcImageEuclidDistanceCalc(mrcImage* in1, mrcImage* in2, int mode)
+			<DD> return Euclid Distnce <UL>
+			<LI> 0: sigma<SUB>i</SUB>(in1<SUB>i</SUB> - in2<SUB>i</SUB>)<SUP>2</SUP>
+			<LI> 1: sqrt(sigma<SUB>i</SUB>(in1<SUB>i</SUB> - in2<SUB>i</SUB>)<SUP>2</SUP>)
+			<LI> 2: the above number / pixelNumber; 
+			</UL>
+			<DD>
+		<DT>lmrcImageCorralation(mrcImage* out, mrcImage* in, mrcImage* ref, long mode);
+			<DD>
+		<DT>void lmrcImageCorrelationRefinement(mrcImage* out, mrcImage* shift, 
+				mrcImage* in, mrcImage* ref, 
+				lmrcImageCorrelationRefinementInfo* info, long mode)
+			<DD> While two images are shifted in Fourier space, i.e. phase shift,  
+				the best match is searched.
+		<DT>double lmrcImageLinearCorrelation(mrcImage* in1, mrcImage* in2, long mode)
+			<DD> Calculate the linear correlation, i.e. statistical correlation
+		<DT>void lmrcImageAutoRotationCorrelation(mrcImage* out,  mrcImage* cor,
+				mrcImage* in, mrcImage* ref,
+				lmrcImageAutoRotationCorrelationInfo* linfo, int mode)
+			<DD> While a reference image is rotated, lmrcImageCorrelation is used. 
+		<DT>void lmrcImageAutoRotationCorrelationRotationalCrossCorrelationFunction(
+			mrcImage* out,  mrcImage* cor,
+			mrcImage* in, mrcImage* ref,
+			lmrcImageAutoRotationCorrelationInfo* linfo, int mode)
+			<DD> After two images are tranformed from Descartes into Polar coordinates, 
+			 lmrcImageCorrelation is used.
+		<DT>void lmrcImageAutoRotationCorretionForManyReferences(mrcImage* in, mrcImage* ref,
+				lmrcImageAutoRotationCorrelationForManyReferencesInfo* info,
+				lmrcImageAutoRotationCorrelationInfo* linfo,
+				int mode)
+			<DD> Auto Rotational correlation for many references.
+	</DL>
+	<LI> Classifilcation <UL>
+		<LI> ClusterAnalysis <UL>
+			<LI> lmrcImageClusterAnalysis
+			<LI> lmrcImageClusterAnalysisByIteration
+			<LI> lmrcImageDistanceCalc <UL>
+				<LI> lmrcImageDistanceCalc0 <UL>
+					<DD> Interface method for DistanceCalc 
+					<LI> lmrcImageDistanceCalc
+					<LI> lmrcImageDistanceCalcWithAutoRotation
+					<LI> lmrcImageDistanceCalcByWardMethod
+					<LI> lmrcImageDistanceCalcByWardMethodWithAutoRotation
+				</UL>
+			<LI> lmrcImageClusterMerge
+			<LI> lmrcImageClusterAnalysisDistanceToLog(FILE* fpt, ...); 	
+				<DD> Output the log file during analysis  
+		</UL>
+	</UL>
+</UL>

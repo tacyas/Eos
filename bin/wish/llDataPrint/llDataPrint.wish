@@ -1,0 +1,85 @@
+#!/usr/local/bin/bltwish
+#
+#
+## Environment Set
+
+if [file exists llDataPrint.wish ] {
+    lappend auto_path [ pwd ]
+    auto_mkindex [ pwd ] *.wish
+}
+
+if [info exists env(EOS_HOME) ] {
+    set path $env(EOS_HOME)/bin/wish/llDataPrint
+} else {
+    set path [ pwd ]
+}
+
+if [info exists env(EOS_HOME)] {
+    set libpath $env(EOS_HOME)/lib
+} else {
+    set libpath {}
+}
+if ![file exists $path/llDataPrint.wish] {
+    tk_dialog .d "Error:" "Wrong Directory!" error 0 OK
+    exit 0
+}
+
+lappend auto_path $libpath
+lappend auto_path $path
+
+auto_mkindex $path    *.wish
+auto_mkindex $libpath *.wish
+
+# Try to import the blt namespace into the global scope.  If it
+# fails, we'll assume BLT was loaded into the global scope.
+#
+catch { 
+    import add blt 
+}
+
+#
+# Convenient "quit" key
+#
+bind all <Control-KeyPress-c> { exit 0 } 
+focus .
+
+#
+# Replace Tk widgets with tiling widgets
+#
+
+set tileCmds { button checkbutton radiobutton frame label scrollbar toplevel }
+
+if { [info commands "namespace"] == "namespace" } {
+    namespace import blt::*
+} else {
+    foreach cmd $tileCmds  {
+    	rename $cmd ""
+    	rename tile$cmd $cmd
+    }
+}
+
+
+#
+#
+#
+set llMaxOnePage 10
+
+llDataPrintOptionSet 
+
+proc FormatLabel { w value } {
+    puts stderr "tick is $value"
+    return $value
+}
+
+set remote {}
+
+wm min . 10 10
+
+#
+# 
+#
+llDataPrintInit
+llDataPrintMenuSet
+llDataPrintGraphCreate
+llDataPrintDesktopSet 0
+

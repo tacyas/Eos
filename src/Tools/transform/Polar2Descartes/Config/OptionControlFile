@@ -1,0 +1,9 @@
+# OptionControlFile
+# FileFormat
+"-i","-i","input: coord","Optional","3","1","r","Real","1.0","2","phi","Real","90.0","3","theta","Real","0.0"
+"-o","-o","output: coord","Optional","1","1","Out","outFile","stdout"
+"-centre","-centre","Centre","Optional","3","1","cx","Real","0.0","2","cy","Real","0.0","3","cz","Real","0.0"
+"-xaxis","-xaxis","x-axis","Optional","3","1","xx","Real","1.0","2","xy","Real","0.0","3","xz","Real","0.0"
+"-zaxis","-zaxis","z-axis","Optional","3","1","zx","Real","0.0","2","zy","Real","0.0","3","zz","Real","1.0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

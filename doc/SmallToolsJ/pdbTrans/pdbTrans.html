@@ -1,0 +1,156 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>pdbTrans</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>pdbTrans<br></h2></b></font>
+	<h4>pdbファイルをアフィン変換する</h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+	<table border="1">
+		<div align="left">
+		<tr>
+			<th>オプション</th>
+			<th>必須項目/選択項目</th>
+			<th>説明</th>
+			<th>デフォルト</th>
+		</tr>
+		<tr>
+			<td>-i</td>
+			<td>必須</td>
+			<td>入力ファイル設定</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-o</td>
+			<td>必須</td>
+			<td>出力ファイル設定</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-EA</td>
+			<td>選択</td>
+			<td>オイラー角を設定</td>
+			<td>モード　0.0　0.0　0.0</td>
+		</tr>
+		<tr>
+			<td>-h</td>
+			<td>選択</td>
+			<td>ヘルプを表示</td>
+			<td>　</td>
+		</tr>
+	</table>
+	
+	<!-- RotModeの設定の仕方 -->
+	
+	<br>
+	<br>
+	<caption><b>オプション-EAのRotModeの設定の詳細</b></caption>
+	<table>
+		<tr>
+			<td>一桁目：</td>
+			<td>どの軸から回転を始めるか設定</td>
+		</tr>
+		<tr>
+			<td>二桁目：</td>
+			<td>回転軸の順番を設定１</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>O…Z→Y→Xの順に回転軸を変更する<br>
+			E…Z→X→Yの順に回転軸を変更する</td>
+		</tr>
+		<tr>
+			<td>三桁目：</td>
+			<td>回転軸の順番の設定２</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>Y…順番を維持する<br>
+			N…順番を逆順にする</td>
+		</tr>
+		<tr>
+			<td>四桁目：</td>
+			<td>回転方法を設定</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>Y…物体そのものをまわす<br>
+			D…座標を移動させる</td>
+		</tr>
+	</table>
+	
+	<br>
+	
+	<div>※オプション-Mと-EAの両方が宣言されてる場合、最初に-Mを実行し、次に-EAを実行する</div>
+	
+	<h4>******実行例******</h4>
+
+<!-- 入力ファイル詳細 -->
+
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<div><img src="121p.png" border="0" alt="121p.png(17496 byte)" width="183" height="168"><br>
+	pdbInfoでみた入力ファイルの詳細<br>
+	<img src="121p-Info.png" border="0" alt="121p-Info.png(2313 byte)" width="455" height="42"><br>
+	※オプション必須項目のみの場合の出力結果は入力ファイルと変わらない</div>
+	
+<!-- オプション -M-->
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-M------</font></caption><br>
+	<div>例１：ｘ軸方向にせん断する座標変換</div>
+	<table>
+		<tr>
+			<td>行列ファイルの詳細<br>
+			<img src="matrix9.png" border="0" width="92" height="110"></td>
+			<td>出力結果画像<br>
+			ーーーーーー＞</td>
+			<td><img src="121p.M9.png"></td>
+		</tr>	
+		<tr>
+			<td>行列ファイルの詳細<br>
+			<img src="matrix10.png" border="0" width="92" height="112"></td>
+			<td>出力結果画像<br>
+			ーーーーーー＞</td>
+			<td><img src="121p.M10.png"></td>
+		</tr>
+	</table>
+	
+	<div>例２：平面ＸＹに反射する座標変換</div>
+	<table>
+		<tr>
+			<td>行列ファイルの詳細<br>
+			<img src="matrix15.png" border="0" width="102" height="108"></td>
+			<td>出力結果画像<br>
+			ーーーーーー＞</td>
+			<td><img src="121p.M15-1.png"></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td></td>
+			<td><br>
+			横からみた様子<br>
+			<img src="121p.M15.png"></td>
+		</tr>
+	</table>
+	
+<!-- オプション　-EA -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-EA------</font></caption><br>
+	<div>オプション　-EA ZONS 30 30 30 で実行<br>
+	<img src="121p.ea.png" border="0" alt="121p.ea.png(35525 byte)" width="249" height="171"><br>
+	<br>
+	※上記の画像すべて白…入力画像、ピンク…処理画像
+	</div>
+	
+</body>
+</html>

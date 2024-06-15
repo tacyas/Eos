@@ -1,0 +1,225 @@
+.SUFFIXES : .tif .mrc .mrcps .fft .fftps .ang .angps .hst .hstps .inf .ctf .ctf2 .fft0 .fft1 .fft1-3 .fft1-5 .fft1-7 .fft1-10 .fft1-12 .fft2 .fft3 .fft4 .crr0 .crr1 .crr1-3 .crr1-5 .crr1-7 .crr1-10 .crr1-12 .crr2 .crr3 .crr4
+
+#TIFFILES = \
+	hf05944b.tif \
+	hf05944.tif
+
+TIFFILES = \
+	hf05944a.tif \
+	hf05944c.tif \
+	hf05944d.tif \
+	hf05944e.tif \
+	hf05944g.tif
+
+#MRCFILES = $(TIFFILES:.tif=.mrc)
+FFTFILES = $(TIFFILES:.tif=.fft)
+ANGFILES = $(TIFFILES:.tif=.ang)
+ANGPSFILES = $(TIFFILES:.tif=.angps)
+HSTFILES = $(TIFFILES:.tif=.hst)
+HSTPSFILES = $(TIFFILES:.tif=.hstps)
+IMGFILES = $(TIFFILES:.tif=.img)
+CTFFILES = $(TIFFILES:.tif=.ctf)
+CTF2FILES = $(TIFFILES:.tif=.ctf2)
+FFTPSFILES = $(TIFFILES:.tif=.fftps)
+CRR0FILES = $(TIFFILES:.tif=.crr0)
+CRR1FILES = $(TIFFILES:.tif=.crr1)
+CRR1-3FILES = $(TIFFILES:.tif=.crr1-3)
+CRR1-5FILES = $(TIFFILES:.tif=.crr1-5)
+CRR1-7FILES = $(TIFFILES:.tif=.crr1-7)
+CRR1-10FILES = $(TIFFILES:.tif=.crr1-10)
+CRR1-12FILES = $(TIFFILES:.tif=.crr1-12)
+CRR2FILES = $(TIFFILES:.tif=.crr2)
+CRR3FILES = $(TIFFILES:.tif=.crr3)
+CRR4FILES = $(TIFFILES:.tif=.crr4)
+
+tif: $(TIFFILES)
+mrc: $(MRCFILES)
+fft: $(FFTFILES)
+ang: $(ANGFILES)
+angps: $(ANGPSFILES)
+hst: $(HSTFILES)
+hstps: $(HSTPSFILES)
+img: $(IMGFILES)
+ctf: $(CTFFILES)
+ctf2: $(CTF2FILES)
+fftps: $(FFTPSFILES)
+crr0: $(CRR0FILES)
+crr1: $(CRR1FILES)
+crr1-3: $(CRR1-3FILES)
+crr1-5: $(CRR1-5FILES)
+crr1-7: $(CRR1-7FILES)
+crr1-10: $(CRR1-10FILES)
+crr1-12: $(CRR1-12FILES)
+crr0: $(CRR0FILES)
+crr2: $(CRR2FILES)
+crr3: $(CRR3FILES)
+crr4: $(CRR4FILES)
+
+#.tif.mrc:
+#	tiff2mrc -i $*.tif -o $*.mrc -r 1.66666666666 -m 1
+
+.mrc.fft:
+	fft2d -i $*.mrc -o $*.fft
+
+.mrc.hst:
+	mrcImageInfo -i $*.mrc -o $*.hst -H 256
+
+.hst.hstps:
+	cat hstps.def | sed -e s/default.inf/$*.hst/ -e s/x11/postscript/ | gnuplot  > $*.hstps
+	gs $*.hstps
+
+.mrc.inf:
+	mrcInfo -i $*.mrc -o $*.inf
+
+.mrc.mrcps:
+	mrcImagePrint -i $*.mrc -o $*.mrcps -S 0.125 -m 17 -L 0.7 -H 1.4 
+
+.fft.ang:
+	mrcFFTInfo -i $*.fft -o $*.ang -m 56
+
+.ang.angps:
+	cat angps.def | sed -e s/default.inf/$*.ang/ -e s/x11/postscript/ | gnuplot  > $*.angps
+	gs $*.angps
+
+.fft.ctf:
+	ctfDetermine -i $*.fft -o $*.ctf -D 32300 -Cs 1.7 -Ac 200 -CutLow 1e+2 -m 0 > $*.ctflog
+
+.fft.fftps:
+	mrcImagePrint -i $*.fft -o $*.fftps -L 0 -H 0.5 -I -S 0.125  -m 17
+
+.fft.ctf2:
+	ctfDetermine -i $*.fft -o $*.ctf2 -D 32000 -Cs 1.7 -Ac 200 -CutLow 1e+2 -CutHigh 10 -I0 5.0e-1 -ratio 0.30 -BofMTF 15 -SN 0.12 -MolcEnv 2000 -m 16 
+
+.fft.fft0:
+	mrcFFTCTFCompensation -i $*.fft -o $*.fft0 -I ctfWeight0.map 
+
+.fft.fft1:
+	mrcFFTCTFCompensation -i $*.fft -o $*.fft1 -I ctfWeight1.map 
+
+.fft.fft1-3:
+	mrcFFTCTFCompensation -i $*.fft -o $*.fft1-3 -I ctfWeight1-3.map 
+
+.fft.fft1-5:
+	mrcFFTCTFCompensation -i $*.fft -o $*.fft1-5 -I ctfWeight1-5.map 
+
+.fft.fft1-7:
+	mrcFFTCTFCompensation -i $*.fft -o $*.fft1-7 -I ctfWeight1-7.map 
+
+.fft.fft1-10:
+	mrcFFTCTFCompensation -i $*.fft -o $*.fft1-10 -I ctfWeight1-10.map 
+
+.fft.fft1-12:
+	mrcFFTCTFCompensation -i $*.fft -o $*.fft1-12 -I ctfWeight1-12.map 
+
+.fft.fft2:
+	mrcFFTCTFCompensation -i $*.fft -o $*.fft2 -I ctfWeight2.map 
+
+.fft.fft3:
+	mrcFFTCTFCompensation -i $*.fft -o $*.fft3 -I ctfWeight3.map 
+
+.fft.fft4:
+	mrcFFTCTFCompensation -i $*.fft -o $*.fft4 -I ctfWeight4.map 
+
+.fft0.crr0:
+	fft2d -i $*.fft0 -o $*.crr0
+
+.fft1.crr1:
+	fft2d -i $*.fft1 -o $*.crr1
+
+.fft1-3.crr1-3:
+	fft2d -i $*.fft1-3 -o $*.crr1-3
+
+.fft1-5.crr1-5:
+	fft2d -i $*.fft1-5 -o $*.crr1-5
+
+.fft1-7.crr1-7:
+	fft2d -i $*.fft1-7 -o $*.crr1-7
+
+.fft1-10.crr1-10:
+	fft2d -i $*.fft1-10 -o $*.crr1-10
+
+.fft1-12.crr1-12:
+	fft2d -i $*.fft1-12 -o $*.crr1-12
+
+.fft2.crr2:
+	fft2d -i $*.fft2 -o $*.crr2
+
+.fft3.crr3:
+	fft2d -i $*.fft3 -o $*.crr3
+
+.fft4.crr4:
+	fft2d -i $*.fft4 -o $*.crr4
+
+hf05944a.mrc:hf05944.mrc
+	mrcImageROI -i hf05944.mrc -o hf05944a.roi -r 0 0 1999 0 1999 1999 0 1999 -H 1000 -W 1000 -m 2
+
+hf05944b.mrc:hf05944.mrc
+	mrcImageROI -i hf05944.mrc -o hf05944b.roi -r 0 0 1999 0 1999 1999 0 1999 -H 2000 -W 2000 -m 2
+
+hf05944c.mrc:hf05944a.mrc
+	mrcImageWindowing -i hf05944a.mrc -o hf05944c.mrc -m 0
+
+hf05944d.mrc:hf05944c.mrc
+	mrcImageSmoothing -i hf05944c.mrc -o hf05944d.mrc -sx 5 -sy 5 -m 1
+
+hf05944e.mrc:hf05944c.mrc
+	mrcImageSmoothing -i hf05944c.mrc -o hf05944e.mrc -sx 3 -sy 3 -m 1
+
+hf05944f.mrc:hf05944b.mrc
+	mrcImageShrink    -i hf05944b.mrc -o hf05944f.mrc -S 2 -m 1
+
+hf05944g.mrc:hf05944f.mrc
+	mrcImageWindowing -i hf05944f.mrc -o hf05944g.mrc -m 0
+	
+
+ctfWeight0.map:
+	ctfWeightMapCreation -o $@ -kV 200 -Cs 1.7 -df 32300 -dRinv 2000 -dRmaxInv 10 -SinWin 20 10 -m 0 
+
+ctfWeight1.map:
+	ctfWeightMapCreation -o $@ -kV 200 -Cs 1.7 -df 32300 -dRinv 2000 -dRmaxInv 10 -SinWin 20 10 -m 1
+
+ctfWeight1-3.map:
+	ctfWeightMapCreation -o $@ -kV 200 -Cs 1.7 -df 30000 -dRinv 2000 -dRmaxInv 10 -SinWin 20 10 -m 1
+
+ctfWeight1-5.map:
+	ctfWeightMapCreation -o $@ -kV 200 -Cs 1.7 -df 50000 -dRinv 2000 -dRmaxInv 10 -SinWin 20 10 -m 1
+
+ctfWeight1-7.map:
+	ctfWeightMapCreation -o $@ -kV 200 -Cs 1.7 -df 70000 -dRinv 2000 -dRmaxInv 10 -SinWin 20 10 -m 1
+
+ctfWeight1-10.map:
+	ctfWeightMapCreation -o $@ -kV 200 -Cs 1.7 -df 100000 -dRinv 2000 -dRmaxInv 10 -SinWin 20 10 -m 1
+
+ctfWeight1-12.map:
+	ctfWeightMapCreation -o $@ -kV 200 -Cs 1.7 -df 120000 -dRinv 2000 -dRmaxInv 10 -SinWin 20 10 -m 1
+
+ctfWeight2.map:
+	ctfWeightMapCreation -o $@ -kV 200 -Cs 1.7 -df 32300 -dRinv 2000 -dRmaxInv 10 -SinWin 20 10 -m 2
+
+ctfWeight3.map:
+	ctfWeightMapCreation -o $@ -kV 200 -Cs 1.7 -df 32300 -dRinv 2000 -dRmaxInv 10 -SinWin 20 10 -m 3 
+
+ctfWeight4.map:
+	ctfWeightMapCreation -o $@ -kV 200 -Cs 1.7 -df 32300 -dRinv 2000 -dRmaxInv 10 -SinWin 20 10 -m 4 -white 1.0
+
+crr1part:
+	mrcImageROI -i hf05944c.crr1    -o /work5/work5/tacyas02/Myosin/hf05944.crr1part   -r 283.565 620.632 826.0 717.0 785.437 945.368 243.0 849.0 -m 2
+	mrcImageROI -i hf05944c.crr1-3  -o /work5/work5/tacyas02/Myosin/hf05944.crr103part -r 283.565 620.632 826.0 717.0 785.437 945.368 243.0 849.0 -m 2
+	mrcImageROI -i hf05944c.crr1-5  -o /work5/work5/tacyas02/Myosin/hf05944.crr105part -r 283.565 620.632 826.0 717.0 785.437 945.368 243.0 849.0 -m 2
+	mrcImageROI -i hf05944c.crr1-7  -o /work5/work5/tacyas02/Myosin/hf05944.crr107part -r 283.565 620.632 826.0 717.0 785.437 945.368 243.0 849.0 -m 2
+	mrcImageROI -i hf05944c.crr1-10 -o /work5/work5/tacyas02/Myosin/hf05944.crr110part -r 283.565 620.632 826.0 717.0 785.437 945.368 243.0 849.0 -m 2
+	mrcImageROI -i hf05944c.crr1-12 -o /work5/work5/tacyas02/Myosin/hf05944.crr112part -r 283.565 620.632 826.0 717.0 785.437 945.368 243.0 849.0 -m 2
+
+crr0part:
+	mrcImageROI -i hf05944c.crr0    -o /work5/work5/tacyas02/Myosin/hf05944.crr0part   -r 283.565 620.632 826.0 717.0 785.437 945.368 243.0 849.0 -m 2
+
+crr0parttiff:
+	mrc2tiff -i hf05944.crr0part   -o hf05944.crr0parttiff -L 1.0 -I -m 0
+
+crr1parttiff:
+	mrc2tiff -i hf05944.crr1part   -o hf05944.crr1parttiff   -m 0
+	mrc2tiff -i hf05944.crr103part -o hf05944.crr103parttiff -m 0
+	mrc2tiff -i hf05944.crr105part -o hf05944.crr105parttiff -m 0
+	mrc2tiff -i hf05944.crr107part -o hf05944.crr107parttiff -m 0
+	mrc2tiff -i hf05944.crr110part -o hf05944.crr110parttiff -m 0
+	mrc2tiff -i hf05944.crr112part -o hf05944.crr112parttiff -m 0

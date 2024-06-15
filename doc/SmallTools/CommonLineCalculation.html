@@ -1,0 +1,42 @@
+<HTML>
+<HEAD>
+<TITLE>CommonLineCalculation</TITLE>
+</HEAD>
+<BODY>
+<H1>CommonLineCalculation</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: CommonLineCalculation
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Optional  :InputDataFile
+    [-I[nputfilelist]    InList              (NULL      ).as(inFileListNoOpen    ) ] :Optional  :InputDatalistFile
+    [-o[utput]           Out                 (stdout    ).as(outFile             ) ] :Optional  :OutputDataFile
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (1         ).as(Integer             ) ] :Optional  :Mode
+    [-I[nput]m[ode]      Inputmode           (0         ).as(Integer             ) ] :Optional  :InputMode
+
+----- mode -----
+-m : 0 : in 2004/07/22 
+     1 : in 2004/09/23 (vector product)
+
+----- input file format -----
+-Im : 0
+RotationalMode1 angle1 angle2 angle3 RotationalMode2 angle1 angle2 angle3
+RotationalMode1 angle1 angle2 angle3 RotationalMode2 angle1 angle2 angle3
+      .           .      .      .          .           .      .      .   
+      .           .      .      .          .           .      .      .   
+      .           .      .      .          .           .      .      .   
+      .           .      .      .          .           .      .      .   
+      .           .      .      .          .           .      .      .   
+
+-Im : 1
+filename RotationalMode angle1 angle2 angle3
+   .           .           .      .      .  
+   .           .           .      .      .  
+   .           .           .      .      .  
+   .           .           .      .      .  
+   .           .           .      .      .  
+
+</PRE>
+</BODY>
+</HTML>

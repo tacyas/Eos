@@ -1,0 +1,9 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile(mrcImage)","Essential","1","1","In","inFile","NULL"
+"-p","-p[dbFile]","InputDataFile(pdbFile)","Essential","1","1","InPDB","inFile","NULL"
+"-o","-o[utput]","OutputDataFile(pdbFile)","Essential","1","1","Out","outFile","NULL"
+"-H","-H[igh]","HighLevel","Optional","1","1","HighLevel","Real","0.0"
+"-L","-L[ow]","LowLevel","Optional","1","1","LowLevel","Real","-1.0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

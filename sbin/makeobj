@@ -1,0 +1,93 @@
+#!/bin/sh
+#
+# makeobj  1.3
+#
+# The latest update : 09/27/96 at 11:13:05
+#
+#@(#) makeobj
+#@(#)
+#
+#@(#) Usage : makeobj
+#
+#@(#) Attention
+#@(#)
+#@(#) Parameter: 
+#@(#)     Essential:
+#@(#)         SourceFileName
+#@(#) Optional:
+#@(#)
+
+# Store Flags
+FlagsCharacter="-"
+
+#
+# Usage
+#
+usage()
+{
+	echo "Usage: makeobj"
+    echo "    makeobj ClassName ToolName new"
+	echo "    makeobj ClassName ToolName update"
+	echo "    makeobj ClassName ToolName"
+	echo "    makeobj ClassName"
+	echo "    makeobj -h : show usage"
+	exit
+}
+
+NameRead()
+{
+	ans="N"
+	while [ $ans != "Y" -a $ans != "y" ]
+	do 
+		echo $1 
+		read Name
+		echo "$Name is good ?"
+		read ans
+	done
+}
+#
+# Option Check
+#
+case $# in 
+	0)
+		;;
+	*)
+		case $1 in 
+			"-h") 
+				usage
+				;;
+			*)
+				;;
+		esac
+esac
+
+#
+# Argument Check
+#
+case $# in
+	0) # No filename 
+		makegeneral Objects Objects
+		;;
+	1) # $1 Class
+		makegeneral Objects Objects $1
+		;;
+	2) # $1 Class, $2 ObjectName
+		makegeneral Objects Objects $1 $2
+		;;
+	3) # $1 Class, $2 OjectName, $3 
+		case $3 in
+			new)
+				makegeneral All Objects $1 $2
+				;;
+			update)
+				makegeneral AllFollowingControlFile Objects $1 $2
+				;;
+			*)
+				usage
+				;;
+		esac
+		;;
+	*) # No filename 
+		usage
+		;;
+esac

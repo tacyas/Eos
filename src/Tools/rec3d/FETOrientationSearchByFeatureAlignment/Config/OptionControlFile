@@ -1,0 +1,18 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputSinogramList","Optional","1","1","InS","inFile","NULL"
+"-i2","-i[nput]2","InputMoreSinogramList","Optional","1","1","InS2","inFile","NULL"
+"-I","-I[nputFET]","InputFETfileList","Optional","1","1","InF","inFile","NULL"
+"-ia","-i[nput]a[ngle]","inputAngleList","Optional","1","1","InA","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Optional","1","1","Out","outFile","NULL"
+"-oclog","-o[ut]clog","OutputCorValueLogFile","Optional","1","1","OutLOG","outFile","NULL"
+"-oa","-o[ut]a[ngle]","OutputAngleList","Optional","1","1","OutA","outFile","NULL"
+"-o2d","-o[ut]2d","OutputAngleListFormrc3Dto2D","Optional","1","1","Out2D","outFile","NULL"
+"-itm","-itm[ax]","iterationMax","Optional","1","1","ITMAX","Integer","8"
+"-dvm","-dvm[ax]","sphereDevideMax","Optional","1","1","DEVMAX","Integer","3"
+"-mitm","-mitm[ax]","iterationMax Multiple","Optional","1","1","MITMAX","Integer","3"
+"-mdvm","-mdvm[ax]","sphereDevideMax Multiple","Optional","1","1","MDEVMAX","Integer","3"
+"-ldn","-ldn[um]","LongaxisDevideNum","Optional","1","1","LDN","Integer","8"
+"-srl","-srl[imit]","sphereReconstLimit","Optional","1","1","SRL","Real","0.0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","202"

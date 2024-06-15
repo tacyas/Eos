@@ -1,0 +1,388 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>
+	mrcImageNoiseAdd
+	</title>
+</head>
+<body>
+	<font color="red"><b><h2>mrcImageNoiseAdd<br></h2></b></font>
+	<h4>画像にノイズ（雑音）を加える</h4>
+	
+	<br>
+	<caption><b>オプション一覧</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>オプション</th>
+				<th>必須項目/選択項目</th>
+				<th>説明</th>
+				<th>デフォルト</th>
+			</tr>
+			<tr>
+				<td>-i</td>
+				<td>必須</td>
+				<td>入力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-o</td>
+				<td>必須</td>
+				<td>出力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-SD</td>
+				<td>選択</td>
+				<td>標準偏差の値を設定（設定しない場合は計算した値を代入）</td>
+				<td>1.0</td>
+			</tr>
+			<tr>
+				<td>-NS</td>
+				<td>選択</td>
+				<td>N/S比の値を設定（値が低いほど性能が良くなる）</td>
+				<td>1.0</td>
+			</tr>
+				<tr>
+				<td>-SN</td>
+				<td>選択</td>
+				<td>S/N比の値を設定（値が高いほど性能が良くなる）</td>
+				<td>1.0</td>
+			</tr>
+			<tr>
+				<td>-H</td>
+				<td>選択</td>
+				<td>閾値の最大値を設定</td>
+				<td>1.0</td>
+			</tr>
+			<tr>
+				<td>-L</td>
+				<td>選択</td>
+				<td>閾値の最小値を設定</td>
+				<td>1.0</td>
+			</tr>
+			<tr>
+				<td>-h</td>
+				<td>選択</td>
+				<td>ヘルプを表示</td>
+				<td>　</td>
+			</tr>
+			</div>
+		</table>
+		<br>
+		
+	<h4>******実行例******</h4>
+		
+<!-- 入力ファイル説明 -->
+
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="test.nomal.center.png" border="0" alt="test.nomal.center.png(2730 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				65.5929<br>
+				5.45036<br>
+				12.3043<br>
+				0.153804<br></p>
+			</td>
+		</tr>
+	</table>
+	
+<!-- オプション必須項目のみの場合 -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション必須項目のみの場合の出力結果画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="test.noise.center.png" border="0" alt="test.noise.center.png(6685 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-58.2366<br>
+			109.19<br>
+			5.32224<br>
+			20.6356<br>
+			0.257945<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>※処理を行う際に、標準偏差の値は指定していないため自動で設定される<br>
+	この画像は標準偏差の値が16.368182で画像処理されている</div>
+	
+<!-- 標準偏差の値を設定した場合 -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------標準偏差の値を設定した場合の出力結果画像（オプション　-SD）------</font></caption>
+	<table>
+		<tr>
+			<td align="top">標準偏差の値を5に設定</td>
+			<td><img src="test.noise.SD5center.png" border="0" alt="test.noise.SD5center.png(6571 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-15.9686<br>
+			67.0627<br>
+			5.44991<br>
+			13.1441<br>
+			0.164301<br></p></td>
+		</tr>
+		<tr>
+			<td align="top">標準偏差の値を10に設定</td>
+			<td><img src="test.noise.SD10center.png" border="0" alt="test.noise.SD10center.png(6599 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-40.2798<br>
+			87.9802<br>
+			5.6276<br>
+			15.9052<br>
+			0.198815<br></p></td>
+		</tr>
+		<tr>
+			<td align="top">標準偏差の値を30に設定</td>
+			<td><img src="test.noise.SD30center.png" border="0" alt="test.noise.SD30center.png(6665 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-120.839<br>
+			154.284<br>
+			5.98209<br>
+			32.4642<br>
+			0.405802<br></p></td>
+		</tr>
+	</table>
+	
+<!-- N/S比の値を設定した場合 -->
+	
+	<br>
+	<br>
+	<caption><font color="blue">------N/S比の値を設定した場合の出力結果画像（オプション　-NS）------</font></caption>
+	<table>
+		<tr>
+			<td align="top">N/S比の値を1に設定</td>
+			<td><img src="test.noise.NS1center.png" border="0" alt="test.noise.NS1center.png(6856 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-57.891<br>
+			87.4796<br>
+			5.64436<br>
+			32.4642<br>
+			0.405802<br></p></td>
+		</tr>
+		<tr>
+			<td align="top">N/S比の値を10に設定</td>
+			<td><img src="test.noise.NS10center.png" border="0" alt="test.noise.NS10center.png(6879 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-554.53<br>
+			582.552<br>
+			5.64436<br>
+			20.5337<br>
+			0.256671<br></p></td>
+		</tr>
+		<tr>
+			<td align="top">N/S比の値を0.1に設定</td>
+			<td><img src="test.noise.NS0.1center.png" border="0" alt="test.noise.NS0.1center.png(5991 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-6.09959<br>
+			69.5869<br>
+			6.9164<br>
+			161.382<br>
+			2.01728<br></p></td>
+		</tr>
+	</table>
+	
+<!-- S/N比の値を設定した場合 -->
+	
+	<br>
+	<br>
+	<caption><font color="blue">------S/N比の値を設定した場合の出力結果画像（オプション　-SN）------</font></caption>
+	<table>
+		<tr>
+			<td align="top">S/N比の値を1に設定</td>
+			<td><img src="test.noise.SN1center.png" border="0" alt="test.noise.SN1center.png(6718 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-65.3038<br>
+			97.9385<br>
+			5.24589<br>
+			20.6135<br>
+			0.257669<br></p></td>
+		</tr>
+		<tr>
+			<td align="top">S/N比の値を10に設定</td>
+			<td><img src="test.noise.SN10center.png" border="0" alt="test.noise.SN10center.png(6014 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-6.99898<br>
+			65.9806<br>
+			5.43102<br>
+			20.6135<br>
+			0.257669<br></p></td>
+		</tr>
+		<tr>
+			<td align="top">S/N比の値を0.1に設定</td>
+			<td><img src="test.noise.SN0.1center.png" border="0" alt="test.noise.SN0.1center.png(6895 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-573.844<br>
+			549.799<br>
+			7.56358<br>
+			12.4175<br>
+			2.03438<br></p></td>
+		</tr>
+	</table>
+
+<!-- 閾値の最大値を設定した場合 -->
+	
+	<br>
+	<br>
+	<caption><font color="blue">------閾値の最大値を設定した場合の出力結果画像（オプション　-H）------</font></caption>
+	<table>
+		<tr>
+			<td align="top">最大値を1に設定</td>
+			<td><img src="test.noise.H1center.png" border="0" alt="test.noise.H1center.png(4773 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-1.05484<br>
+			65.6332<br>
+			5.44977<br>
+			162.751<br>
+			2.03438<br></p></td>
+		</tr>
+		<tr>
+			<td align="top">最大値を50に設定</td>
+			<td><img src="test.noise.H50center.png" border="0" alt="test.noise.H50center.png(6828 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-50.8178<br>
+			88.5773<br>
+			5.55986<br>
+			19.5453<br>
+			0.244317<br></p></td>
+		</tr>
+		<tr>
+			<td align="top">最大値を100に設定</td>
+			<td><img src="test.noise.H100center.png" border="0" alt="test.noise.H100center.png(6832 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-57.8901<br>
+			91.2914<br>
+			5.50518<br>
+			20.6183<br>
+			0.257729<br></p></td>
+		</tr>
+	</table>
+
+<!-- 閾値の最小値を設定した場合 -->
+	
+	<br>
+	<br>
+	<caption><font color="blue">------閾値の最小値を設定した場合の出力結果画像（オプション　-L）------</font></caption>
+	<table>
+		<tr>
+			<td align="top">最小値を1に設定</td>
+			<td><img src="test.noise.L1center.png" border="0" alt="test.noise.L1center.png(6705 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-53.0655<br>
+			101.855<br>
+			5.45203<br>
+			19.5821<br>
+			0.257729<br></p></td>
+		</tr>
+		<tr>
+			<td align="top">最小値を50に設定</td>
+			<td><img src="test.noise.L50center.png" border="0" alt="test.noise.L50center.png(6390 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-12.5503<br>
+			71.3548<br>
+			5.4097<br>
+			12.8456<br>
+			0.160569<br></p></td>
+		</tr>
+		<tr>
+			<td align="top">最小値を0.1に設定</td>
+			<td><img src="test.noise.L0.1center.png" border="0" alt="test.noise.L0.1center.png(6766 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-54.8919<br>
+			96.8201<br>
+			5.76526<br>
+			20.0066<br>
+			0.160569<br></p></td>
+		</tr>
+	</table>
+</body>
+</html>

@@ -1,0 +1,10 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-a","-a[xisOrder]","AxisOrder","Optional","3","1","ax","Integer","1","2","ay","Integer","2","3","az","Integer","3"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"
+"-mm","-m[ode]m[rcimage]","Mode of mrcImage","Optional","1","1","mm","Integer","2"
+"-lm","-l[ength]m[rcimage]","Length of mrcImage","Optional","1","1","lm","Real","0"
+"-lm3","-l[ength]m[rcimage]3","Length of mrcImage","Optional","3","1","lmx","Real","0","2","lmy","Real","0","3","lmz","Real","0"

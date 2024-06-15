@@ -1,0 +1,1153 @@
+%!PS-Adobe-3.0
+%%Creator: A2ps version 4.3
+%%CreationDate: Tue Oct 13 19:14:48 1998
+%%Pages: (atend)
+%%DocumentFonts: Courier Courier-Bold Helvetica Helvetica-Bold
+%%EndComments
+% Copyright (c) 1993, 1994, Miguel Santana, M.Santana@frgu.bull.fr
+
+/$a2psdict 100 dict def
+$a2psdict begin
+
+% General macros.
+/xdef {exch def} bind def
+/getfont {exch findfont exch scalefont} bind def
+
+% Create Courier backspace font
+/backspacefont {
+    /Courier findfont dup length dict begin
+	{ % forall
+	    1 index /FID eq { pop pop } { def } ifelse
+	} forall
+	currentdict /UniqueID known { % if
+	    /UniqueID UniqueID 16#800000 xor def
+	} if
+	CharStrings length 1 add dict begin
+	    CharStrings { def } forall
+	    /backspace { -600 0 0 0 0 0 setcachedevice } bind def
+	    currentdict
+	end
+	/CharStrings exch def
+	/Encoding Encoding 256 array copy def
+	Encoding 8 /backspace put
+	currentdict
+    end
+    definefont pop
+} bind def
+
+% FUNCTIONS
+
+% Function filename: Initialize file printing.
+/fn
+{ /filenm xdef
+  /filenmwidth filenm stringwidth pop def
+  /filenmfont
+       filenmwidth fns gt
+       {
+	       filenmfontname
+	       fnfs fns mul filenmwidth div
+	     getfont
+       }
+       { sfnf }
+     ifelse
+  def
+} bind def
+
+% Function header: prints page header. no page
+% is passed as argument.
+/hp
+  { x sd get  y sd get hs sub 1 add  moveto
+    df setfont
+    gsave
+      x sd get y sd get moveto
+      0 hs 2 div neg rmoveto 
+      hs setlinewidth
+      0.95 setgray
+      pw 0 rlineto stroke
+    grestore
+    gsave
+      dfs hm rmoveto
+      d show				% date/hour
+    grestore
+    gsave
+      pnum cvs pop				% page pop up
+        pw (Page 999) stringwidth pop sub
+        hm
+	  rmoveto
+      (Page ) show pnum show		% page number
+    grestore
+    empty pnum copy pop
+    gsave
+      filenmfont setfont
+         fns filenm stringwidth pop sub 2 div dw add
+          bm 2 mul 
+        add 
+        hm
+      rmoveto
+        filenm show			% file name
+      grestore
+    } bind def
+
+% Function border: prints border page
+/border 
+{ x sd get y sd get moveto
+  gsave				% print four sides
+    0.7 setlinewidth		% of the square
+    pw 0 rlineto
+    0 ph neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+} bind def
+
+% Function hborder: completes border of the header.
+/hborder 
+{ gsave
+	0.7 setlinewidth
+	0 hs neg rmoveto
+	pw 0 rlineto
+	stroke
+  grestore
+} bind def
+
+% Function sheetnumber: prints the sheet number.
+/sn
+    { snx sny moveto
+      df setfont
+      pnum cvs
+	  dup stringwidth pop (0) stringwidth pop sub neg 0 rmoveto show
+      empty pnum copy pop
+    } bind def
+
+% Function loginprint: prints the login id of the requestor.
+/lgp
+    { lx ly moveto
+      df setfont
+      dup stringwidth pop neg 0 rmoveto show
+    } bind def
+
+% Function currentdate: prints the current date.
+/cd
+    { dx dy moveto
+      df setfont
+      (Printed: ) show
+      td show
+    } bind def
+
+% Function filename_footer: prints the file name at bottom of page.
+/fnf
+    { fnx fny moveto
+      df setfont
+      filenm center show
+    } bind def
+
+% Function center: centers text.
+/center
+    { dup stringwidth pop
+      2 div neg 0 rmoveto
+    } bind def
+
+% Function s: print a source line
+/s  { show
+      /y0 y0 bfs sub def
+      x0 y0 moveto
+    } bind def
+
+% Functions b and st: change to bold or standard font
+/b  { show
+      bdf setfont
+    } bind def
+/st { show
+      bf setfont
+    } bind def
+
+% Strings used to make easy printing numbers
+/pnum 12 string def
+/empty 12 string def
+
+% Global initializations
+
+/CourierBack backspacefont
+/filenmfontname /Helvetica-Bold def
+/inch {72 mul} bind def
+
+%
+% Meaning of some variables and functions (coded names)
+%
+%	twp:		twinpages?
+%	sd:		sheet side
+%	l:		line counter
+%	c:		column counter
+%	d:		date
+%	td:		current date (for today)
+%	lg:		login name
+%	fn:		filename printing function
+%	sn:		sheetnumber printing function
+%	cd:		current date printing function
+%	fnf:		filename footer printing function
+%	lgp:		login printing function
+%	hp:		header printing function
+%	y:		y coordinate for the logical page
+%	x:		x coordinate for the logical page
+%	sny:		y coordinate for the sheet number
+%	snx:		x coordinate for the sheet number
+%	dy:		y coordinate for the date
+%	dx:		x coordinate for the date
+%	ly:		y coordinate for the login
+%	lx:		x coordinate for the login
+%	scx:		x coordinate for the sheet center
+%	fny:		y coordinate for the filename (footer)
+%	fnx:		x coordinate for the filename (footer)
+%	fnfs:		filename font size
+%	bfs:		body font size
+%	dfs:		date font size
+%	bfs:		body font size
+%	df:		date font
+%	bf:		body font
+%	bdf:		bold font
+%	sfnf:		standard filename font
+%	dw:		date width
+%	pw:		page width
+%	sw:		sheet width
+%	ph:		page height
+%	sh:		sheet height
+%	hm:		header margin
+%	tm:		top margin
+%	bm:		body margin
+%	rm:		right margin
+%	lm:		left margin
+%	hs:		header size
+%	fns:		filename size
+
+% Initialize page description variables.
+/x0 0 def
+/y0 0 def
+/sh 11.64 inch def
+/sw 8.27 inch def
+/margin 1.4 inch def
+/rm margin 3 div def
+/lm margin 2 mul 3 div def
+/d () def
+/td (Oct 13 1998 19:14) def
+%%EndProlog
+
+/docsave save def
+%%Page: 1 1
+/pagesave save def
+/twp true def
+/fnfs 11 def
+/dfs fnfs 0.8 mul def
+/df /Helvetica dfs getfont def
+/dw df setfont td stringwidth pop def
+/sfnf filenmfontname fnfs getfont def
+/hm fnfs 0.25 mul def
+/hs 0.22 inch def
+/bfs 6.8 def
+/bdf /Courier-Bold bfs getfont def
+/bm bfs 0.7 mul def
+/bf /CourierBack bfs getfont def
+/l 69 def
+/c 89 def
+/pw
+   bf setfont (0) stringwidth pop c mul bm dup add add
+   def
+/ph
+   bfs l mul bm dup add add hs add
+   def
+/fns
+      pw
+      fnfs 4 mul dw add (Page 999) stringwidth pop add
+    sub
+  def
+/tm margin twp {3} {2} ifelse div def
+/sd 0 def
+/y [ rm ph add bm add
+          dup ] def
+/sny dfs dfs add def
+/snx sh tm dfs add sub def
+/dy sny def
+/dx tm dfs add def
+/x [ tm			% left page
+          dup 2 mul pw add	% right page
+        ] def
+/scx sh 2 div def
+/fny dy def
+/fnx scx def
+/ly fnfs 2 div y sd get add def
+/lx snx def
+/d (Oct 13 1998 19:16) def
+( stdin ) fn
+sw 0 translate
+90 rotate
+1 hp
+border
+hborder
+/x0 x 0 get bm add def
+/y0 y 0 get bm bfs add hs add sub def
+x0 y0 moveto
+bf setfont
+( void ) s
+( lllExtractWithLayerSeparation0\() s
+(         llData* llAvg, ) s
+(         char**  In, ) s
+(         int     filNumber, ) s
+(         lllExtractWithLayerSeparationInfo* linfo\)) s
+( {) s
+(         int i;) s
+(         int times, oldtimes;  /* Step number of Rmax and RRmax */) s
+(         int iter;   /* Iteration */ ) s
+(         int iter2;  /* Iteration of same Rmax and RRMax */) s
+(         int iter3;  /* Iteration of same Rmax, RRMax, Weight */) s
+(         double subStep;) s
+(         double rms, rmsFar, rmsNea, rmsAvg, oldrms;) s
+(         double totalP = M_PI, oldTotalP = M_PI;) s
+(         double totalQ = M_PI, oldTotalQ = M_PI;) s
+(         FILE* fpt;) s
+( ) s
+(         lllDataFitAndAverageInfo lfitinfo;) s
+(         llDataFittedParam* paraFit;) s
+(         llDataParaTypeInteger mode;     ) s
+(         llDataParamToFit range;) s
+( ) s
+(         llData*   llMixNea;  /* Mixed Layer Line */) s
+(         llData*   llMixFar;) s
+(         llData    llEstNea;  /* Estimated Layer Line */) s
+(         llData    llEstFar;) s
+(         llData*   llSepNea;  /* Separated Layer Line */) s
+(         llData*   llSepFar;) s
+(         llData    llSepWeight;  /* Separated Layer Line */) s
+(         llData*   llSepFitAvg;) s
+(         llData*   llSepDifNea;  /* Separated Layer Line */) s
+(         llData*   llSepDifFar;) s
+(         llData*   llSepASAvg;) s
+(         llData*   llSepDifASAvg;) s
+(         llData*   llDifNea;) s
+(         llData*   llDifFar;) s
+(         llData    llRef;) s
+(         llData    llNea;) s
+(         llData    llFar;) s
+(         llDataBoth srcLL;) s
+(         llDataBoth dstLL;) s
+(         llDataBoth* srcLLs;) s
+(         llDataBoth* dstLLs;) s
+(         double RMax;) s
+(         double RRMax;) s
+(         char s[1024];) s
+(         FILE* tmpfpt;) s
+(         llDataParaTypeInteger status;) s
+( ) s
+(         range = linfo->range;   ) s
+(         fpt   = linfo->fptLog;) s
+( ) s
+(         LOGPRINT1\(fpt,    "#", "#", "%s", "Start: in lllExtractWithLayerSeparation0"\);) s
+( ) s
+(         /* Log of Parameters */) s
+(         lllExtractWithLayerSeparationInfoPrint\(fpt,    linfo, "INIT", 0\);) s
+( ) s
+(         /* Continue */) s
+(         lllExtractInformationToBeContinuedRead\(linfo, 0\); ) s
+( ) s
+(         /* Initialization */) s
+(         lllExtractInitialization0\(linfo, filNumber, 0\);) s
+( ) s
+(         /*  Mixed Layer Line Extract */) s
+(         lllExtractMixedLayerLine\(&llMixNea, &llMixFar, &paraFit, In, filNumber, linfo, m) s
+( ode\);) s
+( ) s
+(         /* Initial Phase : The 0th turn for separation */) s
+/sd 1 def
+2 hp
+border
+hborder
+/x0 x 1 get bm add def
+/y0 y 1 get bm bfs add hs add sub def
+x0 y0 moveto
+bf setfont
+(         LOGPRINT1\(fpt, "#", "INIT", "%s", "Initial Separation Phase"\);) s
+(         times = 0;) s
+( ) s
+(         llSepNea  = \(llData*\)memoryAllocate\(sizeof\(llData\)*filNumber, "in main"\);) s
+(         llSepFar  = \(llData*\)memoryAllocate\(sizeof\(llData\)*filNumber, "in main"\);) s
+(         llDifNea  = \(llData*\)memoryAllocate\(sizeof\(llData\)*filNumber, "in main"\);) s
+(         llDifFar  = \(llData*\)memoryAllocate\(sizeof\(llData\)*filNumber, "in main"\);) s
+(         srcLLs    = \(llDataBoth*\)memoryAllocate\(sizeof\(llDataBoth\)*filNumber, "in main"\)) s
+( ;) s
+(         dstLLs    = \(llDataBoth*\)memoryAllocate\(sizeof\(llDataBoth\)*filNumber, "in main"\)) s
+( ;) s
+( ) s
+(         RMax  = linfo->RMaxFirst;) s
+(         RRMax = linfo->RRMaxFirst;) s
+(         LOGPRINT2\(fpt,    "#", "INIT", "RMax: %15.6f RRMax: %15.6f", RMax, RRMax\); ) s
+(         rms = 0;) s
+(         for\(i=0; i<filNumber; i++\) {) s
+(                 /* Layer Line Separation */) s
+(                 if\(linfo->flagInLLNea&&linfo->flagInLLFar\) { /* Already Separated */) s
+(                         srcLL.Nea = llMixNea[i]; srcLL.Far = llMixFar[i];) s
+(                         lllExtractWithSeparation\(&dstLL, &srcLL, &\(linfo->leInfo[i]\), 0\)) s
+( ; ) s
+( ) s
+(                         tmpfpt = fileOpen\(linfo->InLLNea[i], "r"\);      ) s
+(                         llDataFileReadFollowingllData\(tmpfpt, &\(llSepNea[i]\), &\(dstLL.Ne) s
+( a\), &status\);    ) s
+(                         fclose\(tmpfpt\);) s
+(                         tmpfpt = fileOpen\(linfo->InLLFar[i], "r"\);      ) s
+(                         llDataFileReadFollowingllData\(tmpfpt, &\(llSepFar[i]\), &\(dstLL.Fa) s
+( r\), &status\);    ) s
+(                         fclose\(tmpfpt\);) s
+( ) s
+(                         llDataFree\(&\(dstLL.Nea\)\);) s
+(                         llDataFree\(&\(dstLL.Far\)\);) s
+(                 } else {                                     /* First time separation */) s
+(                         srcLL.Nea = llMixNea[i]; srcLL.Far = llMixFar[i];) s
+(                         dstLL.Nea = llSepNea[i]; dstLL.Far = llSepFar[i];) s
+(                         lllExtractWithSeparation\(&dstLL, &srcLL, &\(linfo->leInfo[i]\), 0\)) s
+( ; ) s
+(                         llSepNea[i] = dstLL.Nea; llSepFar[i] = dstLL.Far;) s
+(                 }) s
+( ) s
+(                 lllDataLowPassFiltering\(&\(llSepNea[i]\), RMax, lllDataLowPassFilteringMod) s
+( eSameMemorySize\);) s
+(                 lllDataLowPassFiltering\(&\(llSepFar[i]\), RMax, lllDataLowPassFilteringMod) s
+( eSameMemorySize\);) s
+( ) s
+(                 lllDataRadialLowPassFiltering\(&\(llSepNea[i]\), RRMax, lllDataLowPassFilte) s
+( ringModeSameMemorySize\);) s
+(                 lllDataRadialLowPassFiltering\(&\(llSepFar[i]\), RRMax, lllDataLowPassFilte) s
+( ringModeSameMemorySize\);) s
+( ) s
+(                 /* Check of each filaments */) s
+(                 llDataInitWithReference\(&llEstNea, &\(llMixNea[i]\)\); ) s
+(                 llDataInitWithReference\(&llEstFar, &\(llMixFar[i]\)\); ) s
+( ) s
+(                 srcLL.Nea = llSepNea[i]; srcLL.Far = llSepFar[i];) s
+(                 dstLL.Nea = llEstNea;    dstLL.Far = llEstFar;) s
+(                 lllDataMergeDifferentN\(&dstLL, &srcLL, 1\);) s
+(                 llEstNea  = dstLL.Nea;   llEstFar = dstLL.Far;) s
+( ) s
+(                 rmsNea = lllDataDifferenceCalc\(&\(llDifNea[i]\), &\(llMixNea[i]\), &llEstNea) s
+( , 0\);) s
+(                 rmsFar = lllDataDifferenceCalc\(&\(llDifFar[i]\), &\(llMixFar[i]\), &llEstFar) s
+( , 0\);) s
+( ) s
+(                 llDataFree\(&llEstNea\);) s
+(                 llDataFree\(&llEstFar\);) s
+( ) s
+/sd 0 def
+1 sn
+fnf
+lg lgp
+pagesave restore
+showpage
+%%Page: 2 2
+/pagesave save def
+/twp true def
+/fnfs 11 def
+/dfs fnfs 0.8 mul def
+/df /Helvetica dfs getfont def
+/dw df setfont td stringwidth pop def
+/sfnf filenmfontname fnfs getfont def
+/hm fnfs 0.25 mul def
+/hs 0.22 inch def
+/bfs 6.8 def
+/bdf /Courier-Bold bfs getfont def
+/bm bfs 0.7 mul def
+/bf /CourierBack bfs getfont def
+/l 69 def
+/c 89 def
+/pw
+   bf setfont (0) stringwidth pop c mul bm dup add add
+   def
+/ph
+   bfs l mul bm dup add add hs add
+   def
+/fns
+      pw
+      fnfs 4 mul dw add (Page 999) stringwidth pop add
+    sub
+  def
+/tm margin twp {3} {2} ifelse div def
+/sd 0 def
+/y [ rm ph add bm add
+          dup ] def
+/sny dfs dfs add def
+/snx sh tm dfs add sub def
+/dy sny def
+/dx tm dfs add def
+/x [ tm			% left page
+          dup 2 mul pw add	% right page
+        ] def
+/scx sh 2 div def
+/fny dy def
+/fnx scx def
+/ly fnfs 2 div y sd get add def
+/lx snx def
+/d (Oct 13 1998 19:16) def
+( stdin ) fn
+sw 0 translate
+90 rotate
+3 hp
+border
+hborder
+/x0 x 0 get bm add def
+/y0 y 0 get bm bfs add hs add sub def
+x0 y0 moveto
+bf setfont
+(                 rmsAvg = sqrt\(\(SQR\(rmsNea\) + SQR\(rmsFar\)\)/2.0\); ) s
+(                 rms    = sqrt\(SQR\(rms\) + SQR\(rmsAvg\)\); ) s
+(                 LOGPRINT4\(fpt,    "INIT", "DIF", "times: %04d : %04d %s rms: %15.6f", ti) s
+( mes, i, In[i], rmsAvg\);) s
+(         }) s
+(         rms = sqrt\(SQR\(rms\)/filNumber\);) s
+(         LOGPRINT2\(fpt,    "INIT", "DIF", "times: %04d total-rms: %15.6f", times, rms\);) s
+( ) s
+( ) s
+(         DEBUGPRINT\("Iteration Start\\n"\);) s
+(         /* Initialization */    ) s
+(         llSepDifNea   = \(llData*\)memoryAllocate\(sizeof\(llData\)*filNumber, "in main"\);) s
+(         llSepDifFar   = \(llData*\)memoryAllocate\(sizeof\(llData\)*filNumber, "in main"\);) s
+(         llSepDifASAvg = \(llData*\)memoryAllocate\(sizeof\(llData\)*filNumber, "in main"\);) s
+(         llSepASAvg    = \(llData*\)memoryAllocate\(sizeof\(llData\)*filNumber, "in main"\);) s
+(         for\(i=0; i<filNumber; i++\) {) s
+(                 llDataInitWithReference2\(&\(llSepASAvg[i]\), &\(llSepNea[i]\), AverageSide\);) s
+(                 llDataInitWithReference2\(&\(llSepDifASAvg[i]\), &\(llSepNea[i]\), AverageSid) s
+( e\);) s
+(         }) s
+(         llDataInitWithReference\(&llRef, &\(llSepASAvg[0]\)\);) s
+(         llDataInitWithReference\( llAvg, &\(llSepASAvg[0]\)\);) s
+(         llDataInitWithReference\(&llNea, &\(llSepNea[0]\)\);) s
+(         llDataInitWithReference\(&llFar, &\(llSepFar[0]\)\);) s
+(         llDataInitWithReference\(&llSepWeight, &\(llSepASAvg[0]\)\);) s
+( ) s
+(         llSepFitAvg = \(llData*\)memoryAllocate\(sizeof\(llData\)*filNumber, "in main"\);) s
+(         for\(i=0; i<filNumber; i++\) {) s
+(                 llDataInitWithReference\(&\(llSepFitAvg[i]\), llAvg\);) s
+(         }) s
+(         oldrms = rms*2;) s
+(         times = oldtimes = iter = iter2 = iter3 = 0;) s
+(         while\(times < linfo->MaxIteration ) s
+(           &&  linfo->rms < fabs\(rms-oldrms\)\) {) s
+(                 DEBUGPRINT\("Required: llSepNea/llSepFar and llDifNea/llDifFar\\n"\);) s
+(                 LOGPRINT4\(fpt,    "ITER", "#", "times: %04d iter: %04d iter2: %04d %s", ) s
+( times, iter, iter2, "Iteration Phase"\);) s
+(                 linfo->times = times;                   linfo->iter  = iter; linfo->iter) s
+( 2 = iter2; linfo->iter3 = iter3;) s
+(                 oldtimes = times;) s
+(                 linfo->oldRMS = oldrms = rms;   ) s
+(                 linfo->oldP = oldTotalP = totalP; linfo->oldQ = oldTotalQ = totalQ;) s
+( ) s
+(                 DEBUGPRINT\("---- Estimation of Intra-parameter : llSepASAvg ----\\n"\);) s
+(                 LOGPRINT5\(fpt,    "ITER", "Axis", "times: %04d iter: %04d iter2: %04d RM) s
+( ax: %15.6f RRMax: %15.6f", times, iter, iter2, RMax, RRMax\);) s
+(                 for\(i=0; i<filNumber; i++\) {) s
+(                         if\(linfo->flagllInfoImportantForAxis\) {) s
+(                                 float weight;) s
+(                                 weight = linfo->WeightStartOfllInfoImportantForAxis + \(i) s
+( ter2 - iter3/linfo->MaxIteration3\)*linfo->WeightStepOfllInfoImportantForAxis;) s
+(                                 if\(linfo->WeightStepOfllInfoImportantForAxis < 0\) {) s
+(                                         weight = MAX\(weight, linfo->WeightOfllInfoImport) s
+( antForAxis\);) s
+(                                 } else {) s
+(                                         weight = MIN\(weight, linfo->WeightOfllInfoImport) s
+( antForAxis\);) s
+(                                 }) s
+(                                 LOGPRINT5\(fpt,    "ITER", "Axis", "times: %04d iter: %04) s
+( d iter2: %04d iter3: %04d WeightOfImportantAxis: %15.6f", times, iter, iter2, iter3, weig) s
+( ht\);) s
+(                                 lllExtractWeightSetFollowingllExtractInfo\(&llSepNea[i], ) s
+(                                         &\(linfo->leInfoImportantForAxis[i]\), weight, 0\);) s
+(                                 lllExtractWeightSetFollowingllExtractInfo\(&llSepFar[i], ) s
+(                                         &\(linfo->leInfoImportantForAxis[i]\), weight, 0\);) s
+(                         } else {) s
+(                                 lllExtractWeightSetFollowingllExtractInfo\(&llSepNea[i], ) s
+(                                         &\(linfo->leInfo[i]\), 1.0, 0\);) s
+(                                 lllExtractWeightSetFollowingllExtractInfo\(&llSepFar[i], ) s
+/sd 1 def
+4 hp
+border
+hborder
+/x0 x 1 get bm add def
+/y0 y 1 get bm bfs add hs add sub def
+x0 y0 moveto
+bf setfont
+(                                         &\(linfo->leInfo[i]\), 1.0, 0\);) s
+(                         }) s
+(                 }) s
+( ) s
+(                 DEBUGPRINT\("AxisSearch And Average\\n"\);) s
+(                 for\(i=0; i<filNumber; i++\) {) s
+(                         lllDataAxisSearchAndAverage\(&\(llSepASAvg[i]\), &\(llSepNea[i]\), &\() s
+( llSepFar[i]\), ) s
+(                                 &\(paraFit[i]\), ) s
+(                                 lllDataAxisSearchModeSearchProcessPrint) s
+(                            |lllDataAxisSearchModeSearchProcessSameLLStructure\);) s
+(                         DEBUGPRINT2\("AxisSearch: %f -> %f at \(0, 0\)\\n", llSepNea[i].LL[0) s
+( ].data[0].Re, llSepASAvg[i].LL[0].data[0].Re\);) s
+(                         LOGPRINT8\(fpt, "ITER", "Axis", "times: %04d iter: %04d iter2: %0) s
+( 4d R: %15.6f x: %15.6f omega: %15.6f : %04d %s", ) s
+(                                                                                 times,) s
+(                                                                                 iter,) s
+(                                                                                 iter2,) s
+(                                                                                 paraFit[) s
+( i].Para.R*DEGREE, ) s
+(                                                                                 paraFit[) s
+( i].Para.x.Value, ) s
+(                                                                                 paraFit[) s
+( i].Para.Omega.Value,) s
+(                                                                                 i,      ) s
+(                                                                                 In[i]\);) s
+(                 }) s
+( ) s
+(                 DEBUGPRINT\("----- llRef Set -----\\n"\);) s
+(                 if\(iter==0\) { /* First Model */) s
+(                         if\(linfo->flagRef\) { /* Reference */) s
+(                                 llDataFileReadFollowingllData\(linfo->fptRef, &llRef, llA) s
+( vg, &mode\); ) s
+(                                 LOGPRINT4\(fpt,    "ITER", "Ref", "times: %04d iter: %04d) s
+(  iter2: %04d Reference: %s", times, iter, iter2, linfo->Ref\);) s
+(                         } else {             /* No reference */) s
+(                                 LOGPRINT4\(fpt,    "ITER", "Ref", "times: %04d iter: %04d) s
+(  iter2: %04d Reference: %s", times, iter, iter2, linfo->In[0]\);) s
+(                                 lllDataCopy\(&llRef, &\(llSepASAvg[0]\)\);) s
+(                                 if\(linfo->flagCTF\) {) s
+(                                         lllDataSingleCTFCompensationInfo sinfo;) s
+(                                         sinfo.flagllCTF = 0;) s
+(                                         sinfo.CTF       = linfo->CTF[0];) s
+(                                         DEBUGPRINT2\("Before llRef: %f %f at \(0,0\)\\n", ll) s
+( Ref.LL[0].data[0].Re, llRef.LL[0].data[0].Im\);) s
+(                                         DEBUGPRINT2\("Before llSep: %f %f at \(0,0\)\\n", ll) s
+( SepASAvg[0].LL[0].data[0].Re, llSepASAvg[0].LL[0].data[0].Im\);) s
+(                                         lllDataSingleCTFCompensation\(&llRef, &llRef, sin) s
+( fo, linfo->ctfMode\);) s
+(                                         DEBUGPRINT2\("After  llRef: %f %f at \(0,0\)\\n", ll) s
+( Ref.LL[0].data[0].Re, llRef.LL[0].data[0].Im\);) s
+(                                 }) s
+(                                 LOGPRINT4\(fpt,    "ITER", "Ref", "times: %04d iter: %04d) s
+(  iter2: %04d Reference: %s", times, iter, iter2, In[0]\);) s
+(                         }) s
+(                         lllDatarMaxLimit\(&llRef, linfo->rMaxInfo, 0\);) s
+(                         lllDataLowPassFiltering      \(&llRef, linfo->RMax,  lllDataLowPa) s
+( ssFilteringModeSavedMemorySize\);) s
+(                         lllDataRadialLowPassFiltering\(&llRef, linfo->RRMax, lllDataLowPa) s
+( ssFilteringModeSavedMemorySize\);) s
+(                 } else {       /* New Model */) s
+(                         LOGPRINT4\(fpt,    "ITER", "Ref", "times: %04d iter: %04d iter2: ) s
+( %04d Reference: %s", times, iter, iter2, "llAvg"\);) s
+(                         lllDataCopy\(&llRef, llAvg\);) s
+(                 }) s
+( ) s
+(                 LOGPRINT5\(fpt,    "ITER", "Ref", "times: %04d iter: %04d iter2: %04d RMa) s
+( x: %15.6f RRMax: %15.6f", times, iter, iter2, RMax, RRMax\);) s
+(                 if\(RMax<linfo->RMax\) {) s
+/sd 0 def
+2 sn
+fnf
+lg lgp
+pagesave restore
+showpage
+%%Page: 3 3
+/pagesave save def
+/twp true def
+/fnfs 11 def
+/dfs fnfs 0.8 mul def
+/df /Helvetica dfs getfont def
+/dw df setfont td stringwidth pop def
+/sfnf filenmfontname fnfs getfont def
+/hm fnfs 0.25 mul def
+/hs 0.22 inch def
+/bfs 6.8 def
+/bdf /Courier-Bold bfs getfont def
+/bm bfs 0.7 mul def
+/bf /CourierBack bfs getfont def
+/l 69 def
+/c 89 def
+/pw
+   bf setfont (0) stringwidth pop c mul bm dup add add
+   def
+/ph
+   bfs l mul bm dup add add hs add
+   def
+/fns
+      pw
+      fnfs 4 mul dw add (Page 999) stringwidth pop add
+    sub
+  def
+/tm margin twp {3} {2} ifelse div def
+/sd 0 def
+/y [ rm ph add bm add
+          dup ] def
+/sny dfs dfs add def
+/snx sh tm dfs add sub def
+/dy sny def
+/dx tm dfs add def
+/x [ tm			% left page
+          dup 2 mul pw add	% right page
+        ] def
+/scx sh 2 div def
+/fny dy def
+/fnx scx def
+/ly fnfs 2 div y sd get add def
+/lx snx def
+/d (Oct 13 1998 19:16) def
+( stdin ) fn
+sw 0 translate
+90 rotate
+5 hp
+border
+hborder
+/x0 x 0 get bm add def
+/y0 y 0 get bm bfs add hs add sub def
+x0 y0 moveto
+bf setfont
+(                         lllDataLowPassFiltering      \(&llRef, RMax,  lllDataLowPassFilte) s
+( ringModeSameMemorySize\);) s
+(                 }) s
+(                 if\(RRMax<linfo->RRMax\) {) s
+(                         lllDataRadialLowPassFiltering\(&llRef, RRMax, lllDataLowPassFilte) s
+( ringModeSameMemorySize\);) s
+(                 }) s
+( ) s
+(                 if\(linfo->flagllInfoImportant\) {) s
+(                         float weight;) s
+( ) s
+(                         weight = linfo->WeightStartOfllInfoImportant + iter2*linfo->Weig) s
+( htStepOfllInfoImportant;) s
+(                         if\(linfo->WeightStepOfllInfoImportant < 0\) {) s
+(                                 weight = MAX\(weight, linfo->WeightOfllInfoImportant\);) s
+(                         } else {) s
+(                                 weight = MIN\(weight, linfo->WeightOfllInfoImportant\);) s
+(                         }) s
+(                         lllExtractWeightSetFollowingllExtractInfo\(&llRef, &\(linfo->leInf) s
+( oImportant[0]\), weight, 0\);) s
+(                         LOGPRINT5\(fpt,    "ITER", "Ref", "times: %04d iter: %04d iter2: ) s
+( %04d iter3: %04d WeightOfImporantFit: %15.6f ", times, iter, iter2, iter3, weight\);) s
+(                 } else {) s
+(                         lllExtractWeightSetFollowingllExtractInfo\(&llRef, &\(linfo->leInf) s
+( o[0]\),          1.0,    0\);) s
+(                 }) s
+( ) s
+(                 DEBUGPRINT\("----- Set FitAndAverageParameters -----\\n"\);) s
+(                 if\(iter==0\) { /* First Try */) s
+(                         memoryClear\(&lfitinfo, sizeof\(lfitinfo\), 0\);) s
+(                         lfitinfo.times          = times;) s
+(                         lfitinfo.nFile          = filNumber;) s
+(                         lfitinfo.flagOutParam2  = 0; ) s
+(                         lfitinfo.OutParam2      = NULL; ) s
+(                         lfitinfo.fptLog         = linfo->fptLog;) s
+(                         lfitinfo.In             = linfo->In;) s
+(                         lfitinfo.flagCTF        = linfo->flagCTF;) s
+(                         lfitinfo.CTF            = linfo->CTF;) s
+(                         lfitinfo.ctfMode        = linfo->ctfMode;) s
+(                         lfitinfo.weight         = linfo->weight;) s
+(                         lfitinfo.noise          = linfo->WhiteNoise;) s
+(                         lfitinfo.flagAveragingBelowThreshold = linfo->flagBelow;        ) s
+(                         lfitinfo.threshold                   = linfo->threshold;        ) s
+(                         lfitinfo.flagAveragingWithoutAntiPole = linfo->noAntiPole;      ) s
+(                         lfitinfo.mode           = PVALUE_MODE|lllDataFitFitProcessPrint;) s
+(                         if\(lfitinfo.flagCTF\) { ) s
+(                                 for\(i=0; i<filNumber; i++\) {) s
+(                                         llDataInitWithReference\(&\(paraFit[i].Para.llCTF\)) s
+( , &llRef\);) s
+(                                         lllDataFitllCTFSet\(&\(paraFit[i].Para.llCTF\), par) s
+( aFit[i].Para.CTF, 0\);) s
+(                                         paraFit[i].Para.flagllCTF = 1;) s
+(                                         paraFit[i].PPara.llCTF     = paraFit[i].Para.llC) s
+( TF; ) s
+(                                         paraFit[i].PPara.flagllCTF = paraFit[i].Para.fla) s
+( gllCTF; ) s
+(                                 }) s
+(                         }) s
+( #ifdef PVM) s
+(                 if\(linfo->flagpvmList\) {) s
+(                         lfitinfo.flagPVM = 1;) s
+(                         lllDataFitServerStart\(&\(lfitinfo.vPVM\), linfo->fptpvmList, 0\);) s
+(                 } else if\(linfo->flagpvm\) {) s
+(                         lfitinfo.flagPVM = 1;) s
+(                         lllDataFitServerStart\(&\(lfitinfo.vPVM\), NULL, linfo->pvm\);) s
+(                 } else {) s
+(                         lfitinfo.flagPVM = 0;) s
+(                 }) s
+( #endif) s
+/sd 1 def
+6 hp
+border
+hborder
+/x0 x 1 get bm add def
+/y0 y 1 get bm bfs add hs add sub def
+x0 y0 moveto
+bf setfont
+(                 }) s
+(                 DEBUGPRINT\("----- FitAndAverage Start -----\\n"\);) s
+(                 LOGPRINT2\(fpt, "ITER", "Fit", "PVM: flag %d numTask: %d\\n", lfitinfo.fla) s
+( gPVM, lfitinfo.vPVM.numTask\);) s
+(                 LOGPRINT5\(fpt, "ITER", "Fit", "times: %04d iter: %04d iter2: %04d RMax: ) s
+( %15.6f RRMax: %15.6f", times, iter, iter2, RMax, RRMax\);) s
+(                 lllDataFitAndAverage\(llAvg, llSepFitAvg, llSepASAvg, llRef, paraFit, lfi) s
+( tinfo\); ) s
+(                 lllExtractFittingParameterPrint\(fpt, In, paraFit, filNumber, linfo, 0\);) s
+( ) s
+(                 switch\(linfo->algorism\) {) s
+(                         case 0: {) s
+(                                 break;) s
+(                         }) s
+(                         case 1: {) s
+(                                 for\(i=0; i<filNumber; i++\) {) s
+(                                         srcLLs[i].Nea = llMixNea[i];   srcLLs[i].Far = l) s
+( lMixFar[i];) s
+(                                 }) s
+(                                 lllExtractWithSeparationUsingFittingParameter\(llAvg, src) s
+( LLs, paraFit, ) s
+(                                                 filNumber, linfo->leInfo, 1\);) s
+(                                 break;) s
+(                         }) s
+(                         default: {) s
+(                                 fprintf\(stderr, "Not supported Alogrism"\);) s
+(                                 exit\(EXIT_FAILURE\);) s
+(                                 break;) s
+(                         }) s
+(                 }) s
+( ) s
+(                 DEBUGPRINT\("----- Estimation of each filament : llSepNea and llSepFar --) s
+( ---\\n"\); ) s
+(                 lllDataAvgToNea\(&llNea, llAvg\);) s
+(                 lllDataAvgToFar\(&llFar, llAvg\);) s
+(                 for\(i=0; i<filNumber; i++\) {) s
+(                         lllDataPhaseShiftInverse\(&\(llSepNea[i]\), &llNea, &\(paraFit[i]\)\);) s
+(   ) s
+(                         lllDataPhaseShiftInverse\(&\(llSepFar[i]\), &llFar, &\(paraFit[i]\)\);) s
+(  ) s
+(                         if\(linfo->flagCTF\) {) s
+(                                 switch\(linfo->ctfMode\) {) s
+(                                         case 0: {) s
+(                                                 lllDataCTFObservation\(&\(llSepNea[i]\), pa) s
+( raFit[i].Para.CTF, 0\);) s
+(                                                 lllDataCTFObservation\(&\(llSepFar[i]\), pa) s
+( raFit[i].Para.CTF, 0\);) s
+(                                                 break;) s
+(                                         }) s
+(                                         case 1: {) s
+(                                                 lllDataCTFObservation\(&\(llSepNea[i]\), pa) s
+( raFit[i].Para.CTF, 1\);) s
+(                                                 lllDataCTFObservation\(&\(llSepFar[i]\), pa) s
+( raFit[i].Para.CTF, 1\);) s
+(                                                 break;) s
+(                                         }) s
+(                                         default: {) s
+(                                                 fprintf\(stderr, "Not supported Mode: lin) s
+( fo->ctfMode: %d \\n", linfo->ctfMode\);) s
+(                                                 exit\(EXIT_FAILURE\);) s
+(                                         }) s
+(                                 }) s
+(                         }) s
+(                 }) s
+( ) s
+(                 DEBUGPRINT\("----- Output Information For Continue -----\\n"\); ) s
+(                 lllExtractInformationToBeContinuedWrite\(linfo, 0\); ) s
+( ) s
+(                 DEBUGPRINT\("----- Evaluation of each filament : llDifNea and llDifFar --) s
+/sd 0 def
+3 sn
+fnf
+lg lgp
+pagesave restore
+showpage
+%%Page: 4 4
+/pagesave save def
+/twp true def
+/fnfs 11 def
+/dfs fnfs 0.8 mul def
+/df /Helvetica dfs getfont def
+/dw df setfont td stringwidth pop def
+/sfnf filenmfontname fnfs getfont def
+/hm fnfs 0.25 mul def
+/hs 0.22 inch def
+/bfs 6.8 def
+/bdf /Courier-Bold bfs getfont def
+/bm bfs 0.7 mul def
+/bf /CourierBack bfs getfont def
+/l 69 def
+/c 89 def
+/pw
+   bf setfont (0) stringwidth pop c mul bm dup add add
+   def
+/ph
+   bfs l mul bm dup add add hs add
+   def
+/fns
+      pw
+      fnfs 4 mul dw add (Page 999) stringwidth pop add
+    sub
+  def
+/tm margin twp {3} {2} ifelse div def
+/sd 0 def
+/y [ rm ph add bm add
+          dup ] def
+/sny dfs dfs add def
+/snx sh tm dfs add sub def
+/dy sny def
+/dx tm dfs add def
+/x [ tm			% left page
+          dup 2 mul pw add	% right page
+        ] def
+/scx sh 2 div def
+/fny dy def
+/fnx scx def
+/ly fnfs 2 div y sd get add def
+/lx snx def
+/d (Oct 13 1998 19:16) def
+( stdin ) fn
+sw 0 translate
+90 rotate
+7 hp
+border
+hborder
+/x0 x 0 get bm add def
+/y0 y 0 get bm bfs add hs add sub def
+x0 y0 moveto
+bf setfont
+( ---\\n"\);) s
+(                 for\(i=0, rms=0; i<filNumber; i++\) {) s
+(                         llDataInitWithReference\(&llEstNea, &\(llMixNea[i]\)\); ) s
+(                         llDataInitWithReference\(&llEstFar, &\(llMixFar[i]\)\); ) s
+( ) s
+(                         srcLL.Nea = llSepNea[i]; srcLL.Far = llSepFar[i];) s
+(                         dstLL.Nea = llEstNea;    dstLL.Far = llEstFar;) s
+(                         lllDataMergeDifferentN\(&dstLL, &srcLL, 1\);) s
+(                         llEstNea = dstLL.Nea; llEstFar = dstLL.Far;) s
+( ) s
+(                         rmsNea = lllDataDifferenceCalc\(&\(llDifNea[i]\), &\(llMixNea[i]\), &) s
+( llEstNea, 1\);) s
+(                         rmsFar = lllDataDifferenceCalc\(&\(llDifFar[i]\), &\(llMixFar[i]\), &) s
+( llEstFar, 1\);) s
+( ) s
+(                         llDataFree\(&llEstNea\);) s
+(                         llDataFree\(&llEstFar\);) s
+(                         ) s
+(                         rmsAvg = sqrt\(\(SQR\(rmsNea\) + SQR\(rmsFar\)\)/2.0\); ) s
+(                         rms    = sqrt\(SQR\(rms\) + SQR\(rmsAvg\)\); ) s
+(                         LOGPRINT6\(fpt,    "ITER", "DIF", "times: %04d iter: %04d iter2: ) s
+( %04d %04d %s rms: %15.6f", times, iter, iter2, i, In[i], rmsAvg\);) s
+(                 }) s
+(                 linfo->currentRMS = rms = sqrt\(SQR\(rms\)/filNumber\);) s
+(                 LOGPRINT4\(fpt,    "ITER", "DIF", "times: %04d iter: %04d iter2: %04d tot) s
+( al-rms: %15.6f", times, iter, iter2, rms\);) s
+( ) s
+(                 DEBUGPRINT\("----- Evaluation of Q-Value\(AxisSearch\) and P-Value\(FitAndAv) s
+( erage\)"\);) s
+(                 for\(i=0, totalP = 0, totalQ = 0; i<filNumber; i++\) {) s
+(                         if\(llDataPoleNormal == paraFit[i].Para.Pole\) {) s
+(                                 totalP += SQR\(paraFit[i].PPara.R\);) s
+(                         } else {) s
+(                                 totalP += SQR\(paraFit[i].PParaInv.R\);) s
+(                         }) s
+(                         totalQ += paraFit[i].QPara.R; ) s
+(                 }) s
+(                 linfo->currentP = totalP = sqrt\(totalP/filNumber\); ) s
+(                 linfo->currentQ = totalQ = totalQ/filNumber; ) s
+(                 LOGPRINT4\(fpt,    "ITER", "DIF", "times: %04d iter: %04d iter2: %04d tot) s
+( al-P: %15.6f", times, iter, iter2, totalP*DEGREE\);) s
+(                 LOGPRINT4\(fpt,    "ITER", "DIF", "times: %04d iter: %04d iter2: %04d tot) s
+( al-Q: %15.6f", times, iter, iter2, totalQ*DEGREE\);) s
+( ) s
+(                 DEBUGPRINT\("----- Next Turn -----\\n"\);) s
+(                 lllExtractNextStepParamterSet\(fpt, paraFit, filNumber, linfo, 0\);) s
+(                 iter = linfo->iter; iter2 = linfo->iter2; iter3 = linfo->iter3; times = ) s
+( linfo->times;) s
+( ) s
+(                 DEBUGPRINT\("---- Estimation of difference : llSepDifNea and llSepDifFar ) s
+( ----\\n"\); ) s
+(                 LOGPRINT3\(fpt,    "ITER", "Diff", "times: %04d RMax: %15.6f RRMax: %15.6) s
+( f", times, RMax, RRMax\);) s
+(                 for\(i=0; i<filNumber; i++\) {) s
+(                         llDataInitWithReference\(&\(llSepDifNea[i]\), &\(llSepNea[i]\)\);) s
+(                         llDataInitWithReference\(&\(llSepDifFar[i]\), &\(llSepFar[i]\)\);) s
+( ) s
+(                         srcLLs[i].Nea = llDifNea[i]; ) s
+(                         srcLLs[i].Far = llDifFar[i]; ) s
+(                         dstLLs[i].Nea = llSepDifNea[i]; ) s
+(                         dstLLs[i].Far = llSepDifFar[i]; ) s
+(                 }) s
+( ) s
+(                 switch\(linfo->algorism\) {) s
+(                         case 0: {) s
+(                                 for\(i=0; i<filNumber; i++\) {) s
+(                                         lllExtractWithSeparation\(&\(dstLLs[i]\), &\(srcLLs[) s
+( i]\), &\(linfo->leInfo[i]\), 1\); ) s
+(                                 }) s
+/sd 1 def
+8 hp
+border
+hborder
+/x0 x 1 get bm add def
+/y0 y 1 get bm bfs add hs add sub def
+x0 y0 moveto
+bf setfont
+(                                 break;) s
+(                         }) s
+(                         case 1: {) s
+(                         /*) s
+(                                 lllExtractWithSeparationUsingFittingParameter\(dstLLs, sr) s
+( cLLs, paraFit, ) s
+(                                                 filNumber, linfo->leInfo, 1\);) s
+(                         */) s
+(                                 break;) s
+(                         }) s
+(                         default: {) s
+(                                 fprintf\(stderr, "Not supported Alogrism"\);) s
+(                                 exit\(EXIT_FAILURE\);) s
+(                                 break;) s
+(                         }) s
+(                 }       ) s
+(                 for\(i=0; i<filNumber; i++\) {) s
+(                         llSepDifNea[i] = dstLLs[i].Nea; ) s
+(                         llSepDifFar[i] = dstLLs[i].Far;) s
+(                 }) s
+( ) s
+( ) s
+(                 for\(i=0; i<filNumber; i++\) {) s
+(                         /* Dif-shift */ ) s
+(                         lllDataLowPassFiltering      \(&\(llSepDifNea[i]\), RMax,  lllDataL) s
+( owPassFilteringModeSameMemorySize\);) s
+(                         lllDataLowPassFiltering      \(&\(llSepDifFar[i]\), RMax,  lllDataL) s
+( owPassFilteringModeSameMemorySize\);) s
+(                         lllDataRadialLowPassFiltering\(&\(llSepDifNea[i]\), RRMax, lllDataL) s
+( owPassFilteringModeSameMemorySize\);) s
+(                         lllDataRadialLowPassFiltering\(&\(llSepDifFar[i]\), RRMax, lllDataL) s
+( owPassFilteringModeSameMemorySize\);) s
+(                         lllDatarMaxLimit\(&\(llSepDifNea[i]\), linfo->rMaxInfo, 0\);) s
+(                         lllDatarMaxLimit\(&\(llSepDifFar[i]\), linfo->rMaxInfo, 0\);) s
+(                 }) s
+( ) s
+(                 DEBUGPRINT\("----- Estimation of New llSepASAvg -----"\); ) s
+(                 if\(0<linfo->MaxIteration3\) {) s
+(                         subStep = \(\(double\)iter3\)/\(\(double\)linfo->MaxIteration3\);       ) s
+(                 } else {) s
+(                         subStep = 0.0;) s
+(                 }) s
+(                 linfo->currentRMax  = RMax  = MIN\(linfo->RMax,  linfo->RMaxFirst +\(times) s
+(  - subStep\)*linfo->RMaxStep\);) s
+(                 linfo->currentRRMax = RRMax = MIN\(linfo->RRMax, linfo->RRMaxFirst+\(times) s
+(  - subStep\)*linfo->RRMaxStep\);) s
+(                 LOGPRINT3\(fpt,    "ITER", "newllSep", "times: %04d RMax: %15.6f RRMax: %) s
+( 15.6f", times, RMax, RRMax\);) s
+( ) s
+(                 /*) s
+(                         Estimation of new llSepNea and llSepFar ) s
+(                         F\(i\) = F\(i-1\) + lambda*Dif\(i-1\); Dif\(i-1\) = Observe - F\(i-1\)) s
+(                                 If lambda = 1, Jacobi's method) s
+(                                 If lambda = 2, SIRT method) s
+(                 */) s
+(                 for\(i=0; i<filNumber; i++\) {) s
+(                         /* Multiply weight: lambda */) s
+(                         lllDataMultiplyReal\(&\(llSepDifNea[i]\), linfo->lambda\);) s
+(                         lllDataMultiplyReal\(&\(llSepDifFar[i]\), linfo->lambda\);) s
+(                         /* Estimate */) s
+(                         lllDataAdd\(&\(llSepNea[i]\), &\(llSepDifNea[i]\)\);) s
+(                         lllDataAdd\(&\(llSepFar[i]\), &\(llSepDifFar[i]\)\);) s
+( ) s
+(                         llDataFree\(&\(llSepDifNea[i]\)\);) s
+(                         llDataFree\(&\(llSepDifFar[i]\)\);) s
+(                 }) s
+( ) s
+(                 DEBUGPRINT\("----- Output a new model: llAvg -----\\n"\); ) s
+(                 if\(linfo->eachTime || linfo->flagForContinue\) {) s
+/sd 0 def
+4 sn
+fnf
+lg lgp
+pagesave restore
+showpage
+%%Page: 5 5
+/pagesave save def
+/twp true def
+/fnfs 11 def
+/dfs fnfs 0.8 mul def
+/df /Helvetica dfs getfont def
+/dw df setfont td stringwidth pop def
+/sfnf filenmfontname fnfs getfont def
+/hm fnfs 0.25 mul def
+/hs 0.22 inch def
+/bfs 6.8 def
+/bdf /Courier-Bold bfs getfont def
+/bm bfs 0.7 mul def
+/bf /CourierBack bfs getfont def
+/l 69 def
+/c 89 def
+/pw
+   bf setfont (0) stringwidth pop c mul bm dup add add
+   def
+/ph
+   bfs l mul bm dup add add hs add
+   def
+/fns
+      pw
+      fnfs 4 mul dw add (Page 999) stringwidth pop add
+    sub
+  def
+/tm margin twp {3} {2} ifelse div def
+/sd 0 def
+/y [ rm ph add bm add
+          dup ] def
+/sny dfs dfs add def
+/snx sh tm dfs add sub def
+/dy sny def
+/dx tm dfs add def
+/x [ tm			% left page
+          dup 2 mul pw add	% right page
+        ] def
+/scx sh 2 div def
+/fny dy def
+/fnx scx def
+/ly fnfs 2 div y sd get add def
+/lx snx def
+/d (Oct 13 1998 19:16) def
+( stdin ) fn
+sw 0 translate
+90 rotate
+9 hp
+border
+hborder
+/x0 x 0 get bm add def
+/y0 y 0 get bm bfs add hs add sub def
+x0 y0 moveto
+bf setfont
+(                         sprintf\(s, "%s.%03d", linfo->Avg, times\);) s
+(                         tmpfpt = fileOpen\(s, "w"\);) s
+(                         llDataFileWrite\(tmpfpt, llAvg, &status\);) s
+(                         fclose\(tmpfpt\);) s
+(                 }) s
+( ) s
+(                 DEBUGPRINT\("----- Output each filament : llSepNea and llSepFar -----\\n"\)) s
+( ; ) s
+(                 if\(linfo->eachTime && linfo->flagForContinue && oldtimes < times\) {) s
+(                         for\(i=0; i<filNumber; i++\) {) s
+(                                 sprintf\(s, "%s.Nea.%03d", In[i], times\);) s
+(                                 tmpfpt = fileOpen\(s, "w"\);) s
+(                                 llDataFileWrite\(tmpfpt, &\(llSepNea[i]\), &status\);) s
+(                                 fclose\(tmpfpt\);) s
+(                                 sprintf\(s, "%s.Far.%03d", In[i], times\);) s
+(                                 tmpfpt = fileOpen\(s, "w"\);) s
+(                                 llDataFileWrite\(tmpfpt, &\(llSepFar[i]\), &status\);) s
+(                                 fclose\(tmpfpt\);) s
+(                         }) s
+(                 }) s
+(         }) s
+( #ifdef PVM) s
+(     if\(linfo->flagpvmList || linfo->flagpvm\) {) s
+(         lfitinfo.flagPVM = 0;) s
+(         lllDataFitServerEnd\(lfitinfo.vPVM\);) s
+(     }) s
+( #endif) s
+(         linfo->llSepASAvg    = llSepFitAvg;) s
+(         linfo->llSepDifASAvg = llSepDifASAvg;) s
+( }) s
+/sd 1 def
+/sd 0 def
+5 sn
+fnf
+lg lgp
+pagesave restore
+showpage
+
+%%Trailer
+%%Pages: 5
+docsave restore end

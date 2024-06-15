@@ -1,0 +1,10 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-S","-S[hrink]","Shrink(1/S)","Optional","1","1","S","Integer","2"
+"-Sx","-S[hrink]x","Shrink(1/S) for x axis.","Optional","1","1","Sx","Integer","2"
+"-Sy","-S[hrink]y","Shrink(1/S) for y axis.","Optional","1","1","Sy","Integer","2"
+"-Sz","-S[hrink]z","Shrink(1/S) for z axis.","Optional","1","1","Sz","Integer","2"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

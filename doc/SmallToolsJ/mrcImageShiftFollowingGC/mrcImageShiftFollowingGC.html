@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageShiftFollowingGC</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageShiftFllowing<br></h2></b></font>
+	<h4></h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+	<table border="1">
+		<div align="left">
+			<tr>
+				<th>オプション</th>
+				<th>必須項目/選択項目</th>
+				<th>説明</th>
+				<th>デフォルト</th>
+			</tr>
+			<tr>
+				<td>-i</td>
+				<td>必須</td>
+				<td>入力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-o</td>
+				<td>必須</td>
+				<td>出力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-I</td>
+				<td>選択</td>
+				<td>反対に物体が移動する</td>
+				<td>　</td>
+			</tr>
+			<tr>
+				<td>-h</td>
+				<td>選択</td>
+				<td>ヘルプを表示</td>
+				<td>　</td>
+			</tr>
+		</div>
+	</table>
+	
+	<h4>******実行例******</h4>
+
+<!-- 入力ファイル説明 -->
+
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="bin.m0t1.png" border="0" alt="bin.m0t1.png(1137 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0(0, 0, 0)<br>
+				1(45, 15, 0)<br>
+				0.236406<br>
+				0.424874<br>
+				0.00531093<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<br>
+	<br>
+	<caption><font color="blue">------出力ファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="outdata.png" border="0" alt="outdata.png(1137 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0(0, 0, 0)<br>
+				1(46, 14, 0)<br>
+				0.236406<br>
+				0.424874<br>
+				0.00531093<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-I------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="outdata-I.png" border="0" alt="outdata-I.png(1139 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0(0, 0, 0)<br>
+				1(45, 16, 0)<br>
+				0.236406<br>
+				0.424874<br>
+				0.00531093<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<div>※分かりづらいが、物体の位置が少しづつずれてる</div>
+
+</body>
+</html>

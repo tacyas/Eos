@@ -1,0 +1,11 @@
+# OptionControlFile
+# FileFormat
+"-I","-I[nputFileLiest]","InputDataFileList","Essential","1","1","In","inFileListNoOpen","NULL"
+"-o","-o[utput]","OutputDataFileHeader","Essential","1","1","Out","String","NULL"
+"-e","-e[xtension]","OutputDataFileExtension","Essential","1","1","extension","String","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"
+"-ir","-i[ncrease]r[ate]","IncreaseRate","Optional","1","1","ir","Integer","1"
+"-hpn","-h[ybridization]p[oint]n[umber]","HybridizationPointNumber","Optional","1","1","hpn","Integer","1"
+"-ms","-m[ode]s[election]","ModeOfSelection","Optional","1","1","ms","Integer","0"
+"-ird","-i[nitial]r[andom]d[ata]","InitialRandomData","Optional","1","1","ird","Integer","0"

@@ -1,0 +1,13 @@
+.onlineHelp EOS fft2d "Fft2d Help Page"
+.section 1 PROGRAM
+fft2d \- fft2d
+.section 1 DESCRIPTION
+.section 1 "PANE ARGUMENTS"
+.syntax EOS fft2d
+.section 1 EXAMPLES
+.section 1 "SEE ALSO"
+.section 1 RESTRICTIONS 
+.section 1 REFERENCES 
+.section 1 COPYRIGHT
+Copyright (C) 1993 - 1996, Khoral Research, Inc.  All rights reserved.
+

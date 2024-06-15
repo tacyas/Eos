@@ -1,0 +1,3 @@
+OBJECTNAME = eosBayes
+EXTRA_INC =
+EXTRA_CCOPTS =

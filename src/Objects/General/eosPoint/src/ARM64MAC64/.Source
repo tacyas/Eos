@@ -1,0 +1,82 @@
+SRC = \
+eosPointCopy.c \
+eosPointProject.c \
+eosPointRead.c \
+eosPointRotate.c \
+eosPointUtil.c \
+eosPointWrite.c \
+leosPointPositionCorrection.c \
+
+OBJ = \
+eosPointCopy.o \
+eosPointProject.o \
+eosPointRead.o \
+eosPointRotate.o \
+eosPointUtil.o \
+eosPointWrite.o \
+leosPointPositionCorrection.o \
+
+SHAREDOBJ = \
+eosPointCopy.sharedo \
+eosPointProject.sharedo \
+eosPointRead.sharedo \
+eosPointRotate.sharedo \
+eosPointUtil.sharedo \
+eosPointWrite.sharedo \
+leosPointPositionCorrection.sharedo \
+
+REALOBJ = \
+ARM64MAC64/eosPointCopy.o \
+ARM64MAC64/eosPointProject.o \
+ARM64MAC64/eosPointRead.o \
+ARM64MAC64/eosPointRotate.o \
+ARM64MAC64/eosPointUtil.o \
+ARM64MAC64/eosPointWrite.o \
+ARM64MAC64/leosPointPositionCorrection.o \
+
+REALSHAREDOBJ = \
+ARM64MAC64/eosPointCopy.sharedo \
+ARM64MAC64/eosPointProject.sharedo \
+ARM64MAC64/eosPointRead.sharedo \
+ARM64MAC64/eosPointRotate.sharedo \
+ARM64MAC64/eosPointUtil.sharedo \
+ARM64MAC64/eosPointWrite.sharedo \
+ARM64MAC64/leosPointPositionCorrection.sharedo \
+
+OBJDEBUG = \
+eosPointCopy.debugo \
+eosPointProject.debugo \
+eosPointRead.debugo \
+eosPointRotate.debugo \
+eosPointUtil.debugo \
+eosPointWrite.debugo \
+leosPointPositionCorrection.debugo \
+
+REALOBJDEBUG = \
+ARM64MAC64/eosPointCopy.debugo \
+ARM64MAC64/eosPointProject.debugo \
+ARM64MAC64/eosPointRead.debugo \
+ARM64MAC64/eosPointRotate.debugo \
+ARM64MAC64/eosPointUtil.debugo \
+ARM64MAC64/eosPointWrite.debugo \
+ARM64MAC64/leosPointPositionCorrection.debugo \
+
+OBJCUDAGDB = \
+eosPointCopy.cudagdb.o \
+eosPointProject.cudagdb.o \
+eosPointRead.cudagdb.o \
+eosPointRotate.cudagdb.o \
+eosPointUtil.cudagdb.o \
+eosPointWrite.cudagdb.o \
+leosPointPositionCorrection.cudagdb.o \
+
+REALOBJCUDAGDB = \
+ARM64MAC64/eosPointCopy.cudagdb.o \
+ARM64MAC64/eosPointProject.cudagdb.o \
+ARM64MAC64/eosPointRead.cudagdb.o \
+ARM64MAC64/eosPointRotate.cudagdb.o \
+ARM64MAC64/eosPointUtil.cudagdb.o \
+ARM64MAC64/eosPointWrite.cudagdb.o \
+ARM64MAC64/leosPointPositionCorrection.cudagdb.o \
+
+

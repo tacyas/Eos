@@ -1,0 +1,9 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: DataFile","Essential","1","1","inFile","inFile","NULL"
+"-o","-o[utput]","Output: DataFile","Essential","1","1","outFile","outFile","NULL"
+"-M","-M[atrix]","Input: MatrixFile[4][4]","Optional","1","1","matFile","inFile","NULL"
+"-EA","-E[uler]A[ngle]","Input: ","Optional","4","1","RotMode","String","YOYS","2","Rot1","Real","0.0","3","Rot2","Real","0.0","4","Rot3","Real","0.0"
+"-cuda","-cuda","cuda","Optional","1","1","cudaDeviceID","Integer","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

@@ -1,0 +1,19 @@
+#define DoNotAutoRecreate NO
+
+#include EOS_INCLUDE
+
+OBJECT_TYPE = script
+
+TOOLBOX_NAME = eos
+
+OBJECT_NAME = mrcImageRefConv2D
+
+BINARY_NAME = mrcImageRefConv2D
+
+INSTPGMFLAGS =
+
+SCRIPTS = \
+	mrcImageRefConv2D.ksh
+
+#define KKSH_DEF
+#include <Script.template>

@@ -1,0 +1,652 @@
+#!/bin/sh
+echo "Spatially Restricted Molecular Dynamics Simulation"
+#--Version1.1.6.16
+source ./config.SRMD.param
+source ./config.SRMD
+RWeight=1.0
+
+#--Function
+pdbInit()
+{
+
+	echo "$thisProteinPDB output/$thisProteinPDB"
+	temp=${template}
+	echo $thisProteinPSFDir/$thisProtein
+	sed -e s/xxxxx/$thisProtein/ -e s/yyyyy/$filename2/ -e s/wwwww/$langevinDanping/ -e s/vvvvv/$tempS/ -e s/uuuuu/$thisProtein/ -e s/UUUUU/$thisProteinPSFDir/ -e s/ttttt/$temp/ -e s/sssss/$minimum_step/ -e s/PPPPP/$ParamDir/ -e s/ppppp/$ParamFile/ $SRMDBaseDir/template4 > namd_conf_min
+	
+	echo "Let's minimumize atomic model !"
+	namd2 $NAMDOPTION $NAMDOPTION2 namd_conf_min
+	
+}
+DividePDBInit()
+{
+	if [ -d ./dividedPDB/ ]
+	then
+		echo "Dir:dividedPDB has been already created."
+		echo "FILE all clean."
+		rm ./dividedPDB/*.*.coor
+	else
+		mkdir dividedPDB
+	fi 
+}
+SearchDividePOINT()
+{
+	res_num=0
+	res_num2=0
+	n=1		
+	flag=0
+	echo "SearchDividePOINT start! Wait a little."
+	if [ -f ./dividedPDB/DividedNUM.txt ]
+	then 
+		rm ./dividedPDB/DividedNUM.txt
+	fi
+
+
+	while read LINE; do
+		np=$n'p'
+		if [ $DIVIDE_MODE = "COMPLEX" ]; then
+			CHAINIDnow=`sed -n $np output/$filename.coor|cut -c 22`
+			string=`echo $LINE | cut -c 1-4`
+			if [ `expr $n % 100` -eq 0 ];then
+			echo "$n completed."
+			fi
+			if [ $string = "ATOM" ]
+			then  
+				if [ $string = $stringPREV  ]
+				then 	
+					if [ $CHAINIDprev != $CHAINIDnow ]
+					then
+					echo ` expr $n - 1 `  >> ./dividedPDB/DividedNUM.txt
+					echo "DIVIDE!"
+					fi
+				fi
+			fi	
+			CHAINIDprev=`sed -n $np output/$filename.coor|cut -c 22`
+			stringPREV=$string
+		elif [ $DIVIDE_MODE = "DISVALUE" ]; then
+			if [ -f ../DESIGNATED_RESIDUE.txt ]; then
+				while read LINE; do
+					ARRAY[$res_num]=$LINE
+				res_num=` expr $res_num + 1 `
+				done < "../DESIGNATED_RESIDUE.txt"
+			else 
+					echo "Please Create DESIGNATED_RESIDUE.txt"				
+			fi
+			RESIDUEnow=`sed -n $np output/$filename.coor|cut -c 23-26`
+			echo "$RESIDUEprev"
+				num=`echo ${ARRAY[res_num2]} | awk '{printf("%4d",$1);}' `
+				num2=`echo "$RESIDUEnow"`
+				if [ $num2 = $num ]; then
+					if [ $RESIDUEnow != $RESIDUEprev ]; then
+					echo ` expr $n - 1 `  >> ./dividedPDB/DividedNUM.txt
+					echo "DIVIDE!"
+					res_num2=` expr $res_num2 + 1 `
+					fi
+				fi
+			RESIDUEprev=$RESIDUEnow
+		fi
+		n=` expr $n + 1 `	
+	done < "./output/$filename.coor"
+	echo ` expr $n - 1 `  >> ./dividedPDB/DividedNUM.txt
+	echo "Search DividedPoint Finished!!"
+}
+OutputEachPDBFile()
+{
+	SEQNUM=1
+	rm ./dividedPDB/dvCoor.*.*
+	while read LINE; do
+		LINENOW=$LINE
+		if [ $SEQNUM -eq 1 ]
+		then
+			cat output/$filename.coor | head -n '+'$LINENOW  > ./dividedPDB/dvCoor.$SEQNUM.coor
+		else		
+		cat output/$filename.coor | head -n '+'$LINENOW  | tail -n '+'$LINEPREV  >> ./dividedPDB/dvCoor.$SEQNUM.coor
+		fi		
+		SEQNUM=` expr $SEQNUM + 1 `
+		LINEPREV=` expr $LINENOW + 1  `
+	done < "./dividedPDB/DividedNUM.txt"
+	SEQNUM=` expr $SEQNUM - 1 `
+	echo "OutputEachPDBFile Finished!!	SEQNUM=$SEQNUM"
+}
+
+Output_File_init()
+{
+	echo "Output_File_init"
+	sed -e s/yyyyy/$dcd_limit/ $SRMDBaseDir/$template3 > data/$template3	
+	sed -e s/xxxxx/$thisProtein/ -e s/yyyyy/$Contour/ $SRMDBaseDir/mrc_pdb_Fit > data/mrc_pdb_Fit		
+	echo "mol load psf $thisProteinPSFDir/$thisProteinPSF" > test.tcl
+	echo "" > total.log 
+	echo "" > RMSBefore.param
+	echo "" > RMSSelected.param
+	echo "step.1" > data/Rhofit.txt
+	echo "step.1" > data/Shapefit.txt
+	echo "" > data/PdbInfo
+	echo "" > check.log
+}
+
+Temp_Burst()
+{
+##
+##test program for simulated annealing 
+##
+	free_On=$1
+	if [ $free_On -eq 0 ]
+	then
+		if [ $i -eq 0 ]
+		then
+			num=$run_first
+		else
+			num=$run2
+		fi
+	elif [ $free_On -eq 1 ]
+	then
+		num=$run
+	fi
+
+	temp_slope=`echo "scale=5; $slope * $num" | bc `
+	temp_slope2=`echo "scale=5; $slope2 * $num" | bc `
+	num=` expr $count - $phase_prev`
+	temp_slopeflag1=` expr $count - $pre_burst `
+	temp_slopeflag2=` expr $count - $pre_burst2 `
+	if [ $count -gt $burst2 ]
+	then
+		echo "burst phase4">> ./tempTest.txt
+		burst=`expr $burst + $burst_next`
+		burst_next_2=`expr $burst2_next / 2`
+		pre_burst=`expr $burst - $burst_next_2`		
+		burst2=`expr $burst + $burst2_next`
+		pre_burst2=`expr $burst2 - $burst_next_2`
+		slope=`echo "scale=5; $tempBu_tempSt / $burst_next_2 " | bc `
+		slope2=`echo "scale=5; $tempBu_tempSt2 / $burst_next_2 " | bc `
+		tempS=$tempSt	
+		echo "count:$count pre_burst:$pre_burst burst$burst pre_burst2:$pre_burst2 burst2:$burst2 temp:$tempS $temp_slope/$temp_slope2" >>  ./tempTest.txt
+		echo "$count $tempS" >>   ./tempFile4gnuplotTest.txt
+	elif [ $count -gt $pre_burst2 ]
+	then 
+		echo "burst phase3">> ./tempTest.txt
+		if [ $num -eq 2000 ]
+			then
+			if [ $temp_slopeflag2 -le 2000 ]
+			then
+			num=$temp_slopeflag2
+			fi
+		fi
+		temp_slope2=`echo "scale=5; $slope2 * $num" | bc `
+		tempS=`echo "$tempS + $temp_slope2" | bc `
+		echo "count:$count pre_burst:$pre_burst burst$burst pre_burst2:$pre_burst2 burst2:$burst2 temp:$tempS $temp_slope/$temp_slope2 num:$num" >> ./tempTest.txt
+		echo "$count $tempS" >>   ./tempFile4gnuplotTest.txt
+	elif [ $count -gt $burst ]
+	then
+		echo "burst phase2">> ./tempTest.txt
+		tempS=$tempBu
+		echo "count:$count pre_burst:$pre_burst burst$burst pre_burst2:$pre_burst2 burst2:$burst2 temp:$tempS $temp_slope/$temp_slope2" >> ./tempTest.txt
+		echo "$count $tempS" >>   ./tempFile4gnuplotTest.txt
+	elif [ $count -gt $pre_burst ]
+	then 
+		echo "burst phase1">> ./tempTest.txt
+		if [ $num -eq 2000 ]
+			then
+			if [ $temp_slopeflag1 -le 2000 ]
+			then
+			num=$temp_slopeflag1
+			fi
+		fi
+		temp_slope=`echo "scale=5; $slope * $num" | bc `
+		tempS=`echo "$tempS + $temp_slope" | bc `
+		echo "count:$count pre_burst:$pre_burst burst$burst pre_burst2:$pre_burst2 burst2:$burst2 temp:$tempS $temp_slope/$temp_slope2 num:$num" >> ./tempTest.txt
+		echo "$count $tempS" >>   ./tempFile4gnuplotTest.txt
+	else 
+		echo "burst phase0">> ./tempTest.txt
+		echo "count:$count pre_burst:$pre_burst burst$burst pre_burst2:$pre_burst2 burst2:$burst2 temp:$tempS $temp_slope/$temp_slope2" >> ./tempTest.txt
+		echo "$count $tempS" >>   ./tempFile4gnuplotTest.txt
+	fi
+	phase_prev=$count
+}
+
+Region_Control()
+{
+	echo "RegionControl: %$1"
+	PotentialFlag=$1
+	case $PotentialFlag in
+	0)
+		Free_Potential_region
+	;;
+	1)
+		LowPass_Potential_region
+	;;
+	2)	
+		Normal_Potential_region
+	;;
+	*)
+		echo "-----******--ERROR(RegionControl)--*****-------"
+	;;
+	esac
+}
+
+Free_Potential_region()
+{
+	free_On=0
+	region="Free"
+	PotentialFlag=1
+	LowPassFlag=0
+	if [ $i -eq 0 ]
+	then
+		NamdConf ${template2} ${run_first}
+	else
+		NamdConf ${template2} ${run2}
+	fi
+	LowLimit=$firstLowLimit
+	Lowcount=0
+	LowOn=5
+	End_limit=20
+	End_count=0
+}
+
+LowPass_Potential_region()
+{
+	free_On=1
+	End_count=`expr $End_count + 1`
+	NamdConf ${template} ${run}
+	if [ $LowLimit -eq $Lowcount ]
+	then
+		case $LowPassFlag in
+		0)
+			LowOn=`expr $LowOn - 1`
+		;;
+		1)
+			LowOn=`expr $LowOn + 1`
+		;;
+		*)
+			echo "ERROR!! LOWPASS!!"
+		;;
+		esac
+		LowLimit=`expr $LowLimit + $firstLowLimit`
+	fi
+	Lowcount=`expr $Lowcount + $run`
+	LowPass_Control ${LowOn}
+	
+	if [ $End_limit -eq $End_count ]
+	then
+		case $LowPassFlag in
+		0)
+			PotentialFlag=2
+			LowOn=1
+			End_limit=10
+		;;
+		1)
+			PotentialFlag=0
+		;;
+		*)
+			echo "ERROR!! LOWPASS2!!"
+		;;
+		esac
+		LowLimit=$firstLowLimit
+		Lowcount=0
+		End_count=0
+	fi
+}
+
+Normal_Potential_region()
+{
+	flag=0
+	num=1
+	free_On=1
+	region="Normal"
+	End_count=`expr $End_count + 1`
+	NamdConf ${template} ${run}
+	echo "filename=$filename"
+
+	if [ -f ./output/$filename.pdb ] 
+		then
+		rm  ./output/$filename.pdb
+	fi
+
+	OutputEachPDBFile
+	if [ $DIVIDE_MODE = "COMPLEX" ]; then
+
+		while [ $num -le $SEQNUM ];do
+			if [ -f ./output/$filename.$num.pdb ];	then
+				rm  ./output/$filename.$num.pdb
+			fi			
+			echo "mrcImageToNAMDConstantForces -i mrc/$thisProtein.mrc -ip  ./dividedPDB/dvCoor.$num.coor -o output/$filename.$num.pdb -w $weight -C $Contour -R $Rotate -RW $RWeight -S $Seed "
+			mrcImageToNAMDConstantForces -i mrc/$thisProtein.mrc -ip  ./dividedPDB/dvCoor.$num.coor -o output/$filename.$num.pdb -w $weight -C $Contour -R $Rotate -RW $RWeight -S $Seed 
+			cat output/$filename.$num.pdb >> output/$filename.pdb
+			rm output/$filename.$num.pdb
+			num=`expr $num + 1 `
+		done
+	elif [ $DIVIDE_MODE = "DISVALUE" ]; then
+		while [ $num -le $SEQNUM ];do
+			flag=`expr $num % 2 ` 
+			if [ -f ./output/$filename.$num.pdb ]; then
+				rm  ./output/$filename.$num.pdb
+			fi
+			if [ $flag -eq 1 ]; then
+				echo "**************************************************************"
+				echo "mrcImageToNAMDConstantForces -i mrc/$thisProtein.mrc -ip  ./dividedPDB/dvCoor.$num.coor -o output/$filename.$num.pdb -w $weight -C $Contour -R $Rotate -RW $RWeight -S $Seed "
+				mrcImageToNAMDConstantForces -i mrc/$thisProtein.mrc -ip  ./dividedPDB/dvCoor.$num.coor -o output/$filename.$num.pdb -w $weight -C $Contour -R $Rotate -RW $RWeight -S $Seed 
+			else
+				echo "---------------------------------------------------------------"
+				mrcImageToNAMDConstantForces -i mrc/$thisProtein.mrc -ip  ./dividedPDB/dvCoor.$num.coor -o output/$filename.$num.pdb -w 0.0 -C $Contour -R $Rotate -RW $RWeight -S $Seed 
+			fi								
+			cat output/$filename.$num.pdb >> output/$filename.pdb
+			rm output/$filename.$num.pdb			
+			num=`expr $num + 1 `
+		done	
+	elif [$DIVIDE_MODE = "DEFAULT"];then
+		mrcImageToNAMDConstantForces -i mrc/$thisProtein.mrc -ip  output/$filename.coor -o output/$filename.pdb -w $weight -C $Contour -R $Rotate -RW $RWeight -S $Seed 
+	fi		
+	if [ $End_limit -eq $End_count ]
+	then
+		PotentialFlag=1
+		LowPassFlag=1
+		End_limit=20
+		End_count=0
+	fi
+}
+
+NamdConf()
+{
+	temp=$1
+	Run=$2
+	echo $thisProteinPSFDir/$thisProtein
+	sed -e s/xxxxx/$filename/ -e s/yyyyy/$filename2/ -e s/zzzzz/$Run/ -e s/wwwww/$langevinDanping/ -e s/vvvvv/$tempS/ -e s/uuuuu/$thisProtein/ -e s/UUUUU/$thisProteinPSFDir/ -e s/ttttt/$temp/ -e s/PPPPP/$ParamDir/ -e s/ppppp/$ParamFile/ $SRMDBaseDir/template > namd_conf
+	
+	echo "  temp  = " $temp >> check.log
+	echo "  Run   = " $Run >> check.log
+}
+LowPass_Control()
+{
+	LowOn=$1
+	case $LowOn in
+	1)
+		LowPass_ConstantForces ${LowOn} ${Contour1}
+		region="Low1"
+	;;
+	2)
+		LowPass_ConstantForces ${LowOn} ${Contour2}
+		region="Low2"
+	;;
+	3)
+		LowPass_ConstantForces ${LowOn} ${Contour3}
+		region="Low3"
+	;;
+	4)
+		LowPass_ConstantForces ${LowOn} ${Contour4}
+		region="Low4"
+	;;
+	5)
+		LowPass_ConstantForces ${LowOn} ${Contour5}
+		region="Low5"
+	;;
+	*)
+		echo "-----*****--ERROR(LowPass)--*****-----"
+	;;
+	esac
+}
+
+LowPass_ConstantForces()
+{	
+	flag=0
+	num=1
+	Low_patern=$1
+	Cont=$2
+	PDBCount=1
+	
+	OutputEachPDBFile
+
+
+	if [ -f ./output/$filename.pdb ] 
+	then
+		rm  ./output/$filename.pdb
+	fi
+
+	if [ $DIVIDE_MODE = "COMPLEX" ]
+	then
+		while [ $num -le $SEQNUM ];do
+			if [ -f ./output/$filename.$num.pdb ];then
+				rm  ./output/$filename.$num.pdb
+			fi
+			echo "mrcImageToNAMDConstantForces -i mrc/$thisProtein.Low.$Low_patern.mrc -ip ./dividedPDB/dvCoor.$num.coor  -o output/$filename.$num.pdb -w $weight2 -C $Cont -R $Rotate -RW $RWeight -S $Seed  "
+			mrcImageToNAMDConstantForces -i mrc/$thisProtein.Low.$Low_patern.mrc -ip ./dividedPDB/dvCoor.$num.coor  -o output/$filename.$num.pdb -w $weight2 -C $Cont -R $Rotate -RW $RWeight -S $Seed 
+			cat output/$filename.$num.pdb >> output/$filename.pdb
+			rm output/$filename.$num.pdb
+			num=`expr $num + 1 `
+			echo "$1 $2 LowPass" 
+		done
+	elif [ $DIVIDE_MODE = "DISVALUE" ]; then
+		while [ $num -le $SEQNUM ];do
+			flag=`expr $num % 2 ` 
+			if [ -f ./output/$filename.$num.pdb ]; then
+				rm  ./output/$filename.$num.pdb
+			fi
+			if [ $flag -eq 1 ]; then
+				echo "**************************************************************"
+				mrcImageToNAMDConstantForces -i mrc/$thisProtein.Low.$Low_patern.mrc -ip ./dividedPDB/dvCoor.$num.coor  -o output/$filename.$num.pdb -w $weight2 -C $Cont -R $Rotate -RW $RWeight -S $Seed 
+			else
+				echo "---------------------------------------------------------------"
+				mrcImageToNAMDConstantForces -i mrc/$thisProtein.Low.$Low_patern.mrc -ip ./dividedPDB/dvCoor.$num.coor  -o output/$filename.$num.pdb -w 0.0 -C $Cont -R $Rotate -RW $RWeight -S $Seed 			
+			fi								
+			cat output/$filename.$num.pdb >> output/$filename.pdb
+			rm output/$filename.$num.pdb
+			num=`expr $num + 1 `
+		done	
+	elif [$DIVIDE_MODE = "DEFAULT"]
+	then
+		mrcImageToNAMDConstantForces -i mrc/$thisProtein.mrc -ip  output/$filename.coor -o output/$filename.pdb -w $weight -C $Contour -R $Rotate -RW $RWeight -S $Seed 
+	fi
+}
+
+Weight_Control()
+{
+	weight=`expr $weight - 0.0003`
+}
+
+NAMD()
+{
+	#cp namd_conf namd_conf.$i
+	namd2 $NAMDOPTION $NAMDOPTION2 namd_conf | tee log
+}
+
+Total_Log()
+{
+	awk -v Num=$count '/ENERGY:/{printf("%15d %s\n",$2+Num,$0);}' log >> total.log
+}
+
+RMS_OutPut()
+{
+	
+	resn=1
+	resnum=`echo $resn | awk '{printf("%02d",$1);}' `
+	resFile=seg.$resnum.res
+
+	case $PotentialMode in 	
+		'MAP')
+			pdbRhoFit -ipdb output/$filename.coor -imrc mrc/$thisProtein.mrc  -zmax 0 -phimax 0  -I -omrc ./output/output.mrc -opar data/test-fit.param -otxt data/test-fit.txt -opdb data/test-fit.pdb -m 0 -C $RMS_Contour
+			awk -v Num=$count '/RMSBefore:/{printf("%15d %f\n",Num,$2);}' data/test-fit.param >> RMSBefore.param
+			awk -v Num=$count '/RMSSelectedBefore:/{printf("%15d %f\n",Num,$2);}' data/test-fit.param >> RMSSelected.param
+			ncount=`expr $count % 1000`
+			if [ $ncount -eq 0 ]
+			then
+				echo "****************************************$i-$ncount************************************************"
+				echo "***********************************RMSD output********************************************"
+				while [ -f ../seg.$resnum.res ];do
+					pdbTwoProteinFit -i output/$filename.coor -ires ../seg.$resnum.res -r $thisProteinPDBDir/$thisProteinPDB -rres ../seg.$resnum.res -o data/test-fit.$resnum.pdb -oParam data/test-fit.$resnum.param -oMatrix data/test-fit.$resnum.mat
+				awk -v Num=$count '/RMSSelectedBefore:/{printf("%15d %f\n",Num,$2);}' data/test-fit.$resnum.param >> RMSSelected_RMSD.$resnum.param
+				resn=`expr $resn + 1  `
+				resnum=`echo $resn | awk '{printf("%02d",$1);}' `
+				done
+			fi
+			;;	
+		'PDB')	
+			pdbTwoProteinFit -i output/$filename.coor -ires ../test.res -r $thisProteinPDBDir/$FitProteinForRMSoutput -rres ../test.res -o data/test-fit.pdb -oParam data/test-fit.param -oMatrix data/test-fit.mat
+			awk -v Num=$count '/RMSBefore:/{printf("%15d %f\n",Num,$2);}' data/test-fit.param >> RMSBefore.param
+			awk -v Num=$count '/RMSSelectedBefore:/{printf("%15d %f\n",Num,$2);}' data/test-fit.param >> RMSSelected.param
+			;;
+		*) 
+			echo "Check PotentialMode!!"
+			echo "Current Implemented Mode:  PDB  : PDB"
+			echo "                           MAP  : MRC"
+			;;
+	esac	
+
+
+
+
+
+}
+
+OutPut_for_VMD()
+{
+	sed -e s/xxxxx/$i/ data/$template3 > Dcd_VMD		
+	chmod 700 Dcd_VMD
+}
+
+OutPut_for_Fit()
+{
+	sed -e s/zzzzz/$i/ data/mrc_pdb_Fit > mrc_pdb_Fit		
+	chmod 700 mrc_pdb_Fit
+}
+
+PdbInfo_OutPut()
+{
+	if [ $i -gt $free ]
+    then
+ 	   pdbInfo -i output/$filename.coor >> data/PdbInfo
+    fi
+}
+
+Count_Control()
+{
+	free_On=$1
+	if [ $free_On -eq 0 ]
+	then
+		if [ $i -eq 0 ]
+		then
+			count=`expr $count + $run_first`
+		else
+			count=`expr $count + $run2`
+		fi
+	elif [ $free_On -eq 1 ]
+	then
+		count=`expr $count + $run`
+	fi
+}
+
+Check()
+{
+	echo "   i    = " $i >> check.log
+	echo "region  = " $region >> check.log
+	echo " count  = " $count >> check.log
+	echo "End_limit=" $End_limit >> check.log
+	echo "End_count=" $End_count >> check.log
+	echo " "
+}
+
+SRMD_Init()
+{
+	#pdbInit
+	echo "IsthisProteinComplex: $DIVIDE_MODE "
+	if [ $DIVIDE_MODE != "DEFAULT" ];then
+		DividePDBInit
+	fi
+	#--ParameterInit
+	Output_File_init
+	if [ $DIVIDE_MODE != "DEFAULT" ];then
+		SearchDividePOINT
+	fi	
+}
+
+Free_Region_Control()
+{
+if [ $count -gt `expr $burst2 / 2 ` ]; then
+	:
+		elif [ $count -gt `expr $pre_burst2 / 2 ` ]; then
+		free_On=1
+			elif [ $count -gt `expr $burst / 2 ` ]; then
+			:
+				elif [ $count -gt `expr $pre_burst / 2 ` ]; then
+				free_On=1
+fi
+
+}
+
+#-- Main _Program
+i=0
+burstnum=0
+count=0
+SEQNUM=1
+filename=file.000000
+filename2=file.000000
+#max=1000
+#slope_flag=0
+
+pdbInit
+SRMD_Init
+while [ $i -le $max ];
+do
+	echo "########---- LOOP.$i -------#############"
+	j=`expr $i + 1` 
+	ii=`echo $i | awk '{printf("%06d",$1);}' `
+	jj=`echo $j | awk '{printf("%06d",$1);}' `
+	filename=file.$ii
+	filename2=file.$jj
+
+
+
+	#--Temp_Burst
+	Temp_Burst ${free_On}
+
+	#--FURIWAKE
+	Region_Control ${PotentialFlag} 
+
+	#--StateCheck
+	Check
+	
+	#--NAMD
+	NAMD
+	
+	#--IRANAIDATA
+	rm output/$filename2.vel
+	rm output/$filename2.xsc
+
+	#--Dcd_make
+	OutPut_for_VMD
+
+	#--Fit_make
+	OutPut_for_Fit
+	
+	#--Total_Log
+	Total_Log
+	
+	#--RMS_Output
+	RMS_OutPut
+	
+	#--PdbInfo_OutPut
+	PdbInfo_OutPut
+	
+	#--Free_Region_Control
+	Free_Region_Control
+
+	#--Time_Step for OutPut
+	Count_Control ${free_On}
+
+	#--force-quit flag
+	if [ -f output/$filename.coor ]
+	then
+		echo ""
+	else
+		echo "SRMD is stopped by the absence of $filename.coor"
+		break 
+	fi
+
+	#--Next_Step
+	i=`expr $i + 1`
+done
+#------------
+
+#--OutPut Total.Energy
+awk '{printf("%10d %10.4f\n",$1,$8);}' total.log > Elect.log
+awk '{printf("%10d %10.4f\n",$1,$9);}' total.log > VDW.log
+awk '{printf("%10d %10.4f\n",$1,$12);}' total.log > Kinetic.log
+awk '{printf("%10d %10.4f\n",$1,$13);}' total.log > total.Energy
+rm output/*.BAK

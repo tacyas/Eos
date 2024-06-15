@@ -1,0 +1,19 @@
+#!/usr/local/bin/bltwish
+#
+proc llDataPrintDesktopSet { re } {
+	global nFrame	
+
+	if $re {
+		puts "redraw"
+		pack forget .menu
+		pack forget .graphFrames($nFrame(old))
+	}
+
+	tk_menuBar .menu .menu.file .menu.edit .menu.help
+	pack .menu -fill x -side top -expand true -ipadx 3 -ipady 3
+
+	#puts $nFrame(current)
+	#puts .graphFrames($nFrame(current))
+
+	pack .graphFrames($nFrame(current)) -fill both -side bottom -expand true
+}

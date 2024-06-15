@@ -1,0 +1,11 @@
+# OptionControlFile
+# FileFormat
+"-ip","-i[nput]p[ositive]","Input: partile image list filename","Essential","1","1","InPositive","inFileList","NULL"
+"-in","-i[nput]n[egative]","Input: background image list filename","Essential","1","1","InNegative","inFileList","NULL"
+"-o","-o[utput]","Output: Neural Net Parameters after Learning\n \t\t\tFileNameOfWeightForTheBelowLayer NumOfCellOfThisLayer BiasOfThisLayer","Essential","1","1","Out","outFileList","NULL"
+"-B","-B[ias0]","Bias: The value of the bias of the input layer","Optional","1","1","Bias","Real","1.0"
+"-max","-max[Counter]","MaxCounter","Optional","1","1","MaxCounter","Integer","10"
+"-EPS","-EPS","Final Error","Optional","1","1","EPS","Real","0.005"
+"-lambda","-lambda","step for backpropagation","Optional","1","1","Lambda","Real","0.1"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

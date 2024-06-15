@@ -1,0 +1,318 @@
+#!/bin/sh
+echo "Spatially Restricted Molecular Dynamics Simulation"
+#--Version1.1.0
+source config.SRMD
+source config.SRMD.param
+
+#--Function
+
+Output_File_init()
+{
+	sed -e s/yyyyy/$dcd_limit/ $SRMDBaseDir/$template3 > data/$template3	
+	sed -e s/xxxxx/$thisProtein/ -e s/yyyyy/$Contour/ $SRMDBaseDir/mrc_pdb_Fit > data/mrc_pdb_Fit		
+	echo "mol load psf $thisProteinPSFDir/$thisProteinPSF" > test.tcl
+	echo "" > total.log 
+	echo "" > RMSBefore.param
+	echo "" > RMSSelected.param
+	echo "step.1" > data/Rhofit.txt
+	echo "step.1" > data/Shapefit.txt
+	echo "" > data/PdbInfo
+	echo "" > check.log
+}
+
+Temp_Burst()
+{
+	if [ $count -gt $burst ]
+	then
+		tempS=$tempBu
+		if [ $count -gt $burst2 ]
+		then
+			burst=`expr $burst + $burst_next`
+			burst2=`expr $burst + $burst2_next`
+			tempS=$tempSt
+		fi
+	fi
+}
+
+Region_Control()
+{
+	PotentialFlag=$1
+	case $PotentialFlag in
+	0)
+		Free_Potential_region
+	;;
+	1)
+		LowPass_Potential_region
+	;;
+	2)	
+		Normal_Potential_region
+	;;
+	*)
+		echo "-----******--ERROR(RegionControl)--*****-------"
+	;;
+	esac
+}
+
+Free_Potential_region()
+{
+	free_On=0
+	region="Free"
+	PotentialFlag=1
+	LowPassFlag=0
+	if [ $i -eq 0 ]
+	then
+		NamdConf ${template2} ${run_first}
+	else
+		NamdConf ${template2} ${run2}
+	fi
+	LowLimit=$firstLowLimit
+	Lowcount=0
+	LowOn=5
+	End_limit=20
+	End_count=0
+}
+
+LowPass_Potential_region()
+{
+	free_On=1
+	End_count=`expr $End_count + 1`
+	NamdConf ${template} ${run}
+	if [ $LowLimit -eq $Lowcount ]
+	then
+		case $LowPassFlag in
+		0)
+			LowOn=`expr $LowOn - 1`
+		;;
+		1)
+			LowOn=`expr $LowOn + 1`
+		;;
+		*)
+			echo "ERROR!! LOWPASS!!"
+		;;
+		esac
+		LowLimit=`expr $LowLimit + $firstLowLimit`
+	fi
+	Lowcount=`expr $Lowcount + $run`
+	LowPass_Control ${LowOn}
+	
+	if [ $End_limit -eq $End_count ]
+	then
+		case $LowPassFlag in
+		0)
+			PotentialFlag=2
+			LowOn=1
+			End_limit=10
+		;;
+		1)
+			PotentialFlag=0
+		;;
+		*)
+			echo "ERROR!! LOWPASS2!!"
+		;;
+		esac
+		LowLimit=$firstLowLimit
+		Lowcount=0
+		End_count=0
+	fi
+}
+
+Normal_Potential_region()
+{
+	free_On=1
+	region="Normal"
+	End_count=`expr $End_count + 1`
+	NamdConf ${template} ${run}
+	mrcImageToNAMDConstantForces -i mrc/$thisProtein.mrc -ip output/$filename.coor -o output/$filename.pdb -w $weight -C $Contour -R $Rotate -S $Seed 
+	
+	if [ $End_limit -eq $End_count ]
+	then
+		PotentialFlag=1
+		LowPassFlag=1
+		End_limit=20
+		End_count=0
+	fi
+}
+
+NamdConf()
+{
+	temp=$1
+	Run=$2
+	sed -e s/xxxxx/$filename/ -e s/yyyyy/$filename2/ -e s/zzzzz/$Run/ -e s/wwwww/$langevinDanping/ -e s/vvvvv/$tempS/ -e s/uuuuu/$thisProtein/ -e s/ttttt/$temp/ $SRMDBaseDir/template > namd_conf
+	
+	echo "  temp  = " $temp >> check.log
+	echo "  Run   = " $Run >> check.log
+}
+
+LowPass_Control()
+{
+	LowOn=$1
+	case $LowOn in
+	1)
+		LowPass_ConstantForces ${LowOn} ${Contour1}
+		region="Low1"
+	;;
+	2)
+		LowPass_ConstantForces ${LowOn} ${Contour2}
+		region="Low2"
+	;;
+	3)
+		LowPass_ConstantForces ${LowOn} ${Contour3}
+		region="Low3"
+	;;
+	4)
+		LowPass_ConstantForces ${LowOn} ${Contour4}
+		region="Low4"
+	;;
+	5)
+		LowPass_ConstantForces ${LowOn} ${Contour5}
+		region="Low5"
+	;;
+	*)
+		echo "-----*****--ERROR(LowPass)--*****-----"
+	;;
+	esac
+}
+
+LowPass_ConstantForces()
+{
+	Low_patern=$1
+	Cont=$2	
+	mrcImageToNAMDConstantForces -i mrc/$thisProtein.Low.$Low_patern.mrc -ip output/$filename.coor -o output/$filename.pdb -w $weight2 -C $Cont -R $Rotate -S $Seed
+}
+
+Weight_Control()
+{
+	weight=`expr $weight - 0.0003`
+}
+
+NAMD()
+{
+	namd2 namd_conf | tee log
+}
+
+Total_Log()
+{
+	awk -v Num=$count '/ENERGY:/{printf("%15d %s\n",$2+Num,$0);}' log >> total.log
+}
+
+RMS_OutPut()
+{
+	pdbTwoProteinFit -i ../output/$Potential -ires ../test.res -r output/$filename.coor -rres ../test.res -o data/test-fit.pdb -oParam data/test-fit.param -oMatrix data/test-fit.mat
+	awk -v Num=$count '/RMSBefore:/{printf("%15d %f\n",Num,$2);}' data/test-fit.param >> RMSBefore.param
+	awk -v Num=$count '/RMSSelectedBefore:/{printf("%15d %f\n",Num,$2);}' data/test-fit.param >> RMSSelected.param
+}
+
+OutPut_for_VMD()
+{
+	sed -e s/xxxxx/$i/ data/$template3 > Dcd_VMD		
+	chmod 700 Dcd_VMD
+}
+
+OutPut_for_Fit()
+{
+	sed -e s/zzzzz/$i/ data/mrc_pdb_Fit > mrc_pdb_Fit		
+	chmod 700 mrc_pdb_Fit
+}
+
+PdbInfo_OutPut()
+{
+	if [ $i -gt $free ]
+    then
+ 	   pdbInfo -i output/$filename.coor >> data/PdbInfo
+    fi
+}
+
+Count_Control()
+{
+	free_On=$1
+	if [ $free_On -eq 0 ]
+	then
+		if [ $i -eq 0 ]
+		then
+			count=`expr $count + $run_first`
+		else
+			count=`expr $count + $run2`
+		fi
+	elif [ $free_On -eq 1 ]
+	then
+		count=`expr $count + $run`
+	fi
+}
+
+Check()
+{
+	echo "   i    = " $i >> check.log
+	echo "region  = " $region >> check.log
+	echo " count  = " $count >> check.log
+	echo "End_limit=" $End_limit >> check.log
+	echo "End_count=" $End_count >> check.log
+	echo " "
+}
+
+
+#-- Main _Program
+i=0
+count=0
+
+while [ $i -le $max ];
+do
+	echo "########---- Step.$i -------#############"
+
+	j=`expr $i + 1` 
+	ii=`echo $i | awk '{printf("%04d",$1);}' `
+	jj=`echo $j | awk '{printf("%04d",$1);}' `
+	filename=file.$ii
+	filename2=file.$jj
+
+	#--ParameterInit
+	if [ $i -eq 0 ]
+	then
+		Output_File_init
+	fi
+
+	#--Temp_Burst
+	Temp_Burst
+
+	#--FURIWAKE
+	Region_Control ${PotentialFlag} 
+	
+	#--StateCheck
+	Check
+	
+	#--NAMD
+	NAMD
+	
+	#--IRANAIDATA
+	rm output/$filename2.vel
+	rm output/$filename2.xsc
+
+	#--Dcd_make
+	OutPut_for_VMD
+
+	#--Fit_make
+	OutPut_for_Fit
+	
+	#--Total_Log
+	Total_Log
+	
+	#--RMS_Output
+	RMS_OutPut
+	
+	#--PdbInfo_OutPut
+	PdbInfo_OutPut
+
+	#--Time_Step for OutPut
+	Count_Control ${free_On}
+
+	#--Next_Step
+	i=`expr $i + 1`
+done
+#------------
+
+#--OutPut Total.Energy
+awk '{printf("%10d %10.4f\n",$1,$8);}' total.log > Elect.log
+awk '{printf("%10d %10.4f\n",$1,$9);}' total.log > VDW.log
+awk '{printf("%10d %10.4f\n",$1,$12);}' total.log > Kinetic.log
+awk '{printf("%10d %10.4f\n",$1,$13);}' total.log > total.Energy
+rm output/*.BAK	
+

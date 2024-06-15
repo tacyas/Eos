@@ -1,0 +1,45 @@
+<HTML>
+<HEAD>
+<TITLE>mrcImageSinogramCorrelation</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageSinogramCorrelation</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageSinogramCorrelation
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :Input: in[sinogram: mrc]
+    [-r[ef]              Ref                 (NULL      ).as(inFile              ) ] :Essential :Input: ref[sinogram: mrc]
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-w[eigth]           w0th                (1.0       ).as(Real                ) 
+                         w1st                (0.0       ).as(Real                ) 
+                         w2nd                (0.0       ).as(Real                ) ] :Optional  :Weigth for Mode: 1
+    [-T[hreshold]        threshold           (0.0       ).as(Real                ) ] :Optional  :threshold for Mode: 2
+    [-M[odeforCorrelation]corMode             (0         ).as(Integer             ) ] :Optional  :Mode: for Correlation
+    [-L[ength]M[ode]     LengthMode          (0         ).as(Integer             ) ] :Optional  :Length Mode: for LengthCorrelation
+    [-L[ength]T[hreshold]M[ode]LengthThresholdMode (0         ).as(Integer             ) ] :Optional  :Length Threshold Mode: for LengthCorrelation
+    [-L[ength]T[hreshold]R[atio]LengthThresholdRatio(1.0       ).as(Real                ) ] :Optional  :ratio of threshold for LenthMode: 1
+    [-L[ength]C[orrelation]M[ode]LCMode              (0         ).as(Integer             ) ] :Optional  :Mode: for LengthCorrelationMode
+    [-L[ength]C[orrelation]T[hreshold]LengthCorrelationThreshold(0.0       ).as(Real                ) ] :Optional  :threshold for LengthCorrelation
+    [-w[eight]L[ength]   weightLength        (1.0       ).as(Real                ) ] :Optional  :Weight for LengthCorrelation
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+
+----- LengthMode -----
+-LM = 0 : without Length Correlation
+-LM = 1 : addition to Length Correlation (-LT)
+----- LengthCorrelationMode -----
+-LCM = 0 : weight (-wL , -LTM , -LTR)
+-LCM = 1 : threshold (-LTM , -LTR , -LCT)
+-LCM = 2 : power weight (-LTM , -LTR , -wL)
+----- LengthThresholdMode -----
+-LTM = 0 : Multiply derivationMax and ratio(-LTR)
+-LTM = 1 : Average of all derivation 
+----- Mode -----
+-m = 0 :    simple Correlation
+-m = 1 :    weight Correlation (addition to derivation)
+-m = 2 : threshold Correlation (addition to derivation)
+-m = 3 : power weight Correlation (addition to derivation : -LM=1 -LCM=2)
+</PRE>
+</BODY>
+</HTML>

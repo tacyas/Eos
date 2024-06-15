@@ -1,0 +1,15 @@
+if [ $1 = "-h" ]
+then	echo "makecalllistfromlib output functionlist lib"
+	exit
+fi	
+result=$1
+functionlist=$2
+lib=$3
+rm $result
+nm --extern-only -s $lib |awk '{print $0," "}' >nm.$result
+funclist=`cat $functionlist | awk '{print $1}'`
+for func in $funclist
+do	awk '/:/{len=length($1);obj=substr($1,1,len-1);}$1=="U"{print $2,obj;}' nm.$result |egrep ^"$func " | awk '{if ($1==org){printf("%s ",$2)} else {printf("\n%s %s ",$1,$2); org=$1;}}' >> $result
+done
+echo >> $result
+rm nm.$result

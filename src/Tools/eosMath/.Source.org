@@ -1,0 +1,5 @@
+SOURCE=\
+eosMathAverage \
+eosMathMedian \
+eosMathSorting \
+#LastSource

@@ -1,0 +1,19 @@
+#define DoNotAutoRecreate NO
+
+#include EOS_INCLUDE
+
+OBJECT_TYPE = script
+
+TOOLBOX_NAME = eos
+
+OBJECT_NAME = mrcRefImagexaFit
+
+BINARY_NAME = mrcRefImagexaFit
+
+INSTPGMFLAGS =
+
+SCRIPTS = \
+	mrcRefImagexaFit.ksh
+
+#define KKSH_DEF
+#include <Script.template>

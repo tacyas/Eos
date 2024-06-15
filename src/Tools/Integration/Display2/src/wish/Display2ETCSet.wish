@@ -1,0 +1,8 @@
+#
+#
+proc display2ETCSet { } {
+	global Desktop
+
+	#.main_canvas config -cursor "crosshair red"
+	$Desktop(mainCanvas) config -cursor $Desktop(Cursor) 
+}

@@ -1,0 +1,9 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input:binary","Essential","1","1","In","inFile::mrcImage","NULL"
+"-d","-d[ensity]","Input:density","Essential","1","1","InDensity","inFile::mrcImage","NULL"
+"-o","-o[utput]","Output:weightedArea","Essential","1","1","Out","outFile::mrcImage","NULL"
+"-oL","-o[utput]L[abel]","Output:Label","Optional","1","1","OutLabel","outFile::mrcImage","NULL"
+"-n","-n[eighbor]","Neighbor:[6|8]","Optional","1","1","Neighbor","Integer","8"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

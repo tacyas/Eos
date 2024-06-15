@@ -1,0 +1,486 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#undef DEBUG
+#include "mrcImage.h"       
+#include "genUtil.h"
+#include "SpecialNumber.h"
+#ifdef VECLIB
+#include "veclib.h"
+#endif
+/* Internal Fuction */
+extern void _fftImageDataSet(float* ar, float* ai, mrcImage* img, long nx, long ny);
+extern void _fftImageDataSetForVECLIB(float* ar, mrcImage* img, long nx, long ny);
+
+extern void _fftComplexDataSet(float* br, float* bi, mrcImage* fft, long nx2, long ny2);
+extern void _fftComplexDataSetForVECLIB(float* br, mrcImage* fft, long nx2, long ny2);
+
+extern void _fftInvComplexDataSet(float* ar, float* ai, mrcImage* img, long nx, long ny);
+extern void _fftInvComplexDataSetForVECLIB(float* ar, mrcImage* img, long nx, long ny);
+
+extern void _fftInvImageDataSet(float* br, float* bi, mrcImage* fft, long nx, long ny);
+extern void _fftInvImageDataSetForVECLIB(float* br, mrcImage* fft, long nx, long ny);
+
+extern void _fftFreeMemory(float* ar, float* ai, float* br,  float* bi, 
+              float* st, float* ct, int* lbr);
+extern void _fftFreeMemoryForVECLIB(float* ar);
+
+extern void
+_fftAllocateMemory(float** ar, float** ai, float** br,  float** bi, 
+                  float** st, float** ct, int** lbr, 
+                  long nx2, long ny2);
+
+extern void _fftAllocateMemoryForVECLIB(float** ar, long nx2, long ny2);
+
+extern void ffts2_(float* ar, float* ai, float* br, float* bi, long* nx, long* ny, float* st, float* ct, int* lbr, long* m, long* inv, long* jerr);
+
+void
+lfft2d(mrcImage* fft, mrcImage* img)
+{
+    double ftmp, re, im;
+    float* ar;
+    float* ai;
+    float* br;
+    float* bi;
+    float* st;
+    float* ct;
+    int*   lbr;
+    int  	ix, iy;
+    int    nx2, ny2;
+    int n2;
+    int    m, inv, jerr;
+     
+
+    if(img->HeaderN.z!=1) {
+        fprintf(stderr, "lfft2d routine does not supported 3D FFT\n");
+        exit(EXIT_FAILURE);
+    }
+
+    switch(img->HeaderMode) {
+        case MRC_char_image:
+        case MRC_short_image:
+        case MRC_float_image:
+        case MRC_long_image:
+        case MRC_double_image: {
+#ifdef VECLIB
+            nx2 = img->HeaderN.x;
+            ny2 = img->HeaderN.y;
+            n2 = MAX(nx2,ny2) + 2;
+			DEBUGPRINT3("%ld %ld %ld\n", nx2, ny2, n2);
+            fft->Header     = img->Header;
+            fft->HeaderN.x  = nx2;
+            fft->HeaderN.y  = ny2;
+            fft->HeaderN.z  = 1;
+            fft->HeaderMode = mrcComplexFloatFT;
+            mrcInit(fft, NULL); 
+			_fftAllocateMemoryForVECLIB(&ar, n2, ny2);
+			_fftImageDataSetForVECLIB(ar, img, n2, ny2);
+			m = n2;
+			inv = 1;
+			src2ft(ar, &nx2, &ny2, &m, &inv, &jerr);
+			switch(jerr) {
+				case 0: {
+					break;
+				}
+				case -1: {
+					fprintf(stderr, "nx2(%d) not of the required form\n", nx2); 
+					break;
+				}
+				case -2: {
+					fprintf(stderr, "ny2(%d) not of the required form\n", ny2); 
+					break;
+				}
+				case -3: {
+					fprintf(stderr, "ldxy(%d) < nx (%d)\n", m, nx2);
+					break;
+				}	
+				default: {
+					fprintf(stderr, "Probable error in ldxy(%d) or dimension of nx(%d) and ny(%d)\n", m, nx2, ny2); 
+					break;
+				}
+			}
+            _fftComplexDataSetForVECLIB(ar, fft, n2, ny2);
+			_fftFreeMemoryForVECLIB(ar);
+#else
+            nx2 = pow2nn(img->HeaderN.x);
+            ny2 = pow2nn(img->HeaderN.y);
+            n2 = MAX(nx2, ny2);
+            fft->Header     = img->Header;
+            fft->HeaderN.x  = nx2;
+            fft->HeaderN.y  = ny2;
+            fft->HeaderN.z  = 1;
+            fft->HeaderMode = mrcComplexFloatFT;
+            mrcInit(fft, NULL); 
+			_fftAllocateMemory(&ar, &ai, &br, &bi, &st, &ct, &lbr, nx2, ny2);
+            _fftImageDataSet(ar, ai, img, nx2, ny2);
+            inv = 2;
+            m = 2*n2;
+            ffts2_(ar, ai, br, bi, &nx2, &ny2, st, ct, lbr, &m, &inv, &jerr);
+            if(jerr==-1) {
+                fprintf(stderr, "Fourier Transform Missing!\n");
+            }
+            _fftComplexDataSet(br, bi, fft, nx2, ny2);
+			_fftFreeMemory(ar, ai, br, bi, st, ct, lbr);
+#endif
+            break;
+        }
+        case MRC_complex_short_ft:  
+        case MRC_complex_float_ft:  
+        case MRC_complex_long_ft:
+        case MRC_complex_double_ft: {
+#ifdef VECLIB
+            nx2 = img->HeaderN.x;
+            ny2 = img->HeaderN.y;
+			n2 = MAX(nx2,ny2) + 2;
+            fft->Header     = img->Header;
+            fft->HeaderMode = mrcFloatImage;
+            mrcInit(fft, NULL);
+            _fftAllocateMemoryForVECLIB(&ar, n2, ny2);
+            _fftInvComplexDataSetForVECLIB(ar, img, n2, ny2);
+			m = n2;
+			inv = -1;
+			src2ft(ar, &nx2, &ny2, &m, &inv, &jerr);
+			if(jerr!=0) {
+                fprintf(stderr, "Fourier Transform Missing!\n");
+			}
+            _fftInvImageDataSetForVECLIB(ar, fft, n2, ny2);
+			_fftFreeMemoryForVECLIB(ar);
+#else
+            nx2 = pow2nn(img->HeaderN.x);
+            ny2 = pow2nn(img->HeaderN.y);
+			n2 = MAX(nx2, ny2);
+            fft->Header     = img->Header;
+            fft->HeaderMode = mrcFloatImage;
+            mrcInit(fft, NULL);
+            _fftAllocateMemory(&ar, &ai, &br, &bi, &st, &ct, &lbr, nx2, ny2);
+            _fftInvComplexDataSet(ar, ai, img, fft->HeaderN.x, fft->HeaderN.y);
+            inv = -2;
+			m = 2*n2;
+            ffts2_(ar, ai, br, bi, &nx2, &ny2, st, ct, lbr, &m, &inv, &jerr);
+            _fftInvImageDataSet(br, bi, fft, fft->HeaderN.x, fft->HeaderN.y);
+			_fftFreeMemory(ar, ai, br, bi, st, ct, lbr);
+#endif
+            break;
+        }
+        default: {
+            fprintf(stderr, "Not Supported mrcImageMode %ld in lfft\n", img->HeaderMode);
+            break;
+        }
+    }
+}
+
+void
+_fftImageDataSet(float* ar, float* ai, mrcImage* img, long nx, long ny)
+{
+    long   offsetx, offsety;
+    long   ix, iy;
+    double ftmp;
+
+    offsetx = (nx-img->HeaderN.x)/2;
+    offsety = (ny-img->HeaderN.y)/2;
+
+    for(ix=0; ix<nx; ix++) {
+        for(iy=0; iy<ny; iy++) {
+            ar[ix+nx*iy] = img->HeaderAMean;
+            ai[ix+nx*iy] = 0.0;
+        }
+    }
+    for(ix=offsetx; ix<nx-offsetx; ix++) {
+        for(iy=offsety; iy<ny-offsety; iy++) {
+            mrcPixelDataGet(img, (mrcImageParaTypeReal)ix-offsetx, (mrcImageParaTypeReal)iy-offsety, 0.0, 
+			               &ftmp, mrcPixelRePart, mrcPixelHowNearest);
+            ar[ix + nx*iy] = ftmp;
+            ai[ix + nx*iy] = 0.0;
+        }
+    }
+}
+
+void
+_fftImageDataSetForVECLIB(float* a, mrcImage* img, long nx, long ny)
+{
+    long   ix, iy;
+    double ftmp;
+
+    for(ix=0; ix<nx; ix++) {
+        for(iy=0; iy<ny; iy++) {
+            a[ix+nx*iy] = img->HeaderAMean;
+        }
+    }
+    for(ix=0; ix<nx; ix++) {
+        for(iy=0; iy<ny; iy++) {
+            mrcPixelDataGet(img, (mrcImageParaTypeReal)ix, (mrcImageParaTypeReal)iy, 0.0, 
+			               &ftmp, mrcPixelRePart, mrcPixelHowNearest);
+            a[ix + nx*iy] = ftmp;
+        }
+    }
+}
+
+void
+_fftComplexDataSet(float* br, float* bi, mrcImage* fft, long nx2, long ny2)
+{
+    long   ix, iy;
+    double re, im;
+    double mag;
+    double max, min, mean;
+   
+	DEBUGPRINT("in fftComplexDataSet\n");
+    max = min = sqrt(br[0]*br[0]+bi[0]*bi[0]);
+    mean = 0;
+    for(ix=0; ix<nx2/2; ix++) {
+        for(iy=-ny2/2; iy<ny2/2; iy++) {
+            re = br[ix+nx2/2 + nx2*(iy+ny2/2)];
+            im = bi[ix+nx2/2 + nx2*(iy+ny2/2)];
+            mrcPixelDataSet(fft, (mrcImageParaTypeReal)ix, (mrcImageParaTypeReal)iy, 0.0, 
+			                re, mrcPixelRePart);
+            mrcPixelDataSet(fft, (mrcImageParaTypeReal)ix, (mrcImageParaTypeReal)iy, 0.0, 
+			                im, mrcPixelImPart);
+            mag = sqrt(re*re+im*im);
+            if(max<mag) {
+                max = mag;
+            }
+            if(min>mag) {
+                min = mag;
+            }
+            mean += mag;
+        }
+    }
+    for(ix=nx2/2; ix<=nx2/2; ix++) {
+        for(iy=-ny2/2; iy<ny2/2; iy++) {
+            re =  br[ix-nx2/2 + nx2*(iy+ny2/2)];
+            im = -bi[ix-nx2/2 + nx2*(iy+ny2/2)];
+            mrcPixelDataSet(fft, (mrcImageParaTypeReal)ix, (mrcImageParaTypeReal)iy, 0.0, 
+			                re, mrcPixelRePart);
+            mrcPixelDataSet(fft, (mrcImageParaTypeReal)ix, (mrcImageParaTypeReal)iy, 0.0, 
+			                im, mrcPixelImPart);
+            mag = sqrt(re*re+im*im);
+            if(max<mag) {
+                max = mag;
+            }
+            if(min>mag) {
+                min = mag;
+            }
+            mean += mag;
+        }
+    }
+    fft->HeaderAMax = max;
+    fft->HeaderAMin = min;
+    fft->HeaderAMean = mean/(nx2+1)/ny2;
+}
+
+void
+_fftComplexDataSetForVECLIB(float* b, mrcImage* fft, long nx2, long ny2)
+{
+    long   ix, iy, n;
+    double re, im;
+    double mag;
+    double max, min, mean;
+   	double weight;
+
+	weight = sqrt(1.0/nx2/ny2);
+    max = min = sqrt(b[0]*b[0]+b[1]*b[1]);
+    mean = 0;
+    for(ix=0; ix<=fft->HeaderN.x/2; ix++) {
+        for(iy=-fft->HeaderN.y/2; iy<fft->HeaderN.y/2; iy++) {
+			if(0 <= iy) {
+				re = b[2*ix     + iy*(nx2)];
+				im = b[2*ix + 1 + iy*(nx2)];
+			} else {
+				re = b[2*ix     + (ny2 + iy)*(nx2)];
+				im = b[2*ix + 1 + (ny2 + iy)*(nx2)];
+			}
+			/* DEBUGPRINT3("%ld %ld %ld\n", ix, iy, n); */
+            mrcPixelDataSet(fft, (mrcImageParaTypeReal)ix, (mrcImageParaTypeReal)iy, 0.0, 
+			                re*weight, mrcPixelRePart);
+            mrcPixelDataSet(fft, (mrcImageParaTypeReal)ix, (mrcImageParaTypeReal)iy, 0.0, 
+			                im*weight, mrcPixelImPart);
+            mag = sqrt(re*re+im*im);
+            if(max<mag) {
+                max = mag;
+            }
+            if(min>mag) {
+                min = mag;
+            }
+            mean += mag;
+        }
+    }
+    fft->HeaderAMax  = max*weight;
+    fft->HeaderAMin  = min*weight;
+    fft->HeaderAMean = mean/(nx2+1)/ny2*weight;
+}
+
+void
+_fftInvComplexDataSet(float* ar, float* ai, mrcImage* img, long nx, long ny)
+{
+    long   offsetx, offsety;
+    long   ix, iy;
+    double re, im;
+
+    offsetx = (nx-img->HeaderN.x)/2;
+    offsety = (ny-img->HeaderN.y)/2;
+    for(ix=0; ix<nx; ix++) {
+        for(iy=0; iy<ny; iy++) {
+            ar[ix+nx*iy] = 0.0;
+            ai[ix+nx*iy] = 0.0;
+        }
+    }
+    for(ix=-nx/2+offsetx; ix<nx/2-offsetx; ix++) {
+        for(iy=-ny/2+offsety; iy<ny/2-offsety; iy++) {
+            mrcPixelDataGet(img, (mrcImageParaTypeReal)ix, (mrcImageParaTypeReal)iy, 0.0, 
+							&re, mrcPixelRePart, mrcPixelHowNearest);
+            mrcPixelDataGet(img, (mrcImageParaTypeReal)ix, (mrcImageParaTypeReal)iy, 0.0, 
+							&im, mrcPixelImPart, mrcPixelHowNearest);
+            ar[ix+nx/2 + nx*(iy+ny/2)] = re;
+            ai[ix+nx/2 + nx*(iy+ny/2)] = im;
+        }
+    }
+}
+
+void
+_fftInvComplexDataSetForVECLIB(float* a, mrcImage* img, long nx, long ny)
+{
+    long   ix, iy, n;
+    double re, im;
+
+    for(ix=0; ix<nx; ix++) {
+        for(iy=0; iy<ny; iy++) {
+            a[ix+nx*iy] = 0.0;
+        }
+    }
+    for(ix=0; ix<=img->HeaderN.x/2; ix++) {
+        for(iy=-img->HeaderN.y/2; iy<img->HeaderN.y/2; iy++) {
+            mrcPixelDataGet(img, (mrcImageParaTypeReal)ix, (mrcImageParaTypeReal)iy, 0.0, 
+							&re, mrcPixelRePart, mrcPixelHowNearest);
+            mrcPixelDataGet(img, (mrcImageParaTypeReal)ix, (mrcImageParaTypeReal)iy, 0.0, 
+							&im, mrcPixelImPart, mrcPixelHowNearest);
+			if(0<=iy) {
+				a[2*ix     + iy*(nx)] = re;
+				a[2*ix + 1 + iy*(nx)] = im;
+			} else if(iy<0) {
+				a[2*ix     + (ny + iy)*(nx)] = re;
+				a[2*ix + 1 + (ny + iy)*(nx)] = im;
+			} else {
+				fprintf(stderr, "Something wrong\n");
+			}
+        }
+    }
+}
+
+void
+_fftInvImageDataSet(float* br, float* bi, mrcImage* fft, long nx, long ny)
+{
+    long   ix, iy;
+    double re;
+    double max, min, mean;
+
+    max  = min = br[0];
+    mean = 0;
+    for(ix=0; ix<nx; ix++) {
+        for(iy=0; iy<ny; iy++) {
+            re = br[ix+nx*iy];
+            mrcPixelDataSet(fft, (mrcImageParaTypeReal)ix, (mrcImageParaTypeReal)iy, 0.0, 
+			                re, mrcPixelRePart);
+            if(re>max) {
+                max = re;
+            }
+            if(re<min) {
+                min = re;
+            }
+            mean += re;
+        }
+    }
+    fft->HeaderAMax = max;
+    fft->HeaderAMin = min;
+    fft->HeaderAMean = mean/nx/ny;
+}
+
+void
+_fftInvImageDataSetForVECLIB(float* b, mrcImage* img, long nx, long ny)
+{
+    long   ix, iy;
+    double re;
+    double max, min, mean, weight;
+
+	weight = sqrt(nx*ny);
+    max  = min = b[0];
+    mean = 0;
+    for(ix=0; ix<img->HeaderN.x; ix++) {
+        for(iy=0; iy<img->HeaderN.y; iy++) {
+            re = b[ix+(nx)*iy];
+            mrcPixelDataSet(img, (mrcImageParaTypeReal)ix, (mrcImageParaTypeReal)iy, 0.0, 
+			                re*weight, mrcPixelRePart);
+            if(re>max) {
+                max = re;
+            }
+            if(re<min) {
+                min = re;
+            }
+            mean += re;
+        }
+    }
+    img->HeaderAMax = max*weight;
+    img->HeaderAMin = min*weight;
+    img->HeaderAMean = mean/nx/ny*weight;
+}
+
+void
+_fftFreeMemory(float* ar, float* ai, float* br,  float* bi, 
+              float* st, float* ct, int* lbr)
+{
+    free(ar);
+    free(ai);
+    free(br);
+    free(bi);
+    free(st);
+    free(ct);
+    free(lbr);
+}
+
+void
+_fftFreeMemoryForVECLIB(float* ar)
+{
+    free(ar);
+}
+
+void
+_fftAllocateMemory(float** ar, float** ai, float** br,  float** bi, 
+                  float** st, float** ct, int** lbr, 
+                  long nx2, long ny2)
+{
+    if(NULL==(*ar=(float*)malloc(sizeof(float)*(nx2*ny2+1)))) {
+        fprintf(stderr, "Not Allocate Memory in fftAllocateMemory (ar)\n");
+        exit(EXIT_FAILURE);
+    }
+    if(NULL==(*ai=(float*)malloc(sizeof(float)*(nx2*ny2+1)))) {
+        fprintf(stderr, "Not Allocate Memory in fftAllocateMemory (ar)\n");
+        exit(EXIT_FAILURE);
+    }
+    if(NULL==(*br=(float*)malloc(sizeof(float)*(nx2*ny2+1)))) {
+        fprintf(stderr, "Not Allocate Memory in fftAllocateMemory (ar)\n");
+        exit(EXIT_FAILURE);
+    }
+    if(NULL==(*bi=(float*)malloc(sizeof(float)*(nx2*ny2+1)))) {
+        fprintf(stderr, "Not Allocate Memory in fftAllocateMemory (ar)\n");
+        exit(EXIT_FAILURE);
+    }
+    if(NULL==(*st=(float*)malloc(sizeof(float)*(nx2+ny2+1)))) {
+        fprintf(stderr, "Not Allocate Memory in fftAllocateMemory (ar)\n");
+        exit(EXIT_FAILURE);
+    }
+    if(NULL==(*ct=(float*)malloc(sizeof(float)*(nx2+ny2+1)))) {
+        fprintf(stderr, "Not Allocate Memory in fftAllocateMemory (ar)\n");
+        exit(EXIT_FAILURE);
+    }
+    if(NULL==(*lbr=(int*)malloc(sizeof(float)*(nx2+ny2+1)))) {
+        fprintf(stderr, "Not Allocate Memory in fftAllocateMemory (ar)\n");
+        exit(EXIT_FAILURE);
+    }
+}
+
+void
+_fftAllocateMemoryForVECLIB(float** ar, long nx2, long ny2)
+{
+    if(NULL==(*ar=(float*)malloc(sizeof(float)*(nx2*ny2+1)))) {
+        fprintf(stderr, "Not Allocate Memory in fftAllocateMemory (ar)\n");
+        exit(EXIT_FAILURE);
+    }
+}

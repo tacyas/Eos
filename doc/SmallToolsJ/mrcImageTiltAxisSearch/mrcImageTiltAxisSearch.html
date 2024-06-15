@@ -1,0 +1,287 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageTiltAxisSearch</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageTiltAxisSearch<br></h2></b></font>
+	<h4>傾斜軸のずれを計算する</h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>オプション</th>
+				<th>必須項目/選択項目</th>
+				<th>説明</th>
+				<th>デフォルト</th>
+			</tr>
+			<tr>
+				<td>-i</td>
+				<td>選択</td>
+				<td>入力ファイル設定（ファイルが１つの時に設定）</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-I</td>
+				<td>選択</td>
+				<td>入力ファイル設定（軸を探すファイルのリストを設定）</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-r</td>
+				<td>必須</td>
+				<td>参照ファイルを設定（傾斜角度０度のデータを設定）</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-o</td>
+				<td>必須</td>
+				<td>出力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-O</td>
+				<td>選択</td>
+				<td>出力ファイル設定（傾斜軸のずれを予測した値が入る）</td>
+				<td>stdout</td>
+			</tr>
+			<tr>
+				<td>-range</td>
+				<td>選択</td>
+				<td>開始角度、終了角度、刻み幅の設定</td>
+				<td>thetaMin=-90 thetaMax=+90 thetaDelta=1</td>
+			</tr>
+			<tr>
+				<td>-w</td>
+				<td>選択</td>
+				<td>相関を取る領域を設定</td>
+				<td>0.5</td>
+			</tr>
+			<tr>
+				<td>-M</td>
+				<td>選択</td>
+				<td>モード<br>
+				（インターポレーションの値の計算方法を選択。現段階では変更の必要なし）</td>
+				<td>2</td>
+			</tr>
+			<tr>
+				<td>-CM</td>
+				<td>選択</td>
+				<td></td>
+				<td>17</td>
+			</tr>
+			<tr>
+				<td>-h</td>
+				<td>選択</td>
+				<td>ヘルプを表示</td>
+				<td>　</td>
+			</tr>
+			</div>
+		</table>
+
+<!-- モード説明 -->
+
+	<br>
+	<caption><b>モードの詳細</b></caption>
+		<table border="1">
+			<div align="left">
+				<tr>
+					<th>モード</th>
+					<th>説明</th>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>最短距離法</td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>線形補間法</td>
+				</tr>
+				<tr>
+					<td>2</td>
+					<td>３次補間法</td>
+				</tr>
+				<tr>
+					<td>3</td>
+					<td>多項式法</td>
+				</tr>
+			</div>
+		</table>
+		
+<!-- モード説明 -->
+
+	<br>
+	<caption><b>-CMの詳細</b></caption>
+		<table border="1">
+			<div align="left">
+				<tr>
+					<th>モード</th>
+					<th>説明</th>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>正規相関：FxG*</td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>位相相関：FxG*/|FxG*|</td>
+				</tr>
+				<tr>
+					<td>2</td>
+					<td>位相相関：FxG*/sqrt(|FxG*|)</td>
+				</tr>
+				<tr>
+					<td>3</td>
+					<td>標準化された正規相関：FxG*/(|F||G|)</td>
+				</tr>
+				<tr>
+					<td>16</td>
+					<td>(0,0) = 0</td>
+				</tr>
+			</div>
+		</table>
+
+	<br>	
+	<h4>******実行例******</h4>
+
+<!-- 入力ファイル説明 -->
+
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<div>入力ファイル１（傾斜角度が2°ずれている）</div>
+	<table>
+		<tr>
+			<td><img src="1vom-rot0.png" border="0" alt="1vom-rot0.png(2221 byte)" width="64" height="64"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				73.1421<br>
+				6.29881<br>
+				13.7886<br>
+				0.215447<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>入力ファイル２（傾斜角度が10°ずれている）</div>
+	<table>
+		<tr>
+			<td><img src="1vom-rot1.png" border="0" alt="1vom-rot1.png(2155 byte)" width="64" height="64"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				77.0909<br>
+				6.29894<br>
+				14.3204<br>
+				0.223756<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>入力ファイル３（傾斜角度が45°ずれている）</div>
+	<table>
+		<tr>
+			<td><img src="1vom-rot2.png" border="0" alt="1vom-rot2.png(2010 byte)" width="64" height="64"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				83.9283<br>
+				6.29888<br>
+				15.77<br>
+				0.246406<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>入力ファイル４（傾斜角度が60°ずれている）</div>
+	<table>
+		<tr>
+			<td><img src="1vom-rot3.png" border="0" alt="1vom-rot3.png(2031 byte)" width="64" height="64"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				87.0306<br>
+				6.29884<br>
+				15.437<br>
+				0.241203<br></p>
+			</td>
+		</tr>
+	</table>
+
+<!-- 入力ファイル説明２ -->
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-Iで使用するリスト------</font></caption><br>
+	<div>以下のようなリスト内容をファイルデータとする<br>
+	<img src="list.png" border="1" alt="list.png(953 byte)" width="103" height="66"></div>
+	
+<!-- 参照ファイル説明 -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------参照ファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="1vom.png" border="0" alt="1vom.png(2236 byte)" width="64" height="64"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				71.339<br>
+				6.29872<br>
+				13.6724<br>
+				0.213631<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>※入力ファイル、参照ファイルは傾斜軸が10°ずれている</div>
+
+<!-- 実行結果 -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-i------</font></caption><br>
+	<div>入力ファイル４を使用（傾斜角度があるほど、誤差が少なくなるため）<br>
+	また、オプション-rangeは傾斜軸のずれをおよそで判断して設定した上で実行しなければならない。<br>
+	今回の場合だと、傾斜軸のずれは10°なので、-range 0 20 0.1と設定し実行した。</div>
+	<br>
+	<div>オプション　-oの出力結果<br>
+	<img src="outdata-rot3-200time.png" border="0" alt="outdata-rot3-200time.png(539 byte)" width="201" height="1"><br>
+	<br>
+	オプション　-Oの出力結果<br>
+	<img src="outdata2-rot3.png" border="1" alt="outdata2-rot3.png(284 byte)" width="51" height="21"></div>
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-I------</font></caption><br>
+	<div>オプション　-oの出力結果<br>
+	<img src="outdata-I-200time.png" border="0" alt="outdata-I-200time.png(3949 byte)" width="201" height="4"><br>
+	<br>
+	オプション　-Oの出力結果<br>
+	<img src="outdata2-I.png" border="1" alt="outdata2-I.png(302 byte)" width="54" height="21"></div>
+	<br>
+	<div>オプション-iと-Iでは、-Iの方が精度がよいため、-Iを基本的に使用する</div>
+
+</body>
+</html>

@@ -1,0 +1,28 @@
+#!/users/Eos/bin/Display2 
+proc fileOpenWinCreate { } {
+	global fileNameIn
+
+	set fileNameIn [ fileSelect ]  
+	fileOpen $fileNameIn
+}
+
+proc fileNewWinCreate { } {
+	set name [ fileSelect ] 
+	exec Display2 -i $name &
+}
+
+proc seqFileOpenWinCreate { mode } {
+	global fileNameIn
+	global fileNameTemplate
+
+	#puts "in seqFileOpenWinCreate"
+	puts $fileNameTemplate
+	seqFileSelect "fileOpen " $fileNameTemplate ] 
+}
+
+proc seqFileNewWinCreate { mode } {
+	global fileNameTemplate
+
+	seqFileSelect "exec Display2 -t $fileNameTempate -i " $fileNameTemplate ]
+}
+

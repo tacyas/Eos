@@ -1,0 +1,756 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrc2Dto3D</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrc2Dto3D<br></h2></b></font>
+	<h4>2D画像を3D画像にする</h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+	<table border="1">
+		<div align="left">
+		<tr>
+			<th>オプション</th>
+			<th>必須項目/選択項目</th>
+			<th>説明</th>
+			<th>デフォルト</th>
+		</tr>
+		<tr>
+			<td>-i</td>
+			<td>選択</td>
+			<td>入力ファイル設定</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-I</td>
+			<td>選択</td>
+			<td>入力ファイル設定</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-o</td>
+			<td>必須</td>
+			<td>出力ファイル設定</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-O</td>
+			<td>選択</td>
+			<td>出力ファイル設定</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-single</td>
+			<td>選択</td>
+			<td>傾斜軸を一つに設定</td>
+			<td>1</td>
+		</tr>
+		<tr>
+			<td>-InterpolationMode</td>
+			<td>選択</td>
+			<td>展開モード</td>
+			<td>1</td>
+		</tr>
+		<tr>
+			<td>-Double</td>
+			<td>選択</td>
+			<td>傾斜軸を２つに設定</td>
+			<td>　</td>
+		</tr>
+		<tr>
+			<td>-DoubleCounter</td>
+			<td>選択</td>
+			<td>-Doubleを宣言した上で使用<br>
+			２つの傾斜軸を選択し、設定する</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-CounterThreshold</td>
+			<td>選択</td>
+			<td>-Doubleを宣言した上で使用<br>
+			波形の谷の閾値</td>
+			<td>1e-6</td>
+		</tr>
+		<tr>
+			<td>-CounterThresholdMode</td>
+			<td>選択</td>
+			<td>-Doubleを宣言した上で使用<br>
+			波形の谷の閾値のモード</td>
+			<td>0</td>
+		</tr>
+		<tr>
+			<td>-WeightMode</td>
+			<td>選択</td>
+			<td>-Doubleを宣言した上で使用<br>
+			重心のモード</td>
+			<td>0</td>
+		</tr>
+		<tr>
+			<td>-thicknessWeight</td>
+			<td>選択</td>
+			<td>-Doubleを宣言した上で使用<br>
+			重心の深さ</td>
+			<td>　</td>
+		</tr>
+		<tr>
+			<td>-Sub</td>
+			<td>選択</td>
+			<td>-Doubleを宣言した上で使用<br>
+			下位サンプリング</td>
+			<td>1</td>
+		</tr>
+		<tr>
+			<td>-PlusXrot</td>
+			<td>選択</td>
+			<td>rasmolのためにｘ軸を180°回転</td>
+			<td>　</td>
+		</tr>
+		<tr>
+			<td>-SIRT</td>
+			<td>選択</td>
+			<td>同時反復再構成法</td>
+			<td>　</td>
+		</tr>
+		<tr>
+			<td>-max</td>
+			<td>選択</td>
+			<td>-SIRTを宣言した上で使用<br>
+			同時反復再構成法の最大値設定</td>
+			<td>30</td>
+		</tr>
+		<tr>
+			<td>-rms</td>
+			<td>選択</td>
+			<td>-SIRTを宣言した上で使用<br>
+			同時反復再構成法の平方２乗平均を設定</td>
+			<td>1.0</td>
+		</tr>
+		<tr>
+			<td>-CTF</td>
+			<td>選択</td>
+			<td>-SIRTを宣言した上で使用<br>
+			CTFInfoファイルを設定</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-m</td>
+			<td>選択</td>
+			<td>モード</td>
+			<td>0</td>
+		</tr>
+		<tr>
+			<td>-h</td>
+			<td>選択</td>
+			<td>ヘルプを表示</td>
+			<td>　</td>
+		</tr>
+	</table>
+
+<!-- モード詳細 -->
+
+	<br>
+	<br>
+	<caption><b>-mの詳細</b></caption>
+	<table border="1">
+	<div align="left">
+		<tr>
+			<th>モード</th>
+			<th>説明</th>
+		</tr>
+		<tr>
+			<td>0</td>
+			<td>単純な逆投影</td>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>フィルター逆投影</td>
+		</tr>
+	</table>
+	
+	<br>
+	<br>
+	<caption><b>-singleの詳細</b></caption>
+	<table border="1">
+	<div align="left">
+		<tr>
+			<th>モード</th>
+			<th>説明</th>
+		</tr>
+		<tr>
+			<td>0</td>
+			<td>傾斜軸をｘ軸と平行にする</td>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>傾斜軸をｙ軸と平行にする</td>
+		</tr>
+	</table>
+	
+	<br>
+	<br>
+	<caption><b>-WeightModeの詳細</b></caption>
+	<table border="1">
+	<div align="left">
+		<tr>
+			<th>モード</th>
+			<th>説明</th>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>実空間：円（同じ密度）</td>
+		</tr>
+		<tr>
+			<td>2</td>
+			<td>実空間：円（加重密度）</td>
+		</tr>
+		<tr>
+			<td>3</td>
+			<td>実空間：正方形（加重密度）</td>
+		</tr>
+		<tr>
+			<td>4</td>
+			<td>フーリエ空間：平面（同じ密度）-CounterThreshold 0.5とする</td>
+		</tr>
+		<tr>
+			<td>5</td>
+			<td>フーリエ空間：線形包配　-CounterThreshold 0.5とする</td>
+		</tr>
+		<tr>
+			<td>6</td>
+			<td>フーリエ空間：cos包配　-CounterThreshold 0.5とする</td>
+		</tr>
+	</table>
+	
+<!-- -InterpolationModeの詳細 -->
+	<br>
+	<caption><b>-InterpolationModeの詳細</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>モード</th>
+				<th>説明</th>
+			</tr>
+			<tr>
+				<td>0</td>
+				<td>最短距離法</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>線形補間法</td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td>３次補間法</td>
+			</tr>
+			<tr>
+				<td>3</td>
+				<td>多項式法</td>
+			</tr>
+			</div>
+		</table>
+	
+<!-- -Iファイルフォーマット -->
+
+	<br>
+	<br>
+	<caption><b>オプション-Iのファイルフォーマット</b></caption>
+	<div>filename0 RotationOrder0 rot1 rot2 rot3<br>
+	filename1 RotationOrder1 rot1 rot2 rot3<br>
+	　　　　　　　　・<br>
+	　　　　　　　　・<br>
+	　　　　　　　　・<br>
+	</div>
+
+<!-- RotModeの設定の仕方 -->
+	
+	<br>
+	<br>
+	<caption><b>RotationOrderの詳細</b></caption>
+	<table>
+		<tr>
+			<td>一桁目：</td>
+			<td>どの軸から回転を始めるか設定</td>
+		</tr>
+		<tr>
+			<td>二桁目：</td>
+			<td>回転軸の順番を設定１</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>O…Z→Y→Xの順に回転軸を変更する<br>
+			E…Z→X→Yの順に回転軸を変更する</td>
+		</tr>
+		<tr>
+			<td>三桁目：</td>
+			<td>回転軸の順番の設定２</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>Y…順番を維持する<br>
+			N…順番を逆順にする</td>
+		</tr>
+		<tr>
+			<td>四桁目：</td>
+			<td>回転方法を設定</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>Y…物体そのものをまわす<br>
+			D…座標を移動させる</td>
+		</tr>
+	</table>
+	
+	<h4>******実行例******</h4>	
+
+<!-- オプション-i説明 -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション-iで使用したファイルの詳細・出力結果------</font></caption><br>
+	<div>使用した入力ファイル</div>
+	<table>
+		<tr>
+			<td>ｘｙ平面</td>
+			<td>ｚｘ平面</td>
+		</tr>
+		<tr>
+			<td><img src="121p.no2.out-In1-input1.png" border="0" alt="121p.no2.out-In1-input1.png(8192 byte)" width="118" height="113"></td>
+			<td><img src="121p.no2.out-In1-input2.png" border="0" alt="121p.no2.out-In1-input2.png(13508 byte)" width="428" height="90"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				0.175<br>
+				0.00302838<br>
+				0.0129759<br>
+				8.75794e-06<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>出力結果</div>
+	<table>
+		<tr>
+			<td><img src="opution-i.png" border="0" alt="opution-i.png(9487 byte)" width="116" height="118"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				0.0872652<br>
+				0.00352428<br>
+				0.00653417<br>
+				9.13179e-06<br></p>
+			</td>
+		</tr>
+	</table>
+
+<!-- オプション-I説明 -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション-Iで使用したファイルの詳細------</font></caption><br>
+	<div>使用した入力ファイルの中身<br>
+	<img src="inputfile.png" border="0" alt="inputfile.png(2441 byte)" width="156" height="95"><br>
+	　　　　　　・<br>
+	　　　　　　・<br>
+	　　　　　　・<br>
+	<br>
+	</div>
+	<div>例：a000-2.orgmrcの画像</div>
+	<table>
+		<tr>
+			<td><img src="a000-2.png" border="0" alt="a000-2.png(1725 byte)" width="100" height="100"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				37.8872<br>
+				0.833407<br>
+				4.20486<br>
+				0.0420486<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>例：a004-2.orgmrcの画像</div>
+	<table>
+		<tr>
+			<td><img src="a004-2.png" border="0" alt="a004-2.png(1722 byte)" width="100" height="100"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				38.0379<br>
+				0.833354<br>
+				4.19112<br>
+				0.0419112<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>※a000-2.orgmrcとa004-2.orgmrcは同じ物体で、傾斜角度が違う画像である</div>
+	
+<!-- オプション -single -->
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-single------</font></caption><br>
+	<div>今回の傾斜軸は入力ファイルの詳細から、ｙ軸となる</div>
+	<table>
+		<tr>
+			<td>ｘｙ平面</td>
+			<td>ｙｚ平面</td>
+			<td>ｚｘ平面</td>
+		</tr>
+		<tr>
+			<td><img src="single.png" border="0" alt="single.png(8080 byte)" width="106" height="115"></td>
+			<td><img src="single-yx.png" border="0" alt="single-yx.png(10329 byte)" width="158" height="104"></td>
+			<td><img src="single-zx.png" border="0" alt="single-zx.png(10625 byte)" width="163" height="109"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				33.7425<br>
+				0.92622<br>
+				2.73412<br>
+				0.00273412<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	
+<!-- オプション　-Double -->
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-Double------</font></caption><br>
+	<caption><b>オプション-WeightMode,-CounterThreshholdを併用</b></caption>
+	<div>-CounterThreshholdを2に設定<br>
+	WeightMode：１</div>
+	<table>
+		<tr>
+			<td><img src="double-CT2W1m1.png" border="0" alt="double-CT2W1m1.png(8503 byte)" width="113" height="111"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-24.3363<br>
+				115.7<br>
+				-1.58352e-10<br>
+				6.11368<br>
+				0.00611368<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>WeightMode：２</div>
+	<table>
+		<tr>
+			<td><img src="double-CT2W2m1.png" border="0" alt="double-CT2W2m1.png(8591 byte)" width="112" height="114"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-23.6896<br>
+				117.242<br>
+				-8.14329e-09<br>
+				6.12488<br>
+				0.00612488<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>WeightMode：３</div>
+	<table>
+		<tr>
+			<td><img src="double-CT2W3m1.png" border="0" alt="double-CT2W3m1.png(8582 byte)" width="111" height="112"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-23.6896<br>
+				117.242<br>
+				-8.14329e-09<br>
+				6.12488<br>
+				0.00612488<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>WeightMode：４</div>
+	<table>
+		<tr>
+			<td><img src="double-CT2W4m1.png" border="0" alt="double-CT2W4m1.png(8417 byte)" width="112" height="115"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-40.5762<br>
+				174.198<br>
+				0.821701<br>
+				8.99569<br>
+				0.00899569<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>WeightMode：５</div>
+	<table>
+		<tr>
+			<td><img src="double-CT2W5m1.png" border="0" alt="double-CT2W5m1.png(8780 byte)" width="115" height="114"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-41.7929<br>
+				185.856<br>
+				0.821701<br>
+				8.94568<br>
+				0.00894568<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>WeightMode：６</div>
+	<table>
+		<tr>
+			<td><img src="double-CT2W6m1.png" border="0" alt="double-CT2W6m1.png(9027 byte)" width="113" height="115"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-43.5065<br>
+				190.759<br>
+				0.821701<br>
+				9.38459<br>
+				0.00938459<br></p>
+			</td>
+		</tr>
+	</table>
+	<br>
+	<div>※-CounterThreshholdがデフォルトのままだと、この画像の場合うまく計算処理されず、以下のような画像が処理される場合がある<br>
+	<img src="121p-input-DW5m1.png" border="0" alt="121p-input-DW5m1.png(8037 byte)" width="120" height="122"></div>
+
+	<br>
+	<caption><b>オプション　-CounterThresholdModeを併用</b></caption>
+	<div>オプション-WeightMode=1,-CounterThreshhold=2で実行</div>
+	<div>モード：０</div>
+	<table>
+		<tr>
+			<td><img src="double-CT2W1m1CTM0.png" border="0" alt="double-CT2W1m1CTM0.png(8435 byte)" width="109" height="111"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-24.3363<br>
+				115.7<br>
+				-1.58352e-10<br>
+				6.11368<br>
+				0.00611368<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>モード：１</div>
+	<table>
+		<tr>
+			<td><img src="double-CT2W1m1CTM1.png" border="0" alt="double-CT2W1m1CTM1.png(11481 byte)" width="122" height="123"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-20.1632<br>
+				113.527<br>
+				-8.04145e-10<br>
+				5.91589<br>
+				0.00591589<br></p>
+			</td>
+		</tr>
+	</table>
+	
+<!-- オプション　-InterpolationMode -->
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-InterpolationMode------</font></caption><br>
+	<div>オプション-WeightMode=1,-CounterThreshhold=2で実行</div>
+	<div>InterpolationMode：０</div>
+	<table>
+		<tr>
+			<td><img src="double-CT2W1m1IM0.png" border="0" alt="double-CT2W1m1IM0.png(8687 byte)" width="120" height="117"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-24.6593<br>
+				117.022<br>
+				-4.08489e-09<br>
+				6.13305<br>
+				0.00613305<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>InterpolationMode：１</div>
+	<table>
+		<tr>
+			<td><img src="Double-CT2W1m1IM1.png" border="0" alt="Double-CT2W1m1IM1.png(8520 byte)" width="118" height="117"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-24.3363<br>
+				115.7<br>
+				-1.58352e-10<br>
+				6.11368<br>
+				0.00611368<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>InterpolationMode：２</div>
+	<table>
+		<tr>
+			<td><img src="Double-CT2W1m1IM2.png" border="0" alt="Double-CT2W1m1IM2.png(8371 byte)" width="115" height="111"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-26.0299<br>
+				118.253<br>
+				2.86921e-09<br>
+				6.1544<br>
+				0.0061544<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>InterpolationMode：３</div>
+	<table>
+		<tr>
+			<td><img src="Double-CT2W1m1IM3.png" border="0" alt="Double-CT2W1m1IM3.png(8435 byte)" width="120" height="118"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-40640.8<br>
+				209412<br>
+				3.35228e-06<br>
+				10763.2<br>
+				10.7632<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-SIRT------</font></caption><br>
+	<div>オプション　-max,-rmsをデフォルト値で、オプション-WeightMode=1,-CounterThreshhold=2で実行</div>
+	<table>
+		<tr>
+			<td><img src="double-m1SIRT.png" border="0" alt="double-m1SIRT.png(9171 byte)" width="115" height="116"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-725.47<br>
+				2563.64<br>
+				6.83624e-07<br>
+				130.514<br>
+				0.130514<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>オプション　-max=5,-rms=1で実行</div>
+	<table>
+		<tr>
+			<td><img src="Double-m1SIRTm5r1.png" border="0" alt="Double-m1SIRTm5r1.png(10511 byte)" width="122" height="121"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-234.062<br>
+				575.77<br>
+				-7.42642e-08<br>
+				35.0409<br>
+				0.0350409<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-m------</font></caption><br>
+	<div>モード：0</div>
+	<table>
+		<tr>
+			<td><img src="double.png" border="0" alt="double.png(8098 byte)" width="118" height="110"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				30.514<br>
+				0.916102<br>
+				2.14263<br>
+				0.00214263<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>モード：1</div>
+	<table>
+		<tr>
+			<td><img src="double-m1.png" border="0" alt="double-m1.png(7840 byte)" width="110" height="109"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-54.8893<br>
+				125.857<br>
+				7.73532e-09<br>
+				6.50251<br>
+				0.00650251<br></p>
+			</td>
+		</tr>
+	</table>
+
+</body>
+</html>

@@ -1,0 +1,3 @@
+OBJECTNAME = eosStarFile
+EXTRA_INC =
+EXTRA_CCOPTS = -lgsl

@@ -1,0 +1,29 @@
+<HTML>
+<HEAD>
+<TITLE>mrcImageEdgeEnhancement</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageEdgeEnhancement</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageEdgeEnhancement
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile::mrcImage    ) ] :Essential :InputDataFile
+    [-o[utput]           Out                 (NULL      ).as(outFile::mrcImage   ) ] :Essential :OutputDataFile
+    [-o[utput]d[irection]OutDirection        (NULL      ).as(outFile::mrcImage   ) ] :Optional  :Output: Direction
+    [-M[ode]             NeighborMode        (0         ).as(Integer             ) ] :Optional  :Input: NeighborMode
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+mode: 0 : Differential(SQRT)
+mode: 1 : Differential(ABS)
+mode: 2 : Roberts Cross(SQRT)
+mode: 3 : Roberts Cross(ABS)
+mode: 4 : Prewitt(SQRT)
+mode: 5 : Prewitt(ABS)
+mode: 6 : Sobel(SQRT)
+mode: 7 : Sobel(ABS)
+mode: 8 : NegativeLaplacian
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,8 @@
+.onlineHelp EOS mrcImageReverse "Introduction to mrcImageReverse"
+.
+.section 1 "Introduction to mrcImageReverse"
+.
+.\" This is the help page associated with the Help button on
+.\" the toplevel window of mrcImageReverse
+If you are reading this text,
+you should report it as a bug :-)

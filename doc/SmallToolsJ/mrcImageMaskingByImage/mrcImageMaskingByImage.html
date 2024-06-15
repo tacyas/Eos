@@ -1,0 +1,241 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageMaskingByImage</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageMaskingByImage<br></h2></b></font>
+	<h4></h4>
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>オプション</th>
+				<th>必須項目/選択項目</th>
+				<th>NULL</th>
+				<th>デフォルト</th>
+			</tr>
+			<tr>
+				<td>-i</td>
+				<td>必須</td>
+				<td>入力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-o</td>
+				<td>必須</td>
+				<td>出力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-M</td>
+				<td>必須</td>
+				<td>出力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-v</td>
+				<td>選択</td>
+				<td>マスク処理の閾値を設定する</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-m</td>
+				<td>選択</td>
+				<td>モード</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-h</td>
+				<td>選択</td>
+				<td>ヘルプを表示</td>
+				<td>　</td>
+			</tr>
+		</table>
+
+<!-- モード詳細 -->
+
+	<br>
+	<br>
+	<caption><b>モードの詳細</b></caption>
+	<table border="1">
+	<div align="left">
+		<tr>
+			<th>モード</th>
+			<th>説明</th>
+		</tr>
+		<tr>
+			<td>0</td>
+			<td>オプション-vの値より大きい値の部分をマスク処理する</td>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>オプション-vの値より小さい値の部分をマスク処理する</td>
+		</tr>
+		<tr>
+			<td>2</td>
+			<td>マルチファイルと入力ファイルを掛け合わせる</td>
+		</tr>
+		<tr>
+			<td>+16</td>
+			<td>密度から対象物の平均値を引く</td>
+		</tr>
+	</div>
+	</table>
+
+	<h4>******実行例******</h4>
+
+<!-- 入力ファイル説明 -->
+	
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="b120-2.png" border="0" alt="b120-2.png(6742 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-65.0178<br>
+				94.4699<br>
+				4.85274<br>
+				20.4635<br>
+				0.255794<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<caption><font color="blue">------マスクファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="mask.png" border="0" alt="mask.png(999 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				1<br>
+				0.345156<br>
+				0.475419<br>
+				0.00594274<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<caption><font color="blue">------オプション　-m------</font></caption><br>
+	<div>モード：０<br>
+	-v＝０の場合</div>
+	<table>
+		<tr>
+			<td><img src="outdata.png" border="0" alt="outdata.png(4936 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-65.0178<br>
+				55.7056<br>
+				-0.491187<br>
+				13.2508<br>
+				0.165635<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<br>
+	-v＝１の場合</div>
+	<table>
+		<tr>
+			<td><img src="outdata-m0v1.png" border="0" alt="outdata-m0v1.png(6742 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-65.0178<br>
+				94.4699<br>
+				4.85274<br>
+				20.4635<br>
+				0.255794<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>※マスクファイルの画像の最大値が１なので、マスク処理が行われない</div>
+	
+	<br>
+	<br>
+	<div>モード：１<br>
+	-v＝０の場合</div>
+	<table>
+		<tr>
+			<td><img src="outdata-m1.png" border="0" alt="outdata-m1.png(6742 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-65.0178<br>
+				94.4699<br>
+				4.85274<br>
+				20.4635<br>
+				0.255794<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>※マスクファイルの画像の最小値が０なので、マスク処理が行われない</div>
+
+	<br>
+	<div>-v＝１の場合</div>
+	<table>
+		<tr>
+			<td><img src="outdata-m1v1.png" border="0" alt="outdata-m1v1.png(3231 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-45.4312<br>
+				94.4699<br>
+				5.34393<br>
+				15.4248<br>
+				0.192809<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<br>
+	<br>
+	<div>モード：２<br>
+	-v＝０の場合</div>
+	<table>
+		<tr>
+			<td><img src="outdata-m2.png" border="0" alt="outdata-m2.png(3231 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-45.4312<br>
+				94.4699<br>
+				5.34393<br>
+				15.4248<br>
+				0.192809<br></p>
+			</td>
+		</tr>
+	</table>
+
+
+</body>
+</html>

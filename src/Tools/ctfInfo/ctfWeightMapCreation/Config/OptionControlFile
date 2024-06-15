@@ -1,0 +1,14 @@
+# OptionControlFile
+# FileFormat
+"-o","-o[utput]","OutputDataFile","Optional","1","1","Out","outFile","stdout"
+"-kV","-kV","AccVol[kV]","Optional","1","1","kV","Real","200"
+"-Cs","-Cs","Cs[mm]","Optional","1","1","Cs","Real","1.7"
+"-df","-df","Defocus[A]:under(+)","Essential","1","1","Defocus","Real","2.7"
+"-white","-white","WhiteNoise(N/S)","Optional","1","1","WhiteNoise","Real","1.0"
+"-noise","-noise","Noise Power Spectrum","Optional","1","1","Noise","inFile","NULL"
+"-splusn","-splusn","Signal+Noise Power Spectrum","Optional","1","1","SplusN","inFile","NULL"
+"-dRinv","-dRinv","dRinv[A]","Essential","1","1","dRinv","Real","1024*5/3"
+"-dRmaxInv","-dRmaxInv","dRmaxInv[A]","Essential","1","1","dRmaxInv","Real","10.0"
+"-SinWin","-SinWin","RminInv[A] RmaxInv[A]","Optional","2","1","SinWinRminInv","Real","20.0","2","SinWinRmaxInv","Real","10.0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

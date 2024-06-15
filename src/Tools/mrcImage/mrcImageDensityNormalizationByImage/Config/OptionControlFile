@@ -1,0 +1,12 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Test: Input","Essential","1","1","In","inFile","NULL"
+"-r","-r[ef]","Reference: Input","Essential","1","1","Ref","inFile","NULL"
+"-o","-o[utput]","NormalizedImage:  Output","Essential","1","1","Out","outFile","NULL"
+"-O","-O[utput]","Parameters:       Output","Optional","1","1","OutParam","outFile","stdout"
+"-D","-D[ataForNormalizing]","DataList to be used","Optional","1","1","UsedData","outFile","stdout"
+"-Cylinder","-Cylinder","Cylinder Region","Optional","4","1","CCenterX","Real","20","2","CCenterY","Real","20","3","CMinR","Real","10","4","CMaxR","Real","20"
+"-testBG","-testBG[Region]","SearchRegion","Optional","3","1","tstBGMin","Real","-3","2","tstBGMax","Real","3","3","tstBGDelta","Real","0.1"
+"-M","-M[ode]","DensityFittngMethod: Mode","Optional","1","1","fitMode","Integer","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

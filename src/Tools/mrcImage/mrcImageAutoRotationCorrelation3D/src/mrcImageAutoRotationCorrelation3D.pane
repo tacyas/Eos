@@ -1,0 +1,28 @@
+-F 4.3 1 0 52x1+0+0 +0+0 'Cantata' cantata
+  -M 1 1 52x1+0+0 +1+0 ' ' subform
+    -P 1 0 52x1+0+1 +0+0 ' ' mrcImageAutoRotationCorrelation3D
+      -D 1 0 9x1+0+0 'Options' _gui_options
+        -H 1  6x1+0+0 'License' 'license' $BOOTSTRAP/repos/license/License license
+        -E
+        -R 1 0 1 5x1+35+0 'Run' 'execute operation' $EOS/bin/mrcImageAutoRotationCorrelation3D
+        -H 1  5x1+41+0 'Help' 'help page' $EOS/src/Tools/mrcImage/mrcImageAutoRotationCorrelation3D/doc/mrcImageAutoRotationCorrelation3D.doc help
+        -Q 1 0 5.25x1+47+0 'Close'
+        -I 1 0 1 1 0 1 -1x1+1+1.500000 ' ' 'In' 'Input: mrc[test]' i
+        -I 1 0 1 1 0 1 -1x1+1+3.000000 ' ' 'Ref' 'Input: mrc[ref]' r
+        -O 1 0 1 0 0 1 -1x1+1+4.500000 ' ' 'Out' 'Output: Parameter' o
+        -O 1 0 1 0 0 1 -1x1+1+6.000000 ' ' 'Cor' 'Output: CorMap' cor
+        -O 1 0 1 0 0 1 -1x1+1+7.500000 ' ' 'Fit' 'Output: Best Fit' fit
+        -s 1 0 1 0 0 -1x1+1+9.000000 0 0 0 0 0 'EulerAngle' 'Input: EulerAngle' EA
+        -I  1 0 0 1 0 1 -1x1+1+10 ' ' '0.0' 'Rot1Min' Rot1
+        -I  1 0 0 1 0 1 -1x1+1+12 ' ' '0.0' 'Rot2Min' Rot2
+        -I  1 0 0 1 0 1 -1x1+1+13 ' ' '0.0' 'Rot3Min' Rot3
+        -I  1 0 0 1 0 1 -1x1+1+15 ' ' '0' 'XrangeMin' Xrange[pixel]: Not set, all space search
+        -I  1 0 0 1 0 1 -1x1+1+16 ' ' '0' 'YrangeMin' Yrange[pixel]: Not set, all space search
+        -I  1 0 0 1 0 1 -1x1+1+18 ' ' '0' 'ZrangeMin' Zrange[pixel]: Not set, all space search
+        -i 1 0 1 0 0 -1x1+1+19.500000 0 0 0 0 0 'Mode' 'Mode: Correlation Mode' M
+        -i 1 0 1 0 0 -1x1+1+21.000000 0 0 0 0 0 'ModeRotation' 'Mode: Rotation3D Mode' MR
+        -I 1 0 1 0 0 1 -1x1+1+22.500000 ' ' 'configFile' 'ConfigurationFile' c
+        -i 1 0 1 0 0 -1x1+1+24.000000 0 0 0 0 0 'mode' 'Mode: InterpolationMode' m
+    -E
+  -E
+-E

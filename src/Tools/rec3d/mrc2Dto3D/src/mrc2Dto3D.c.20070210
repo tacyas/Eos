@@ -1,0 +1,387 @@
+/*
+# %M% %Y% %I%
+# The latest update : %G% at %U%
+#
+#%Z% mrc2Dto3D ver %I%
+#%Z% Created by 
+#%Z%
+#%Z% Usage : mrc2Dto3D
+#%Z% Attention
+#%Z%
+*/
+static char __sccs_id[] = "%Z%mrc2Dto3D ver%I%; Date:%D% %Z%";
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>                  
+#define GLOBAL_DECLARATION
+#undef DEBUG
+#include "../inc/config.h"
+#include "genUtil.h"
+#include "Memory.h"
+#include "String.h"
+#include "mrcImage.h"
+#include "Matrix3D.h"
+#include "lmrcImageRhoFiltering.h"
+
+typedef enum lmrc2Dto3DMode {
+	mrc2Dto3DModeSimpleBackProjection = 0,
+	mrc2Dto3DModeFilteredBackProjection = 1
+} lmrc2Dto3DMode;
+
+typedef struct lmrc2Dto3DInfo {
+	long flagDouble;
+	long singleTiltMode;
+	long mode;
+	int  InterpolationMode;
+	long flagPlusXrot;
+	mrcImage* CounterForWeight;
+	lmrcImageRhoFilteringInfo rhoInfo;
+} lmrc2Dto3DInfo;
+
+extern void lmrc2Dto3D(mrcImage* Out, mrcImage* in, lmrc2Dto3DInfo* linfo, long mode);
+
+extern void lmrc2Dto2DMulti(mrcImage* out, char** filename, int number, FILE* fptInfo, int mode);
+
+int
+main(int argc, char* argv[]) 
+{
+	long status;
+	mrc2Dto3DInfo info;
+	static lmrc2Dto3DInfo linfo;
+	static mrcImage  In;
+	static mrcImage Out;
+
+	init0(&info);
+    argCheck(&info, argc, argv);
+    init1(&info);
+
+	linfo.mode = info.mode;
+	linfo.singleTiltMode = info.single;
+	linfo.flagDouble     = info.Double;
+	linfo.flagPlusXrot   = info.PlusXrot;
+	linfo.InterpolationMode = info.InterpolationMode;
+	linfo.rhoInfo.counterThreshold = info.CounterThreshold;
+	linfo.rhoInfo.weightMode     = info.WeightMode;
+	linfo.rhoInfo.SubSampling    = info.SubSampling;
+
+	if(info.flagIn) {
+		mrcFileRead(&In, info.In, "in main", 0); 
+	} else if (info.flagIn2) {
+		lmrc2Dto2DMulti(&In, info.In2, info.flagIn2, info.fptIn2List, 0);
+	} else {
+		fprintf(stderr, "-i or -I is required\n");
+		exit(EXIT_FAILURE);
+	}
+	lmrc2Dto3D(&Out, &In, &linfo, 0);
+
+	mrcFileWrite(&Out, info.Out, "in main", 0); 
+	if(info.flagOut2) {
+		mrcFileWrite(&In, info.Out2, "in main", 0);
+	}
+	if(info.Double && info.flagDoubleCounter) {
+		if(NULL!=linfo.CounterForWeight) {
+			mrcFileWrite(linfo.CounterForWeight, info.DoubleCounter, "in main", 0);
+		}
+	}
+	exit(EXIT_SUCCESS);
+}
+
+void
+additionalUsage()
+{
+	fprintf(stderr, "----- Additional Usage -----\n");
+	fprintf(stderr, "-m Option\n");
+	fprintf(stderr, "    %d:SimpleBackProjection\n", mrc2Dto3DModeSimpleBackProjection);
+	fprintf(stderr, "    %d:FilteredBackProjection\n", mrc2Dto3DModeFilteredBackProjection);
+	fprintf(stderr, "-single 0|1 \n");
+	fprintf(stderr, "    0: tilt axis is parallel to x-axis\n");
+	fprintf(stderr, "    1: tilt axis is parallel to y-axis\n");
+	fprintf(stderr, "-Double \n");
+	fprintf(stderr, "    Double Tilt \n");
+	fprintf(stderr, "-WeightMode \n");
+	fprintf(stderr, "    1 : RealSpace: Circle(same density)\n");
+	fprintf(stderr, "    2 : RealSpace: Circle(weighted density)\n");
+	fprintf(stderr, "    3 : RealSpace: Square(weighted density) \n");
+	fprintf(stderr, "    4 : Fourier Space : Plane(same density) -CounterThreshold 0.5\n");
+	fprintf(stderr, "    5 : Fourier Space : Plane(Linear Gradient)-CounterThreshold 0.5\n");
+	fprintf(stderr, "    6 : Fourier Space : Plane(Cosine Gradient) Current Recommende using -CounterThreshold 0.5\n");
+	fprintf(stderr, "-------------------------------\n");
+	fprintf(stderr, "-I Option file format\n");
+	fprintf(stderr, "filename0 RotationOrder0 rot1 rot2 rot3\n");
+	fprintf(stderr, "filename1 RotationOrder1 rot1 rot2 rot3\n");
+	fprintf(stderr, ".......................................\n");
+	fprintf(stderr, ">>> RotationOrder : Eular Angle Expression <<< \n");
+	fprintf(stderr, "Example: YOYS : RotY(rot3)RotX(rot2)RotY(rot1)*v\n");
+	fprintf(stderr, "First Rotation  : y-axis : Y: Y     : [X|Y|Z] Axis used initially\n");
+	fprintf(stderr, "Second Rotation : x-axis : O: Odd   : [O|E]   Parity of axis permutation\n");
+	fprintf(stderr, "Last Rotation   : z-axis : Y: Yes   : [Y|N]   Repetition of initial axis as last\n");
+	fprintf(stderr, "v1 = A v0                : S: Staic : [S|R]   Frame from which axes are taken\n");
+
+}
+
+void
+lmrc2Dto2DMulti(mrcImage* out, char** filename, int number, FILE* fptInfo, int mode)
+{
+	long i;
+	mrcImage* in; 
+	mrcImageParaTypeInteger Nx, Ny;
+	mrcImageParaTypeReal    Length;
+	mrcImageParaTypeReal    srcx, srcy, srcz;
+	mrcImageParaTypeReal    dstx, dsty, dstz;
+	char s[1024];
+	double data;
+
+	in = (mrcImage*)memoryAllocate(sizeof(mrcImage)*number, "in lmrc2Dto2DMulti");
+	Nx = 0;
+	Ny = 0;
+	Length = 1e6;
+	for(i=0; i<number; i++) {
+		DEBUGPRINT1("Opening:%s\n", filename[i]);
+		mrcFileRead(&(in[i]), filename[i], "in lmrc2Dto2DMulti", 0);
+		if(Nx < in[i].HeaderN.x) {
+			Nx = in[i].HeaderN.x;
+		}
+		if(Ny < in[i].HeaderN.y) {
+			Ny = in[i].HeaderN.y;
+		}
+		if(in[i].HeaderLength.x < Length) {
+			Length = in[i].HeaderLength.x;
+		}
+		if(in[i].HeaderLength.y < Length) {
+			Length = in[i].HeaderLength.y;
+		}
+	}	
+	out->HeaderN.x = Nx;
+	out->HeaderN.y = Ny;
+	out->HeaderN.z = number;
+	out->HeaderMode = mrcFloatImage;
+	out->HeaderLength.x = Length;
+	out->HeaderLength.y = Length;
+	out->HeaderLength.z = Length;
+	mrcInit(out, NULL);
+	for(dstz=0; dstz<number; dstz++) {
+		for(dstx=0; dstx<in->HeaderN.x; dstx++) {
+			for(dsty=0; dsty<in->HeaderN.y; dsty++) {
+				srcx = dstx - (out->HeaderN.x - in->HeaderN.x)/2.0;
+				srcy = dsty - (out->HeaderN.y - in->HeaderN.y)/2.0;
+				mrcPixelDataGet(&(in[(int)dstz]), srcx, srcy,  0.0, &data, mrcPixelRePart, mrcPixelHowLinear);
+				mrcPixelDataSet(out,              dstx, dsty, dstz,  data, mrcPixelRePart);
+			}
+		}
+	}
+	out->numTailer = number;
+	out->Tailer = (mrcImageTailer*)memoryAllocate(sizeof(mrcImageTailer)*number, "in lmrc2Dto2DMulti");
+	fseek(fptInfo, 0L, SEEK_SET);
+	for(i=0; i<number; i++) {
+		stringGetFromFile(s, "", fptInfo, stdout, 3);
+		out->Tailer[i].Cont.Mode = mrcImageTailerMode2DProjection;
+		stringCopy(out->Tailer[i].Cont.EulerAngleMode, stringGetNthWord(s, 2, " \t,"), 4);
+		out->Tailer[i].Cont.Rot1 = stringGetNthRealData(s, 3, " ,\t")*RADIAN;
+		out->Tailer[i].Cont.Rot2 = stringGetNthRealData(s, 4, " ,\t")*RADIAN;
+		out->Tailer[i].Cont.Rot3 = stringGetNthRealData(s, 5, " ,\t")*RADIAN;
+	}
+	for(i=0; i<number; i++) {
+		mrcImageFree(&(in[i]), "in lmrc2Dto2DMulti");
+	}
+	free(in);
+}
+
+void 
+lmrc2Dto3D(mrcImage* out, mrcImage* in, lmrc2Dto3DInfo* linfo, long mode)
+{
+	mrcImageParaTypeInteger i;
+	mrcImageParaTypeInteger num;
+	mrcImageParaTypeReal    x, y, z;
+	mrcImageParaTypeReal    gx, gy, gz;
+	mrcImageParaTypeReal    g3x, g3y, g3z;
+	mrcImageParaTypeReal    prjx, prjy, prjz;
+	mrcImage                tmp;
+	mrcImage                prj;
+	double                  data, projdata;
+	Matrix3D                Matrix;
+	Matrix3D                MatrixAnti;
+	floatVector             v;
+	double lenx, leny, lenz;
+	double weight;
+	tmp.Header    = prj.Header    = in->Header;
+	tmp.HeaderN.z = prj.HeaderN.z = 1;
+	mrcInit(&tmp, NULL); mrcInit(&prj, NULL); 
+
+	out->Header = in->Header;
+	out->HeaderN.x = MAX(in->HeaderN.x, in->HeaderN.y);
+	out->HeaderN.y = MAX(in->HeaderN.x, in->HeaderN.y);
+	out->HeaderN.z = MAX(in->HeaderN.x, in->HeaderN.y);
+	out->HeaderLength.z = out->HeaderLength.x;
+	mrcInit(out, NULL);
+	lenx =  (out->HeaderN.x-1)/2.0;
+	leny =  (out->HeaderN.y-1)/2.0;
+	lenz =  (out->HeaderN.z-1)/2.0;
+
+	floatVectorInit(&v, 4);
+	v.data[3] = 1.0;
+	num = in->numTailer;
+
+	for(i=0; i<num; i++) {
+		DEBUGPRINT4("%ld: %g %g %g\n", i, in->Tailer[i].Cont.Rot1*DEGREE, in->Tailer[i].Cont.Rot2*DEGREE, in->Tailer[i].Cont.Rot3*DEGREE);
+		/* Projection Data Set */
+		mrcImageSectionGet(&tmp, in, i, 1); 	
+
+		/* Set Matrix */
+		matrix3DRotationSetFollowingEulerAngle(Matrix,
+										in->Tailer[i].Cont.EulerAngleMode,
+										in->Tailer[i].Cont.Rot1, 
+										in->Tailer[i].Cont.Rot2, 
+										in->Tailer[i].Cont.Rot3, 
+										MATRIX_3D_MODE_INITIALIZE);
+
+		if(linfo->flagDouble && linfo->flagPlusXrot) {
+			matrix3DRotationSetFollowingEulerAngle(Matrix,
+										"XEYS",
+										180*RADIAN, 
+										0, 
+										0, 
+										MATRIX_3D_MODE_NOT_INITIALIZE);
+		}
+		matrix3DRotationAntiSetFollowingEulerAngle(MatrixAnti,
+										in->Tailer[i].Cont.EulerAngleMode,
+										in->Tailer[i].Cont.Rot1, 
+										in->Tailer[i].Cont.Rot2, 
+										in->Tailer[i].Cont.Rot3, 
+										MATRIX_3D_MODE_INITIALIZE);
+
+		/* Filtering */
+		switch(linfo->mode) {
+			case mrc2Dto3DModeSimpleBackProjection: {
+				prj = tmp;
+				break;
+			}
+			case mrc2Dto3DModeFilteredBackProjection: {
+				if(linfo->flagDouble) {
+					/* Preparing Rho Filtering */
+					linfo->CounterForWeight = lmrcImageRhoFiltering2(out, Matrix, i, &linfo->rhoInfo, 0);
+					prj = tmp;
+				} else {
+					lmrcImageRhoFiltering(&prj, &tmp, MatrixAnti, linfo->singleTiltMode);
+				}
+				break;
+			}
+			default: {
+				break;
+			}
+		}
+
+		/* Determination of Image Centre */	
+		switch(linfo->mode) {
+			case mrc2Dto3DModeSimpleBackProjection: 
+			case mrc2Dto3DModeFilteredBackProjection: {
+				g3x = (out->HeaderN.x - 1)/2.0;
+				g3y = (out->HeaderN.y - 1)/2.0;
+				g3z = (out->HeaderN.z - 1)/2.0;
+				gx  = (in->HeaderN.x  - 1)/2.0;
+				gy  = (in->HeaderN.y  - 1)/2.0;
+				gz  = 0.0;
+				break;
+			}
+			default: {
+				fprintf(stderr, "Not supported mode: %d : lmrc2D3D\n", linfo->mode);
+				return;
+			}
+		}
+		
+		/* */
+		switch(linfo->mode) {
+			case mrc2Dto3DModeSimpleBackProjection: { /* Backprojection */
+				for(z=0; z<out->HeaderN.z; z++) {
+				for(y=0; y<out->HeaderN.y; y++) {
+				for(x=0; x<out->HeaderN.x; x++) {
+					v.data[0] = x-g3x; 
+					v.data[1] = y-g3y; 
+					v.data[2] = z-g3z;
+					//v.data[3] = 1;
+					matrix3DMultiplyVector(&v, Matrix);
+					//DEBUGPRINT2("x %f -> %f\n", x - g3x, v.data[0]);
+					//DEBUGPRINT2("y %f -> %f\n", y - g3y, v.data[1]);
+					//DEBUGPRINT2("z %f -> %f\n", z - g3z, v.data[2]);
+					prjx = v.data[0] + gx; 
+					prjy = v.data[1] + gy;
+					prjz = v.data[2] + g3z;
+					//DEBUGPRINT2("x %f -> %f\n", x, prjx);
+					//DEBUGPRINT2("y %f -> %f\n", y, prjy);
+					//DEBUGPRINT1("z %f      \n", z);
+					mrcPixelDataGet(out, x, y, z, &data, mrcPixelRePart, mrcPixelHowNearest);
+					if( -0.5<=prjx && prjx<prj.HeaderN.x-0.5
+					  &&-0.5<=prjy && prjy<prj.HeaderN.y-0.5) {
+						mrcPixelDataGet(&prj, prjx, prjy, 0.0, &projdata, mrcPixelRePart, linfo->InterpolationMode);
+						mrcPixelDataSet(out, x, y, z, data + projdata, mrcPixelRePart);
+					}
+				}
+				}
+				}
+				break;
+			}
+			case mrc2Dto3DModeFilteredBackProjection: {
+				for(z=0; z<out->HeaderN.z; z++) {
+				for(y=0; y<out->HeaderN.y; y++) {
+				for(x=0; x<out->HeaderN.x; x++) {
+					v.data[0] = x-g3x; 
+					v.data[1] = y-g3y; 
+					v.data[2] = z-g3z;
+					v.data[3] = 1;
+					matrix3DMultiplyVector(&v, Matrix);
+					//DEBUGPRINT2("x %f -> %f\n", x - g3x, v.data[0]);
+					//DEBUGPRINT2("y %f -> %f\n", y - g3y, v.data[1]);
+					//DEBUGPRINT2("z %f -> %f\n", z - g3z, v.data[2]);
+					prjx = v.data[0] + gx; 
+					prjy = v.data[1] + gy;
+					prjz = v.data[2] + g3z;
+					//DEBUGPRINT2("x %f -> %f\n", x, prjx);
+					//DEBUGPRINT2("y %f -> %f\n", y, prjy);
+					//DEBUGPRINT1("z %f      \n", z);
+					//
+					if(-0.5<=prjz && prjz < out->HeaderN.z - 0.5) {	
+						mrcPixelDataGet(out, x, y, z, &data, mrcPixelRePart, mrcPixelHowNearest);
+						if( -0.5<=prjx && prjx<prj.HeaderN.x-0.5
+					  	  &&-0.5<=prjy && prjy<prj.HeaderN.y-0.5) {
+							mrcPixelDataGet(&prj, prjx, prjy, 0.0, &projdata, mrcPixelRePart, linfo->InterpolationMode);
+							if(linfo->flagDouble) {
+							/*
+							weight = SQR((x-g3x)/lenx)+SQR((y-g3y)/leny)+SQR((z-g3z)/lenz);
+							//DEBUGPRINT1("Weight: %lf\n", weight);
+							if(weight<1) {
+								weight = 1;
+							} else {
+								weight = (1/3.0 - 1/weight)/(1/3.0 - 1.0);
+							}	
+							//DEBUGPRINT1("Weight: %lf\n", weight);
+							projdata *= weight;							
+							*/
+							} 
+							mrcPixelDataSet(out, x, y, z, data + projdata, mrcPixelRePart);
+						}
+					}
+				}
+				}
+				}
+				break;
+			}
+			default: {
+				break;
+			}
+		}
+	}
+	if(linfo->flagDouble && linfo->mode==mrc2Dto3DModeFilteredBackProjection) {
+		/* Perform RhoFiltering */
+#ifdef DEBUG
+		mrcFileWrite(out, "/tmp/RawDataforDebug.mrc3d", "in main", 0);
+#endif
+		linfo->CounterForWeight = lmrcImageRhoFiltering2(out, Matrix, i, &linfo->rhoInfo, 1);
+		if(NULL==linfo->CounterForWeight) {
+			fprintf(stderr, "Counter is null.\n");
+		}
+	} else {
+		lmrcImageDevidedByReal(out, num);
+	}
+	mrcStatDataSet(out, 0);
+}
+

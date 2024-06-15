@@ -1,0 +1,201 @@
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i /home/people/ayumi/ayumiFS02/3d_1/get/0001.fft 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i /home/people/ayumi/ayumiFS02/3d_1/get/0001.mrc 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i /home/people/ayumi/ayumiFS02/3d_1/get/0002.mrc 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i /home/people/ayumi/ayumiFS02/3d_1/get/0002.fft 
+I686LINUX/mrcFFTResampling -h 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -samp 2.0 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -sampling 2.0 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -s 2.0 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -samp 2.0 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -sampling 2.0 
+I686LINUX/mrcFFTResampling -input test/0002.fft -o test/0002.res 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -s 2.0 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -s 2.0 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -s 2.0 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -s 2.0 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -s 2.0 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -s 2.0 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -s 2.0 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -s 2.0 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0002.res 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002.res 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0002.fft 
+I686LINUX/mrcFFTResampling -h 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -s 2 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0002.res 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0002.res 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0002.fft 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0002.res 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0002.fft 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0002.res 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -h 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -s 2.0 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0002.res 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -s 2.0 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0002.res 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -h 
+I686LINUX/mrcFFTResampling -h 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 32 -ny 32 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0002.res 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0002.fft 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002.fft 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 128 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002.res 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002.res 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 128 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 128 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 128 -ny128 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 128 -ny 128 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0002.fft 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002.fft 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 128 -ny 128 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0002 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 32 -ny 32 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0002.res 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0002.fft 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002.res 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 128 -ny 128 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0002.res 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 128 -ny 128 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 128 -ny 128 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 128 -ny 128 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0002 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 32 -ny 32 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0002.res 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0002.fft 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/002.ftt 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 128 -ny 128 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0002.res 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0002.fft 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 32 -ny 32 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002.ftt 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 32 -ny 32 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0002.res 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0002.fft 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 32 -ny 32 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 32 -ny 32 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 128 -ny 128 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 128 -ny 128 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 128 -ny 128 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 128 -ny 128 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 128 -ny 128 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 128 -ny 128 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0002.res 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0002.fft 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 128 -ny 128 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 32 -ny 32 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 128 -ny 128 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 128.0 -ny 128.0 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 128 -ny 128 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -h 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 128 -ny 128 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0002.res 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0002.fft 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 256 -ny 256 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 512 -ny 512 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002 
+I686LINUX/mrcFFTResampling -h 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002.fft 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002res -nx 128 -ny 128 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002.res 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002.res 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002.fft 
+I686LINUX/mrcFFTResampling -h 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/1002.res 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0002.res 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 128 -ny 128 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0002.res 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/1002.res 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002.res 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/1002.res 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002.res 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/1002.res 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002.fft 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcImagePrint -h 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcImagePrint -i test/0002.res -o test/0002.ps 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 128 -ny 128 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002.res 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002.res 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002.fft 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002.fft 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/1002.fft 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/1002.fft 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/1002.res 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 32 -ny 32 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002.res 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/1002.res 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 546 -ny 546 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/1002.res 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/1002.res 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 128 -ny 128w 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/1002.res 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 128 -ny 128 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/1002.res 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 32 -ny 32 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/1002.res 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 546 -ny 546 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 256 -ny 256 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/1002.res 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 256 -ny 256 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/1002.res 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 128 -ny 128 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 128 -ny 128 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/1002.res 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 128 -ny 128 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 128 -ny 128 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/1002.res 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 128 -ny 128 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/1002.res 
+I686LINUX/mrcFFTResampling -i test/0002.fft test/0003.res -nx 128 -ny 128 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0003.res -nx 128 -ny 128 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/1003.res 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 128 -ny 128 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/1002.res 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0002.mrc 
+I686LINUX/mrcFFTResampling -h 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0002.fft 
+I686LINUX/mrcFFTResampling -i test/0002.mrc -o test/0002.res -nx 128 -ny 128 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 128 -ny 128 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002.fft 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002.fft 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002.res 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002.mrc 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002.res.mrc 
+I686LINUX/mrcFFTResampling -i test/0002.fft -o test/0002.res -nx 128.0 -ny 128.0 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0002.res.mrc 
+X86LINUX64/mrcFFTResampling -html 
+CELLLINUX64/mrcFFTResampling -html 
+I686LINUX/mrcFFTResampling -html 
+X86LINUX64/mrcFFTResampling -html 
+I686LINUX/mrcFFTResampling -html 

@@ -1,0 +1,10 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Optional","1","1","Out","outFile","stdout"
+"-n","-n[Molecule]","NumberOfMolecule","Optional","1","1","nMolecule","Real","1.0"
+"-M","-M[olecularWeight]","MolecularWeight","Optional","1","1","MolecularWeight","Real","1.0"
+"-d","-d[ensty]","Density","Optional","1","1","Density","Real","1.35"
+"-D","-D[elta]","Delta[A]","Optional","1","1","Delta","Real","5.0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

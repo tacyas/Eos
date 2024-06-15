@@ -1,0 +1,4 @@
+OBJECTNAME = mrcRefCorrelation
+EXTRA_LIB  =
+EXTRA_CCOPTS =
+EXTRA_INC =

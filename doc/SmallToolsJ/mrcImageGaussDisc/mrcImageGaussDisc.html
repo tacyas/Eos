@@ -1,0 +1,426 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageGaussDisc</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageGaussDisc<br></h2></b></font>
+	<h4></h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>オプション</th>
+				<th>必須項目/選択項目</th>
+				<th>NULL</th>
+				<th>デフォルト</th>
+			</tr>
+			<tr>
+				<td>-o</td>
+				<td>必須</td>
+				<td>出力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-sigmax</td>
+				<td>選択</td>
+				<td>物体のｘ軸の幅を設定</td>
+				<td>10</td>
+			</tr>
+			<tr>
+				<td>-sigmay</td>
+				<td>選択</td>
+				<td>物体のｙ軸の幅を設定</td>
+				<td>10</td>
+			</tr>
+			<tr>
+				<td>-sigma_range</td>
+				<td>選択</td>
+				<td>画像データの大きさを設定</td>
+				<td>3</td>
+			</tr>
+			<tr>
+				<td>-weight</td>
+				<td>選択</td>
+				<td>物体の高さを設定</td>
+				<td>10</td>
+			</tr>
+			<tr>
+				<td>-size</td>
+				<td>選択</td>
+				<td>ピクセルのサイズを設定</td>
+				<td>5</td>
+			</tr>
+			<tr>
+				<td>-W</td>
+				<td>選択</td>
+				<td>画像データの幅を設定</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-H</td>
+				<td>選択</td>
+				<td>画像データの高さを設定</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-cx</td>
+				<td>選択</td>
+				<td>物体の中心のｘ座標を設定</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-cy</td>
+				<td>選択</td>
+				<td>物体の中心のｙ座標を設定</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-a</td>
+				<td>選択</td>
+				<td></td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-m</td>
+				<td>選択</td>
+				<td>モード</td>
+				<td>2</td>
+			</tr>
+			<tr>
+				<td>-h</td>
+				<td>選択</td>
+				<td>ヘルプを表示</td>
+				<td>　</td>
+			</tr>
+		</table>
+		
+	<div>ファイルサイズ＝(sigma_range*sigmax*2) x (sigma_range*sigmay*2)</div>
+
+<!-- モード詳細 -->
+
+	<br>
+	<br>
+	<caption><b>モードの詳細</b></caption>
+	<table border="1">
+	<div align="left">
+		<tr>
+			<th>モード</th>
+			<th>説明</th>
+		</tr>
+		<tr>
+			<td>0</td>
+			<td>char（１バイト）</td>
+		</tr>
+		<tr>
+			<td>2</td>
+			<td>float（４バイト）</td>
+		</tr>
+	</div>
+	</table>
+
+	<h4>******実行例******</h4>
+
+	<br>
+	<br>
+	<caption><font color="blue">------必須項目のオプションのみの場合------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="outdata.png" border="0" alt="outdata.png(982 byte)" width="13" height="13"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">1.523e-07<br>
+				10<br>
+				0.743568<br>
+				1.77904<br>
+				0.136849<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-sigmax,-sigmay------</font></caption><br>
+	<div>-sigmax=30,-sigmay=30で実行</div>
+	<table>
+		<tr>
+			<td><img src="outdata-sigmax30y30.png" border="0" alt="outdata-sigmax30y30.png(1275 byte)" width="37" height="37"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">1.523e-07<br>
+				10<br>
+				0.826111<br>
+				1.85693<br>
+				0.0501874<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<div>-sigmax=50,-sigmay=50で実行</div>
+	<table>
+		<tr>
+			<td><img src="outdata-sigmax50y50.png" border="0" alt="outdata-sigmax50y50.png(1751 byte)" width="61" height="61"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">1.523e-07<br>
+				10<br>
+				0.84426<br>
+				1.87314<br>
+				0.0307072<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-sigma_range------</font></caption><br>
+	<div>-sigmax=30,-sigmay=30で実行<br>
+	-sigma_range=3（デフォルト）の場合</div>
+	<table>
+		<tr>
+			<td><img src="outdata-sigmax30y30.png" border="0" alt="outdata-sigmax30y30.png(1275 byte)" width="37" height="37"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">1.523e-07<br>
+				10<br>
+				0.826111<br>
+				1.85693<br>
+				0.0501874<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<div>-sigma_range=5の場合</div>
+	<table>
+		<tr>
+			<td><img src="outdata-sigmax30y30-sigma_range5.png" border="0" alt="outdata-sigmax30y30-sigma_range5.png(1295 byte)" width="61" height="61"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">1.92875e-21<br>
+				10<br>
+				0.303943<br>
+				1.19471<br>
+				0.0195854<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>物体の大きさは変わってないが、画像の大きさが変わっているのがわかる</div>
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-weight------</font></caption><br>
+	<div>-sigmax=30,-sigmay=30で実行<br>
+	-weight=10（デフォルト）の場合</div>
+	<table>
+		<tr>
+			<td><img src="outdata-sigmax30y30.png" border="0" alt="outdata-sigmax30y30.png(1275 byte)" width="37" height="37"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">1.523e-07<br>
+				10<br>
+				0.826111<br>
+				1.85693<br>
+				0.0501874<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<div>-weight=30の場合</div>
+	<table>
+		<tr>
+			<td><img src="outdata-sigmax30y30-weight30.png" border="0" alt="outdata-sigmax30y30-weight30.png(1275 byte)" width="37" height="37"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">4.56899e-07<br>
+				30<br>
+				2.47833<br>
+				5.5708<br>
+				0.150562<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-size------</font></caption><br>
+	<div>-size=1で実行</div>
+	<table>
+		<tr>
+			<td><img src="outdata-size1.png" border="0" alt="outdata-size1.png(1751 byte)" width="61" height="61"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">1.523e-07<br>
+				10<br>
+				0.84426<br>
+				1.87314<br>
+				0.0307072<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-W,-H------</font></caption><br>
+	<div>-W=100,-H=100で実行</div>
+	<table>
+		<tr>
+			<td><img src="outdata-W100H100.png" border="0" alt="outdata-W100H100.png(984 byte)" width="20" height="20"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">2.52616e-19<br>
+				8.82497<br>
+				0.314159<br>
+				1.2133<br>
+				0.0606651<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>※ピクセルサイズがデフォルト（５）となっているので、ｘ軸およびｙ軸の幅は20となる</div>
+
+	<div>-size=1に設定し、-W=100,-H=100で実行</div>
+	<table>
+		<tr>
+			<td><img src="outdata-W100-H100-size1.png" border="0" alt="outdata-W100-H100-size1.png(1767 byte)" width="100" height="100"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">5.21673e-21<br>
+				9.95012<br>
+				0.314159<br>
+				1.2133<br>
+				0.012133<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-cx,-cy------</font></caption><br>
+	<div>デフォルトは-cy=0,-cy=0なので、物体は中央に表示される<br>
+	-cy=10,-cy=10で実行</div>
+	<table>
+		<tr>
+			<td><img src="outdata-size1cx10cy10.png" border="0" alt="outdata-size1cx10cy10.png(1743 byte)" width="61" height="61"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">1.26642e-13<br>
+				10<br>
+				0.841155<br>
+				1.87449<br>
+				0.0307294<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<div>-cy=-10,-cy=-10で実行</div>
+	<table>
+		<tr>
+			<td><img src="outdata-size1cx-10cy-10.png" border="0" alt="outdata-size1cx-10cy-10.png(1711 byte)" width="61" height="61"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">1.26642e-13<br>
+				10<br>
+				0.841155<br>
+				1.87449<br>
+				0.0307294<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-m------</font></caption><br>
+	<div>-size=1で実行</div>
+	<div>モード：０</div>
+	<table>
+		<tr>
+			<td><img src="outdata-size1m0.png" border="0" alt="outdata-size1m0.png(1154 byte)" width="61" height="61"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				10<br>
+				0.67025<br>
+				1.74607<br>
+				0.028624<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<div>モード：２</div>
+	<table>
+		<tr>
+			<td><img src="outdata-size1.png" border="0" alt="outdata-size1.png(1751 byte)" width="61" height="61"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">1.523e-07<br>
+				10<br>
+				0.84426<br>
+				1.87314<br>
+				0.0307072<br></p>
+			</td>
+		</tr>
+	</table>
+	
+</body>
+</html>

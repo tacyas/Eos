@@ -1,0 +1,9 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input:","Essential","1","1","In","inFile::mrcImage","NULL"
+"-o","-o[utput]","Output:","Optional","1","1","Out","outFile::ASCII","stdout"
+"-dx","-d[elta]x","Minimum width x component","Optional","1","1","dX","Real","1"
+"-dy","-d[elta]y","Minimum width y component","Optional","1","1","dY","Real","0"
+"-dz","-d[elta]z","Minimum width z component","Optional","1","1","dZ","Real","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

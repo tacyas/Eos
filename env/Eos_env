@@ -1,0 +1,482 @@
+#!/usr/local/bin/bash
+
+###### Users may need to modify the below line.
+# Set Eos Home Directory
+if [ -z "$EOS_HOME0" ] ;  then
+		export EOS_HOME=$HOME/Eos
+		export EOS_MIRROR_SITE=$HOME/EosMirror
+	else 
+		export EOS_HOME=$EOS_HOME0
+		export EOS_MIRROR_SITE=$EOS_MIRROR_SITE
+	fi
+
+#
+# Eos
+if [ -z $EOS_GITUSER0 ] ; then
+	export EOS_GITUSER=
+else 
+	export EOS_GITUSER=$EOS_GITUSER0
+fi
+
+#if you want to use the binaries complied by icc, you need set USE_ICC 
+# In most cases, faster but sometimes comannds  cannnot work well.
+#export USE_ICC="ICC"
+
+###### General users need not the below lines.
+###### Typeically, automatically.
+
+###### HOSTYPE #####
+# For Intel
+P4=`uname -p  | grep "Intel"`
+
+# For ManyCPU/PHI
+MIC=`uname -p | grep "k1om"`
+if [ ! -z "$MIC" ] ; then
+	HOSTTYPE=`uname -m | grep "k1om"`
+fi
+
+
+if [ "$HOSTTYPE" = "i486" ] ; then
+	if [ -z "$P4" ] ; then
+		P4=`egrep 'Intel\(R\)' /proc/cpuinfo | awk '{aaa=4;print $aaa;exit}'`
+	fi
+	GCCVER=`gcc -v 2>&1 | egrep '^Target' | awk '{aaa=2;print $aaa;exit}' | sed 's/-[a-zA-Z]\+//g'`
+	if [ "$GCCVER" == "i486" ] ; then
+		export HOSTTYPE="i386"
+	fi
+fi
+
+CELL=`uname -p   | grep "Cell"`
+CYGWIN=`uname -s | grep "CYGWIN"`
+LINUX=`uname -s  | grep "Linux"`
+MAC=`uname -s    | grep "Darwin"`
+
+MACHINE=`uname -m`
+if [ -z "$HOSTTYPE" ]; then
+	HOSTTYPE=$MACHINE
+fi
+
+# Set Eos host type
+case $HOSTTYPE in
+	"alpha")
+		if [ $OSTYPE = "Linux" ] ; then
+			case $HOSTNAME in
+				jerico)
+					export EOS_HOST=alphaLinux
+					export EOS_HOSTDIR=ALPHALINUX
+					;;
+				*) 
+					export EOS_HOST=alphaLinux5
+					export EOS_HOSTDIR=ALPHALINUX5
+					;;
+			esac
+		else
+			if [ $OSTYPE = "OSF1" ] ; then
+				export EOS_HOST=alphaOSF1
+				export EOS_HOSTDIR=ALPHAOSF1
+			fi	
+		fi
+		;;
+	"hp9000s700")
+		export EOS_HOST=hpux
+		export EOS_HOSTDIR=HP
+		;;
+	"mips")
+		export EOS_HOST=sgi
+		export EOS_HOSTDIR=SGI
+		;;
+	"i386")
+		#echo $P4
+		if [ -z "$P4" ] ; then
+			if [ ! -z "$MAC" ] ; then 
+				export EOS_HOST=i386Mac
+				export EOS_HOSTDIR=I386MAC
+			elif [ ! -z "$LINUX" ] ;  then
+				export EOS_HOST=i386Linux
+				export EOS_HOSTDIR=I386LINUX
+			fi
+		else
+			export EOS_HOSTDIR=I686LINUX
+			export EOS_HOST=i686Linux
+		fi
+		;;
+	"i686")
+		if [ -z "$P4" ] ; then
+			if [ -z "$CYGWIN" ]  ; then
+				export EOS_HOST=i386Linux
+				export EOS_HOSTDIR=I386LINUX
+			else
+				export EOS_HOST=i386Cygwin
+				export EOS_HOSTDIR=I386CYGWIN
+			fi
+		else
+			export EOS_HOSTDIR=I686LINUX
+			export EOS_HOST=i686Linux
+		fi
+		;;
+	"i586")
+		if [ -z "$P4" ] ; then
+			export EOS_HOST=i386Linux
+			export EOS_HOSTDIR=I386LINUX
+		else
+			export EOS_HOSTDIR=I686LINUX
+			export EOS_HOST=i686Linux
+		fi
+		;;
+	"i486")
+		if [ -z "$P4" ] ; then
+			export EOS_HOST=i386Linux
+			export EOS_HOSTDIR=I386LINUX
+		else
+			export EOS_HOSTDIR=I686LINUX
+			export EOS_HOST=i686Linux
+		fi
+		;;
+	"x86_64")
+		#echo $P4
+		if [ -z "$P4" ] ; then
+			if [ ! -z "$MAC" ] ;  then 
+				major=`sw_vers | awk '/ProductVersion/ { split($2, a, "."); print a[1] }'`
+				minor=`sw_vers | awk '/ProductVersion/ { split($2, a, "."); print a[2] }'`
+				#echo $major,$minor
+				if [ $major -eq 10 -a $minor -lt 9 ] ; then
+					export EOS_HOST=x86Mac64_8
+					export EOS_HOSTDIR=X86MAC64_8
+				else
+					export EOS_HOST=x86Mac64
+					export EOS_HOSTDIR=X86MAC64
+				fi
+			elif [ ! -z "$LINUX" ] ; then
+				export EOS_HOST=x86Linux64
+				export EOS_HOSTDIR=X86LINUX64
+			fi
+		else
+			export EOS_HOST=x86Linux64
+			export EOS_HOSTDIR=X86LINUX64
+		fi
+		export CUDA_LIB_64=64
+		;;
+	"arm64")
+		#echo $P4
+		if [ -z "$P4" ] ; then
+			if [ ! -z "$MAC" ] ;  then 
+				major=`sw_vers | awk '/ProductVersion/ { split($2, a, "."); print a[1] }'`
+				minor=`sw_vers | awk '/ProductVersion/ { split($2, a, "."); print a[2] }'`
+				#echo $major,$minor
+				if [ $major -eq 10 -a $minor -lt 9 ] ; then
+					export EOS_HOST=x86Mac64_8
+					export EOS_HOSTDIR=X86MAC64_8
+				else
+					export EOS_HOST=arm64Mac64
+					export EOS_HOSTDIR=ARM64MAC64
+				fi
+			elif [ ! -z "$LINUX" ] ; then
+				export EOS_HOST=x86Linux64
+				export EOS_HOSTDIR=X86LINUX64
+			fi
+		else
+			export EOS_HOST=x86Linux64
+			export EOS_HOSTDIR=X86LINUX64
+		fi
+		export CUDA_LIB_64=64
+		;;
+	"k1om")
+		export EOS_HOST=k1om
+		export EOS_HOSTDIR=K1OM
+		;;
+	"sparc")
+		export EOS_HOST=sparc
+		export EOS_HOSTDIR=SPARC
+		;;
+	"powerpc")
+		if [ -z "$CELL" ] ; then
+			if [ -z "$MAC" ] ; then
+				export EOS_HOST=ppc64Linux
+				export EOS_HOSTDIR=PPC64LINUX
+			else 
+				export EOS_HOST=ppcMac
+				export EOS_HOSTDIR=PPCMAC
+			fi
+		else
+			export EOS_HOST=cellLinux64
+			export EOS_HOSTDIR=CELLLINUX64
+		fi
+		;;
+esac
+
+
+### Set Display2 Home
+export DISPLAY2_HOME=$EOS_HOME/bin/wish
+
+# Set PATH
+EOS_HOME_BIN=$EOS_HOME/bin
+EOS_HOME_SBIN=$EOS_HOME/sbin
+EOS_HOSTDIR_BIN=$EOS_HOME/util/$EOS_HOSTDIR/bin
+CK_EOS_HOME_BIN=$(echo $PATH | grep $EOS_HOME_BIN)
+CK_EOS_HOME_SBIN=$(echo $PATH | grep $EOS_HOME_SBIN)
+CK_EOS_HOSTDIR_BIN=$(echo $PATH | grep $EOS_HOSTDIR_BIN)
+if [ -z "$CK_EOS_HOSTDIR_BIN" -a -d $EOS_HOSTDIR_BIN ] ; then
+	export PATH=$EOS_HOSTDIR_BIN:$PATH
+fi
+if [ -z "$CK_EOS_HOME_SBIN" -a -d $EOS_HOME_SBIN ] ; then
+	export PATH=$EOS_HOME_SBIN:$PATH
+fi
+if [ -z "$CK_EOS_HOME_BIN" -a -d $EOS_HOME_BIN ] ; then
+	export PATH=$EOS_HOME_BIN:$PATH
+fi
+
+#CVS
+export EOS_CVSROOT=:pserver:tacyas@Eos.yasunaga-lab.bse.kyutech.ac.jp:/CVS_DB
+export EOS_SOURCEFORGE=cvs.sourceforge.jp:/cvsroot/eos
+
+# PVM
+export PVM_ROOT=$EOS_HOME/util/srcAny/pvm3
+export XPVM_ROOT=$EOS_HOME/util/srcAny/pvm3/xpvm
+export PVM_RSH=/usr/bin/ssh
+if [ -d $PVM_ROOT ] ; then
+	if [ -x $PVM_ROOT/lib/pvmgetarch ] ; then
+		export PVM_ARCH=`$PVM_ROOT/lib/pvmgetarch`
+	fi
+fi
+export PVM_PATH=$PATH
+if [ -d $PVM_ROOT ] ; then
+	export PVM_MAN=$PVM_ROOT/man
+fi
+export MANPATH=$MANPATH:$PVM_MAN
+export PVM_WD=/tmp
+PVM_ROOT_LIB=$PVM_ROOT/lib
+CK_PVM_ROOT_LIB=$(echo $PATH | grep $PVM_ROOT_LIB)
+if [ -z "$CK_PVM_ROOT_LIB" -a -d $PVM_ROOT_LIB ] ; then
+	export PATH=$PATH:$PVM_ROOT_LIB
+fi
+PVM_ROOT_BIN=$PVM_ROOT/bin
+CK_PVM_ROOT_BIN=$(echo $PATH | grep $PVM_ROOT_BIN)
+if [ -z "$CK_PVM_ROOT_BIN" -a -d $PVM_ROOT_BIN ] ; then
+	export PATH=$PATH:$PVM_ROOT_BIN
+fi
+
+##### LD_LIBRARY_PATH ######
+### Intel Complier
+if [ -d /opt/intel/compiler70/ia32/lib ] ; then
+    #echo "intel"
+	if [ ! -z "$LD_LIBRARY_PATH" ] ; then
+		export LD_LIBRARY_PATH=/opt/intel/compiler70/ia32/lib:$LD_LIBRARY_PATH
+	else
+		export LD_LIBRARY_PATH=/opt/intel/compiler70/ia32/lib
+	fi
+fi
+### Eos
+if [ -d $EOS_HOME/util/$EOS_HOSTDIR/lib ] ; then
+    #echo "utildir"
+	if [ ! -z "$LD_LIBRARY_PATH" ] ; then
+		export LD_LIBRARY_PATH=$EOS_HOME/util/$EOS_HOSTDIR/lib:$LD_LIBRARY_PATH
+	else
+		export LD_LIBRARY_PATH=$EOS_HOME/util/$EOS_HOSTDIR/lib
+	fi
+fi
+### Vtk
+if [ -d $EOS_HOME/util/$EOS_HOSTDIR/lib/vtk ] ; then
+    #echo "vtkdir"
+	if [ ! -z "$LD_LIBRARY_PATH" ] ; then
+		export LD_LIBRARY_PATH=$EOS_HOME/util/$EOS_HOSTDIR/lib/vtk:$LD_LIBRARY_PATH
+	else
+		export LD_LIBRARY_PATH=$EOS_HOME/util/$EOS_HOSTDIR/lib/vtk
+	fi
+fi
+
+### Eos util
+if [ -d $EOS_HOME/hostdepend/$EOS_HOSTDIR/util/$EOS_HOSTDIR/lib ] ; then
+    #echo "hostdependutil"
+	if [ ! -z "$LD_LIBRARY_PATH" ] ; then
+		export LD_LIBRARY_PATH=$EOS_HOME/hostdepend/$EOS_HOSTDIR/util/$EOS_HOSTDIR/lib:$LD_LIBRARY_PATH
+	else
+		export LD_LIBRARY_PATH=$EOS_HOME/hostdepend/$EOS_HOSTDIR/util/$EOS_HOSTDIR/lib
+	fi
+fi
+### Vtk
+if [ -d $EOS_HOME/hostdepend/$EOS_HOSTDIR/util/$EOS_HOSTDIR/lib/vtk ] ; then
+    #echo "vtk"
+	if [ ! -z "$LD_LIBRARY_PATH" ] ; then
+		export LD_LIBRARY_PATH=$EOS_HOME/hostdepend/$EOS_HOSTDIR/util/$EOS_HOSTDIR/lib/vtk:$LD_LIBRARY_PATH
+	else
+		export LD_LIBRARY_PATH=$EOS_HOME/hostdepend/$EOS_HOSTDIR/util/$EOS_HOSTDIR/lib/vtk
+	fi
+fi
+#echo ".Eos_env(1):$LD_LIBRARY_PATH"
+
+##### CUDA #####
+if [ ! -z "$CUDA_ROOT" ] ; then
+	if [ ! -d $CUDA_ROOT -a ! -L $CUDA_ROOT ]; then
+		export CUDA_ROOT= 
+	fi
+fi
+
+if [ ! -z "$CUDA_ROOT" ] ; then
+    OIFS=$IFS
+    IFS=": "
+	#echo "LD"
+	for k in "$LD_LIBRARY_PATH" ; do
+		v=`echo $k | egrep $CUDA_ROOT`
+		#echo $v
+		if [ ! -z "$v" ] ; then
+			#echo $v
+			if [ -e "$v" ] ; then
+				if [ -z "$CUDA_LD_LIBRARY_PATH" ] ; then
+					CUDA_LD_LIBRARY_PATH=$v
+				else
+					CUDA_LD_LIBRARY_PATH=$v:$CUDA_LD_LIBRARY_PATH
+				fi
+				#echo $v
+			fi
+		fi
+	done
+	#echo "PATH"
+	for k in "$PATH" ; do
+		v=`echo $k | egrep $CUDA_ROOT`
+		#echo $v
+		if [ ! -z "$v" ] ; then
+			if [ -d "$v" -o -L "$v" ] ; then
+				if [ -z "$CUDA_PATH" ] ; then
+					CUDA_PATH=$v
+				else
+					CUDA_PATH=$v:$CUDA_PATH
+				fi
+			fi
+		fi
+	done
+    IFS=$OIFS
+else
+	CUDA_ROOT=$EOS_HOME/util/$EOS_HOSTDIR/cuda
+	if [ -e "$CUDA_ROOT" ] ; then 
+		export CUDA_ROOT=$CUDA_ROOT
+		export CUDA_PATH=$CUDA_ROOT/cudaprof/bin:$CUDA_ROOT/bin:$PATH
+		export CUDA_LD_LIBRARY_PATH=$CUDA_ROOT/lib$CUDA_LIB_64:$CUDA_ROOT/lib
+	else 
+		CUDA_ROOT=/usr/local/cuda
+		if [ -d "$CUDA_ROOT" -o -L  "$CUDA_ROOT" ] ; then
+			export CUDA_ROOT=$CUDA_ROOT
+			export CUDA_PATH=$CUDA_ROOT/cudaprof/bin:$CUDA_ROOT/bin
+			export CUDA_LD_LIBRARY_PATH=$CUDA_ROOT/lib$CUDA_LIB_64:$CUDA_ROOT/lib
+		else 
+			export CUDA_ROOT=
+			export CUDA_PATH=
+			export CUDA_LD_LIBRARY_PATH=
+		fi
+	fi
+fi
+
+if [ -z "$CUDA_ROOT" ] ; then
+	CUDA_OPTS="-UCUDA"
+	export CUDA_OPTS
+elif [ -e "$CUDA_ROOT" ] ; then
+	CUDA_OPTS="-DCUDA"
+	export PATH=$CUDA_PATH:$PATH
+	export LD_LIBRARY_PATH=$CUDA_LD_LIBRARY_PATH:$LD_LIBRARY_PATH
+	export DYLD_LIBRARY_PATH=$CUDA_LD_LIBRARY_PATH:$DYLD_LIBRARY_PATH
+else
+	#echo "NO Directory for CUDA. No need for cuda. "
+	CUDA_OPTS="-UCUDA"
+fi
+export CUDA_OPTS
+
+##### ATI
+#
+# ATI Stream SDK
+#
+if [ -z "$ATISTREAMROOT" ] ; then
+	ATISTREAMROOT=$EOS_HOME/util/$EOS_HOSTDIR/ati-stream-sdk/
+	if [ -d "$ATISTREAMROOT" ] ; then
+		export ATISTREAMROOT
+		source $ATISTREAMROOT/.bash_profile
+	fi
+else
+#    OIFS=$IFS
+#    IFS=":"
+#    read k v < <(echo "$LD_LIBRARY_PATH" | egrep "$ATISTREAMSDKROOT" )
+    k=`echo "$LD_LIBRARY_PATH" | egrep "$ATISTREAMSDKROOT"` 
+#    IFS=$OIFS
+#	echo "v=$v"
+	if [ -z "$k" ] ; then
+		if [ -d "$ATISTREAMROOT" ] ; then
+			export ATISTREAMROOT
+			source $ATISTREAMROOT/.bash_profile
+		fi
+	fi
+fi
+
+#### LIBGFORTRAN
+#
+# libgfortran
+#
+if [ -z "$LD_LIBGFORTRAN" ] ; then
+	LIBGFORTRANSETUPDIR=$HOME/.gfortran/x86_64/suse
+	LIBGFORTRANSETUPFILE=( $LIBGFORTRANSETUPDIR/setlibfortranpath.sh )
+	if [ -d "$LIBGFORTRANSETUPDIR" -a -f "$LIBGFORTRANSETUPFILE" ] ; then
+		export LD_LIBGFORTRANS=( $( $LIBGFORTRANSETUPFILE ) )
+		for LD_LIBGFORTRAN in ${LD_LIBGFORTRANS[@]}
+		do
+			if [ ! -z "$LD_LIBRARY_PATH" ] ; then
+				export LD_LIBRARY_PATH=$LD_LIBGFORTRAN:$LD_LIBRARY_PATH
+			else
+				export LD_LIBRARY_PATH=$LD_LIBGFORTRAN
+			fi
+		done
+	fi
+else
+#    OIFS=$IFS
+#    IFS=":"
+#    read k v < <(echo "$LD_LIBRARY_PATH" | egrep "$LD_LIBGFORTRAN" )
+    k=`echo "$LD_LIBRARY_PATH" | egrep "$LD_LIBGFORTRAN`
+#    IFS=$OIFS
+#	echo "v=$v"
+	if [ -z "$k" ] ; then
+		if [ ! -z "$LD_LIBRARY_PATH" ] ; then
+			export LD_LIBRARY_PATH=$LD_LIBGFORTRAN:$LD_LIBRARY_PATH
+		else
+			export LD_LIBRARY_PATH=$LD_LIBGFORTRAN
+		fi
+	fi
+fi
+
+
+if [ -f $EOS_HOME/.acmlg/.bashrc ] ; then
+	source $EOS_HOME/.acmlg/.bashrc
+fi
+
+#ICC
+#ICC_ROOT=/opt/intel/Compiler/11.1/072
+ICC_ROOT=/opt/intel/
+if [ -d $ICC_ROOT ] && [ -f $ICC_ROOT/bin/icc ] && [ $USE_ICC ] ; then
+	DIRNAMES=$ICC_ROOT/bin
+	#echo $HOSTTYPE
+	case $HOSTTYPE in 
+		"x86_64") 
+			ICCVARS_ARG1=intel64
+			;;
+		"k1om") 
+			ICCVARS_ARG1=mic
+			;;
+		*) 
+			ICCVARS_ARG1=ia32
+			;;
+	esac
+	#echo $ICCVARS_ARG1
+	ICCVARS=$ICC_ROOT/bin/iccvars.sh
+	if [ -d $ICC_ROOT -a -f $ICCVARS ] ; then
+		source $ICCVARS $ICCVARS_ARG1
+	fi
+	export FLAG_ICC="icc"
+else
+	export FLAG_ICC="" 
+fi
+
+# For Tcl/Tk Library (Display2/ctfDisplay etc.)
+#export TCL_LIBRARY=$EOS_HOME/hostdepend/$EOS_HOSTDIR/util/$EOS_HOSTDIR/lib/tcl8.4:$EOS_HOME/hostdepend/$EOS_HOSTDIR/util/$EOS_HOSTDIR/lib/tcl8.5:$EOS_HOME/hostdepend/$EOS_HOSTDIR/util/$EOS_HOSTDIR/lib/tcl8.6
+export TCL_LIBRARY=$EOS_HOME/hostdepend/$EOS_HOSTDIR/util/$EOS_HOSTDIR/lib/tcl8.6
+#export TCLLIBPATH=$EOS_HOME/hostdepend/$EOS_HOSTDIR/util/$EOS_HOSTDIR/lib/tcl8.4:$EOS_HOME/hostdepend/$EOS_HOSTDIR/util/$EOS_HOSTDIR/lib/tcl8.5:$EOS_HOME/hostdepend/$EOS_HOSTDIR/util/$EOS_HOSTDIR/lib/tcl8.6
+export TCLLIBPATH=$EOS_HOME/hostdepend/$EOS_HOSTDIR/util/$EOS_HOSTDIR/lib/tcl8.6
+
+#### DLL
+# For Dynamic Library
+export DYLD_FALLBACK_LIBRARY_PATH=$EOS_HOME/hostdepend/$EOS_HOSTDIR/util/$EOS_HOSTDIR/lib:$EOS_HOME/hostdepend/$EOS_HOSTDIR/util/$EOS_HOSTDIR/lib/vtk:$DYLD_FALLBACK_LIBRARY_PATH:/usr/lib 
+#export LD_LIBRARY_PATH=/opt/intel/compiler70/ia32/lib:$EOS_HOME/hostdepend/$EOS_HOSTDIR/util/$EOS_HOSTDIR/lib:$EOS_HOME/hostdepend/$EOS_HOSTDIR/util/$EOS_HOSTDIR/lib/vtk:$EOS_HOME/hostdepend/$EOS_HOSTDIR/util/$EOS_HOSTDIR/cuda/lib64:/home/people/Eos/Eos/hostdepend/X86LINUX64/util/X86LINUX64/lib/cuda:$LD_LIBRARY_PATH:/usr/lib

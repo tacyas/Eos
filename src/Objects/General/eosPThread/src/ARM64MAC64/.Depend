@@ -1,0 +1,5 @@
+ARM64MAC64/eosPThread.o:eosPThread.o
+ARM64MAC64/eosPThreadCreate.o:eosPThreadCreate.o
+ARM64MAC64/eosPThreadInit.o:eosPThreadInit.o
+ARM64MAC64/eosPThreadJoin.o:eosPThreadJoin.o
+ARM64MAC64/eosPThreadMutex.o:eosPThreadMutex.o

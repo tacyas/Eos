@@ -1,0 +1,4 @@
+OBJECTNAME = mrcImage2pdb
+EXTRA_LIB  =
+EXTRA_CCOPTS =
+EXTRA_INC =

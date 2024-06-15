@@ -1,0 +1,60 @@
+#!../hf2000LenzCurrent
+puts "start"
+if [file exists hf2000LenzCurrent.wish ] {
+    lappend auto_path [ pwd ] 
+    auto_mkindex [ pwd ] *.wish
+}
+
+if [info exists env(EOS_HOME)] {
+    set path $env(EOS_HOME)/bin/wish/hf2000LenzCurrent
+} else {
+    set path [ pwd ] 
+}
+
+if [info exists env(EOS_HOME)] {
+    set libpath $env(EOS_HOME)/lib
+} else {
+    set libpath {}
+}
+
+if ![file exists $path/hf2000LenzCurrent.wish] {
+    tk_dialog .d "Error:" "Wrong Directory!" error 0 OK
+    exit 0
+}
+
+lappend auto_path $libpath
+lappend auto_path $path
+
+auto_mkindex $path    *.wish  
+auto_mkindex $libpath *.wish
+
+
+if { $tcl_version >= 8.0 } { 
+    catch { namespace import blt::* }
+} else {
+    catch { import add blt }
+}
+
+bind all <Control-KeyPress-c> { exit 0 }
+bind all <KeyPress-q> { exit 0 }
+focus .
+
+if { [ info commands "namespace" ] == "namespace" } {
+    if { $tcl_version >= 8.0 } {
+        catch { namespace import -force blt::tile::* }
+    } else {
+        catch { import add blt::tile }
+    }
+} else {
+    foreach cmd { button checkbutton radiobutton frame label scrollbar toplevel menubutton listbox } {
+        if { [info command tile${cmd}] == "tile${cmd}" } {
+            rename ${cmd} ""
+            rename tile${cmd} ${cmd}
+        }
+    }
+}
+
+## Main Program
+
+puts "hf2000LenzCurrentInit"
+hf2000LenzCurrentInit

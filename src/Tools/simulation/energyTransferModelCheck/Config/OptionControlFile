@@ -1,0 +1,44 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+# Exclusion by PDB 
+"-p","-p[db]","Excluded Area by PDB: Input[PDB]","Optional","1","1","PDB","inFile","NULL"
+"-P","-P[dbs]","Excluded Area by PDB: Input[PDBFileList]","Optional","1","1","PDBs","inFileList","NULL"
+"-PW","-P[DBs]W[ithInfo]","PDBFileList With Info: filename sigma[A]","Optional","0"
+"-sigma","-sigma","SigmaOfAtom for All: sigma [pixel]x delta[A/pixel]","Optional","1","1","sigma","Real","1.0"
+"-sigmaA","-sigmaA","SigmaOfAtom for All: sigma [A]","Optional","1","1","sigmaA","Real","1.0"
+# Exclusion by MRC
+"-mrc","-mrc","Excluded Area by mrc: Input[MRC]","Optional","1","1","MRC","inFile","NULL"
+"-MRC","-MRC","Excluded Area by MRC: Input[MRCFileList]","Optional","1","1","MRCs","inFileList","NULL"
+"-MRCW","-MRCW[ithInfo]","MRCFileList with Info: filename contour near[A]","Optional","0"
+"-C","-C[ontour]","ContourLevel for Exclusion: Density<ContourLevel -> 0","Optional","1","1","EContour","Real","10."
+"-Near","-Near","Near [pixel]: Exclusion Area: near[pixel] x delta [A/pixel]","Optional","1","1","ENear","Real","1."
+"-NearA","-NearA","Near [A]: Exclusion Area: near [A]","Optional","1","1","ENearA","Real","1."
+# Restriction by MRC 
+"-r","-r[estrict]","Restricted Area: Input[mrc]","Optional","1","1","Rest","inFile","NULL"
+"-R","-R[estrict]","Restricted Area: InputDataFileList[mrcs]","Optional","1","1","Rests","inFileList","NULL"
+"-contour","-contour","ContourLevel for Restriction","Optional","1","1","Contour","Real","10."
+"-near","-near","Near [pixel]: Restriction Area: near[pixel] x delta [A/pixel]","Optional","1","1","Near","Real","1."
+"-nearA","-nearA","Near [A]: Restriction Area: near[A] ","Optional","1","1","NearA","Real","1."
+"-RW","-R[estrictWithInfo]","WithInfo: filename contour near[A]","Optional","0"
+# Restrction by PDB 
+"-rP","-r[estrict]P","Restricted Area: InputDataFile[pdb]","Optional","1","1","RestP","inFile","NULL"
+"-RP","-R[estrict]P","Restricted Area: InputDataFileList[pdbs]: format: filename near[pixel]","Optional","1","1","RestsP","inFileList","NULL"
+"-sigmaP","-sigmaP","Sigma[pixel]: Restriction Area: sigma x delta [A]","Optional","1","1","SigmaP","Real","1."
+"-sigmaPA","-sigmaPA","Sigma[A]: Restriction Area: sigma [A]","Optional","1","1","SigmaPA","Real","1."
+"-nearP","-nearP","Near [pixel]: Restriction Area: near x delta [A]","Optional","1","1","NearP","Real","1."
+"-nearPA","-nearPA","Near [A]: Restriction Area: near [A]","Optional","1","1","NearPA","Real","1."
+"-RPW","-R[estrict]PW","WithInfo: filename near[A] sigma[A]","Optional","0"
+# Search space information
+"-delta","-delta","delta [A]","Optional","3","1","deltax","Real","5","2","deltay","Real","5","3","deltaz","Real","5"
+"-sdelta","-sdelta","starting delta [A]","Optional","3","1","sdeltax","Real","5","2","sdeltay","Real","5","3","sdeltaz","Real","5"
+"-start","-start","start [A]","Optional","3","1","startx","Real","5","2","starty","Real","5","3","startz","Real","5"
+"-end","-end","end [A]","Optional","3","1","endx","Real","5","2","endy","Real","5","3","endz","Real","5"
+# Iteration control
+"-maxIter","-maxIter","Max Iteration ","Optional","1","1","maxIter","Integer","1"
+"-startIter","-startIter","Start Iteration ","Optional","1","1","startIter","Integer","0"
+"-neglect","-neglect","neglect: probability for each term: not final probability","Optional","1","1","neglect","Real","1e-4"
+# General
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

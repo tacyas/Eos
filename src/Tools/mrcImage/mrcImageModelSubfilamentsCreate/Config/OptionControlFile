@@ -1,0 +1,16 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-nx","-nx","Real length = nx * lx","Optional","1","1","nx","Integer","71"
+"-ny","-ny","Real length = ny * ly","Optional","1","1","ny","Integer","71"
+"-nz","-nz","Real lenght = nz * lz","Optional","1","1","nz","Integer","100"
+"-lx","-lx","Pixel Size[Angstrom]","Optional","1","1","lx","Real","5.0"
+"-ly","-ly","Pixel Size[Angstrom]","Optional","1","1","ly","Real","5.0"
+"-lz","-lz","Pixel Size[Angstrom]","Optional","1","1","lz","Real","5.0"
+"-position","-position","subfilaments position from center [A]","Optional","1","1","position","Real","70"
+"-n","-n","n-helix","Optional","1","1","nHelix","Integer","3"
+"-dphi","-dphi","rotation angle [degree]","Optional","1","1","deltaPhi","Real","1.395348837"
+"-sphi","-sphi","start angle [degree]","Optional","1","1","startPhi","Real","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

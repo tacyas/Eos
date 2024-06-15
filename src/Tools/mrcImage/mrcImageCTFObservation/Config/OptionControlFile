@@ -1,0 +1,16 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input:2D","Essential","1","1","In","inFile::mrcImage","stdin"
+"-o","-o[utput]","Output:2D","Essential","1","1","Out","outFile::mrcImage","stdout"
+"-ctf","-ctf","Input:ctfInfo","Optional","1","1","CTF","inFile::ASCII","stdin"
+"-kV","-kV","AccVol[kV]","Optional","1","1","kV","Real","200"
+"-Cs","-Cs","Cs[mm]","Optional","1","1","Cs","Real","2.1"
+"-df","-df","Defocus [A]:under(+)","Optional","1","1","Defocus","Real","27000"
+"-A","-A","AmplitudeContrast/PhaseContrast","Optional","1","1","AoverP","Real","0.0"
+"-Ain","-Ain","IlluminationAperture[mrad]","Optional","1","1","Ain","Real","0.0"
+"-white","-white","WhiteNoise(N/S)","Optional","1","1","WhiteNoise","Real","1.0"
+"-SinWin","-SinWin","Windowing by sine function from Rmin[A] to Rmax[A]","Optional","2","1","SinWinRmin","Real","0.1","2","SinWinRmax","Real","1.0"
+"-ctfMode","-ctfMode","CTFMode","Optional","1","1","ctfMode","Integer","0"
+"-Astig","-Astig[matism]","With Atigmatism","Optional","3","1","dfMin","Real","0","2","dfMax","Real","0","1","asAxis","Real","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

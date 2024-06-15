@@ -1,0 +1,30 @@
+<HTML>
+<HEAD>
+<TITLE>pdbTwoProteinFit</TITLE>
+</HEAD>
+<BODY>
+<H1>pdbTwoProteinFit</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: pdbTwoProteinFit
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-i[nput]res[idue]   InResidue           (NULL      ).as(inFile              ) ] :Optional  :ResidueInformationOfInputData
+    [-i[nput]sel[ectResidue]SelectIn            (NULL      ).as(outFile             ) ] :Optional  :Output: Selected residue of in after fitting
+    [-r[ef]              Ref                 (NULL      ).as(inFile              ) ] :Essential :ReferenceDataFile
+    [-r[ef]res[idue]     RefResidue          (NULL      ).as(inFile              ) ] :Optional  :ResidueInfomationOfReferenceData
+    [-r[ef]sel[ectResidue]SelectRef           (NULL      ).as(outFile             ) ] :Optional  :Output: Selected residue of after fitting
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-o[utput]Matrix     Matrix              (stdout    ).as(outFile             ) ] :Optional  :OutputMatrix
+    [-o[utput]Param      Param               (stdout    ).as(outFile             ) ] :Optional  :OutputParam
+    [-o[utput]Dis[tance] outDis              (stdout    ).as(outFile             ) ] :Optional  :Output: PDB Distance as Temp
+    [-o[utput]Dis[tance]2outDis2             (stdout    ).as(outFile             ) ] :Optional  :Output: Distance List for Ca
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+>>>> Input and Reference File Format<<<<
+ResidueNumberToBeFitted
+...
+If |, all residules are sellected till the residue in the next line
+</PRE>
+</BODY>
+</HTML>

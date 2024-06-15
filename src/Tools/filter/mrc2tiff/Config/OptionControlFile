@@ -1,0 +1,18 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","inFile","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","outFile","outFile","NULL"
+"-H","-H[igh]","HighThreshold","Optional","1","1","High","Real","0"
+"-L","-L[ow]","LowThreshold","Optional","1","1","Low","Real","0"
+"-I","-I[nverse]","Inverse(Black is white)","Optional","0"
+"-raw","-raw","raw","Optional","0"
+"-offset","-offset","raw","Optional","1","1","Offset","Real","0"
+"-Z","-Z","Each: 0<=, SerialSection:-1","Optional","1","1","Z","Integer","0"
+"-r","-r[esolution]","[A]","Optional","1","1","Resolution","Real","1.0"
+"-r3","-r[esolution]3","[A]","Optional","3","1","ResolutionX","Real","1.0","2","ResolutionY","Real","1.0","3","ResolutionZ","Real","1.0"
+"-e","-e[xtension]","SerialSectionFormat","Optional","1","1","format","String","%s.%04d"
+"-color","-color","Color","Optional","1","1","colorMode","Integer","0"
+"-colorRange","-colorRange","ColorRange","Optional","2","1","colorRangeMin","Real","0","2","colorRangeMax","Real","100" 
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-M","-M[ode]","Mode: 0:char 1:short 2:float 6:unsigned short","Optional","1","1","Mode","Integer","0"
+"-m","-m[ode]","Mode: \n\t\t\t0 (8bits), 1(16bits), 2(float)\n\t\t\t","Optional","1","1","mode","Integer","0"

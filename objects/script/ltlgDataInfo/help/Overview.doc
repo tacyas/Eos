@@ -1,0 +1,8 @@
+.onlineHelp EOS ltlgDataInfo "Introduction to ltlgDataInfo"
+.
+.section 1 "Introduction to ltlgDataInfo"
+.
+.\" This is the help page associated with the Help button on
+.\" the toplevel window of ltlgDataInfo
+If you are reading this text,
+you should report it as a bug :-)

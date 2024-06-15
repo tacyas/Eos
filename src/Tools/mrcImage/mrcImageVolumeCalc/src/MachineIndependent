@@ -1,0 +1,105 @@
+#!/bin/sh
+#
+# MachineIndependent  1.14
+#
+# The latest update : 09/25/97 at 11:21:34
+#
+#@(#) MachineIndependent Function
+#@(#)
+#
+#@(#) Usage : MachineIndependent 
+#
+#@(#) Attention
+#@(#)
+#@(#) Parameter:  Any
+#@(#)
+
+BASENAME=`basename $0`
+
+case ${EOS_HOST} in
+	"hpux")
+		OSTYPE=HP
+		;;
+	"alpha")
+		OSTYPE=ALPHA
+		;;
+	"alphaLinux")
+		OSTYPE=ALPHALINUX
+		;;
+	"alphaLinux5")
+		OSTYPE=ALPHALINUX5
+		;;
+	"alphaOSF1")
+		OSTYPE=ALPHAOSF1
+		;;
+	"i386Mac")
+		OSTYPE=I386MAC
+		;;
+	"i386Linux")
+		OSTYPE=I386LINUX
+		;;
+	"i686Linux")
+		OSTYPE=I686LINUX
+		;;
+	"x86Linux64")
+		OSTYPE=X86LINUX64
+		;;
+	"cellLinux64")
+		OSTYPE=CELLLINUX64
+		;;
+	"sgi")
+		OSTYPE=SGI
+		;;
+	"sparc")
+		OSTYPE=SPARC
+		;;
+	"apollo")
+		OSTYPE=APOLLO
+		;;
+	*)
+		echo "The environment variable, EOS_HOST, has not set yet." 
+		echo "Or EOS_HOST=\"${EOS_HOST}\" is not supported yet."
+		;;
+esac
+
+#echo $OSTYPE
+if [ -x ${EOS_HOME}/bin/shell/${BASENAME}/${BASENAME}.sh ]
+then
+	# Shell Script
+	${EOS_HOME}/bin/shell/${BASENAME}/${BASENAME}.sh $*
+elif [ -x ${EOS_HOME}/bin/perl/${BASENAME}/${BASENAME}.pl ]
+then
+	# Perl 
+	perl ${EOS_HOME}/bin/perl/${BASENAME}/${BASENAME}.pl $*
+	#
+elif [ -x ${EOS_HOME}/bin/ruby/${BASENAME}/${BASENAME}.rb ]
+then
+	# Ruby
+	ruby -I${EOS_HOME}/lib/${OSTYPE} -I${EOS_HOME}/lib -I${EOS_HOME}/bin/ruby/${BASENAME} ${EOS_HOME}/bin/ruby/${BASENAME}/${BASENAME}.rb $*
+	#
+elif [ -x ${EOS_HOME}/bin/wish/${BASENAME}/${BASENAME}.wish ] 
+then
+	# Wish
+	if [ -x ${EOS_HOME}/bin/${OSTYPE}/${BASENAME} ]
+	then
+		${EOS_HOME}/bin/${OSTYPE}/${BASENAME} $*	< ${EOS_HOME}/bin/wish/${BASENAME}/${BASENAME}.wish
+	elif [ -x ${EOS_ANOTHER_HOME}/bin/${OSTYPE}/${BASENAME} ]
+	then
+		${EOS_ANOTHER_HOME}/bin/${OSTYPE}/${BASENAME} $* < ${EOS_HOME}/bin/wish/${BASENAME}/${BASENAME}.wish
+	else
+		echo "Not installed: ${OSTYPE}-vesion ${BASENAME}"	
+	fi
+else
+	# No Wish 
+	if [ -x ${EOS_HOME}/bin/${OSTYPE}/${BASENAME} ]
+	then
+		${EOS_HOME}/bin/${OSTYPE}/${BASENAME} "$@"	
+	elif [ -x ${EOS_ANOTHER_HOME}/bin/${OSTYPE}/${BASENAME} ]
+	then
+		${EOS_ANOTHER_HOME}/bin/${OSTYPE}/${BASENAME} "$@"
+	else
+		echo "Not installed: ${OSTYPE}-version ${BASENAME}"	
+	fi
+fi
+
+exit 0

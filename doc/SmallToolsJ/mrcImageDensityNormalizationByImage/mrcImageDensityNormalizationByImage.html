@@ -1,0 +1,310 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageDensityNormalizationByImage</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageDensityNormalizationByImage<br></h2></b></font>
+	<h4></h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>オプション</th>
+				<th>必須項目/選択項目</th>
+				<th>NULL</th>
+				<th>デフォルト</th>
+			</tr>
+			<tr>
+				<td>-i</td>
+				<td>必須</td>
+				<td>入力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-r</td>
+				<td>必須</td>
+				<td>参照ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-o</td>
+				<td>必須</td>
+				<td>出力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-O</td>
+				<td>選択</td>
+				<td>出力ファイル設定</td>
+				<td>stdout</td>
+			</tr>
+			<tr>
+				<td>-D</td>
+				<td>選択</td>
+				<td></td>
+				<td>stdout</td>
+			</tr>
+			<tr>
+				<td>-Cylinder</td>
+				<td>選択</td>
+				<td></td>
+				<td>CCenterX=20 CCenterY=20 CMinR=10 CMaxR=20</td>
+			</tr>
+			<tr>
+				<td>-testBG</td>
+				<td>選択</td>
+				<td></td>
+				<td>tstBGMin=-3 tstBGMax=3 tstBGDelta=0.1</td>
+			</tr>
+			<tr>
+				<td>-M</td>
+				<td>選択</td>
+				<td>モード１</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-m</td>
+				<td>選択</td>
+				<td>モード２</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-h</td>
+				<td>選択</td>
+				<td>ヘルプを表示</td>
+				<td>　</td>
+			</tr>
+		</table>
+
+<!-- モード詳細 -->
+
+	<br>
+	<br>
+	<caption><b>モード1の詳細</b></caption>
+	<table border="1">
+	<div align="left">
+		<tr>
+			<th>モード</th>
+			<th>説明</th>
+		</tr>
+		<tr>
+			<td>0</td>
+			<td>密度フィッティング法：単線</td>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>密度フィッティング法：</td>
+		</tr>
+	</div>
+	</table>
+	
+	<br>
+	<br>
+	<caption><b>モード2の詳細</b></caption>
+	<table border="1">
+	<div align="left">
+		<tr>
+			<th>モード</th>
+			<th>説明</th>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>2</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>4</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>8</td>
+			<td></td>
+		</tr>
+	</div>
+	</table>
+
+	<h4>******実行例******</h4>
+
+<!-- 入力ファイル説明 -->
+
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="b120-2.center.png" border="0" alt="b120-2.center.png(6742 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-65.0178<br>
+				94.4699<br>
+				4.85274<br>
+				20.4635<br>
+				0.255794<br></p>
+			</td>
+		</tr>
+	</table>
+
+<!-- 参照ファイル説明 -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------参照ファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="b120-2.center3.png" border="0" alt="b120-2.center3.png(6681 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-37.8047<br>
+				57.1575<br>
+				2.49049<br>
+				11.3587<br>
+				0.141984<br></p>
+			</td>
+		</tr>
+	</table>
+	
+<!-- 出力結果 -->
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション必須項目のみの場合------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="outdata.png" border="0" alt="outdata.png(6742 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-32.2771<br>
+				47.084<br>
+				2.49049<br>
+				10.1827<br>
+				0.127283<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-O------</font></caption><br>
+	<div>指定したファイル内に以下のようなデータが作成される<br>
+	<img src="outdata-1.png" border="1" alt="outdata-1.png(1436 byte)" width="259" height="64">
+	</div>
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-D------</font></caption><br>
+	<div>指定したファイル内に以下のようなデータが作成される<br>
+	<img src="outdata-D.png" border="1" alt="outdata-D.png(3785 byte)" width="259" height="201"><br>
+	</div>
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-Cylinder------</font></caption><br>
+	<div>CCenterX=10 CCenterY=10 CMinR=50 CMaxR=10に変更し実行</div>
+	<table>
+		<tr>
+			<td><img src="outdata-Cylinder.png" border="0" alt="outdata-Cylinder.png(6742 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-31.6534<br>
+				47.337<br>
+				2.95179<br>
+				10.1351<br>
+				0.126689<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-M------</font></caption><br>
+	<div>モード：０</div>
+	<table>
+		<tr>
+			<td><img src="outdata.png" border="0" alt="outdata.png(6742 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-32.2771<br>
+				47.084<br>
+				2.49049<br>
+				10.1827<br>
+				0.127283<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<div>モード：１</div>
+	<table>
+		<tr>
+			<td><img src="outdata-M1.png" border="0" alt="outdata-M1.png(6742 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-31.946<br>
+				46.8266<br>
+				2.56378<br>
+				10.1071<br>
+				0.126339<br></p>
+			</td>
+		</tr>
+	</table>
+
+<!-- 	<br>
+	<br>
+	<caption><font color="blue">------オプション　-m------</font></caption><br>
+	<div>モード：1</div>
+	<table>
+		<tr>
+			<td></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-32.2771<br>
+				47.084<br>
+				2.49049<br>
+				10.1827<br>
+				0.127283<br></p>
+			</td>
+		</tr>
+	</table>
+ -->
+
+
+
+
+
+</body>
+</html>

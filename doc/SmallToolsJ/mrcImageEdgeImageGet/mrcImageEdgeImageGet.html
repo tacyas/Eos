@@ -1,0 +1,402 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageEdgeImageGet</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageEdgeImageGet<br></h2></b></font>
+	<h4></h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>オプション</th>
+				<th>必須項目/選択項目</th>
+				<th>NULL</th>
+				<th>デフォルト</th>
+			</tr>
+			<tr>
+				<td>-i</td>
+				<td>必須</td>
+				<td>入力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-o</td>
+				<td>選択</td>
+				<td>出力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-s</td>
+				<td>選択</td>
+				<td>画像サイズを設定</td>
+				<td>64</td>
+			</tr>
+			<tr>
+				<td>-m</td>
+				<td>選択</td>
+				<td>モード設定</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-h</td>
+				<td>選択</td>
+				<td>ヘルプを表示</td>
+				<td>　</td>
+			</tr>
+		</table>
+
+<!-- モード説明 -->
+
+	<br>
+	<caption><b>モードの詳細</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>モード</th>
+				<th>説明</th>
+			</tr>
+			<tr>
+				<td>0</td>
+				<td>4パターンの画像を出力</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>9パターンの画像を出力</td>
+			</tr>
+			</div>
+		</table>
+
+<!-- 入力ファイル説明 -->
+	
+	<br>
+	<br>
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<div>入力ファイル</div>
+	<table>
+		<tr>
+			<td><img src="b120.png" border="0" alt="b120.png(2730 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				65.5929<br>
+				5.45036<br>
+				12.3043<br>
+				0.153804<br></p>
+			</td>
+		</tr>
+	</table>
+	
+<!-- 出力ファイル -->
+
+	<caption><font color="blue">------オプション　-s------</font></caption><br>
+	<div>-s=45の場合</div>
+	<table>
+		<tr>
+			<td><img src="outdata-s45.mrc.000.png" border="0" alt="outdata-s45.mrc.000.png(1563 byte)" width="45" height="45"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				65.4791<br>
+				6.81118<br>
+				14.7739<br>
+				0.328309<br></p>
+			</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td><img src="outdata-s45.mrc.001.png" border="0" alt="outdata-s45.mrc.001.png(1556 byte)" width="45" height="45"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				65.5929<br>
+				9.23785<br>
+				16.2496<br>
+				0.361103<br></p>
+			</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td><img src="outdata-s45.mrc.002.png" border="0" alt="outdata-s45.mrc.002.png(1750 byte)" width="45" height="45"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				65.4791<br>
+				9.26971<br>
+				15.2065<br>
+				0.337922<br></p>
+			</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td><img src="outdata-s45.mrc.003.png" border="0" alt="outdata-s45.mrc.003.png(1808 byte)" width="45" height="45"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				65.4791<br>
+				7.41122<br>
+				14.8921<br>
+				0.330936<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<caption><font color="blue">------オプション　-m------</font></caption><br>
+	<div>モード：０の場合</div>
+	<table>
+		<tr>
+			<td><img src="outdata.mrc.000.png" border="0" alt="outdata.mrc.000.png(2663 byte)" width="64" height="64"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				65.5929<br>
+				8.49419<br>
+				14.5172<br>
+				0.226832<br></p>
+			</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td><img src="outdata.mrc.001.png" border="0" alt="outdata.mrc.001.png(2665 byte)" width="64" height="64"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				65.5929<br>
+				8.49763<br>
+				14.5156<br>
+				0.226806<br></p>
+			</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td><img src="outdata.mrc.002.png" border="0" alt="outdata.mrc.002.png(2676 byte)" width="64" height="64"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				65.5929<br>
+				8.50969<br>
+				14.5102<br>
+				0.226721<br></p>
+			</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td><img src="outdata.mrc.003.png" border="0" alt="outdata.mrc.003.png(2680 byte)" width="64" height="64"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				65.5929<br>
+				8.51314<br>
+				14.5085<br>
+				0.226695<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<br>
+	<div>モード：１の場合</div>
+	<table>
+		<tr>
+			<td><img src="outdata-m1.mrc.000.png" border="0" alt="outdata-m1.mrc.000.png(2663 byte)" width="64" height="64"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				65.5929<br>
+				8.49419<br>
+				14.5172<br>
+				0.226832<br></p>
+			</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td><img src="outdata-m1.mrc.001.png" border="0" alt="outdata-m1.mrc.001.png(2673 byte)" width="64" height="64"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				65.5929<br>
+				8.49861<br>
+				14.515<br>
+				0.226798<br></p>
+			</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td><img src="outdata-m1.mrc.002.png" border="0" alt="outdata-m1.mrc.002.png(2665 byte)" width="64" height="64"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				65.5929<br>
+				8.49763<br>
+				14.5156<br>
+				0.226806<br></p>
+			</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td><img src="outdata-m1.mrc.003.png" border="0" alt="outdata-m1.mrc.003.png(2693 byte)" width="64" height="64"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				65.5929<br>
+				8.51177<br>
+				14.509<br>
+				0.226704<br></p>
+			</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td><img src="outdata-m1.mrc.004.png" border="0" alt="outdata-m1.mrc.004.png(2702 byte)" width="64" height="64"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				65.5929<br>
+				8.51619<br>
+				14.5068<br>
+				0.226669<br></p>
+			</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td><img src="outdata-m1.mrc.005.png" border="0" alt="outdata-m1.mrc.005.png(2698 byte)" width="64" height="64"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				65.5929<br>
+				8.51521<br>
+				14.5074<br>
+				0.226678<br></p>
+			</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td><img src="outdata-m1.mrc.006.png" border="0" alt="outdata-m1.mrc.006.png(2676 byte)" width="64" height="64"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				65.5929<br>
+				8.50969<br>
+				14.5102<br>
+				0.226721<br></p>
+			</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td><img src="outdata-m1.mrc.007.png" border="0" alt="outdata-m1.mrc.007.png(2682 byte)" width="64" height="64"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				65.5929<br>
+				8.51411<br>
+				14.5079<br>
+				0.226687<br></p>
+			</td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td><img src="outdata-m1.mrc.008.png" border="0" alt="outdata-m1.mrc.008.png(2680 byte)" width="64" height="64"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				65.5929<br>
+				8.51314<br>
+				14.5085<br>
+				0.226695<br></p>
+			</td>
+		</tr>
+	</table>
+
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageNullImageCreate</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageNullImageCreate<br></h2></b></font>
+	<h4></h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+		<table border="1">
+			<div align="left">
+				<tr>
+					<th>オプション</th>
+					<th>必須項目/選択項目</th>
+					<th>NULL</th>
+					<th>デフォルト</th>
+				</tr>
+				<tr>
+					<td>-o</td>
+					<td>必須</td>
+					<td>出力ファイル設定</td>
+					<td>NULL</td>
+				</tr>
+				<tr>
+					<td>-Nx</td>
+					<td>選択</td>
+					<td>ｘ軸の幅を設定</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>-Ny</td>
+					<td>選択</td>
+					<td>ｙ軸の幅を設定</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>-Nz</td>
+					<td>選択</td>
+					<td>ｚ軸の幅を設定</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>-v</td>
+					<td>選択</td>
+					<td>ピクセル値を設定</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>-d</td>
+					<td>選択</td>
+					<td>ピクセルサイズを設定</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>-h</td>
+					<td>選択</td>
+					<td>ヘルプを表示</td>
+					<td>　</td>
+				</tr>
+			</div>
+		</table>
+
+
+	<h4>******実行例******</h4>
+
+<!-- 出力結果 -->
+	
+	<caption><font color="blue">------オプション　-v------</font></caption><br>
+	<div>v=0で実行</div>
+	<table>
+		<tr>
+			<td><img src="outdata.png" border="0" alt="outdata.png(962 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				0<br>
+				0<br>
+				0<br>
+				0<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<br>
+	<div>v=1で実行</div>
+	<table>
+		<tr>
+			<td><img src="outdata-v1d1.png" border="1" alt="outdata-v1d1.png(995 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">1<br>
+				1<br>
+				1<br>
+				0<br>
+				0<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<br>
+	<div>v=1で実行</div>
+	<table>
+		<tr>
+			<td><img src="outdata-v0.5d1.png" border="0" alt="outdata-v0.5d1.png(995 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0.5<br>
+				0.5<br>
+				0.5<br>
+				0<br>
+				0<br></p>
+			</td>
+		</tr>
+	</table>
+
+
+
+
+
+</body>
+</html>

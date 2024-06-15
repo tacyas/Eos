@@ -1,0 +1,183 @@
+<HTML>
+<HEAD>
+<TITLE>
+Eos Tutorial
+</TITLE>
+</HEAD>
+<BODY bgcolor="#ffffcc">
+<CENTER>
+<H1>Eos Quick Tutorial for System Developer</H1>
+--- How to create and update the Eos tools ---
+</CENTER>
+<AUTHOR>Created  by Isao Sakane</AUTHOR> <BR>
+<AUTHOR>Modified by tacyas@tkyemghp.phys.s.u-tokyo.ac.jp</AUTHOR>
+<HR>
+This document illustrates how to make tools with the Eos.  We assume that
+you want to make image handling programs easy as possible, and reuseable
+as possible. And, we assume that you are used to the unix shell system.
+
+<OL>
+<LI> Setup <OL>
+
+	First of all, you  must set your environment for Eos. These 
+	environment variables are used internally by the Eos.<P>
+
+	<LI>Link to the Eos directory<BR>
+	 Make a link to the Eos directory under your home directory. For
+	 example, if the Eos directory is, `/somewhere/Eos' then, you make
+	 a link to there by
+<CODE>
+<PRE>
+> ln -s /somewhere/Eos ~/.
+</PRE>
+</CODE>
+	<LI>Set the Eos directories<BR>
+	 How to set environment variables depends on your shell.  <BR>
+ For example: if you are using csh, you write into `.cshrc',<P>
+<CODE>
+<PRE>
+> setenv EOS_HOME ~/Eos
+> setenv EOS_HOST hpux
+> setenv EOS_PATH $EOS_HOME/bin:$EOS_HOME/sbin
+> setenv DISPLAY2_HOME ~/Eos/bin/wish
+</PRE>
+</CODE>
+
+For example: /bin/sh or bash, you write into '.profile' or `.bashrc',<P>
+<CODE>
+<PRE>
+> export EOS_HOME=~/Eos
+> export EOS_HOST=hpux
+> export EOS_PATH=$EOS_HOME/bin:$EOS_HOME/sbin
+> export DISPLAY2_HOME=~/Eos/bin/wish
+</PRE>
+</CODE>
+	<LI>Change your group to Eos<BR>
+<BR>
+$ newgrp Eos<P>
+</OL>
+<LI> Make a tool <OL>
+
+	To add or modify tools to Eos, you should use the command 
+	`maketool'. This tool asks you what you want to do. If you want
+	to create a new tool, you input a new tool name. Then `maketool'
+	will do some routine works for you. It will create the directory
+	,which name you have input, under `$EOS_HOME/src/Tools'. It will
+	generate some codes for you.<P>
+	
+	For example, if you are going to make a new tool, which name is
+	`mrcImageNewTool', you should execute `maketool' as,
+<CODE>
+<PRE>
+$ maketool mrcImage mrcImageNewTool new
+</PRE>
+</CODE>
+
+	Here, we assumed that you are making a tool which handles mrc 
+	formatted data. Let's look if the new directory has made. Execute,
+<CODE>
+<PRE>
+$ ls $EOS_HOME/src/Tools/mrcImage/mrcImageNewTool/
+</PRE>
+</CODE>
+
+	<LI>Coding <OL>
+
+	For example, let's assume you are making the tool `mrcImageCVE'.
+	There is a directory named `mrcImageCVE' and under that, are 
+	subdirectories named `src', `inc', `Config' and so on. <P>
+
+	<LI>Option Handling<BR>
+	To make the tool respond to users request correctly, the Eos 
+	provides you auto option handling mechanism. You write 
+	`OptionControlFile' under `Config' directory and that's it. Here
+	is an example from `mrcImageCVE'.
+<PRE>
+<CODE>
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-sx","-sx","x of Kernel Size","Optional","1","1","sx","Integer","25"
+"-sy","-sy","y of Kernel Size","Optional","1","1","sy","Integer","25"
+"-sz","-sz","z of Kernel Size","Optional","1","1","sz","Integer","1"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+</CODE>
+</PRE>
+
+	A Line begins with # is a comment. The first record of a line is
+	the option name. For example, you specify the input file name by
+	this option name as, `mrcImageCVE -i &ltinput file name>'. The 
+	seventh record of a line is the variable name. Maketool will 
+	create the option information struct including that named 
+	variable. And the eighth record specifies the variable type. The
+	option value for `-sx' will take `Integer'. And the last record
+	tells option handler the option default value.<P>
+
+	After you wrote `OptionControlFile', run `maketool' to update the
+	tool environment.  For example,
+<CODE>
+<PRE>
+$ maketool mrcImage mrcImageNewTool update
+</PRE>
+</CODE>
+	The option struct code will be written in the headerfile. And also
+	it updates the option handling code for you. So you can absorbed
+	in the real coding problem.<P>
+	
+	<LI>Write DataManipulationg Function(s)<BR>
+
+	The `maketool' only creates the interface to your program. Writing
+	the real data handling code will be your prime task. You will 
+	create the pure data handling function. For example, the `main'
+	function in `mrcImageCVE.c' calls the function `lmrcImageCVE' in
+	`lmrcImageCVE.c' with pointers for the source data and the 
+	destination data. You are recommended to make another file for 
+	this function like `lmrcImageCVE.c'. If you create a object code
+	file for a data handling function, other tools can use that 
+	function. Make such object code files under 
+	$EOS_HOME/src/Objects/Datamanip/mrcImage/src/. Hand pointers to
+	the data and some other information needed to those data 
+	manipulation functions .<P>
+
+	When you code a source `lmrcImageNewTool.c', you must edit the 
+	headerfile `../inc/mrcImage.h' yourself. It is not modified 
+	automatically. <P>
+	</OL>
+
+	<LI>Compile<BR>
+
+	If you wrote up a data manipulating function, then it is a good
+	time to compile the source file. Move to the 
+	`$EOS_HOME/src/Objects/Datamanip/mrcImage/src/' directory. If your
+	code has not been compiled before, you must run the command `make
+	depend' to rewrite `Makefile', otherwise just run 'make'. There
+	will be some errors and warnings. Debug, code and compile. 
+	Finally, there will be no explicit bugs and you think you have 
+	wrote the complete code. Then run the command `make install' at
+	`src/..' directory. <P>
+
+	The data handling object is now complete. So you want to make up
+	the tool. Change directory to 
+	`$EOS_HOME/src/Tools/mrcImage/mrcImageNewTool/src' and run make.
+	If you wrote correctly, there will be your tool. Run and test it.<P>
+
+	If your tool runs correctly and you think it is good enough for
+	public use, run `make install'. Then your tool will be installed
+	automatically under the Eos binary directory.<P>
+
+	<LI>Examine the Data<BR>
+
+	To see what your program has done, you may want to display the 
+	mrcImage data on the screen. Use `Display2' command for this 
+	purpose. If you want to see the file `test.mrc', just run,
+
+<CODE>
+<PRE>
+$ Display2 -i test.mrc
+</PRE>
+</CODE>
+</OL>
+</OL>
+</BODY>
+</HTML>

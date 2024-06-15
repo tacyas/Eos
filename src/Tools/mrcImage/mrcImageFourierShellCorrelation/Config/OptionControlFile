@@ -1,0 +1,17 @@
+# OptionControlFile
+# FileFormat
+"-i1","-i1[input1]","Input:","Optional","1","1","In1","inFile::mrcImage","NULL"
+"-i2","-i2[input2]","Input:","Optional","1","1","In2","inFile::mrcImage","NULL"
+"-o","-o[utput]","Output:FSC","Optional","1","1","Out","outFile::ASCII","stdout"
+"-SNR","-SNR","flagSNR","Optional","0"
+"-FSCfull","-FSCfull","flagFSCfull","Optional","0"
+"-Cref","-Cref","flagCref","Optional","0"
+"-NoiseWeighted","-NoiseWeighted","flagNoiseWeighted: Cref*exp(-Bfactor/(4*d^2)","Optional","1","1","Brestore","Real","-1000"
+"-d","-d[elta]","Interval of output data(1/A). Default 1/(Nx*size of pixel)","Optional","1","1","delta","Real","0"
+"-z","-z[position]","z position of reference file to correlate.For mode2=1 only","Optional","1","1","z","Integer","0"
+"-L","-L[owThreshold]","Low threshold for mode +2.","Optional","1","1","L","Real","0"
+"-H","-H[ighThreshold]","High threshold for mode +2.","Optional","1","1","H","Real","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"
+"-M","-M[ode2]","Mode2","Optional","1","1","mode2","Integer","0"
+"-I1","-I1[nput array of file]","InputDataFiles","Optional","1","1","In1Array","inFileList","stdin"

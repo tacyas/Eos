@@ -1,0 +1,47 @@
+-F 4.3 1 0 52x1+0+0 +0+0 'Cantata' cantata
+  -M 1 1 52x1+0+0 +1+0 ' ' subform
+    -P 1 0 52x1+0+1 +0+0 ' ' energyTransferModelCheck
+      -D 1 0 9x1+0+0 'Options' _gui_options
+        -H 1  6x1+0+0 'License' 'license' $BOOTSTRAP/repos/license/License license
+        -E
+        -R 1 0 1 5x1+35+0 'Run' 'execute operation' $EOS/bin/energyTransferModelCheck
+        -H 1  5x1+41+0 'Help' 'help page' $EOS/src/Tools/simulation/energyTransferModelCheck/doc/energyTransferModelCheck.doc help
+        -Q 1 0 5.25x1+47+0 'Close'
+        -I 1 0 1 1 0 1 -1x1+1+1.500000 ' ' 'In' 'InputDataFile' i
+        -O 1 0 1 1 0 1 -1x1+1+3.000000 ' ' 'Out' 'OutputDataFile' o
+        -I 1 0 1 0 0 1 -1x1+1+4.500000 ' ' 'PDB' 'Excluded Area by PDB: Input[PDB]' p
+        -I 1 0 1 0 0 1 -1x1+1+6.000000 ' ' 'PDBs' 'Excluded Area by PDB: Input[PDBFileList]' P
+        -t 1 0 1 0 0 6x1+1+7 'PW' 'PDBFileList With Info: filename sigma[A]' PW
+        -f 1 0 1 0 0 -1x1+1+9.000000 0 0 1.000000 0 0 0 'sigma' 'SigmaOfAtom for All: sigma [pixel]x delta[A/pixel]' sigma
+        -f 1 0 1 0 0 -1x1+1+10.500000 0 0 1.000000 0 0 0 'sigmaA' 'SigmaOfAtom for All: sigma [A]' sigmaA
+        -I 1 0 1 0 0 1 -1x1+1+12.000000 ' ' 'MRC' 'Excluded Area by mrc: Input[MRC]' mrc
+        -I 1 0 1 0 0 1 -1x1+1+13.500000 ' ' 'MRCs' 'Excluded Area by MRC: Input[MRCFileList]' MRC
+        -t 1 0 1 0 0 6x1+1+15 'MRCW' 'MRCFileList with Info: filename contour near[A]' MRCW
+        -f 1 0 1 0 0 -1x1+1+16.500000 0 0 10.000000 0 0 0 'EContour' 'ContourLevel for Exclusion: Density<ContourLevel -> 0' C
+        -f 1 0 1 0 0 -1x1+1+18.000000 0 0 1.000000 0 0 0 'ENear' 'Near [pixel]: Exclusion Area: near[pixel] x delta [A/pixel]' Near
+        -f 1 0 1 0 0 -1x1+1+19.500000 0 0 1.000000 0 0 0 'ENearA' 'Near [A]: Exclusion Area: near [A]' NearA
+        -I 1 0 1 0 0 1 -1x1+1+21.000000 ' ' 'Rest' 'Restricted Area: Input[mrc]' r
+        -I 1 0 1 0 0 1 -1x1+1+22.500000 ' ' 'Rests' 'Restricted Area: InputDataFileList[mrcs]' R
+        -f 1 0 1 0 0 -1x1+1+24.000000 0 0 10.000000 0 0 0 'Contour' 'ContourLevel for Restriction' contour
+        -f 1 0 1 0 0 -1x1+1+25.500000 0 0 1.000000 0 0 0 'Near' 'Near [pixel]: Restriction Area: near[pixel] x delta [A/pixel]' near
+        -f 1 0 1 0 0 -1x1+1+27.000000 0 0 1.000000 0 0 0 'NearA' 'Near [A]: Restriction Area: near[A] ' nearA
+        -t 1 0 1 0 0 6x1+1+28 'RW' 'WithInfo: filename contour near[A]' RW
+        -I 1 0 1 0 0 1 -1x1+1+30.000000 ' ' 'RestP' 'Restricted Area: InputDataFile[pdb]' rP
+        -I 1 0 1 0 0 1 -1x1+1+31.500000 ' ' 'RestsP' 'Restricted Area: InputDataFileList[pdbs]: format: filename near[pixel]' RP
+        -f 1 0 1 0 0 -1x1+1+33.000000 0 0 1.000000 0 0 0 'SigmaP' 'Sigma[pixel]: Restriction Area: sigma x delta [A]' sigmaP
+        -f 1 0 1 0 0 -1x1+1+34.500000 0 0 1.000000 0 0 0 'SigmaPA' 'Sigma[A]: Restriction Area: sigma [A]' sigmaPA
+        -f 1 0 1 0 0 -1x1+1+36.000000 0 0 1.000000 0 0 0 'NearP' 'Near [pixel]: Restriction Area: near x delta [A]' nearP
+        -f 1 0 1 0 0 -1x1+1+37.500000 0 0 1.000000 0 0 0 'NearPA' 'Near [A]: Restriction Area: near [A]' nearPA
+        -t 1 0 1 0 0 6x1+1+39 'RPW' 'WithInfo: filename near[A] sigma[A]' RPW
+        -I  1 0 0 1 0 1 -1x1+1+40 ' ' '5' 'deltax' delta [A]
+        -I  1 0 0 1 0 1 -1x1+1+42 ' ' '5' 'sdeltax' starting delta [A]
+        -I  1 0 0 1 0 1 -1x1+1+43 ' ' '5' 'startx' start [A]
+        -I  1 0 0 1 0 1 -1x1+1+45 ' ' '5' 'endx' end [A]
+        -i 1 0 1 0 0 -1x1+1+46.500000 0 0 1 0 0 'maxIter' 'Max Iteration ' maxIter
+        -i 1 0 1 0 0 -1x1+1+48.000000 0 0 0 0 0 'startIter' 'Start Iteration ' startIter
+        -f 1 0 1 0 0 -1x1+1+49.500000 0 0 0.000100 0 0 0 'neglect' 'neglect: probability for each term: not final probability' neglect
+        -I 1 0 1 0 0 1 -1x1+1+51.000000 ' ' 'configFile' 'ConfigurationFile' c
+        -i 1 0 1 0 0 -1x1+1+52.500000 0 0 0 0 0 'mode' 'Mode' m
+    -E
+  -E
+-E

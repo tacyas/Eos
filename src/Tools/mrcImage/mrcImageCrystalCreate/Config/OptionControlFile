@@ -1,0 +1,14 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-nx","-nx","Number:x-axis(a-axis)","Optional","1","1","nx","Integer","1"
+"-ny","-ny","Number:y-axis(b-axis)","Optional","1","1","ny","Integer","1"
+"-nz","-nz","Number:z-axis(c-axis)","Optional","1","1","nz","Integer","1"
+"-start","-start","start coord(x, y, z)[Ang]","Optional","3","1","StartX","Real","0.0","2","StartY","Real","0.0","3","StartZ","Real","0.0"
+"-A","-A[-axis]","a(x, y, z)[Ang]","Optional","3","1","AX","Real","1.0","2","AY","Real","0.0","3","AZ","Real","0.0"
+"-B","-B[-axis]","b(x, y, z)[Ang]","Optional","3","1","BX","Real","0.0","2","BY","Real","1.0","3","BZ","Real","0.0"
+"-C","-C[-axis]","c(x, y, z)[Ang]","Optional","3","1","CX","Real","0.0","2","CY","Real","0.0","3","CZ","Real","1.0"
+"-M","-M[ode]","Mode: PixelHow","Optional","1","1","Mode","Integer","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

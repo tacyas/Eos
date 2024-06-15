@@ -1,0 +1,13 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","Output: centre","Optional","1","1","Out","outFile","stdout"
+"-O","-O[utput]","Output: shifted Image","Optional","1","1","Out2","outFile","stdout"
+"-res","-res[ideu]","OutputDataFile","Optional","1","1","Res","outFile","NULL"
+"-n","-n[Fold]","Input: nFold","Essential","1","1","nFold","Integer","2"
+"-delPHI","-delPHI","Input: delPHI[degree]","Optional","1","1","delPHI","Real","1.0"
+"-rangex","-rangex","Input: range [pixel size]","Optional","3","1","minx","Real","-3","2","maxx","Real","3","3","delx","Real","1"
+"-rangey","-rangey","Input: range [pixel size]","Optional","3","1","miny","Real","-3","2","maxy","Real","3","3","dely","Real","1"
+"-rangez","-rangez","Input: range [pixel size]","Optional","3","1","minz","Real","0","2","maxz","Real","0","3","delz","Real","1"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

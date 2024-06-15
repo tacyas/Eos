@@ -1,0 +1,4 @@
+OBJECTNAME = mrc2lattice
+EXTRA_LIB  =
+EXTRA_CCOPTS =
+EXTRA_INC =

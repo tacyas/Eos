@@ -1,0 +1,31 @@
+<HTML>
+<HEAD>
+<TITLE>marker2Dto3DEstimator</TITLE>
+</HEAD>
+<BODY>
+<H1>marker2Dto3DEstimator</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: marker2Dto3DEstimator
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFileList::ASCII   ) ] :Essential :Input: 
+    [-i[nput]t[ype]      InType              (2         ).as(Integer             ) ] :Optional  :Input: 
+    [-o[utput]           Out                 (NULL      ).as(outFileList::ASCII  ) ] :Essential :Output: 
+    [-o[utput]t[ype]     OutType             (2         ).as(Integer             ) ] :Optional  :Input: 
+    [-o[utput]EA         OutEA               (NULL      ).as(outFileList::ASCII  ) ] :Essential :Output: 
+    [-zero               ZeroPlane           (0         ).as(Integer             ) ] :Optional  :Zero Plane
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+----- input; -i  -----
+-i pointListPerEachImage
+point2d.000 YOYS tiltAngle0 tiltAxisBeta0 tiltAxisAlpha0 axisShiftX0 axisShiftY0
+point2d.001 YOYS tiltAngle1 tiltAxisBeta1 tiltAxisAlpha1 axisShiftX1 axisShiftY1
+.....
+EachFile::eosPoint(type)
+x0 y0 0 weight0 sigx0 sigy0 0
+x1 y1 0 weight1 sigx1 sigy1 0
+.....
+</PRE>
+</BODY>
+</HTML>

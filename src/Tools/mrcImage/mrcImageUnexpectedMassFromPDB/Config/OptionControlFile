@@ -1,0 +1,11 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-p","-p[dbFile]","InputPDBDataFile","Essential","1","1","InPDB","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-T","-T[hres]","ThresHold","Essential","1","1","Thres","Real","0.0"
+"-D","-D[ata]","AssinedData","Essential","1","1","Data","Real","0.0"
+"-M","-M[ode]","AtomMode","Optional","1","1","AtomMode","Integer","1"
+"-r","-r[adius]","Radius","Optional","1","1","radius","Real","3.4"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

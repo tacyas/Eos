@@ -1,0 +1,7 @@
+<HTML>
+<BODY>
+<H1>SQR(x)</H1><BR>
+<H3>in genUtil.h</H3><BR>
+<H3> #define SQR(x) ((x)*(x)) #ifndef MAX #define MAX(x,y) ((x)>(y)?(x):(y)) #endif #ifndef MIN #define MIN(x,y) ((x)<(y)?(x):(y)) #define MIN3(x,y,z) MIN( MIN(x,y), z) #endif #define NORMAL_PHASE(x) ((x)>=(0)?(fmod((x),2*M_PI)):(fmod((x),2*M_PI)+2*M_PI)) #define MIN_NORMAL_PHASE(x) MIN(NORMAL_PHASE(x), 2*M_PI-NORMAL_PHASE(x)) #define POSITIVE_MODE(x,y) ((x)>=(0)?( (x)%(y) ):( (x)%(y) +(y))) #define POSITIVE_FMODE(x,y) ((x)>=(0)?(fmod((x),(y)) ):(fmod((x),(y)) +(y))) #define SSWITCH(x) { char* __sswitch_tmp_=x; \ if(0==strcmp(__sswitch_tmp_, "")) { \ fprintf(stderr, "SSWITCH Error\n"); \ exit(EXIT_FAILURE); \ } #define SCASE(x) else if(0==strcmp(x,__sswitch_tmp_)) #define SDEFAULT else #define SBREAK ; </H3>
+</HTML>
+</BODY>

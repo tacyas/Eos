@@ -1,0 +1,3 @@
+OBJECTNAME = rigakuImage
+EXTRA_INC =
+EXTRA_CCOPTS =

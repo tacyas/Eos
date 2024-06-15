@@ -1,0 +1,11 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: ","Essential","1","1","In","inFile","NULL"
+"-it","-i[nput]t[ype]","InputDataType","Optional","1","1","InType","String","FEIextendedMRC"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-ot","-o[utput]t[ype]","OutputDataType","Optional","1","1","OutType","String","Eos"
+"-Length","-Length","Mode","Optional","3","1","LenX","Real","1.0","1","LenY","Real","1.0","3","LenZ","Real","1.0"
+"-M","-M","M","Optional","3","1","Mx","Integer","1","1","My","Integer","1","3","Mz","Integer","1"
+"-flagStat","-flagStat","Statistics again","Optional","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

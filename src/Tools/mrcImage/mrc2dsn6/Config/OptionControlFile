@@ -1,0 +1,10 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: mrc","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","Output: dsn6 ","Essential","1","1","Out","outFile","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-shiftx","-shiftx","shiftx","Optional","1","1","shiftx","Real","0.0"
+"-shifty","-shifty","shifty","Optional","1","1","shifty","Real","0.0"
+"-shiftz","-shiftz","shiftz","Optional","1","1","shiftz","Real","0.0"
+"-mul","-mul","mrc*mul","Optional","1","1","mul","Real","1.0"
+"-m","-m[ode]","Mode: \n\t\t0 : Normal(BottomRightIsOrigin)\n\t\t1 : Helix(CentreIsOrigin)","Optional","1","1","mode","Integer","0"

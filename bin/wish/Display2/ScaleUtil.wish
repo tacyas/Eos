@@ -1,0 +1,87 @@
+#
+proc ScaleRecreate {} {
+	ScaleClear
+	ScaleCreate
+}
+
+proc ScaleCreate { } {
+	global Scale
+	global Desktop
+	global fileNameIn
+	global mainImage
+	global Roi
+
+	set c $Desktop(mainCanvas).canvas
+
+	if { $Scale(which) == "X" } {
+		$c delete ScaleX$Scale(at)
+		
+		if [ info exists Scale(X) ] {
+			unset Scale(X)
+		}
+		set Scale(X) [ mrcInfoGet $fileNameIn SectX $Scale(at) ]
+
+		if { $mainImage(mode) == "R" } { 
+			for { set i 0 } { $i < $mainImage(width) } { incr i 1 } { 
+				set data [ lindex $Scale(X) $i ] 
+				lappend p $i [ expr ($data - $mainImage(min))*$Scale(scale) + $Scale(at) ]    
+			}
+		} else {
+			for { set i 0 } { $i < $mainImage(width) } { incr i 1} {
+				set data [ lindex $Scale(X) $i ] 
+				lappend p $i [ expr -1*($data - $mainImage(min))*$Scale(scale) - $Scale(at) + $mainImage(height)/2.0]    
+			}
+		}
+		eval { $c create line } $p { -fill red -tags ScaleX$Scale(at) }
+		$c scale ScaleX$Scale(at) 0 0 $Roi(Zoom) $Roi(Zoom) 
+	} else {
+		$c delete ScaleY$Scale(at)
+		set Scale(Y) [ mrcInfoGet $fileNameIn SectY $Scale(at) ]
+
+		if { $mainImage(mode) == "R" } { 
+			for { set i 0 } { $i < $mainImage(height) } { incr i 1 } {
+				set data [ lindex $Scale(Y) $i ] 
+				lappend p [ expr ($data - $mainImage(min))*$Scale(scale) + $Scale(at) ] [ expr $mainImage(height) - 1 - $i ]
+			}
+		} else {
+			for { set i 0 } { $i < $mainImage(height) } { incr i 1 } {
+				set data [ lindex $Scale(Y) $i ] 
+				lappend p [ expr ($data - $mainImage(min))*$Scale(scale) + $Scale(at) + $mainImage(width)/2.0 ] [ expr $mainImage(height) - 1 - $i ]
+			}
+		}
+		eval { $c create line } $p { -fill red -tags ScaleY$Scale(at) }
+		$c scale ScaleY$Scale(at) 0 0 $Roi(Zoom) $Roi(Zoom)  
+	}
+
+	set LayerLine(flag) ON
+}
+
+proc ScaleClear { } {
+	global Desktop
+	global Scale
+
+	set c $Desktop(mainCanvas).canvas
+	if { $Scale(which) == "X" } {
+		$c delete ScaleX$Scale(at)
+	} else {
+		$c delete ScaleY$Scale(at)
+	}
+
+	set LayerLine(flag) OFF
+}
+
+proc ScaleChange { } {
+	global Scale
+
+	set w .ScaleInfo
+	set f $w.which
+	set b $f.which 
+	if { $Scale(which) == "X" } {
+		set Scale(which) Y
+	} else {
+		set Scale(which) X
+	}
+	$b configure -text $Scale(which) -command ScaleChange
+}
+
+

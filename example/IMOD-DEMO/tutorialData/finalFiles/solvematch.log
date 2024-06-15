@@ -1,0 +1,27 @@
+
+ FORMATTED  old  file opened: BBafid.xyz
+ 25 points from first tomogram
+
+ FORMATTED  old  file opened: BBbfid.xyz
+ 25 points from second tomogram
+
+ FORMATTED  ro  file opened: transferfid.coord
+ 25 pairs of fiducial points originally specified
+ 25 pairs of points are available for fitting
+ In the final list of correspondences used for fits, points from A are:
+1-25
+ Points from B are:
+1-25
+
+
+ Mean residual   0.335,  maximum    0.780 at point #  17 (Obj  1 cont  17 in A)
+  Deviations:    0.137    0.264    0.721
+
+ Transformation matrix for matchvol:
+  0.005501 -0.015051  0.984453    55.069
+ -0.000539  0.993769  0.009225     0.217
+ -1.018205 -0.005159  0.006522   -20.773
+
+ FORMATTED  new  file opened: solvezero.xf
+STATUS: SOLVEMATCH RAN SUCCESSFULLY, NEXT RUNNING MATCHSHIFTS
+MATCHSHIFTS: Found non-zero shifts in solvezero.xf, copied it to solve.xf

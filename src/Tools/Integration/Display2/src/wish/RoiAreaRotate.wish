@@ -1,0 +1,210 @@
+#!/usr/local/bin/wish -f
+proc roiAreaRotateStart {c x y} {
+	global mousePressed
+	global Roi
+
+	set mousePressed(mode) 1
+	set mousePressed(startx) $x
+	set mousePressed(starty) $y
+
+	switch $Roi(Shape)  {
+		Rectangle {
+			set rectanglePoints(near) [ rectangleNearPoint $x $y ]
+		}
+		TiltRectangle {
+			set rectanglePoints(near) [ rectangleNearPoint $x $y ]
+		}
+		Line {
+			set linePoints(near) [ lineNearPoint $x $y ]
+		}
+		Spline {
+			set splinePoints(near) [ splineNearPoint $x $y ]
+		}
+		default {
+			puts "Not supported Action"
+		}
+	}
+}
+
+proc roiAreaRotateMotion {c x y} {
+	global mousePressed
+	global Roi
+
+	if { $mousePressed(mode) == 1 } {
+		$c delete $Roi(CurrentObject)
+		set mousePressed(endx) $x
+		set mousePressed(endy) $y
+		switch $Roi(Shape) {
+			Rectangle {
+				set Roi(CurrentObject) [rectangleRotate $c $mousePressed(startx) $mousePressed(starty) $mousePressed(endx) $mousePressed(endy) ]
+			}
+			TiltRectangle {
+				set Roi(CurrentObject) [rectangleRotate $c $mousePressed(startx) $mousePressed(starty) $mousePressed(endx) $mousePressed(endy) ]
+			}
+			Line {
+				set Roi(CurrentObject) [lineRotate $c $mousePressed(startx) $mousePressed(starty) $mousePressed(endx) $mousePressed(endy) ]
+			}
+			Spline {
+				set Roi(CurrentObject) [splineRotate $c $mousePressed(startx) $mousePressed(starty) $mousePressed(endx) $mousePressed(endy) ]
+			}
+			default {
+				puts "Not supported Action"
+			}
+		}
+		set mousePressed(startx) $x
+		set mousePressed(starty) $y
+	}
+}
+
+proc roiAreaRotateEnd {c x y} {
+	global mousePressed
+	global Roi
+
+	if { $mousePressed(mode) == 1 } {
+		$c delete $Roi(CurrentObject)
+		set mousePressed(endx) $x
+		set mousePressed(endy) $y
+		switch $Roi(Shape) {
+			Rectangle {
+				set Roi(CurrentObject) [rectangleRotate $c $mousePressed(startx) $mousePressed(starty) $mousePressed(endx) $mousePressed(endy) ]
+			}
+			TiltRectangle {
+				set Roi(CurrentObject) [rectangleRotate $c $mousePressed(startx) $mousePressed(starty) $mousePressed(endx) $mousePressed(endy) ]
+			}
+			Line {
+				set Roi(CurrentObject) [lineRotate $c $mousePressed(startx) $mousePressed(starty) $mousePressed(endx) $mousePressed(endy) ]
+			}
+			Spline {
+				set Roi(CurrentObject) [splineRotate $c $mousePressed(startx) $mousePressed(starty) $mousePressed(endx) $mousePressed(endy) ]
+			}
+			default {
+				puts "Not supported Action"
+			}
+		}
+	}
+	set mousePressed(mode) 0
+}
+
+proc rectangleRotate { c startx starty endx endy } {
+	global rectanglePoints 
+
+	switch $rectanglePoints(near) {
+		0 {
+			rectangleRotateCalc $rectanglePoints(x2) $rectanglePoints(y2) \
+								$endx $endy \
+								$rectanglePoints(x3) $rectanglePoints(y3) \
+								$rectanglePoints(x0) $rectanglePoints(y0) \
+								$rectanglePoints(x1) $rectanglePoints(y1)
+			set rectanglePoints(x3) $rectanglePoints(bx)
+			set rectanglePoints(y3) $rectanglePoints(by)
+			set rectanglePoints(x0) $rectanglePoints(cx)
+			set rectanglePoints(y0) $rectanglePoints(cy)
+			set rectanglePoints(x1) $rectanglePoints(dx)
+			set rectanglePoints(y1) $rectanglePoints(dy)
+		}
+		1 {
+			rectangleRotateCalc $rectanglePoints(x3) $rectanglePoints(y3) \
+								$endx $endy \
+								$rectanglePoints(x0) $rectanglePoints(y0) \
+								$rectanglePoints(x1) $rectanglePoints(y1) \
+								$rectanglePoints(x2) $rectanglePoints(y2)
+			set rectanglePoints(x0) $rectanglePoints(bx)
+			set rectanglePoints(y0) $rectanglePoints(by)
+			set rectanglePoints(x1) $rectanglePoints(cx)
+			set rectanglePoints(y1) $rectanglePoints(cy)
+			set rectanglePoints(x2) $rectanglePoints(dx)
+			set rectanglePoints(y2) $rectanglePoints(dy)
+		}
+		2 {
+			rectangleRotateCalc $rectanglePoints(x0) $rectanglePoints(y0) \
+								$endx $endy \
+								$rectanglePoints(x1) $rectanglePoints(y1) \
+								$rectanglePoints(x2) $rectanglePoints(y2) \
+								$rectanglePoints(x3) $rectanglePoints(y3)
+			set rectanglePoints(x1) $rectanglePoints(bx)
+			set rectanglePoints(y1) $rectanglePoints(by)
+			set rectanglePoints(x2) $rectanglePoints(cx)
+			set rectanglePoints(y2) $rectanglePoints(cy)
+			set rectanglePoints(x3) $rectanglePoints(dx)
+			set rectanglePoints(y3) $rectanglePoints(dy)
+		}
+		3 {
+			rectangleRotateCalc $rectanglePoints(x1) $rectanglePoints(y1) \
+								$endx $endy \
+								$rectanglePoints(x2) $rectanglePoints(y2) \
+								$rectanglePoints(x3) $rectanglePoints(y3) \
+								$rectanglePoints(x0) $rectanglePoints(y0)
+			set rectanglePoints(x2) $rectanglePoints(bx)
+			set rectanglePoints(y2) $rectanglePoints(by)
+			set rectanglePoints(x3) $rectanglePoints(cx)
+			set rectanglePoints(y3) $rectanglePoints(cy)
+			set rectanglePoints(x0) $rectanglePoints(dx)
+			set rectanglePoints(y0) $rectanglePoints(dy)
+		}
+	}
+	return [ rectangleCreate $c \
+							$rectanglePoints(x0) $rectanglePoints(y0) $rectanglePoints(x1) $rectanglePoints(y1) \
+						    $rectanglePoints(x2) $rectanglePoints(y2) $rectanglePoints(x3) $rectanglePoints(y3) ]
+}
+
+#
+# a     : fixed point
+# point : pointed point
+# a -> b -> c -> d ( Counter-clockwise)
+#
+proc rectangleRotateCalc { ax ay pointx pointy bx by cx cy dx dy } {
+	global rectanglePoints
+
+	set angle [expr atan2($pointy-$ay,$pointx-$ax) - atan2($cy-$ay,$cx-$ax) ]
+	set rectanglePoints(bx) [ expr ($bx-$ax)*cos($angle)-($by-$ay)*sin($angle) + $ax ]
+	set rectanglePoints(by) [ expr ($bx-$ax)*sin($angle)+($by-$ay)*cos($angle) + $ay ]
+	set rectanglePoints(cx) [ expr ($cx-$ax)*cos($angle)-($cy-$ay)*sin($angle) + $ax ]
+	set rectanglePoints(cy) [ expr ($cx-$ax)*sin($angle)+($cy-$ay)*cos($angle) + $ay ]
+	set rectanglePoints(dx) [ expr ($dx-$ax)*cos($angle)-($dy-$ay)*sin($angle) + $ax ]
+	set rectanglePoints(dy) [ expr ($dx-$ax)*sin($angle)+($dy-$ay)*cos($angle) + $ay ]
+}
+
+proc lineRotate { c startx starty endx endy } {
+	global linePoints 
+
+	switch $linePoints(near) {
+		0 {
+			lineRotateCalc $linePoints(x1) $linePoints(y1) $endx  $endy $linePoints(x0) $linePoints(y0)
+    		set linePoints(x0) $linePoints(bx)
+    		set linePoints(y0) $linePoints(by)
+		}
+		1 {
+			lineRotateCalc $linePoints(x0) $linePoints(y0) $endx  $endy $linePoints(x1) $linePoints(y1)
+    		set linePoints(x1) $linePoints(bx)
+    		set linePoints(y1) $linePoints(by)
+		}
+	}
+	return [ lineCreate $c $linePoints(x0) $linePoints(y0) $linePoints(x1) $linePoints(y1) ]
+}
+
+#
+# a     : fixed point
+# point : pointed point
+# a -> b 
+#
+proc lineRotateCalc { ax ay pointx pointy bx by } {
+	global linePoints
+
+	set angle [expr atan2($pointy-$ay,$pointx-$ax) - atan2($by-$ay,$bx-$ax) ]
+	set linePoints(bx) [ expr ($bx-$ax)*cos($angle)-($by-$ay)*sin($angle) + $ax ]
+	set linePoints(by) [ expr ($bx-$ax)*sin($angle)+($by-$ay)*cos($angle) + $ay ]
+}
+
+proc splineRotate { c startx starty endx endy } {
+	global splinePoints 
+}
+
+#
+# a     : fixed point
+# point : pointed point
+# a -> b 
+#
+proc splineRotateCalc { ax ay pointx pointy bx by } {
+	global splinePoints
+}
+

@@ -1,0 +1,143 @@
+/*
+# pdbView : $Revision$  
+# $Date$ 
+# Created by $Author$
+# Usage : pdbView
+# Attention
+#   $Loccker$
+#  	$State$ 
+#
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <stream.h>
+#include "vtk.h"
+
+#include "eosAxisSource.hh"
+#include "./eosRuler.hh"              
+#include "eosRuler.cc"
+
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+
+#define DEBUG
+#include "genUtil.h"
+#include "pdbFile.h"
+
+#include "vtkTextMapper.h"
+#include "vtkPicker.h"
+
+//temp
+#include "vtkImageGridSource.h"
+
+
+/*
+Example:
+typedef struct lpdbViewInfo {
+	float a;
+	int   b;
+} lpdbViewInfo;
+
+typedef enum lpdbViewMode {
+	a=0,
+	b=1
+} lpdbViewMode;
+*/
+
+
+int
+main(int argc, char* argv[]) 
+{
+    
+  pdbViewInfo info;
+  pdbFile pdb;
+  pdbFile* ppdb;
+
+  ppdb = &pdb;
+  
+  init0(&info);
+  argCheck(&info, argc, argv);
+  init1(&info);
+  
+  DEBUGPRINT("Program Start\n");
+  cout << "start C++\n";
+  pdbFileRead(info.fptIn, &pdb);
+  
+  vtkRenderer *ren = vtkRenderer::New();
+  vtkRenderWindow *renWindow = vtkRenderWindow::New();
+  renWindow->AddRenderer(ren);
+  vtkRenderWindowInteractor *iren = vtkRenderWindowInteractor::New();
+  iren->SetRenderWindow(renWindow);
+  
+ 
+  //SetText
+  vtkTextMapper* tMapper = vtkTextMapper::New();
+  tMapper->SetInput("testShow");
+  tMapper->ShadowOn();
+
+  vtkActor2D* tActor = vtkActor2D::New();
+  tActor->SetMapper(tMapper);
+  tActor->SetPosition(0,0);
+
+  ren->AddActor2D(tActor);
+
+
+  //Axes
+  vtkAxes* axes = vtkAxes::New();
+  axes->SetOrigin(0,0,0);
+  vtkPolyDataMapper* axesMapper = vtkPolyDataMapper::New();
+  axesMapper->SetInput(axes->GetOutput());
+  vtkActor* axesActor = vtkActor::New();
+  axesActor->SetMapper(axesMapper);
+
+  ren->AddActor(axesActor);
+
+
+  //Cube
+  vtkCubeSource *cube = vtkCubeSource::New();
+  cube->SetCenter(0,0,0);
+  cube->SetXLength(5);
+  cube->SetYLength(5);
+  cube->SetZLength(5);
+  //cube->SetBounds(0.0,0.5,0.0,0.3,0.0,0.2);
+  vtkPolyDataMapper *cubeMapper = vtkPolyDataMapper::New();
+  cubeMapper->SetInput(cube->GetOutput());
+  vtkActor *cubeActor = vtkActor::New();
+  cubeActor->SetMapper(cubeMapper);
+  cubeActor->GetProperty()->SetOpacity(0.5);
+  cubeActor->GetProperty()->SetColor(0.4,0.4,0.7);
+  
+
+
+    //assign our actor to the renderer
+
+    ren->AddActor(cubeActor);
+    ren->SetBackground(0,0,0);
+    ren->ResetCamera();
+
+    //renWindow->PolygonSmoothingOff();
+    //renWindow->PointSmoothingOff();
+    //renWindow->LineSmoothingOff();
+  
+
+    renWindow->SetSize(400,400);
+
+    //draw the resulting scene
+    renWindow->Render();
+
+    //Begin mouse interaction
+    iren->Start();
+
+    //picker->Pick( 200, 200, 0, ren);
+
+
+	exit(EXIT_SUCCESS);
+}
+
+void
+additionalUsage()
+{
+	fprintf(stderr, "----- Additional Usage -----\n");
+}

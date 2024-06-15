@@ -1,0 +1,30 @@
+have_library: checking for main() in -lGL... -------------------- no
+
+"gcc -o conftest -I. -I/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/universal-darwin10.0 -I. -I/Applications/Eos.app/Eos/include  -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE   -arch i386 -arch x86_64 -g -Os -pipe -fno-common -DENABLE_DTRACE  -fno-common  -pipe -fno-common   conftest.c  -L. -L/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib -L/usr/lib -L/Applications/Eos.app/Eos/lib/X86MAC64 -L. -arch i386 -arch x86_64      -lruby -lGL  -lpthread -ldl  "
+ld: library not found for -lGL
+collect2: ld returned 1 exit status
+ld: library not found for -lGL
+collect2: ld returned 1 exit status
+lipo: can't open input file: /var/folders/-E/-EQYdVDRG7mXZpHb2KKd8E+++TI/-Tmp-//cc6OijR9.out (No such file or directory)
+checked program was:
+/* begin */
+1: /*top*/
+2: int main() { return 0; }
+3: int t() { void ((*volatile p)()); p = (void ((*)()))main; return 0; }
+/* end */
+
+"gcc -o conftest -I. -I/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/universal-darwin10.0 -I. -I/Applications/Eos.app/Eos/include  -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE   -arch i386 -arch x86_64 -g -Os -pipe -fno-common -DENABLE_DTRACE  -fno-common  -pipe -fno-common   conftest.c  -L. -L/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib -L/usr/lib -L/Applications/Eos.app/Eos/lib/X86MAC64 -L. -arch i386 -arch x86_64      -lruby -lGL  -lpthread -ldl  "
+ld: library not found for -lGL
+collect2: ld returned 1 exit status
+ld: library not found for -lGL
+collect2: ld returned 1 exit status
+lipo: can't open input file: /var/folders/-E/-EQYdVDRG7mXZpHb2KKd8E+++TI/-Tmp-//ccIUC5dh.out (No such file or directory)
+checked program was:
+/* begin */
+1: /*top*/
+2: int main() { return 0; }
+3: int t() { main(); return 0; }
+/* end */
+
+--------------------
+

@@ -1,0 +1,274 @@
+/*
+# pdbRhoFitTm.c  1.4
+# The latest update : 12/17/96 at 16:22:47
+#
+#@(#) pdbRhoFitTm ver 1.4
+#@(#) Created by Yu MENG
+#@(#)
+#@(#) Usage : pdbRhoFitTm
+#@(#) Attention
+#@(#)
+*/
+static char __sccs_id[] = "@(#)pdbRhoFitTm ver1.4; Date:96/12/17 @(#)";
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>                  
+#include <memory.h>
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+
+
+#undef DEBUG
+#undef PDBDEBUG
+#undef MRCDEBUG
+#undef NORDEBUG
+#define Count_mode (0)
+#define Density_mode (1)
+#define PI (3.14159265358979)
+#define MINTFACTOR (1)
+#define MAX (1000)
+
+#include "mrcImage.h"
+#include "pdbFile.h"
+
+extern void lpdbRhoFitTm(pdbRhoFitTmInfo*);
+
+void
+main(int argc, char* argv[]) 
+{
+	long status;
+	pdbRhoFitTmInfo info;
+
+	init0(&info);
+    argCheck(&info, argc, argv);
+    init1(&info);
+
+	lpdbRhoFitTm(&info);
+	exit(EXIT_SUCCESS);
+}
+
+void lpdbRhoFitTm(pdbRhoFitTmInfo* info)
+{
+	pdbFile inPdb;
+	pdbFile inS0Pdb; /* pdb file shifted to the (0, 0) coord */
+	pdbFile tmpPdb;
+	double data;
+	double score;
+	double normalizeData;
+	float zPosition;
+	float phi;
+	float rad;
+	Matrix3D MatrixRot;
+	Matrix3D MatrixShift0; /* to the (0, 0) coord */
+	Matrix3D MatrixShift1; /* back to the original coord */
+	float xofMrc;
+	float yofMrc;
+	float zofMrc;
+	mrcImage inMrc;
+	mrcImage outmrc;
+	mrcImage tmpmrc;
+	mrcImageParaTypeReal x,y,z;
+	#ifdef PDBDEBUG
+		FILE* pdbfpt;
+		char tmpPdbFName[256];
+	#endif
+
+	pdbRecord* onePdbRecord;
+	pdbFileParaTypeReal X,Y,Z;
+	int mrcX,mrcY;
+	int i;
+
+	pdbFileRead(info->fptInPdb, &inPdb);
+	mrcFileRead(&inMrc,info->InMrc,"in lpdbRhoFitTm\n",0);
+	xofMrc=(inMrc.HeaderN.x-1) * inMrc.HeaderLength.x;
+	yofMrc=(inMrc.HeaderN.y-1) * inMrc.HeaderLength.y;
+	zofMrc=(inMrc.HeaderN.z-1) * inMrc.HeaderLength.z;
+	#ifdef DEBUG
+		fprintf(stderr,"xlen(A) %f\n",xofMrc);
+		fprintf(stderr,"ylen(A) %f\n",yofMrc);
+		fprintf(stderr,"zlen(A) %f\n",zofMrc);
+	#endif
+
+/* initialize MatrixShift0 and MatrixShift1 */
+	matrix3DInit(MatrixShift0);
+	matrix3DInit(MatrixShift1);
+
+/*
+         [0][0]   [1][0]   [2][0]   [3][0]    |x|
+         [0][1]   [1][1]   [2][1]   [3][1] * | y |
+         [0][2]   [1][2]   [2][2]   [3][2]   | z |
+         [0][3]   [1][3]   [2][3]   [3][3]    |1|
+ */
+
+	MatrixShift0[3][0]=-info->Sx;
+	MatrixShift0[3][1]=-info->Sy;
+	MatrixShift1[3][0]= info->Sx;
+	MatrixShift1[3][1]= info->Sy;
+/* initialize mrcImage out */
+	outmrc.HeaderN.x=(info->phimax-info->phimin)/info->phiDelta;
+	outmrc.HeaderN.y=(info->zmax-info->zmin)/info->zDelta;
+	outmrc.HeaderN.z=1;
+	outmrc.HeaderMode=MRC_float_image;
+	mrcInit(&outmrc, NULL);
+
+	inS0Pdb.PDB=NULL;
+	tmpPdb.nAtom=0;
+	tmpPdb.PDB=NULL;
+	pdbFileCopyAll(&inS0Pdb,&inPdb);
+	pdbTrans(&inS0Pdb,MatrixShift0);
+	mrcX=0;
+	mrcY=0;
+	fprintf(stderr,"zmax = %f\n",info->zmax);
+	if(info->flagOutTxt){
+		fprintf(info->fptOutTxt,"      ");
+		for(phi=info->phimin;phi<info->phimax;phi=phi+info->phiDelta){
+			fprintf(info->fptOutTxt,"%4.0f ",phi);
+		}
+		fprintf(info->fptOutTxt,"\n\n");
+	}
+	tmpmrc.Header=inMrc.Header;
+	mrcInit(&tmpmrc,NULL);
+	normalizeData=0;
+	for(x=0;x<inMrc.HeaderN.x;x++){
+		for(y=0;y<inMrc.HeaderN.y;y++){
+			for(z=0;z<inMrc.HeaderN.z;z++){
+				mrcPixelDataGet(&inMrc,x,y,z,&data,mrcPixelRePart,mrcPixelHowNearest);
+				if(0!=info->Inverse){
+					data= -data;
+				}
+				if(0 != info->flagnormalizeContour){
+					if(data<info->normalizeContour){
+						normalizeData += data/info->normalizeWeight;
+					}
+				}
+				score=0;
+				if(info->flagcontourLevel>=1){
+					for(i=0;i<info->flagcontourLevel;i++){
+						if(data<info->contourLevel[i]){
+							if(Count_mode==info->mode){
+								score++;
+							}else if(Density_mode==info->mode){
+								score=score-data/100;
+							}
+						}
+					}
+				}else if(0==info->flagcontourLevel && Density_mode==info->mode){
+					score=score-data/100;
+				}else{
+                    usage("pdbRhoFitTm");
+                    exit(EXIT_FAILURE);
+				}
+				mrcPixelDataSet(&tmpmrc,x,y,z,score,mrcPixelRePart);
+			}
+		}
+	}
+	normalizeData=normalizeData*inMrc.HeaderLength.x
+							   *inMrc.HeaderLength.y*inMrc.HeaderLength.z;
+	#ifdef NORDEBUG
+		fprintf(stderr,"normalizeData= %f.\n",normalizeData);
+		exit(0);
+	#endif
+	for(zPosition=info->zmin;zPosition<info->zmax;zPosition=zPosition+info->zDelta){
+
+		fprintf(stderr,"zPosition = %f\n",zPosition);
+		if(info->flagOutTxt){
+			fprintf(info->fptOutTxt,"%5.1f ",zPosition);
+		}
+		for(phi=info->phimin;phi<info->phimax;phi=phi+info->phiDelta){
+			#ifdef MRCDEBUG
+				fprintf(stderr,"phi=%f\n",phi);
+			#endif
+			matrix3DInit(MatrixRot);
+			rad=phi*PI/180;
+			MatrixRot[0][0] =  cos(rad);
+			MatrixRot[1][0] = -sin(rad);
+			MatrixRot[0][1] =  sin(rad);
+			MatrixRot[1][1] =  cos(rad);
+			if(0==info->Zminus){
+				MatrixRot[3][2]= zPosition;
+			}else{
+				MatrixRot[3][2]= -zPosition;
+			}
+			pdbFileCopyAll(&tmpPdb,&inS0Pdb);
+			pdbTrans(&tmpPdb,MatrixRot);
+			pdbTrans(&tmpPdb,MatrixShift1);
+			#ifdef PDBDEBUG
+				sprintf(tmpPdbFName,"tmp%1.0f%1.0f.pdb",zPosition,phi);
+				pdbfpt=fopen(tmpPdbFName,"w");
+				pdbFileWrite(pdbfpt,&tmpPdb);
+			#endif
+			onePdbRecord=pdbFileTop(&tmpPdb);
+			score=0;
+			while(NULL!=onePdbRecord){
+				pdbFileCoordGet(&tmpPdb,&X,&Y,&Z);
+				mrcImageDataGetbyAU(&tmpmrc,X,Y,Z,&data, mrcPixelMag, mrcPixelHowNearest);
+				if(data>MAX || data<-MAX){
+					fprintf(stderr,"data is %f\n",data);
+				}
+				#ifdef MRCDEBUG
+					fprintf(stderr,"X=%f; Y=%f; Z=%f; data= %f\n",X,Y,Z,data);
+				#endif
+				if(0!=info->Tfactor && onePdbRecord->TemperatureFactor<info->Tlim){
+					score=score+data*30/onePdbRecord->TemperatureFactor;
+				}else{
+					score=score+data;
+				}
+				onePdbRecord=pdbFileNextAtom(&tmpPdb);
+			}
+			if(0 != info->flagnormalizeContour){
+				score = -score/normalizeData;
+/* density in normal image is minus (normalizeData < 0) */
+			}
+			mrcPixelDataSet(&outmrc, mrcX, mrcY, 0, score, mrcPixelRePart);
+			if(info->flagOutTxt){
+				fprintf(info->fptOutTxt,"%4.0f ",score);
+			}
+			mrcX++;	
+		}
+		if(info->flagOutTxt){
+			fprintf(info->fptOutTxt,"\n");
+		}
+		mrcY++;
+	}
+	outmrc.HeaderM.x=1;
+	outmrc.HeaderM.y=1;
+	outmrc.HeaderM.z=1;
+	outmrc.HeaderLength.x=info->phiDelta;
+	outmrc.HeaderLength.y=info->zDelta;
+	outmrc.HeaderLength.z=1;
+	outmrc.HeaderAlpha=90;
+	outmrc.HeaderBeta=90;
+	outmrc.HeaderGamma=90;
+	outmrc.HeaderMAPC=1;
+	outmrc.HeaderMAPR=2;
+	outmrc.HeaderMAPS=3;
+	mrcStatDataSet(&outmrc, 0);
+	mrcFileWrite(&outmrc, info->OutMrc, "in lpdbRhoFitTm", 0);
+}
+
+void
+additionalUsage()
+{
+	fprintf(stderr,"\n\nUsage of pdbRhoFitTm:\n");
+	fprintf(stderr,"    -ipdb   : Filename of pdb file of atomic model\n");
+	fprintf(stderr,"    -imrc   : Filename of mrc file of contour map\n");
+	fprintf(stderr,"    -omrc   : Filename of mrc file of fitting results\n");
+	fprintf(stderr,"    -otxt   : Filename of text file of fitting results\n");
+	fprintf(stderr,"    -Sx	    : x of rotation axis\n");
+	fprintf(stderr,"    -Sy     : y of rotation axis\n");
+	fprintf(stderr,"    -zmin   : Initial value of z (should <= zmax)\n");
+	fprintf(stderr,"    -zmax   : Final value of z\n");
+	fprintf(stderr,"    -zd     : Delta z for fitting (should >0)\n");
+	fprintf(stderr,"    -phimin : Initial value of phi (should <= phimax; initial value of phi is 0)\n");
+	fprintf(stderr,"    -phimax : Final value of phi (should >0)\n");
+	fprintf(stderr,"    -phid   : Delta phi for fitting (should >0)\n");
+	fprintf(stderr,"    -C      : Contour level (variable and MUST be last option)\n");
+	fprintf(stderr,"    -Inverse: Black is high density on the image\n");
+	fprintf(stderr,"    -Zminus : Atomic model shift to -z while fitting\n");
+	fprintf(stderr,"    -Tfactor: Consider temperature factor\n");
+	fprintf(stderr,"    -Tlim   : The atoms whose T factor is above Tlim will be neglected\n");
+	fprintf(stderr,"    -c      : Not used now\n");
+	fprintf(stderr,"    -m   %d : Count the atom number inside the contour.\n",Count_mode);
+	fprintf(stderr,"         %d : Add the densities of atoms.\n",Density_mode);
+}

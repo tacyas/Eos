@@ -1,0 +1,30 @@
+<HTML>
+<HEAD>
+<TITLE>mrc2hdf</TITLE>
+</HEAD>
+<BODY>
+<H1>mrc2hdf</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrc2hdf
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile::mrcInfo     ) ] :Optional  :Input
+    [-I[nput]            InList              (NULL      ).as(inFileList::mrcInfo ) ] :Optional  :Input:FileList
+    [-I[nput]2           InList2             (NULL      ).as(inFileList::mrcInfo ) ] :Optional  :Input:FileList
+    [-I[nput]color       IR                  (1.0       ).as(Real                ) 
+                         IG                  (0.0       ).as(Real                ) 
+                         IB                  (0.0       ).as(Real                ) 
+                         IA                  (1.0       ).as(Real                ) ] :Optional  :RGBA
+    [-I[nput]2color      I2R                 (0.0       ).as(Real                ) 
+                         I2G                 (1.0       ).as(Real                ) 
+                         I2B                 (0.0       ).as(Real                ) 
+                         I2A                 (1.0       ).as(Real                ) ] :Optional  :RGBA
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-nres[olution]      nResolution         (1         ).as(Integer             ) ] :Optional  :Pyramidal Resolution
+    [-M[ode]             hdf5mode            (1         ).as(Integer             ) ] :Optional  :Mode:0 hdf5 1 imaris
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+</PRE>
+</BODY>
+</HTML>

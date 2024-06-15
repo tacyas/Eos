@@ -1,0 +1,34 @@
+-F 4.3 1 0 52x1+0+0 +0+0 'Cantata' cantata
+  -M 1 1 52x1+0+0 +1+0 ' ' subform
+    -P 1 0 52x1+0+1 +0+0 ' ' llExtractCtrlFileCreate
+      -D 1 0 9x1+0+0 'Options' _gui_options
+        -H 1  6x1+0+0 'License' 'license' $BOOTSTRAP/repos/license/License license
+        -E
+        -R 1 0 1 5x1+35+0 'Run' 'execute operation' $EOS/bin/llExtractCtrlFileCreate
+        -H 1  5x1+41+0 'Help' 'help page' $EOS/src/Tools/rec3d/llExtractCtrlFileCreate/doc/llExtractCtrlFileCreate.doc help
+        -Q 1 0 5.25x1+47+0 'Close'
+        -I 1 0 1 0 0 1 -1x1+1+1.500000 ' ' 'In' 'InputDataFile' i
+        -O 1 0 1 0 0 1 -1x1+1+3.000000 ' ' 'Out' 'OutputDataFile' o
+        -I 1 0 1 0 0 1 -1x1+1+4.500000 ' ' 'configFile' 'ConfigurationFile' c
+        -i 1 0 1 0 0 -1x1+1+6.000000 0 0 -6 0 0 'turn' 'Turn' t
+        -i 1 0 1 0 0 -1x1+1+7.500000 0 0 13 0 0 'unit' 'Unit' u
+        -i 1 0 1 0 0 -1x1+1+9.000000 0 0 1 0 0 'nstrand' 'N-strand' N
+        -i 1 0 1 0 0 -1x1+1+10.500000 0 0 36 0 0 'Y1' 'Y1 [pixel]: The Position of LayerLine which l = |t| i.e., |n|=1&&m=0 for the first time' Y1
+        -i 1 0 1 0 0 -1x1+1+12.000000 0 0 78 0 0 'Y0' 'Y0 [pixel]: The Position of LayerLine which n = 0 , l != 0 for the first time' Y0
+        -f 1 0 1 0 0 -1x1+1+13.500000 0 0 250.000000 0 0 0 'rmax' 'rmax[A]' rmax
+        -f 1 0 1 0 0 -1x1+1+15.000000 0 0 0.100000 0 0 0 'Rmax' 'Rmax[/A]' Rmax
+        -f 1 0 1 0 0 -1x1+1+16.500000 0 0 5.000000 0 0 0 'lx' 'Pixel Size' lx
+        -f 1 0 1 0 0 -1x1+1+18.000000 0 0 5.000000 0 0 0 'ly' 'Pixel Size' ly
+        -f 1 0 1 0 0 -1x1+1+19.500000 0 0 1000.000000 0 0 0 'nx' 'Image Size[Pixel]' nx
+        -f 1 0 1 0 0 -1x1+1+21.000000 0 0 1000.000000 0 0 0 'ny' 'Image Size[Pixel]' ny
+        -f 1 0 1 0 0 -1x1+1+22.500000 0 0 500.000000 0 0 0 'center' 'Center of nx (center of filament)[Pixel]' center
+        -f 1 0 1 0 0 -1x1+1+24.000000 0 0 21.000000 0 0 0 'layerline' 'Number of Layer Line' layerline
+        -f 1 0 1 0 0 -1x1+1+25.500000 0 0 5000.000000 0 0 0 'Ax' 'Length of nx (lx * nx)[A]' Ax
+        -f 1 0 1 0 0 -1x1+1+27.000000 0 0 12.000000 0 0 0 'dY' 'Range of Layer Line[pixel]' dY
+        -f 1 0 1 0 0 -1x1+1+28.500000 0 0 430.000000 0 0 0 'truePitch' 'True Pitch' truePitch
+        -f 1 0 1 0 0 -1x1+1+30.000000 0 0 5.000000 0 0 0 'PixelSize' 'Pixel Size [A]' PixelSize
+        -f 1 0 1 0 0 -1x1+1+31.500000 0 0 0.500000 0 0 0 'deltadY' 'A range of deltadY to determine dY.[pixel]' deltadY
+        -i 1 0 1 0 0 -1x1+1+33.000000 0 0 1 0 0 'mode' 'Mode' m
+    -E
+  -E
+-E

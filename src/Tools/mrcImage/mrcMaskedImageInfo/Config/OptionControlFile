@@ -1,0 +1,9 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input","Essential","1","1","In","inFile::mrcImage","NULL"
+"-o","-o[utput]","Output","Optional","1","1","Out","outFile::ASCII","stdout"
+"-M","-M[askedValue]","MaskedValue","Optional","1","1","MaskedValue","Real","0.0"
+"-e","-e[psilon]","Epsilon","Optional","1","1","Epsilon","Real","1e-6"
+"-nQ","-nQ[uantile]","Epsilon","Optional","1","1","nQuantile","Integer","9"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

@@ -1,0 +1,89 @@
+#!/bin/sh
+# sccsPut  1.3
+#
+# The latest update : at 23:21:38
+#
+#@(#) A new SCCS file is created if no SCCS. If one have SCCS, delta commands.
+#@(#) 
+#
+#@(#) Usage : sccsPut SourceFileName
+#@(#)
+#@(#) Attention
+#@(#)
+#@(#) Parameter: 
+#@(#)     Essential:
+#@(#)         SourceFileName
+#@(#)     Optional:
+#@(#)
+
+# Store Flags
+FlagsCharacter="-"
+
+while [ `echo $1 | cut -c1` = "-" ]
+do
+	parms="$ {parms} $1"
+	shift 
+done
+
+case $# in
+	0) # No filename 
+		echo "Enter SourceFileName"
+		read filename
+		;;
+	1) # 
+		filename=$1
+		;;
+	*) #
+		filename="$*"
+		;;
+esac
+#
+EosSCCSHome=$EOS_HOME/sccs
+currentDir=`pwd`
+
+for file in ${filename}
+do
+	FullName=${currentDir}/${file}	
+	Name=`basename ${FullName}`
+	Dir=`dirname ${FullName}`
+#	echo Full=${FullName} Name=${Name} EosHome=$EOS_HOME
+
+	currentSCCSDir=`echo $Dir | awk '{sub(/\/[a-zA-Z0-9\/]*\/Eos\//, ""); print $0}'` 
+	sccsDir=${EosSCCSHome}/${currentSCCSDir}
+#	echo sccsDir=${sccsDir} currentSCCSDir=${currentSCCSDir}
+#	exit
+
+	echo ">>>> ${Name}"
+
+	if [ -x $file ]
+	then 
+		Executable="+x"
+	else
+		Executable="-x"
+	fi
+
+	if [ -f ${sccsDir}/s.${Name} ] 
+	then
+		echo "newline is \\"
+		delta ${sccsDir}/s.${Name} 
+	else
+		if [ ! -d ${sccsDir} ]
+		then
+			mkdir -p  ${sccsDir}
+		fi
+		admin -n -i${file} ${sccsDir}/s.${Name}
+	fi
+	if [ -f ${file} ]
+	then
+		if [ -f ${sccsDir}/s.${Name} ]
+		then
+			rm $file
+		fi
+	fi
+
+	cd ${Dir}
+	get   ${sccsDir}/s.${Name}
+	chgrp Eos ${Name}
+	chmod 444 ${Name} 
+	chmod ${Executable} ${Name}
+done

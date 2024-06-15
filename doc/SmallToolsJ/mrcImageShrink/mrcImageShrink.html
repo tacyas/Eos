@@ -1,0 +1,180 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageShrink</title>
+	
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageShrink<br></h2></b></font>
+	<h4>収縮</h4>
+	
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+	<table border="1">
+		<div align="left">
+		<tr>
+			<th>オプション</th>
+			<th>必須項目/選択項目</th>
+			<th>説明</th>
+			<th>デフォルト</th>
+		</tr>
+		<tr>
+			<td>-i</td>
+			<td>必須</td>
+			<td>入力ファイル設定</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-o</td>
+			<td>必須</td>
+			<td>出力ファイル設定</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-S</td>
+			<td>選択</td>
+			<td>ピクセルサイズの値を設定（x,y,z軸すべて同じ値になる）</td>
+			<td>2</td>
+		</tr>
+		<tr>
+			<td>-Sx</td>
+			<td>選択</td>
+			<td>ピクセルサイズのx軸の値を設定</td>
+			<td>2</td>
+		</tr>
+		<tr>
+			<td>-Sy</td>
+			<td>選択</td>
+			<td>ピクセルサイズのy軸の値を設定</td>
+			<td>2</td>
+		</tr>
+		<tr>
+			<td>-Sz</td>
+			<td>選択</td>
+			<td>ピクセルサイズのz軸の値を設定</td>
+			<td>2</td>
+		</tr>
+		<tr>
+			<td>-h</td>
+			<td>選択</td>
+			<td>ヘルプを表示</td>
+			<td>　</td>
+		</tr>
+	</table>
+	
+	<h4>******実行例******</h4>
+	
+<!-- 入力ファイル説明 -->
+
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><a href="inputfile.html">入力ファイル画像</a>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				2.40654<br>
+				0.331372<br>
+				0.183364<br>
+				0.000358573<br></p>
+			</td>
+		</tr>
+	</table>
+	<br>
+	<div>●画素数をmrcInfoで表示した結果<br>
+	<img src="mrcInfo1.png"></div>
+
+<!-- 出力結果 -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------出力結果------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="test.shrink.png" border="0" alt="test.shrink.png(55168 byte)" width="125" height="523"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0.0190035<br>
+				1.66372<br>
+				0.331372<br>
+				0.151921<br>
+				0.000594173<br></p>
+			</td>
+		</tr>
+	</table>
+	<br>
+	<div>●画素数をmrcInfoで表示した結果<br>
+	<img src="mrcInfo2.png"><br>
+	オプションでピクセルサイズの値を指定していないので、<br>
+	デフォルトの2で収縮される</div>
+	
+	<br>
+	<br>
+	<caption><font color="blue">------ピクセルサイズを指定（オプション　-S）------</font></caption><br>
+		<div>値を10にして実行</div>
+		<table>
+			<tr>
+			<td><img src="test.S10.shrink.png" border="0" alt="test.S10.shrink.png(3308 byte)" width="25" height="104"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0.164437<br>
+				0.856332<br>
+				0.331082<br>
+				0.0903754<br>
+				0.00177241<br></p>
+			</td>
+		</tr>
+	</table>
+	<br>
+	<div>●画素数をmrcInfoで表示した結果<br>
+	<img src="mrcInfo3.png"><br>
+	</div>
+
+	<br>
+	<br>
+	<caption><font color="blue">------各軸のピクセルサイズを別々に指定（オプション　-Sx,-Sy,-Sz）------</font></caption><br>
+		<div>x軸の値を3、y軸の値を5にして実行</div>
+		<table>
+			<tr>
+			<td><img src="test.x3y5.shrink.png" border="0" alt="test.x3y5.shrink.png(15660 byte)" width="83" height="209"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0.0726836<br>
+				1.24973<br>
+				0.331489<br>
+				0.123327<br>
+				0.000936368<br></p>
+			</td>
+		</tr>
+	</table>
+	<br>
+	<div>●画素数をmrcInfoで表示した結果<br>
+	<img src="mrcInfo4.png"><br>
+	<br>
+	※入力ファイルの画素数を指定したピクセルサイズで処理して、<br>
+	　 結果が少数になった場合は、少数は切り捨てになる<br>
+	※オプション-Sx,-Sy,-Szを指定していても、-Sを指定していたら、<br>
+	　 -Sが優先される</div>
+</body>
+
+</html>

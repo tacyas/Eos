@@ -1,0 +1,38 @@
+<HTML>
+<HEAD>
+<TITLE>ProjectionDirectionMapCreate</TITLE>
+</HEAD>
+<BODY>
+<H1>ProjectionDirectionMapCreate</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: ProjectionDirectionMapCreate
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Optional  :OutputDataFile
+    [-p[ost]s[cript]     Ps                  (NULL      ).as(outFile             ) ] :Optional  :OutputPostScriptFile
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+    [-R[otation]m[ode]   Rmode               (0         ).as(Integer             ) ] :Optional  :Mode
+----- Rotational Mode -----
+Final rotation of projection is only Z .
+
+----- input file format -----
+filename rotationalmode angle angle angle
+   .             .        .     .     .  
+   .             .        .     .     .  
+   .             .        .     .     .  
+   .             .        .     .     .  
+
+----- mode -----
+-m : 0 : Not separate plus and minus of theta. Create one line data
+     1 :     separate plus and minus of theta. Create one line data
+     2 :     separate plus and minus of theta. Create two line data
+     3 : Mollweide expressionn
+----- mode -----
+-Rm : 0 : Not change rotational mode
+      1 :     Change rotational mode to ZONS
+
+</PRE>
+</BODY>
+</HTML>

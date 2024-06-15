@@ -1,0 +1,15 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-ires","-i[nput]res[idue]","ResidueInformationOfInputData","Optional","1","1","InResidue","inFile","NULL"
+"-isel","-i[nput]sel[ectResidue]","Output: Selected residue of in after fitting","Optional","1","1","SelectIn","outFile","NULL"
+"-r","-r[ef]","ReferenceDataFile","Essential","1","1","Ref","inFile","NULL"
+"-rres","-r[ef]res[idue]","ResidueInfomationOfReferenceData","Optional","1","1","RefResidue","inFile","NULL"
+"-rsel","-r[ef]sel[ectResidue]","Output: Selected residue of after fitting","Optional","1","1","SelectRef","outFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-oMatrix","-o[utput]Matrix","OutputMatrix","Optional","1","1","Matrix","outFile","stdout"
+"-oParam","-o[utput]Param","OutputParam","Optional","1","1","Param","outFile","stdout"
+"-oDis","-o[utput]Dis[tance]","Output: PDB Distance as Temp","Optional","1","1","outDis","outFile","stdout"
+"-oDis2","-o[utput]Dis[tance]2","Output: Distance List for Ca","Optional","1","1","outDis2","outFile","stdout"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

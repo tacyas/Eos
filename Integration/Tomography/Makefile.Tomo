@@ -1,0 +1,302 @@
+.SUFFIXES: .tif .dat .prectf .fft .ctfinfo .mrc \
+	.box .roi \
+	.roiinfo-coarse .roiall-coarse .roiinforef-coarse .roiallref-coarse  .roiinfoprev-coarse \
+	.roiinfo        .roiall        .roiinforef        .roiallref         .roiinfoprev \
+	.box2roiinfo .roiinfo2box .corinfo \
+	.roilst0 .roilst .mrc3d .ds6 .mrc3dmed .mrc3dmedcentre .orimrccentre .oricorinfo .coarroi .coarroiinfo .roi2 .pad .mul
+
+RESOLUTION=1.7
+ORIFILE=p1
+ZEROTILTNUM=31
+ORIBASE=$(ORIFILE)_0$(ZEROTILTNUM)
+MINTILTNUM=1
+MAXTILTNUM=61
+STEPTILTNUM=1
+MINTILTANGLE=-60
+STEPTILTANGLE=2
+
+SMOOTHr=5
+SMOOTHm=1
+SMOOTHM=1
+CENTERNX=100
+CENTERNY=100
+CENTERNZ=100
+
+ORINX=1024
+ORINY=1024
+
+ORINZ=1
+ORISIZEX=2048
+ORISIZEY=2048
+TILTAXISANGLE=0
+IMAGEPADm=15
+IMAGEPADV=0
+IMAGEMULTIPLYINGv=-1
+MRC2MAPmul=1
+
+all: data2mrc COARCreate $(ORIBASE).roiinfo BoxCreate PadAndMul roilstCreate ds6Create
+
+data2mrc::
+	for (( i=1 ; $$i <= $(MAXTILTNUM) ; i=$$(($$i + 1)))) \
+	do \
+		ori=`printf "%s_%03d" $(ORIFILE) $$i`; \
+		make $$ori.prectf; \
+		make $$ori.fft; \
+		make $$ori.ctfinfo; \
+		make $$ori.mrc ; \
+	done ;
+	
+.dat.prectf:
+	emData2mrc -i $*.dat -o $*.prectf
+
+.tif.prectf:
+	tiff2mrc -i $*.tif -o $*.prectf -m 1 -r $(RESOLUTION)
+
+.prectf.fft:
+	mrcImageFFT -i $*.prectf -o $*.fft	
+
+.fft.ctfinfo:
+	ctfDetermine -i $*.fft -o $*.ctfinfoauto -D 50000 -m 163 -CutLow 0.07 -CutHigh 0.15 -Ac 200 -d 3 -Cc 0.7 -Cs 2.1	
+	awk '/^[^:]/ {print $$0};' $*.ctfinfoauto > $*.ctfinfo
+	#Display2 -i $*.fft -H 1e7
+	ctfDisplay -i $+.fft
+
+.ctfinfo.mrc:
+	mv $*.ctfinfo $*.ctfinfotmp
+	awk '/^[^:]/ {print $$0};' $*.ctfinfotmp > $*.ctfinfo
+	mrcImageCTFCompensation -i $*.fft -o $*.mrc -info2 $*.ctfinfo -m 1	
+	Display2 -i $*.mrc -geometry 1024x1024+0+0 -Zoom 0.5 &
+
+
+COARCreate::
+	ORIZEROFILE=$(ORIBASE).mrc; \
+	previous=$(ORIBASE) ; \
+	echo "Create the zero-tilt Image ROI (same as mrc, just copy)"; \
+	make $(ORIBASE).roiinfo-coarse; echo "$(ORIBASE).roi will be created."; \
+	make $(ORIBASE).roiall-coarse ; echo "$(ORIBASE).roi was created." ;  \
+	make $(ORIBASE).orimrccentre  ; echo "The centre of $(ORIBASE).roi was created." ;  \
+	for delta in -$(STEPTILTNUM) +$(STEPTILTNUM) ;  do \
+	echo "$$delta"; \
+	previous=$(ORIBASE); \
+	TOTALX=0 ; \
+	TOTALY=0 ; \
+	echo "Total: $$TOTALX $$TOTALY" > $$previous.oricorinfo; \
+	for (( i=$$(($(ZEROTILTNUM) + $$delta )) ; (( $(MINTILTNUM) <= $$i && $$i <= $(MAXTILTNUM)  )) ; i=$$(($$i + $$delta)) )) \
+	do \
+		ori=`printf "%s_%03d" $(ORIFILE) $$i`; \
+		echo $$i, $(MAXTILTNUM), $(MINTILTNUM); \
+		echo $$previous > $$ori.prevname ; \
+		ln -sf $$previous.roiinfo-coarse $$ori.roiinfoprev-coarse ; make $$ori.roiinforef-coarse ; \
+		make $$ori.roiallref-coarse ; \
+		make $$ori.orimrccentre ;     \
+		TOTALX=`awk '/Total:/ { print $$2 }' $$previous.oricorinfo`; \
+		TOTALY=`awk '/Total:/ { print $$3 }' $$previous.oricorinfo`; \
+		ln -sf $$previous.orimrccentre $$ori.oriref ; make $$ori.oricorinfo ; \
+		echo "TotalPrev: $$TOTALX $$TOTALY" >> $$ori.oricorinfo; \
+		make $$ori.roiinfo-coarse; \
+		make $$ori.roiall-coarse; \
+		touch $$ori.orimrccentre ; sleep 1; \
+		touch $$ori.oricorinfo   ; sleep 1; \
+		touch $$ori.roiinfo-coarse; sleep 1; \
+		touch $$ori.roiall-coarse; sleep 1; \
+		previous=$$ori; \
+	done ; \
+	echo $$i; \
+	done  
+
+CleanCOARCreate::
+	rm *.roiinfo-coarse
+
+$(ORIBASE).roiinfo-coarse:
+	printf "%s_%03d.roi Rect2 %15.6f %15.6f %15.6f %15.6f %15.6f %15.6f\n" $(ORIFILE) $(ZEROTILTNUM) $$(($(ORISIZEX)/2)) $$(($(ORISIZEY)/2)) $(ORISIZEX) $(ORISIZEY) > $(ORIBASE).roiinfo-coarse 
+
+
+.orimrccentre.oricorinfo:
+	echo "orimrccentre -> oricorinfo: SHIFT:= current.orimrccentre for prev.oirmrccentre"
+	mrcImageCorrelation -i $*.orimrccentre -r $*.oriref -c $*.oricorinfo
+
+.oricorinfo.roiinfo-coarse:
+	TOTALX=`awk '/TotalPrev:/ { print $$2 }' $*.oricorinfo`; \
+	TOTALY=`awk '/TotalPrev:/ { print $$3 }' $*.oricorinfo`; \
+	SHIFTX=`awk '/Shift:/ { print $$2 }' $*.oricorinfo`; \
+	SHIFTY=`awk '/Shift:/ { print $$3 }' $*.oricorinfo`; \
+	echo "$$SHIFTX,$$SHIFTY"; \
+	if [ $$(($(ORINX)/2)) -lt $$SHIFTX ]; then  \
+		SHIFTX=$$(($$SHIFTX - $(ORINX))) ; \
+	fi ; \
+	if [ $$(($(ORINY)/2)) -lt $$SHIFTY ]; then  \
+		SHIFTY=$$(($$SHIFTY - $(ORINY))) ; \
+	fi ; \
+	TOTALX=$$(($$TOTALX + $$SHIFTX)) ; \
+	TOTALY=$$(($$TOTALY + $$SHIFTY)) ; \
+	echo "Total: $$TOTALX $$TOTALY" >> $*.oricorinfo; \
+	printf "%s.roi Rect2 %15.6f %15.6f %15.6f %15.6f %15.6f %15.6f\n" $* $$(($(ORISIZEX)/2+$$TOTALX)) $$(($(ORISIZEY)/2+$$TOTALY)) $(ORISIZEX) $(ORISIZEY) $$TOTALX $$TOTALY > $*.roiinfo-coarse ; 
+
+.roiinfo-coarse.roiall-coarse:
+	make $*.mrc
+	mrcImageROIs -i $*.mrc -I $*.roiinfo-coarse 
+	touch $*.roiall-coarse 
+
+.roiinforef-coarse.roiallref-coarse:
+	mrcImageROIs -i $*.mrc -I $*.roiinforef-coarse
+	touch $*.roiallref-coarse
+
+.roiinfoprev-coarse.roiinforef-coarse:
+	previous=`cat $*.prevname`; \
+	sed -s s/$$previous/$*/ $*.roiinfoprev-coarse  > $*.roiinforef-coarse
+
+.roi.orimrccentre:
+	echo "roi -> orimrccentre"
+	mrcImageCenterGet -i $*.roi -o $*.orimrccentre -Nx $(ORINX) -Ny $(ORINY) -Nz $(ORINZ)
+
+$(ORIBASE).roiinfo:
+	Display2 -i $*.mrc 
+
+BoxCreate::
+	BASE=$(ORIBASE); \
+	make $$BASE.roiall ; \
+	for delta in +$(STEPTILTNUM) -$(STEPTILTNUM) ; do \
+	echo $$delta,$$BASE ;  \
+	previous=$$BASE	; \
+	for (( i=$$(($(ZEROTILTNUM)+$$delta)) ; (( $(MINTILTNUM) <= $$i && $$i <= $(MAXTILTNUM) )) ; i=$$(($$i + $$delta)) )) \
+	do  \
+		name=`printf "%s_%03d" $(ORIFILE) $$i`; \
+		echo ">>>> $$name $$i start: $(ZEROTILTNUM) $$(($(ZEROTILTNUM)+$$delta))"; \
+		echo $$previous > $$name.prevname; \
+		ln -sf $$previous.roiinfo $$name.roiinfoprev ; make $$name.roiinforef ; \
+		make $$name.roiinfo ; \
+		make $$name.roiall ; \
+		previous=$$name ; \
+	done  ; \
+	done
+
+CleanBoxCreate::
+	rm *.roiall *.roiinfoprev *.roiinforef
+
+.roiinfo.roiall:
+	make $*.roi
+	mrcImageROIs -i $*.roi -I $*.roiinfo
+	touch $*.roiall
+
+.roiinforef.roiallref:
+	mrcImageROIs -i $*.roi -I $*.roiinforef
+	touch $*.roiallref
+
+.roi.corinfo:
+	mrcImageCorrelation -i $*.roi -r $*.ref -c $*.corinfo 
+
+.roiinforef.roiinfo:
+	# Extract ROIs using roiinfo of previous image (roiinforef)
+	previous=`cat $*.prevname`; \
+	echo $$previous; \
+	echo "start initial ROI"; \
+	make $*.roiallref ; \
+	ROINUM=`wc -l $*.roiinforef | awk '{print $$1}'` ; \
+	echo $$ROINUM ; \
+	rm -f $*.roiinfo ; \
+	for (( j=0 ; $$j < $$ROINUM ; j=$$(($$j+1)))) \
+	do  \
+		input=`printf "%s-%04d" $*         $$j`; \
+		refer=`printf "%s-%04d" $$previous $$j`; \
+		echo $$input, $$refer ; \
+		ln -sf $$refer.roi $$input.ref ; make $$input.corinfo ; \
+		SHIFTX=`awk '/Shift:/ { print $$2 }' $$input.corinfo`; \
+		SHIFTY=`awk '/Shift:/ { print $$3 }' $$input.corinfo`; \
+		echo "$$SHIFTX,$$SHIFTY,$$input"; \
+		awk -v SHIFTXAWK0=$$SHIFTX -v SHIFTYAWK0=$$SHIFTY -v NAMEAWK=$$input -v BASEAWK=$* \
+		 ' /'"$$input"'/ { \
+			SizeX = int(sqrt(($$5-$$3)*($$5-$$3)+( $$6-$$4)*( $$6-$$4))+0.5)+1; \
+			SizeY = int(sqrt(($$9-$$3)*($$9-$$3)+($$10-$$4)*($$10-$$4))+0.5)+1; \
+		 	if(SizeX/2<SHIFTXAWK0) { \
+				SHIFTXAWK0 -= SizeX ; \
+			} \
+			if(SizeY/2<SHIFTYAWK0) { \
+				SHIFTYAWK0 -= SizeY ; \
+			} \
+			Angle = atan2($$6-$$4, $$5-$$3) ; \
+			SHIFTXAWK = +1*( SHIFTXAWK0*cos(Angle) - SHIFTYAWK0*sin(Angle)); \
+			SHIFTYAWK = +1*( SHIFTXAWK0*sin(Angle) + SHIFTYAWK0*cos(Angle)); \
+			printf("%s-%04d.roi Rect %15.6f %15.6f %15.6f %15.6f %15.6f %15.6f %15.6f %15.6f %15.6f %15.6f %15.6f %15.6f %15.6f\n", BASEAWK, FNR-1, $$3+SHIFTXAWK, $$4+SHIFTYAWK, $$5+SHIFTXAWK, $$6+SHIFTYAWK, $$7+SHIFTXAWK, $$8+SHIFTYAWK, $$9+SHIFTXAWK, $$10+SHIFTYAWK, SHIFTXAWK, SHIFTYAWK, Angle*180/3.141592653589793238, SizeX, SizeY);}' \
+		 $*.roiinforef | tee -a $*.roiinfo ; \
+	done ; 
+
+.roiinfoprev.roiinforef:
+	previous=`cat $*.prevname`; \
+	sed -s s/$$previous/$*/ $*.roiinfoprev  > $*.roiinforef
+
+PadAndMul::
+	roiNum=`wc -l  $(ORIBASE).roiinfo | awk '{print $$1}' `; \
+	for ((i=$(MINTILTNUM);i<=$(MAXTILTNUM);i=$$(($$i+$(STEPTILTNUM))) )) \
+	do \
+		for((j=0;j<$$roiNum;j=$$(($$j+1)))) \
+		do \
+			name=`printf "%s_%03d-%04d" $(ORIFILE) $$i $$j` ; \
+			echo $$(($$i-61)) > $$name.tilt ; \
+			ln -sf $$name.roi $$name.roi2 ; make $$name.pad ; \
+			make $$name.mul ; \
+		done ; \
+	done ;
+
+CleanPadAndMul::
+	rm *.pad
+
+.roi2.pad:
+	tilt=`cat $*.tilt` ; \
+	echo $$tilt ; \
+	mrcImagePad -i $*.roi2 -o $*.pad -Tilt $(TILTAXISANGLE) $$tilt -m $(IMAGEPADm) -V $(IMAGEPADV)
+
+.pad.mul:
+	mrcImageMultiplying -i $*.pad -o $*.mul -v $(IMAGEMULTIPLYINGv)
+
+roilstCreate::
+	roiNum=`wc -l  $(ORIBASE).roiinfo | awk '{print $$1}' `; \
+	echo $$roiNum; \
+	for (( i=0 ; $$i < $$roiNum ; i=$$(($$i + 1)))) \
+	do \
+		tiltnum=`printf "%s-%04d" $(ORIFILE) $$i`; \
+		echo "$$i" > $$tiltnum.roilst0; \
+		make $$tiltnum.roilst ; \
+	done ;
+
+Cleanroilst::
+	rm *.roilst
+
+.roilst0.roilst:
+		i=`cat $*.roilst0`; \
+		num=`printf "%04d" $$i`; \
+		roiname=`printf "%s-%04d" $(ORIBASE) $$i`; \
+		echo "$$roiname in $(ORIBASE).roiinfo"; \
+		tiltangle=`awk  '/'"$$roiname"'/ { printf("%15.6f", atan2($$6-$$4, $$5-$$3)*180/3.141592653589793238); }' $(ORIBASE).roiinfo`; \
+		echo "$*.roilst creating" ; \
+		ls -1 *-$$num.mul | awk ' BEGIN {angle=$(MINTILTANGLE)} {printf("%s %s %f %f %f\n",$$1, "XOYS", -1*angle, -1*'"$$tiltangle"', 0); angle+=$(STEPTILTANGLE)}' > $*.roilst ; \
+
+ds6Create::
+	roiNum=`ls -1 *.roilst | wc -l `; \
+	echo $$roiNum; \
+	for (( i=0 ; $$i < $$roiNum ; i=$$(($$i + 1)) )) \
+	do \
+		tiltnum=`printf "%s-%04d" $(ORIFILE) $$i`; \
+		make $$tiltnum.mrc3d ; \
+		make $$tiltnum.mrc3dmed ; \
+		make $$tiltnum.mrc3dmedcentre ; \
+		make $$tiltnum.ds6 ; \
+	done ;
+
+Cleands6::
+	rm *.mrc3d
+
+.roilst.mrc3d:
+	mrc2Dto3D -I $*.roilst -o $*.mrc3d -single 0 -InterpolationMode 2 -m 1 
+	
+.mrc3dmedcentre.ds6:
+	mrc2map -i $*.mrc3d -o $*.ds6 -mul $(MRC2MAPmul)
+	mrc2map -i $*.mrc3dmed -o $*.med.ds6 -mul $(MRC2MAPmul)
+	mrc2map -i $*.mrc3dmedcentre -o $*.medcentre.ds6 -mul $(MRC2MAPmul)
+
+.mrc3d.mrc3dmed:
+	mrcImageSmoothing -i $*.mrc3d -o $*.mrc3dmed -r $(SMOOTHr) -m $(SMOOTHm) -M $(SMOOTHM)
+
+.mrc3dmed.mrc3dmedcentre:
+	mrcImageCenterGet -i $*.mrc3dmed -o $*.mrc3dmedcentre -Nx $(CENTERNX) -Ny $(CENTERNY) -Nz $(CENTERNZ)
+	
+

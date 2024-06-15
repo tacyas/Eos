@@ -1,0 +1,12 @@
+# OptionControlFile
+# FileFormat
+"-I","-I[nput]","Input:ImageFileList","Essential","1","1","InList","inFileList","NULL"
+"-o1d","-o[utput]1d","Output:","Optional","1","1","Out1D","outFile","NULL"
+"-o1de","-o[utput]1de[nlarged]","Output:","Optional","1","1","Out1DEnlarged","outFile","NULL"
+"-o2d","-o[utput]2d","Output:","Optional","1","1","Out2D","outFile","NULL"
+"-aP","-a[xis]P[osition]","Input: AxisPosition","Optional","3","1","OriginX","Real","0.0","2","OriginY","Real","0.0","3","OriginZ","Real","0.0"
+"-a","-a[xisAngle]","Input: AxisAngleYaw/Pitch[degree]","Optional","2","1","AxisAngleYaw","Real","0.0","2","AxisAnglePitch","Real","0.0"
+"-R","-R","Input: LowPathFiltering","Optional","2","1","Rmin","Real","0.05","2","Rmax","Real","0.1"
+"-Interp","-Interp[olationMode]","Input: InterpolationMode","Optional","1","1","InterpolationMode","Integer","2"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

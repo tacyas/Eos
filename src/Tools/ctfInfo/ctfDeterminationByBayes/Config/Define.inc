@@ -1,0 +1,4 @@
+OBJECTNAME = ctfDeterminationByBayes
+EXTRA_LIB  =
+EXTRA_CCOPTS =
+EXTRA_INC =

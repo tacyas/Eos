@@ -1,0 +1,8 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-Stereo","-Stereo","Stereo","Optional","0"
+"-Contour","-Contour","InputDataFile","Optional","1","1","Contour","Real","0.0"
+"-LightPosition","-LightPosition","LightPosition","Optional","3","1","xLight","Real","-1000","2","yLight","Real","-1000","3","zLight","Real","1000"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

@@ -1,0 +1,9 @@
+# OptionControlFile
+# FileFormat
+"-I","-I[nput]","Input:FileList[mrcImage x y z]","Essential","1","1","In","inFileList","stdin"
+"-o","-o[utput]","Output:mrcImage","Essential","1","1","Out","outFile","NULL"
+"-oC","-o[utput]C[ount]","Output(Count):mrcImage","Optional","1","1","Count","outFile","NULL"
+"-N","-N","Input:OutImageSize","Optional","3","1","Nx","Integer","0","2","Ny","Integer","0","3","Nz","Integer","0"
+"-M","-M[ode]","InterpolationMode","Optional","1","1","InterpolationMode","Integer","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

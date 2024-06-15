@@ -1,0 +1,118 @@
+/*
+# powerspectraTangentLine : $Revision$  
+# $Date$ 
+# Created by $Author$
+# Usage : powerspectraTangentLine 
+# Attention
+#   $Loccker$
+#  	$State$ 
+#
+*/
+/* $Log$ */
+static char __sccs_id[] = "%Z%lctfDetermination ver%I%; Date:%D% %Z%";
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include "./powerspectraTangentLine.h"
+#define DEBUG
+#include "genUtil.h"
+#include "Vector.h"
+#include "nr2.h"
+#include "Memory.h"
+
+long int __power(long int x, int a)
+{
+	int i;
+	long int y = 1;	
+	
+	for(i=0;i<a;i++){
+		y*=x;
+	}
+	return(y);
+}
+
+void
+TangentLine(floatVector* spacing, floatVector* scatter, floatVector* Tangent,ctfInfo* ini,lctfDetermineInfo* linfo,  long mode)
+{	
+	long  i,j,k=0;
+	//long int  Number  = __power((long)((linfo->max - linfo->min)/linfo->step),(long)(linfo->agree + 1));
+	long int  Number;
+	float coefficient0,coefficient1,coefficient2,tmpcoefficient0,tmpcoefficient1,tmpcoefficient2;
+	float interval = 0.1;
+	double E;
+	double Emin;
+	double Emax;
+	//double coefficient[Number][linfo->agree];
+	double** coefficient;
+	double tmpcoefficient;
+	floatVector* Plog;
+
+	Number  = __power((long int)((linfo->max - linfo->min)/linfo->step), (int)(linfo->agree + 1));
+
+	coefficient = MemoryAllocate(double*, linfo->agree, "in TangentLine");
+	for(i=0; i<linfo->agree; i++){
+		coefficient[i] = MemoryAllocate(double, Number, "in TangentLine");
+	}
+	
+	fprintf(stdout,"Number = %ld\n",Number);
+	/*for(i=0;i<linfo->agree;i++){
+		for(j=0;j<Number;j++){
+			coefficient[Number][i] = k+1;
+			fprintf(stdout,"%f\n",coefficient[Number][i]);
+			k++;
+		}
+	}
+	*/
+	exit(1);
+	
+	Plog = floatVectorInit(NULL,spacing->size);
+	for(i=0;i<spacing->size;i++){
+		Plog->data[i] = log10(scatter->data[i]);
+		if((spacing->data[i] > ini->CutLow) && (spacing->data[i] < ini->CutHigh)){
+			Emax += Plog->data[i];
+		}
+		//fprintf(stdout,"%f %f %f\n",scatter->data[i],Plog->data[i],Emax);
+	}
+	Emin = Emax;
+
+	
+	
+	/*
+	for(coefficient0 = 0 ; coefficient0 <= 10 ; coefficient0 += interval){
+		for(coefficient1 = -10 ; coefficient1 <= 10 ; coefficient1 += interval){
+			for(coefficient2 = -10 ; coefficient2 <= 10 ; coefficient2 += interval){
+				E = 0.0;
+				for(i = 0 ; i < Tangent->size ; i++){
+					if((spacing->data[i] > ini->CutLow) && (spacing->data[i] < ini->CutHigh)){
+						Tangent->data[i] = coefficient0 + coefficient1*spacing->data[i]+coefficient2*spacing->data[i]*spacing->data[i];
+						 E += fabs(Tangent->data[i] - Plog->data[i]);
+						if((Tangent->data[i] - Plog->data[i]) > 0 || Tangent->data[i] < 0){
+							E = Emax;
+							break;
+						}
+					}
+				}
+
+				if(E < Emin){
+					Emin = E;
+					tmpcoefficient0 = coefficient0;
+					tmpcoefficient1 = coefficient1;
+					tmpcoefficient2 = coefficient2;
+					//fprintf(stdout,"0=%f 1=%f 2=%f E=%e\n",coefficient0,coefficient1,coefficient2,E);
+				}
+			}
+		}
+	}
+	*/
+
+	fprintf(stdout,"0=%f 1=%f 2=%f\n\n",tmpcoefficient0,tmpcoefficient1,tmpcoefficient2);
+	
+	for(i=0 ; i<Tangent->size ; i++){
+		if((spacing->data[i] > ini->CutLow) && (spacing->data[i] < ini->CutHigh)){
+			Tangent->data[i] = tmpcoefficient0 + tmpcoefficient1*spacing->data[i]+tmpcoefficient2*spacing->data[i]*spacing->data[i];
+			fprintf(stdout,"%f %f %f\n",spacing->data[i],Plog->data[i],Tangent->data[i]);
+		}
+	}
+	
+}
+

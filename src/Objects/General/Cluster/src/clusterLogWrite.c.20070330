@@ -1,0 +1,454 @@
+/*
+# clusterLogWrite : $Revision$  
+# $Date$ 
+# Created by $Author$
+# Usage : clusterLogWrite 
+# Attention
+#   $Loccker$
+#  	$State$ 
+#
+*/
+/* $Log$ */
+
+#include <stdlib.h> 
+#include <stdio.h> 
+#include <math.h> 
+#include <string.h> 
+#undef DEBUG
+#include "genUtil.h"
+#include "String.h"
+#include "Memory.h"
+#include "mrcImage.h"
+#include "../inc/Cluster.h"
+
+
+clusterLogOneRecord*
+clusterLogWrite(clusterLog* in, FILE* fpt, int mode)
+{
+	char  s[1024];
+	char* stmp;
+	clusterLogOneRecord * cluster;
+
+	cluster = in->current;
+	return clusterLogWriteOneRecord(cluster, fpt, mode);	
+}
+
+clusterLogOneRecord*
+clusterLogWriteOneRecord(clusterLogOneRecord* cluster, FILE* fpt, int mode)
+{
+	if(NULL!=cluster) {
+		switch(mode) {
+			case 0: {
+				fprintf(fpt, "%10d %10d %10d %10d %15.6g\n", 
+					cluster->N, cluster->M, 
+					cluster->prevN, cluster->prevM, 
+					cluster->distance);
+				break;
+			}
+			case 1: {
+				if(NULL!=cluster->belowLayer) {
+					fprintf(fpt, "%10d %10d %15.6g Number: %10d below %10d %10d <- %10d %10d\n", 
+						cluster->N, cluster->M, 
+						cluster->distance,
+						cluster->clusterNumber,
+						cluster->prevN, cluster->prevM, 
+						cluster->belowLayer->N, cluster->belowLayer->M); 
+				} else {
+					clusterLogWriteOneRecord(cluster, fpt, 0);
+				}
+				break;
+			}
+			case 2: {
+				if(NULL!=cluster->belowLayer) {
+					fprintf(fpt, "%10d %10d %10d %10d %15.6g %10d %10d", 
+						cluster->N, cluster->M, cluster->prevN, cluster->prevM, cluster->distance,
+						cluster->belowLayer->N, cluster->belowLayer->M);
+				} else {
+					clusterLogWriteOneRecord(cluster, fpt, 0);
+				}
+
+				if(NULL!=cluster->belowLayerForN) {
+					fprintf(fpt, "%10d %10d", cluster->belowLayerForN->N, cluster->belowLayerForN->M);
+				} else {
+					fprintf(fpt, "%10d %10d", -1, -1);
+				}
+				if(NULL!=cluster->belowLayerForM) {
+					fprintf(fpt, "%10d %10d", cluster->belowLayerForM->N, cluster->belowLayerForM->M);
+				} else {
+					fprintf(fpt, "%10d %10d", -1, -1);
+				}
+				fprintf(fpt, "\n");
+				break;
+			}
+			case 3: {
+				fprintf(fpt, "%10d %10d %10d %10d %15.6g original %10d %10d first %10d %10d ", 
+					cluster->N, cluster->M, cluster->prevN, cluster->prevM, cluster->distance,
+					cluster->firstN, cluster->firstM,
+					cluster->originalN, cluster->originalM);
+				if(0<cluster->clusterSize){
+					fprintf(fpt, "%10d =", cluster->clusterSize);	
+				} else {
+					fprintf(fpt, "%10s ", "NULL");	
+				}
+				if(cluster->belowLayerForN != NULL) {
+					fprintf(fpt, "%10d + ", cluster->belowLayerForN->clusterSize);
+				} else {
+					fprintf(fpt, "%10d + ", 1);
+				}
+				if(cluster->belowLayerForM != NULL) {
+					fprintf(fpt, "%10d ", cluster->belowLayerForM->clusterSize);
+				} else {
+					fprintf(fpt, "%10d ", 1);
+				}
+				if(0<cluster->clusterNumber){
+					fprintf(fpt, "%10d ", cluster->clusterNumber);	
+				}
+				fprintf(fpt, "\n");
+				break;
+			}
+			case 4: {
+				clusterLogOneRecord* tmp;
+				for(tmp=cluster; tmp!=NULL; tmp=tmp->belowLayer) {
+					while(tmp->belowLayerForN==NULL || tmp->belowLayerForM == NULL) {
+						if(tmp->prev!=NULL) {
+							tmp = tmp->prev;
+						} else {
+							exit(EXIT_FAILURE);
+						}
+					}
+					fprintf(fpt, "%10d %10d %10d %10d %15.6f below %10d %10d\n", 
+						cluster->N, cluster->M, cluster->prevN, cluster->prevM, cluster->distance,
+						tmp->belowLayerForN->N, tmp->belowLayerForN->M);
+				}
+				break;
+			}
+			default: {
+				break;
+			}
+		}
+	}	
+	return cluster;
+}
+
+clusterLogOneRecord*
+clusterLogWriteAll(clusterLog* cluster, FILE* fpt, int mode)
+{
+	clusterLogOneRecord* last=NULL;
+
+	cluster->current = cluster->top; 
+	if(NULL==cluster->current) {
+		fprintf(stderr, "No Cluster\n");
+		exit(EXIT_FAILURE);
+	}
+	while(NULL!=clusterLogWrite(cluster, fpt, mode)) {
+		last = cluster->current;
+		cluster->current = cluster->current->next;
+	}
+	return last;
+}
+
+clusterLogOneRecord*
+clusterLogWriteAllBinary(clusterLog* in, char* basename, int mode)
+{
+	clusterLogOneRecord* last    = NULL;
+	clusterLogOneRecord* cluster = NULL;
+	int N, combinationN;
+	int i;
+	mrcImage log;
+	char s[1024];
+	char filename[1024];
+	double data;
+	float x, y;
+
+	cluster = in->top;	
+	if(NULL==cluster) {
+		fprintf(stderr, "No Cluster in clusterLogWriteAllBinary\n");
+		exit(EXIT_FAILURE);			
+	} 
+
+	if(cluster->prevN != cluster->prevM) {
+		fprintf(stderr, "This log does not have the first line\n");
+		exit(EXIT_FAILURE);
+	} else { 
+		N = cluster->prevN;			
+	}
+
+	i = 0;
+	combinationN = N*(N-1)/2;
+	while(NULL!=cluster) {
+		if(0==i) { /* This layer has just started. */
+			log.HeaderN.x = N;	
+			log.HeaderN.y = N;	
+			log.HeaderN.z = 1;	
+			log.HeaderMode = mrcFloatImage;
+			mrcInit(&log, NULL);
+			sprintf(filename,  CLUSTERLOG_BINARY_FILENAME_FORMAT, basename, cluster->prevN, cluster->prevM, N);
+			for(x=0;x<N;x++) {
+			for(y=0;y<N;y++) {
+				mrcPixelDataSet(&log, x, y, 0, CLUSTERLOG_BINARY_NO_CALCULATION_VALUE, mrcPixelRePart);
+			}
+			}
+		}
+
+		/**/
+		mrcPixelDataGet(&log, cluster->N, cluster->N, 0, &data, mrcPixelRePart, mrcPixelHowNearest);
+		if(data<cluster->distance) {
+			mrcPixelDataSet(&log, cluster->N, cluster->N, 0, data, mrcPixelRePart);
+		}
+		mrcPixelDataGet(&log, cluster->M, cluster->M, 0, &data, mrcPixelRePart, mrcPixelHowNearest);
+		if(data<cluster->distance) {
+			mrcPixelDataSet(&log, cluster->M, cluster->M, 0, data, mrcPixelRePart);
+		}
+		
+		mrcPixelDataSet(&log, cluster->N, cluster->M, 0, cluster->distance, mrcPixelRePart);  
+		mrcPixelDataSet(&log, cluster->M, cluster->N, 0, cluster->distance, mrcPixelRePart);  
+
+		i++; /* Next log */
+		last = cluster;
+		cluster = cluster->next;
+
+		if(combinationN<=i) { /* This layer has finished. */
+			mrcFileWrite(&log, filename, "in clusterLogWriteAllBinary", 0);
+			
+			N -= 1;
+			combinationN = N*(N-1)/2;
+			i = 0;
+			mrcImageFree(&log, "in LogBinary");
+		}
+	}
+	return last;
+}
+
+clusterLogOneRecord*
+clusterLogWriteClusterOnly(clusterLog* cluster, FILE* fpt, int mode)
+{
+	clusterLogOneRecord* last=NULL;
+
+	cluster->current = cluster->bottom; 
+	if(NULL==cluster->current) {
+		fprintf(stderr, "No Cluster\n");
+		exit(EXIT_FAILURE);
+	}
+	while(NULL!=cluster->current->belowLayer) {
+		cluster->current = cluster->current->belowLayer;
+	}
+	while(NULL!=clusterLogWrite(cluster, fpt, mode)) {
+		last = cluster->current;
+		DEBUGPRINT1("ClusterSize: %d\n", cluster->current->clusterSize);
+		cluster->current = cluster->current->upperLayer;
+	}
+	return last;
+}
+
+#include "psFile.h"
+
+void
+clusterLogWritePS0(clusterLogOneRecord* cluster, psFile* ps, clusterTreeInfo* linfo, int mode)
+{
+	float shoulderN;
+	float shoulderM;
+	float armN;
+	float armM;
+	float tick;
+	float x,y;
+	float tmp;
+	char s[1024];
+	clusterLogOneRecord* tmpCluster;	
+	int tmpN;
+
+	if(NULL==cluster) {
+		return;
+	} 
+	DEBUGPRINT2("N: %d M: %d\n", cluster->N, cluster->M);
+
+	x = linfo->posX;
+	y = linfo->posY;
+	if(NULL==cluster->belowLayerForN) {
+		shoulderN = 1;
+		if(linfo->flagLog) {
+			armN      = MAX(0,log10(cluster->distance)-log10(linfo->ArmOffset));
+		} else {
+			armN      = MAX(0,cluster->distance-linfo->ArmOffset);
+		}
+	} else {
+		shoulderN = cluster->belowLayerForN->clusterSize;
+		if(linfo->flagLog) {
+			armN      = log10(cluster->distance) - log10(cluster->belowLayerForN->distance); 
+		} else {
+			armN      = cluster->distance - cluster->belowLayerForN->distance; 
+		}
+	}
+
+	if(NULL==cluster->belowLayerForM) {
+		shoulderM = 1;
+		if(linfo->flagLog) {
+			armM      = MAX(0,log10(cluster->distance)-log10(linfo->ArmOffset));
+		} else {
+			armM      = MAX(0,cluster->distance-linfo->ArmOffset);
+		}
+	} else {
+		shoulderM = cluster->belowLayerForM->clusterSize;
+		if(linfo->flagLog) {
+			armM      = log10(cluster->distance) - log10(cluster->belowLayerForM->distance);
+		} else {
+			armM      = cluster->distance - cluster->belowLayerForM->distance;
+		}
+	}
+	
+	shoulderN /= 2.0;
+	shoulderM /= 2.0;
+
+	shoulderN *= linfo->ShoulderScale;	
+	shoulderM *= linfo->ShoulderScale;	
+	armN      *= linfo->ArmScale;	
+	armM      *= linfo->ArmScale;	
+	tick       = 1;
+
+	tmp = shoulderN;
+	shoulderN = -1.0*shoulderM;
+	shoulderM = tmp;
+
+	psFileLineDraw(ps, x-tick, y,           x,      y);           /* tick */
+	psFileLineDraw(ps, x,      y+shoulderN, x,      y+shoulderM); /* shoulder */  
+	psFileLineDraw(ps, x,      y+shoulderN, x+armN, y+shoulderN); /* armN */ 
+	psFileLineDraw(ps, x,      y+shoulderM, x+armM, y+shoulderM); /* armM */
+
+	tmpN = MAX(cluster->firstN, cluster->firstM);
+	tmpCluster = cluster->belowLayerForN;
+	while(NULL!=tmpCluster) {
+		tmpN = tmpCluster->firstM;
+		tmpCluster = tmpCluster->belowLayerForM;
+	}
+	sprintf(s, "%6d", tmpN);
+	psFileString(ps, s, x-0.15*linfo->ArmScale, y+0.1*linfo->ShoulderScale, 0); 
+
+	if(NULL==cluster->belowLayerForN) {
+		if(linfo->In!=NULL) {
+			sprintf(s, "%6d %6d %s",       linfo->currentNo, cluster->firstN, linfo->In[cluster->firstN]);
+			DEBUGPRINT2("N: %6d %s\n", cluster->firstN, linfo->In[cluster->firstN]);
+			linfo->InPosY[cluster->firstN]        = y+shoulderN-linfo->ShoulderScale*0.5;
+		} else {
+			sprintf(s, "%6d %6d", linfo->currentNo, cluster->firstN);
+		}
+		psFileString(ps, s, x+armN+tick, y+shoulderN-linfo->ShoulderScale*0.5, 0); 
+		linfo->currentNo--;
+	} else {
+		linfo->InPosX[cluster->belowLayerForN->firstM] = x;  
+	}
+
+	if(NULL==cluster->belowLayerForM) {
+		if(linfo->In!=NULL) {
+			sprintf(s, "%6d %6d %s", linfo->currentNo, cluster->firstM, linfo->In[cluster->firstM]);
+			DEBUGPRINT2("M: %6d %s\n", cluster->firstM, linfo->In[cluster->firstM]);
+			linfo->InPosY[cluster->firstM]        = y+shoulderM-linfo->ShoulderScale*0.5;
+		} else {
+			sprintf(s, "%6d %6d", linfo->currentNo, cluster->firstM);
+		}
+		psFileString(ps, s, x+armM+tick, y+shoulderM-linfo->ShoulderScale*0.5, 0); 
+		linfo->currentNo--;
+	} else {
+		linfo->InPosX[cluster->belowLayerForM->firstN] = x;  
+
+	}
+
+	linfo->posX = x+armN; 
+	linfo->posY = y+shoulderN; 
+	clusterLogWritePS0(cluster->belowLayerForN, ps, linfo, mode);
+
+	linfo->posX = x+armM; 
+	linfo->posY = y+shoulderM; 
+	clusterLogWritePS0(cluster->belowLayerForM, ps, linfo, mode);
+
+}
+
+void clusterLogWritePSScaling(clusterLog* cluster, clusterTreeInfo* linfo, psFile* ps, int mode)
+{
+	float min;
+	float max;
+	float tick;
+	float deltaTick;
+	float minTick;
+	float maxTick;
+	float max2;
+	char s[1024];
+
+	max = cluster->bottom->distance;  		
+	if(0<linfo->ArmOffset) {
+		min = linfo->ArmOffset;
+	} else {
+		min = 0;
+	}
+	if(linfo->flagLog) {
+		min = MAX(min,1);
+	}
+
+	if(linfo->flagLog) {
+		deltaTick = 1; 
+		minTick   = (int)(log10(min));
+		maxTick   = (int)(log10(max));
+		max2      = log10(max);	
+	} else {
+		deltaTick = (int)((max - min)/(0.1*max));
+		minTick   = (int)(min/deltaTick);
+		maxTick   = (int)(max/deltaTick);
+		max2 = max;
+	}
+
+	psFileLineDraw(ps, (max2-minTick)*linfo->ArmScale, 0, (max2-maxTick)*linfo->ArmScale, 0);
+	for(tick=minTick; tick<=maxTick; tick+=deltaTick) {
+			DEBUGPRINT1("Tick: %f\n", tick);
+			psFileLineDraw(ps, (max2-tick)*linfo->ArmScale, -0.5*linfo->ShoulderScale, (max2-tick)*linfo->ArmScale, +0.5*linfo->ShoulderScale); 	
+			sprintf(s, "%+5.1f", tick); 
+			psFileString(ps, s, (max2 - tick)*linfo->ArmScale-1.0, 1.0*linfo->ShoulderScale, 0);  
+	}
+}
+
+void
+clusterLogWritePS(clusterLog* cluster, clusterTreeInfo* linfo, FILE* fpt, int mode)
+{
+	psFile ps;
+	int i;
+	char s[1024];
+
+	ps.fpt = fpt;
+	ps.info.page = 1;
+	ps.info.label[0] = '\0';
+	psFileInit(&ps, 0);
+
+	psFilePageStart(&ps, 0);
+	
+	psFileStringDefaultStatusSet(&ps);
+	psFileStringStatusSet(&ps, "/Helvetica", (int)(linfo->ShoulderScale));
+
+	if(NULL==cluster->bottom) {
+		fprintf(stderr, "No Cluster\n");
+		exit(EXIT_FAILURE);
+	} else if(NULL!=cluster->bottom->next) {
+		fprintf(stderr, "Something wrong! Bottom is not bottom in WritePS\n");
+		exit(EXIT_FAILURE);
+	} else if(cluster->bottom->clusterSize<0){
+		fprintf(stderr, "ClusterSize in WritePS : %d\n",  cluster->bottom->clusterSize);
+		exit(EXIT_FAILURE);
+	}
+	linfo->InPosY = (float*)memoryAllocate(sizeof(float)*cluster->bottom->clusterSize, "in clusterLogWritePS0");
+	linfo->InPosX = (float*)memoryAllocate(sizeof(float)*cluster->bottom->clusterSize, "in clusterLogWritePS0");
+	linfo->clusterSize =  (clusterTypeInteger*)memoryAllocate(sizeof(int)*cluster->bottom->clusterSize, "in clusterLogWritePS0");
+	linfo->clusterNumber = (clusterTypeInteger*)memoryAllocate(sizeof(int)*cluster->bottom->clusterSize, "in clusterLogWritePS0");
+	linfo->currentNo = cluster->bottom->clusterSize-1;
+
+	clusterLogWritePS0(cluster->bottom, &ps, linfo, mode);
+
+	if(linfo->flagScaling) {
+		clusterLogWritePSScaling(cluster, linfo, &ps, mode);
+	}
+	
+	s[0] = '\0';
+	for(i=0; i<linfo->argc; i++) {
+		strncat(s, linfo->argv[i], strlen(linfo->argv[i]));	
+		strncat(s, " ", strlen(" "));
+	}
+	psFileString(&ps, s, 0, -2*linfo->ShoulderScale, 0);
+	psFilePageEnd(&ps, 0);
+	return ;
+}
+

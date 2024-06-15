@@ -1,0 +1,10 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-r","-r[eference]","ReferenceDataFile","Essential","1","1","Ref","inFile","NULL"
+"-range","-range","Search range of shift.Default:Nx","Optional","1","1","range","Integer","0"
+"-s","-s[ignal position]","File to define position of signal","Essential","1","1","Signal","inFile","NULL"
+"-d","-d[elta]","Spacing of molecule(Pixel).","Optional","1","1","delta","Real","1.0"
+"-norm","-norm[alize]","Normalize before correlation","Optional","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

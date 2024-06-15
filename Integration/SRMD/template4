@@ -1,0 +1,55 @@
+# NAMD configuration file for uuuuu 
+
+# molecular system
+structure	UUUUU/uuuuu.psf
+
+# force field
+paratypecharmm	on
+parameters	PPPPP/ppppp
+exclude		scaled1-4
+1-4scaling	1.0
+
+#Constant Forces
+constantforce ttttt
+consforcefile output/xxxxx.pdb
+
+# approximations
+switching	on
+switchdist	8
+cutoff		12
+pairlistdist	13.5
+margin		0
+stepspercycle	20
+
+#integrator
+timestep 1.0
+
+#output
+outputenergies	10
+outputtiming	100
+binaryoutput	no
+imdon		yes
+imdfreq		1
+imdport		3111
+
+# molecular system
+coordinates	output/xxxxx.coor
+
+#output
+outputname	output/yyyyy	
+dcdfreq		20
+
+#protocol
+temperature	vvvvv
+langevin	on
+langevinDamping wwwww	
+langevinTemp vvvvv
+
+rescaleFreq 1
+rescaleTemp vvvvv 
+
+#script
+
+minimize sssss
+
+#run zzzzz 

@@ -1,0 +1,9 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Optional","1","1","Out","outFile","NULL"
+"-id1","-id1[]","ChainId1","Optional","1","1","ID1","Character","A"
+"-id2","-id2[]","ChainId2","Optional","1","1","ID2","Character","B"
+"-d","-d[istance]","Threshold distance","Optional","1","1","d","Real","1"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

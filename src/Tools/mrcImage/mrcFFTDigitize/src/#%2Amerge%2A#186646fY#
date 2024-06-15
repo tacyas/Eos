@@ -1,0 +1,220 @@
+I686LINUX/mrcFFTDigitize -h 
+I686LINUX/mrcFFTDigitize -h 
+I686LINUX/mrcFFTDigitize -h 
+I686LINUX/mrcFFTDigitize -html 
+I686LINUX/mrcFFTDigitize -i 
+I686LINUX/mrcFFTDigitize 
+I686LINUX/mrcFFTDigitize -i test 
+I686LINUX/mrcFFTDigitize -h 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0001.fft 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -L 4 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -l 4 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -l 4 -min 5 
+I686LINUX/mrcFFTDigitize -h 
+I686LINUX/mrcFFTDigitize -i 0 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig - l 4 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/ 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -l 4 
+I686LINUX/mrcFFTDigitize -h 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -l 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 0 -max 10 -l 4 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -l 4 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig 
+I686LINUX/mrcFFTDigitize 
+I686LINUX/mrcFFTDigitize 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig 
+I686LINUX/mrcFFTDigitize -h 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 0 -max 10 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 0 -max 10 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 0 -max 10 -l 4 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0001.fft 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0001.fft 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 0 -max 10 -l 4 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig 
+I686LINUX/mrcFFTDigitize -html 
+I686LINUX/mrcFFTDigitize -html 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 0 -max 10 -l 4 
+I686LINUX/mrcFFTDigitize -h 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 0.0 -max 10.0 -l 4 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 0 -max 10 -l 4 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 0 -max 10 -l 4 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 0 -max 10 -l 4 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 10.0 -max 20.0 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001.dig 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 10.0 -max 20.0 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001.dig 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 10.0 -max 20.0 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001.dig 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 10.0 -max 20.0 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001.dig 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 10.0 -max 20.0 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 10.0 -max 20.0 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1000 -max 2000 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1000 -max 2000 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1000 -max 2000 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1000 -max 2000 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1000 -max 2000 
+I686LINUX/mrcFFTDigitize -html 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 100 -max 200 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 100.0 -max 200.0 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 100.0 -max 200.0 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 100.0 -max 200.0 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 100.0 -max 200.0 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 100.0 -max 200.0 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 100.0 -max 200.0 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 100.0 -max 200.0 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 100.0 -max 200.0 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 10.0 -max 20.0 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 10.0 -max 20.0 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 10.0 -max 20.0 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 5.0 -max 20.0 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 5.0 -max 20.0 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1.0 -max 2.0 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1.0 -max 2.0 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1.0 -max 3.0 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001.dig 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1.0 -max 3.0 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001.dig 
+I686LINUX/mrcFFTDigitize -html 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1.0 -max 3.0 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001.dig 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001.fft 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001.dig 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1 -max 3 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001.dig 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1 -max 3 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1 -max 3 -l 4 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1 -max 3 -l 3 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1 -max 3 -l 4 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1 -max 3 -l 4 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1 -max 3 -l 4 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1 -max 3 -l 4 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1 -max 3 -l 4 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1 -max 3 -l 4 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1 -max 2 -l 4 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1 -max 5 -l 4 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1 -max 5 -l 3 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1 -max 5 -l 6 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1 -max 5 -l 10 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1 -max 5 -l 10 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1 -max 5 -l 4 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1 -max 5 -l 6 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1 -max 5 -l 4 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1 -max 4 -l 4 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1 -max 3 -l 4 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1 -max 3 -l 4 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1 -max 2 -l 4 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1 -max 7 -l 4 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 3 -max 7 -l 4 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1 -max 7 -l 4 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001.dig 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0001.dig 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0001.fft 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1 -max 7 -l 4 -h 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1 -max 7 -l 4 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1 -max 7 -l 4 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1 -max 7 -l 4 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0001.dig 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001.flt 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001.flt 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001.fft 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001.dig 
+I686LINUX/mrcFFTDigitize -html 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcFFTDigitize -h 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 1 -max 7 -l 4 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0001.dig 
+I686LINUX/mrcFFTDigitize -html 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcFFTDigitize -h 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 10 -max 20 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0001.dig 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001.dig 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001.dig 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001flt 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001.flt 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001.ftt 
+I686LINUX/mrcFFTDigitize -h 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001.fft 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/data 
+I686LINUX/mrcFFTDigitize -h 
+I686LINUX/mrcFFTDigitize -i test/0001.mrc -o test/1001.dig -min 2.0 -max 10.0 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0001.mrc 
+I686LINUX/mrcFFTDigitize -i test/0001.mrc -o test/1001.dig -min 2.0 -max 10.0 
+I686LINUX/mrcFFTDigitize -i test/0001.mrc -o test/1001.dig -min 2.0 -max 10.0 
+I686LINUX/mrcFFTDigitize -h 
+I686LINUX/mrcFFTDigitize -i test/0001.mrc -o test/0001.dig 
+I686LINUX/mrcFFTDigitize -i test/0001.mrc -o test/0001.dig -min 2.0 -max 10.0 
+I686LINUX/mrcFFTDigitize -h 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/1001.dig 
+I686LINUX/mrcFFTDigitize -i test/0001.mrc -o test/0001.dig -min 2.0 -max 10.0 -l 3.0 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/0001.fft 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001.dig -min 2.0 -max 10.0 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001.fft 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001.dig 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001.mrc 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001.dig 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001.fft 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001.mrc 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001.dig.fft 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001_3.dig -min 2.0 -max 10.0 -l 3.0 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001_3.dig 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001_3.dig.fft 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001_3.dig -min -5.0 -max 20.0 -l 3.0 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001_3.dig 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001_3.dig 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001_3.dig.fft 
+I686LINUX/mrcFFTDigitize -i test/0001.fft -o test/0001_4.dig -min -5.0 -max 20.0 -l 4.0 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001_4.dig 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/0001_4.dig.fft 
+I686LINUX/mrcFFTDigitize -html 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/source_0001.fft 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/source_0001.fft 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/source_0001.fft 
+I686LINUX/mrcFFTDigitize -h 
+I686LINUX/mrcFFTDigitize -i test/source_0001.fft -o test/1001.dig -min 30 -max 80 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/1001.dig -o test/1001.dig.mrc 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/source_0001.fft 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/source_0001.fft 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/1001.dig 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/1001.dig.mrc 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/1001.dig.mrc 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/1001.dig.mrc 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/source_0001.fft.mrc 
+I686LINUX/mrcFFTDigitize -i test/source_0001.fft -o test/3001.dig -min 30 -max 80 -l 3 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/3001.dig 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/3001.dig.mrc 
+I686LINUX/mrcFFTDigitize -i test/source_0001.fft -o test/4001.dig -min 30 -max 80 -l 4 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/4001.dig.mrc 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/4001.dig 
+I686LINUX/mrcFFTDigitize -i test/source_0001.fft -o test/8001.dig -min 30 -max 80 -l 8 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/8001.dig 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/8001.dig.mrc 
+I686LINUX/mrcFFTDigitize -i test/source_0001.fft -o test/1601.dig -min 30 -max 80 -l 16 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/1601.dig.mrc 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/1601.dig 
+I686LINUX/mrcFFTDigitize -i test/source_0001.fft -o test/3201.dig -min 30 -max 80 -l 32 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/3201.dig 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/3201.dig.mrc 
+I686LINUX/mrcFFTDigitize -i test/source_0001.fft -o test/6401.dig -min 30 -max 80 -l 64 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/6401.dig.mrc 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/6401.dig 
+I686LINUX/mrcFFTDigitize -i test/source_0001.fft -o test/2561.dig -min 30 -max 80 -l 256 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/2561.dig 
+/home/people/ayumi/Eos/bin/I686LINUX/Display2 -i test/2561.dig.mrc 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/6401.dig 
+/home/people/ayumi/Eos/bin/I686LINUX/mrcInfo -i test/1001.dig 
+I686LINUX/mrcFFTDigitize -html 
+X86LINUX64/mrcFFTDigitize -html 
+CELLLINUX64/mrcFFTDigitize -html 
+I686LINUX/mrcFFTDigitize -html 
+X86LINUX64/mrcFFTDigitize -html 
+I686LINUX/mrcFFTDigitize -html 

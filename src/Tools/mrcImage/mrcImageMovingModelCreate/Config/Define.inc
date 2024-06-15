@@ -1,0 +1,4 @@
+OBJECTNAME = mrcImageMovingModelCreate
+EXTRA_LIB  =
+EXTRA_CCOPTS =
+EXTRA_INC =

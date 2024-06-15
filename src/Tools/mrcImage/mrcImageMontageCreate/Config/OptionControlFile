@@ -1,0 +1,18 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFileListNoOpen","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-nx","-nx","Nx: If this option does not set, the default value will be set","Optional","1","1","Nx","Integer","10"
+"-ny","-ny","Ny: If this option does not set, the value will be set automatically","Optional","1","1","Ny","Integer","10"
+"-W","-W[idth]","Width: If this option does not set, the value will be set automatically","Optional","1","1","Width","Integer","10"
+"-H","-H[eight]","Height: If this option does not set, the value will be set automatically","Optional","1","1","Height","Integer","10"
+"-AW","-AW[indow]","AverageWindow for Pad","Optional","1","1","AvgWnd","Real","2000"
+"-V","-V[alue]","","Optional","1","1","Value","Real","0.0"
+"-PM","-P[ad]M[ode]","","Optional","1","1","PadMode","Integer","3"
+"-EdgeAverage","-EdgeAverage","","Optional","0"
+"-EdgeAverageWindow","-EdgeAverageWindow","Definition of Edge","Optional","1","1","EdgeAverageWindow","Integer","4"
+"-NoAverage","-NoAverage","","Optional","0"
+"-Max","-Max","MaximumValue: If the pixel value is more than this max, the pixel value is assigned to the Value indicated by -V or -VMax.","Optional","1","1","Max","Real","16383"
+"-VMax","-VMax","Attention: related to -Max ","Optional","1","1","VMax","Real","16383"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

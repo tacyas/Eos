@@ -1,0 +1,14 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-s","-s[ize]","Mask Size (Odd Only) /pixel","Optional","2","1","sizeX","Integer","1","2","sizeY","Integer","1"
+"-v1","-v[ector]1","Vector1(/A):x y","Essential","2","1","v1x","Real","1","2","v1y","Real","0"
+"-v2","-v[ector]2","Vector2(/A):x y","Optional","2","1","v2x","Real","0","2","v2y","Real","1"
+"-in","-in[initial number]","Initialn number of data to cut out.For 1D only.","Optional","1","1","inum","Integer","1"
+"-fn","-fn[final number]","Final number of data to cut out.For 1D only.Default:All.","Optional","1","1","num","Integer","0"
+"-en","-en[extra number]","Extra number of data to cut out.For mode 2 only","Optional","1","1","exnum","Integer","0"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"
+
+

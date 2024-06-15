@@ -1,0 +1,8 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: mrcImage","Optional","1","1","In","inFile","NULL"
+"-ip","-i[nput]p[db]","Input: pdbfile","Optional","1","1","InPdb","inFile","NULL"
+"-C","-C[ontour]","Input: ContourValue","Optional","1","1","Contour","Real","0.0"
+"-o","-o[utput]","Output: 3DCG","Optional","1","1","Out","outFile","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

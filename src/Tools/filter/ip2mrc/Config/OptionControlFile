@@ -1,0 +1,12 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile[.img]","Essential","1","1","In","inFile","NULL"
+"-i2","-i2[nput]","InputDataFile[.tem]","Optional","1","1","InTem","inFile","NULL"
+"-i3","-i3[nput]","InputDataFile[.inf]","Optional","1","1","InInf","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-o2","-o2[utput]","OutputDataFile[1/4]","Optional","1","1","Out2","outFile","NULL"
+"-Mag","-Mag","Magnification","Optional","1","1","Mag","Real","40000"
+"-SE","-SE","SE","Optional","1","1","SE","Real","200"
+"-OutMode","-OutMode","OutPutMode","Optional","1","1","OutMode","Integer","1"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

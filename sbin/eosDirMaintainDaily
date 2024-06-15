@@ -1,0 +1,69 @@
+#!/bin/sh
+#
+# %M% %Y% %I%
+#
+# The latest update : %G% at %U%
+#
+#%Z% eosDirMaintainDaily Function
+#%Z%
+#
+#%Z% Usage : eosDirMaintainDaily SourceFileName
+#
+#%Z% Attention
+#%Z%
+#%Z% Parameter: 
+#%Z%     Essential:
+#%Z%         SourceFileName
+#%Z%     Optional:
+#%Z%
+
+usage()
+{
+	echo "Usage: eosDirMaintainDaily"
+}
+
+NameRead()
+{
+	ans="N"
+	while [ $ans != "Y" -a $ans != "y" ]
+	do
+		echo $1
+		read Name
+		echo "$Name is good ?"
+		read ans
+	done
+}
+# Store Flags
+FlagsCharacter="-"
+
+case $# in 
+	0)
+		;;
+	*)
+		while [ `echo $1 | cut -c1` = ${FlagsCharacter} ]
+		do
+			if [ `echo $1 | cut -c2` = "h" ] 
+			then
+				usage
+			else
+				parms="${parms} $1"
+				shift 
+			fi
+		done
+		;;
+esac
+
+case $# in
+	0) # No filename 
+		;;
+	*) #
+		;;
+esac
+#
+currentDir=`pwd`
+
+while [ 1==1 ]
+do
+	echo "test"
+	sleep 3600
+done

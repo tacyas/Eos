@@ -1,0 +1,15 @@
+------------ How to use this Makefile-------------------
+make Init
+make ALLROIS
+make Pad
+make Log
+If make Log stopped in mid-flow, you can recalculate cluster in the middle by make ReLog
+make LogPS
+Refinement Start
+You must create xxxx.clstlst and xxxx.clstref, judging from ClusterTree:logps/padsortmon/avgsortmon.
+xxxx.clstlst
+xxxx.fitlst
+xxxx.clstavg
+If you want to repeat refinement, 
+xxxx.clstref
+Refinement End

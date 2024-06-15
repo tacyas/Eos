@@ -1,0 +1,275 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>pdb2mrc</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>pdb2mrc<br></h2></b></font>
+	<h4>pdbファイルをmrcファイルに変換する</h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+	<table border="1">
+		<div align="left">
+		<tr>
+			<th>オプション</th>
+			<th>必須項目/選択項目</th>
+			<th>説明</th>
+			<th>デフォルト</th>
+		</tr>
+		<tr>
+			<td>-i</td>
+			<td>必須</td>
+			<td>入力ファイル設定</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-o</td>
+			<td>選択</td>
+			<td>出力ファイル設定</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-nx</td>
+			<td>選択</td>
+			<td>出力画像ｘ軸の幅を設定</td>
+			<td>1</td>
+		</tr>
+		<tr>
+			<td>-ny</td>
+			<td>選択</td>
+			<td>出力画像ｙ軸の幅を設定</td>
+			<td>1</td>
+		</tr>
+		<tr>
+			<td>-nz</td>
+			<td>選択</td>
+			<td>出力画像ｚ軸の幅を設定</td>
+			<td>1</td>
+		</tr>
+		<tr>
+			<td>-Sx</td>
+			<td>選択</td>
+			<td>入力ファイルの読み込み開始地点設定（ｘ軸）</td>
+			<td>0.0</td>
+		</tr>
+		<tr>
+			<td>-Sy</td>
+			<td>選択</td>
+			<td>入力ファイルの読み込み開始地点設定（ｙ軸）</td>
+			<td>0.0</td>
+		</tr>
+		<tr>
+			<td>-Sz</td>
+			<td>選択</td>
+			<td>入力ファイルの読み込み開始地点設定（ｚ軸）</td>
+			<td>0.0</td>
+		</tr>
+		<tr>
+			<td>-dx</td>
+			<td>選択</td>
+			<td>１ピクセルのｘ軸の幅を設定</td>
+			<td>2.5</td>
+		</tr>
+		<tr>
+			<td>-dy</td>
+			<td>選択</td>
+			<td>１ピクセルのｙ軸の幅を設定</td>
+			<td>2.5</td>
+		</tr>
+		<tr>
+			<td>-dz</td>
+			<td>選択</td>
+			<td>１ピクセルのｚ軸の幅を設定</td>
+			<td>2.5</td>
+		</tr>
+		<tr>
+			<td>-w</td>
+			<td>選択</td>
+			<td>重量を設定</td>
+			<td>1.0</td>
+		</tr>
+		<tr>
+			<td>-sig</td>
+			<td>選択</td>
+			<td>原子の半径</td>
+			<td>0.0</td>
+		</tr>
+		<tr>
+			<td>-m</td>
+			<td>選択</td>
+			<td>モード設定</td>
+			<td>0</td>
+		</tr>
+		<tr>
+			<td>-h</td>
+			<td>選択</td>
+			<td>ヘルプを表示</td>
+			<td>　</td>
+		</tr>
+	</table>
+
+<!-- モード説明 -->
+
+	<br>
+	<br>
+	<caption><b>モードの詳細</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>モード</th>
+				<th>説明</th>
+			</tr>
+			<tr>
+				<td>0</td>
+				<td>ガウス球</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>Wentzel原子模型</td>
+			</tr>
+		</table>
+		
+	<h4>******実行例******</h4>
+	
+<!-- 入力ファイル詳細 -->
+
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<div><img src="121p.png" border="0" alt="121p.png(17496 byte)" width="183" height="168"><br>
+	pdbInfoでみた入力ファイルの詳細<br>
+	<img src="121p-Info.png" border="0" alt="121p-Info.png(2313 byte)" width="455" height="42"></div>
+
+<!-- 出力ファイル -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------出力ファイルの画像------</font></caption><br>
+	<div>オプションを使用し、画像に物体が写るよう調整する<br>
+	今回の入力ファイルではオプションを下記のように設定<br></div>
+	<table border="1">
+		<tr>
+			<td>-nx</td>
+			<td>100</td>
+		</tr>
+		<tr>
+			<td>-ny</td>
+			<td>100</td>
+		</tr>
+		<tr>
+			<td>-nz</td>
+			<td>1</td>
+		</tr>
+		<tr>
+			<td>-Sx</td>
+			<td>-18</td>
+		</tr>
+		<tr>
+			<td>-Sy</td>
+			<td>-1</td>
+		</tr>
+		<tr>
+			<td>-Sz</td>
+			<td>0.5</td>
+		</tr>
+		<tr>
+			<td>-dx</td>
+			<td>0.5</td>
+		</tr>
+		<tr>
+			<td>-dy</td>
+			<td>0.5</td>
+		</tr>
+		<tr>
+			<td>-dz</td>
+			<td>60</td>
+		</tr>
+	</table>
+	
+	<br>
+	<div>モード：０<br>
+	<table>
+		<tr>
+			<td><img src="121p.m3.png" border="0" alt="121p.m3.png(2191 byte)" width="100" height="100"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br>
+				合計</p>
+			</td>
+			<td><p align="left">0<br>
+				4<br>
+				0.1364<br>
+				0.39089<br>
+				0.0039089<br>
+				1364</p>
+			</td>
+		</tr>	
+	</table>
+	
+	<br>
+	<div>モード：１<br>
+	<table>
+		<tr>
+			<td><img src="121p.m2.png" border="0" alt="121p.m2.png(6425 byte)" width="100" height="100"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br>
+				合計</p>
+			</td>
+			<td><p align="left">0<br>
+				9516.95<br>
+				1100.45<br>
+				1467.25<br>
+				14.6725<br>
+				1.10045e+07</p>
+			</td>
+		</tr>	
+	</table>
+	
+<!-- オプション-w -->
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-w------</font></caption><br>
+	<div>-wを１０に設定<br>
+	<br>
+	オプション指定前の画像データ<br>
+	<img src="121p.m5.info.png" border="0" alt="121p.m5.info.png(1531 byte)" width="209" height="81"><br>
+	<br>
+	オプション指定後の画像データ<br>
+	<img src="121p.m5.info2.png" border="0" alt="121p.m5.info2.png(1546 byte)" width="208" height="81"></div>
+	
+<!-- オプション-sig -->
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-sig------</font></caption><br>
+	<div>-sigを１に設定</div>
+	<table>
+		<tr>
+			<td><img src="121p.m4.png" border="0" alt="121p.m4.png(7082 byte)" width="100" height="100"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br>
+				合計</p>
+			</td>
+			<td><p align="left">0<br>
+				0.251258<br>
+				0.0430626<br>
+				0.0499095<br>
+				0.000499095<br>
+				430.626</p>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

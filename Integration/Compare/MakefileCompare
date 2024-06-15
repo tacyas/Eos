@@ -1,0 +1,7 @@
+.SUFFIEXES: .ref .roi .fit .sub
+
+.roi.fit:
+	mrcImageCorrelation -i $*.roi -r $*.ref -o $*.param -s $*.fit -m 18
+
+.fit.sub:
+	mrcImageNormalizedSubtration -i1 $*.roi -i2 $*.fit -o $*.sub -nori2 $*.nor -p $*.subparam

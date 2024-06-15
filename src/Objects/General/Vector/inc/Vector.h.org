@@ -1,0 +1,22 @@
+#ifndef VECTOR_H
+#define VECTOR_H
+
+typedef struct floatVector {
+	unsigned long size;
+	float*        data;
+} floatVector;
+
+extern floatVector* floatVectorInit(floatVector* v, long size);
+extern floatVector* floatVectorFree(floatVector* v);
+extern floatVector* floatVectorAdd(floatVector* v, floatVector* u, floatVector* w);
+
+extern void lVectorSplineTableMake(floatVector* x, floatVector* y, floatVector* z);
+
+extern double lVectorSpline(double t, floatVector* x, floatVector* y, floatVector* z);
+
+extern void lVectorSplineTable2DMake(floatVector* p, floatVector* x, floatVector* y, floatVector* a, floatVector* b);
+extern void lVectorSpline2D(double t, double* px, double* py, 
+	floatVector* p, floatVector* x, floatVector* y,
+	floatVector* a, floatVector* b);
+
+#endif /* VECTOR_H */

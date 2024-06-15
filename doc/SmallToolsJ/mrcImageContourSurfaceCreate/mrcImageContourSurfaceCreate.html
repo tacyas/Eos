@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageContourSurfaceCreate</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageContourSurfaceCreate<br></h2></b></font>
+	<h4>輪郭の図を作成する</h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+		<table border="1">
+			<div align="left">
+				<tr>
+					<th>オプション</th>
+					<th>必須項目/選択項目</th>
+					<th>説明</th>
+					<th>デフォルト</th>
+				</tr>
+				<tr>
+					<td>-i</td>
+					<td>必須</td>
+					<td>入力ファイル設定</td>
+					<td>NULL</td>
+				</tr>
+				<tr>
+					<td>-o</td>
+					<td>必須</td>
+					<td>出力ファイル設定</td>
+					<td>NULL</td>
+				</tr>
+				<tr>
+					<td>-C</td>
+					<td>必須</td>
+					<td>輪郭の値を設定</td>
+					<td>0.0</td>
+				</tr>
+				<tr>
+					<td>-h</td>
+					<td>選択</td>
+					<td>ヘルプを表示</td>
+					<td>　</td>
+				</tr>
+			</div>
+		</table>
+		
+	<br>	
+	<h4>******実行例******</h4>
+	
+<!-- 入力ファイル説明 -->
+
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="b120.png" border="0" alt="b120.png(2730 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				65.5929<br>
+				5.45036<br>
+				12.3043<br>
+				0.153804<br></p>
+			</td>
+		</tr>
+	</table>
+
+<!-- 実行結果 -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-C------</font></caption><br>
+	<div>C=0.1の場合</div>
+	<table>
+		<tr>
+			<td><img src="outdata1-0.1.png" border="0" alt="outdata1-0.1.png(1191 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				1<br>
+				0.0484375<br>
+				0.214689<br>
+				0.00268361<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<div>C=1の場合</div>
+	<table>
+		<tr>
+			<td><img src="outdata1-1.png" border="0" alt="outdata1-1.png(1210 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				1<br>
+				0.0484375<br>
+				0.214689<br>
+				0.00268361<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<div>C=10の場合</div>
+	<table>
+		<tr>
+			<td><img src="outdata1-10.png" border="0" alt="outdata1-10.png(1198 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				1<br>
+				0.0484375<br>
+				0.211371<br>
+				0.00264214<br></p>
+			</td>
+		</tr>
+	</table>
+
+</body>
+</html>

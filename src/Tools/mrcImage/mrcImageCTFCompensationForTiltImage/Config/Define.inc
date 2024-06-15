@@ -1,0 +1,4 @@
+OBJECTNAME = mrcImageCTFCompensationForTiltImage
+EXTRA_LIB  =
+EXTRA_CCOPTS =
+EXTRA_INC =

@@ -1,0 +1,33 @@
+<HTML>
+<HEAD>
+<TITLE>ctfWeightMapCreation</TITLE>
+</HEAD>
+<BODY>
+<H1>ctfWeightMapCreation</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: ctfWeightMapCreation
+Options:
+    [-o[utput]           Out                 (stdout    ).as(outFile             ) ] :Optional  :OutputDataFile
+    [-kV                 kV                  (200       ).as(Real                ) ] :Optional  :AccVol[kV]
+    [-Cs                 Cs                  (1.7       ).as(Real                ) ] :Optional  :Cs[mm]
+    [-df                 Defocus             (2.7       ).as(Real                ) ] :Essential :Defocus[A]:under(+)
+    [-white              WhiteNoise          (1.0       ).as(Real                ) ] :Optional  :WhiteNoise(N/S)
+    [-noise              Noise               (NULL      ).as(inFile              ) ] :Optional  :Noise Power Spectrum
+    [-splusn             SplusN              (NULL      ).as(inFile              ) ] :Optional  :Signal+Noise Power Spectrum
+    [-dRinv              dRinv               (1024*5/3  ).as(Real                ) ] :Essential :dRinv[A]
+    [-dRmaxInv           dRmaxInv            (10.0      ).as(Real                ) ] :Essential :dRmaxInv[A]
+    [-SinWin             SinWinRminInv       (20.0      ).as(Real                ) 
+                         SinWinRmaxInv       (10.0      ).as(Real                ) ] :Optional  :RminInv[A] RmaxInv[A]
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+Mode:
+      0: No correction  : F = G
+      1: Phase contrast : F = G*(H/abs(H))(Only 1 or -1)
+      2: Phase contrast : F = G*H (Winer filter (S/N << 1))
+      3: Phase contrast : F = G/H (Inverse filter)
+      4: Phase contrast : F = G*(H/(H*H + N*N)) (Winer filter (white noise : Required Option -white))
+      5: Phase contrast : F = G*(H/abs(H)*abs(G*G-N*N)/(G*G)) (Winer filter: Required Option -noise, -splusn))
+</PRE>
+</BODY>
+</HTML>

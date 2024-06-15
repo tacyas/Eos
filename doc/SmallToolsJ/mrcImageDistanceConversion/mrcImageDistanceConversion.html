@@ -1,0 +1,199 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageDistanceConversion</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageDistanceConversion<br></h2></b></font>
+	<h4>距離関数変換</h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>オプション</th>
+				<th>必須項目/選択項目</th>
+				<th>NULL</th>
+				<th>デフォルト</th>
+			</tr>
+			<tr>
+				<td>-i</td>
+				<td>必須</td>
+				<td>入力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-o</td>
+				<td>選択</td>
+				<td>出力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-m</td>
+				<td>選択</td>
+				<td>モード</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-f</td>
+				<td>選択</td>
+				<td>フォーム</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-h</td>
+				<td>選択</td>
+				<td>ヘルプを表示</td>
+				<td>　</td>
+			</tr>
+		</table>
+		
+<!-- モード詳細 -->
+
+	<br>
+	<br>
+	<caption><b>モードの詳細</b></caption>
+	<table border="1">
+	<div align="left">
+		<tr>
+			<th>モード</th>
+			<th>説明</th>
+		</tr>
+		<tr>
+			<td>0</td>
+			<td>４近傍</td>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>８近傍</td>
+		</tr>
+	</div>
+	</table>
+	
+<!-- フォーム詳細 -->
+
+	<br>
+	<br>
+	<caption><b>フォームの詳細</b></caption>
+	<table border="1">
+	<div align="left">
+		<tr>
+			<th>フォーム</th>
+			<th>説明</th>
+		</tr>
+		<tr>
+			<td>0</td>
+			<td>距離転換のみ</td>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>距離転換＋マスキングフレーム</td>
+		</tr>
+	</div>
+	</table>
+
+	<h4>******実行例******</h4>
+
+<!-- 入力ファイル説明 -->
+	
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="b120.png" border="0" alt="b120.png(2730 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				65.5929<br>
+				5.45036<br>
+				12.3043<br>
+				0.153804<br></p>
+			</td>
+		</tr>
+	</table>
+	
+<!-- 出力結果 -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション必須項目のみで実行した場合------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="b120.outdata.png" border="0" alt="b120.outdata.png(2495 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				20.0884<br>
+				1.77124<br>
+				3.87563<br>
+				0.0484454<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-m------</font></caption><br>
+	<div>モード：１</div>
+	<table>
+		<tr>
+			<td><img src="b120.outdata-m1.png" border="0" alt="b120.outdata-m1.png(2767 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				12.6413<br>
+				1.24538<br>
+				2.64442<br>
+				0.0330552<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-f------</font></caption><br>
+	<div>モード：１</div>
+	<table>
+		<tr>
+			<td><img src="b120.outdata-f1.png" border="0" alt="b120.outdata-f1.png(1014 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				1<br>
+				0.00296875<br>
+				0.0544053<br>
+				0.000680066<br></p>
+			</td>
+		</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+</body>
+</html>

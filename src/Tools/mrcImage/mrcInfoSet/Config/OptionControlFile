@@ -1,0 +1,8 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputMrcFile","Essential","1","1","In","inFile","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-Length","-Length","Length[A]","Optional","3","1","Lengthx","Real","2.5","2","Lengthy","Real","2.5","3","Lengthz","Real","2.5"
+"-Fixed","-Fixed","Fixed Values in mrcImageHeader are fixed.","Optional","0"
+"-Interactive","-Interactive","Interactive(CUI) ","Optional","0"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

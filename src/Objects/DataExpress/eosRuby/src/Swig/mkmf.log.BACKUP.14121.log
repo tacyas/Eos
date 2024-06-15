@@ -1,0 +1,179 @@
+have_library: checking for main() in -lGL... -------------------- no
+
+<<<<<<< HEAD
+"gcc -o conftest -I. -I/usr/lib/ruby/1.8/x86_64-linux -I. -I/home/people/risachan/Eos/include    -fno-strict-aliasing -g -g -O2  -fPIC   conftest.c  -L. -L/usr/lib -L/usr/lib -L/home/people/risachan/Eos/lib/X86LINUX64 -L/home/people/risachan/Eos/util/X86LINUX64/lib -L. -Wl,-Bsymbolic-functions -rdynamic -Wl,-export-dynamic     -lruby1.8-static -lGL  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+/usr/lib/ruby/1.8/mkmf.rb:266: warning: Insecure world writable dir /home/people/risachan/Eos/util/X86LINUX64 in PATH, mode 040777
+=======
+"gcc -o conftest -I. -I/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/universal-darwin10.0 -I. -I/Applications/Eos.app/Eos/include  -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE   -arch i386 -arch x86_64 -g -Os -pipe -fno-common -DENABLE_DTRACE  -fno-common  -pipe -fno-common   conftest.c  -L. -L/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib -L/usr/lib -L/Applications/Eos.app/Eos/lib/X86MAC64 -L. -arch i386 -arch x86_64      -lruby -lGL  -lpthread -ldl  "
+ld: library not found for -lGL
+collect2: ld returned 1 exit status
+ld: library not found for -lGL
+collect2: ld returned 1 exit status
+lipo: can't open input file: /var/folders/-E/-EQYdVDRG7mXZpHb2KKd8E+++TI/-Tmp-//cc6OijR9.out (No such file or directory)
+>>>>>>> origin/master
+checked program was:
+/* begin */
+1: /*top*/
+2: int main() { return 0; }
+3: int t() { void ((*volatile p)()); p = (void ((*)()))main; return 0; }
+/* end */
+
+<<<<<<< HEAD
+--------------------
+
+have_library: checking for main() in -lGLU... -------------------- yes
+
+"gcc -o conftest -I. -I/usr/lib/ruby/1.8/x86_64-linux -I. -I/home/people/risachan/Eos/include    -fno-strict-aliasing -g -g -O2  -fPIC   conftest.c  -L. -L/usr/lib -L/usr/lib -L/home/people/risachan/Eos/lib/X86LINUX64 -L/home/people/risachan/Eos/util/X86LINUX64/lib -L. -Wl,-Bsymbolic-functions -rdynamic -Wl,-export-dynamic    -lGL  -lruby1.8-static -lGLU -lGL  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+checked program was:
+/* begin */
+1: /*top*/
+2: int main() { return 0; }
+3: int t() { void ((*volatile p)()); p = (void ((*)()))main; return 0; }
+/* end */
+
+--------------------
+
+have_library: checking for main() in -lglut... -------------------- yes
+
+"gcc -o conftest -I. -I/usr/lib/ruby/1.8/x86_64-linux -I. -I/home/people/risachan/Eos/include    -fno-strict-aliasing -g -g -O2  -fPIC   conftest.c  -L. -L/usr/lib -L/usr/lib -L/home/people/risachan/Eos/lib/X86LINUX64 -L/home/people/risachan/Eos/util/X86LINUX64/lib -L. -Wl,-Bsymbolic-functions -rdynamic -Wl,-export-dynamic    -lGLU -lGL  -lruby1.8-static -lglut -lGLU -lGL  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+checked program was:
+/* begin */
+1: /*top*/
+2: int main() { return 0; }
+3: int t() { void ((*volatile p)()); p = (void ((*)()))main; return 0; }
+/* end */
+
+--------------------
+
+have_library: checking for main() in -ltcl8.4... -------------------- yes
+
+"gcc -o conftest -I. -I/usr/lib/ruby/1.8/x86_64-linux -I. -I/home/people/risachan/Eos/include    -fno-strict-aliasing -g -g -O2  -fPIC   conftest.c  -L. -L/usr/lib -L/usr/lib -L/home/people/risachan/Eos/lib/X86LINUX64 -L/home/people/risachan/Eos/util/X86LINUX64/lib -L. -Wl,-Bsymbolic-functions -rdynamic -Wl,-export-dynamic    -lglut -lGLU -lGL  -lruby1.8-static -ltcl8.4 -lglut -lGLU -lGL  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+checked program was:
+/* begin */
+1: /*top*/
+2: int main() { return 0; }
+3: int t() { void ((*volatile p)()); p = (void ((*)()))main; return 0; }
+/* end */
+
+--------------------
+
+have_library: checking for main() in -ltk8.4... -------------------- yes
+
+"gcc -o conftest -I. -I/usr/lib/ruby/1.8/x86_64-linux -I. -I/home/people/risachan/Eos/include    -fno-strict-aliasing -g -g -O2  -fPIC   conftest.c  -L. -L/usr/lib -L/usr/lib -L/home/people/risachan/Eos/lib/X86LINUX64 -L/home/people/risachan/Eos/util/X86LINUX64/lib -L. -Wl,-Bsymbolic-functions -rdynamic -Wl,-export-dynamic    -ltcl8.4 -lglut -lGLU -lGL  -lruby1.8-static -ltk8.4 -ltcl8.4 -lglut -lGLU -lGL  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+checked program was:
+/* begin */
+1: /*top*/
+2: int main() { return 0; }
+3: int t() { void ((*volatile p)()); p = (void ((*)()))main; return 0; }
+/* end */
+
+--------------------
+
+have_library: checking for main() in -lBLT... -------------------- yes
+
+"gcc -o conftest -I. -I/usr/lib/ruby/1.8/x86_64-linux -I. -I/home/people/risachan/Eos/include    -fno-strict-aliasing -g -g -O2  -fPIC   conftest.c  -L. -L/usr/lib -L/usr/lib -L/home/people/risachan/Eos/lib/X86LINUX64 -L/home/people/risachan/Eos/util/X86LINUX64/lib -L. -Wl,-Bsymbolic-functions -rdynamic -Wl,-export-dynamic    -ltk8.4 -ltcl8.4 -lglut -lGLU -lGL  -lruby1.8-static -lBLT -ltk8.4 -ltcl8.4 -lglut -lGLU -lGL  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+checked program was:
+/* begin */
+1: /*top*/
+2: int main() { return 0; }
+3: int t() { void ((*volatile p)()); p = (void ((*)()))main; return 0; }
+/* end */
+
+--------------------
+
+have_library: checking for main() in -lasound... -------------------- yes
+
+"gcc -o conftest -I. -I/usr/lib/ruby/1.8/x86_64-linux -I. -I/home/people/risachan/Eos/include    -fno-strict-aliasing -g -g -O2  -fPIC   conftest.c  -L. -L/usr/lib -L/usr/lib -L/home/people/risachan/Eos/lib/X86LINUX64 -L/home/people/risachan/Eos/util/X86LINUX64/lib -L. -Wl,-Bsymbolic-functions -rdynamic -Wl,-export-dynamic    -lBLT -ltk8.4 -ltcl8.4 -lglut -lGLU -lGL  -lruby1.8-static -lasound -lBLT -ltk8.4 -ltcl8.4 -lglut -lGLU -lGL  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+checked program was:
+/* begin */
+1: /*top*/
+2: int main() { return 0; }
+3: int t() { void ((*volatile p)()); p = (void ((*)()))main; return 0; }
+/* end */
+
+--------------------
+
+have_library: checking for main() in -lgif... -------------------- yes
+
+"gcc -o conftest -I. -I/usr/lib/ruby/1.8/x86_64-linux -I. -I/home/people/risachan/Eos/include    -fno-strict-aliasing -g -g -O2  -fPIC   conftest.c  -L. -L/usr/lib -L/usr/lib -L/home/people/risachan/Eos/lib/X86LINUX64 -L/home/people/risachan/Eos/util/X86LINUX64/lib -L. -Wl,-Bsymbolic-functions -rdynamic -Wl,-export-dynamic    -lasound -lBLT -ltk8.4 -ltcl8.4 -lglut -lGLU -lGL  -lruby1.8-static -lgif -lasound -lBLT -ltk8.4 -ltcl8.4 -lglut -lGLU -lGL  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+=======
+"gcc -o conftest -I. -I/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib/ruby/1.8/universal-darwin10.0 -I. -I/Applications/Eos.app/Eos/include  -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE   -arch i386 -arch x86_64 -g -Os -pipe -fno-common -DENABLE_DTRACE  -fno-common  -pipe -fno-common   conftest.c  -L. -L/System/Library/Frameworks/Ruby.framework/Versions/1.8/usr/lib -L/usr/lib -L/Applications/Eos.app/Eos/lib/X86MAC64 -L. -arch i386 -arch x86_64      -lruby -lGL  -lpthread -ldl  "
+ld: library not found for -lGL
+collect2: ld returned 1 exit status
+ld: library not found for -lGL
+collect2: ld returned 1 exit status
+lipo: can't open input file: /var/folders/-E/-EQYdVDRG7mXZpHb2KKd8E+++TI/-Tmp-//ccIUC5dh.out (No such file or directory)
+>>>>>>> origin/master
+checked program was:
+/* begin */
+1: /*top*/
+2: int main() { return 0; }
+<<<<<<< HEAD
+3: int t() { void ((*volatile p)()); p = (void ((*)()))main; return 0; }
+/* end */
+
+--------------------
+
+have_library: checking for main() in -lfftw3f... -------------------- yes
+
+"gcc -o conftest -I. -I/usr/lib/ruby/1.8/x86_64-linux -I. -I/home/people/risachan/Eos/include    -fno-strict-aliasing -g -g -O2  -fPIC   conftest.c  -L. -L/usr/lib -L/usr/lib -L/home/people/risachan/Eos/lib/X86LINUX64 -L/home/people/risachan/Eos/util/X86LINUX64/lib -L. -Wl,-Bsymbolic-functions -rdynamic -Wl,-export-dynamic    -lgif -lasound -lBLT -ltk8.4 -ltcl8.4 -lglut -lGLU -lGL  -lruby1.8-static -lfftw3f -lgif -lasound -lBLT -ltk8.4 -ltcl8.4 -lglut -lGLU -lGL  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+checked program was:
+/* begin */
+1: /*top*/
+2: int main() { return 0; }
+3: int t() { void ((*volatile p)()); p = (void ((*)()))main; return 0; }
+/* end */
+
+--------------------
+
+have_library: checking for main() in -lnr... -------------------- yes
+
+"gcc -o conftest -I. -I/usr/lib/ruby/1.8/x86_64-linux -I. -I/home/people/risachan/Eos/include    -fno-strict-aliasing -g -g -O2  -fPIC   conftest.c  -L. -L/usr/lib -L/usr/lib -L/home/people/risachan/Eos/lib/X86LINUX64 -L/home/people/risachan/Eos/util/X86LINUX64/lib -L. -Wl,-Bsymbolic-functions -rdynamic -Wl,-export-dynamic    -lfftw3f -lgif -lasound -lBLT -ltk8.4 -ltcl8.4 -lglut -lGLU -lGL  -lruby1.8-static -lnr -lfftw3f -lgif -lasound -lBLT -ltk8.4 -ltcl8.4 -lglut -lGLU -lGL  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+checked program was:
+/* begin */
+1: /*top*/
+2: int main() { return 0; }
+3: int t() { void ((*volatile p)()); p = (void ((*)()))main; return 0; }
+/* end */
+
+--------------------
+
+have_library: checking for main() in -lnl... -------------------- yes
+
+"gcc -o conftest -I. -I/usr/lib/ruby/1.8/x86_64-linux -I. -I/home/people/risachan/Eos/include    -fno-strict-aliasing -g -g -O2  -fPIC   conftest.c  -L. -L/usr/lib -L/usr/lib -L/home/people/risachan/Eos/lib/X86LINUX64 -L/home/people/risachan/Eos/util/X86LINUX64/lib -L. -Wl,-Bsymbolic-functions -rdynamic -Wl,-export-dynamic    -lnr -lfftw3f -lgif -lasound -lBLT -ltk8.4 -ltcl8.4 -lglut -lGLU -lGL  -lruby1.8-static -lnl -lnr -lfftw3f -lgif -lasound -lBLT -ltk8.4 -ltcl8.4 -lglut -lGLU -lGL  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+checked program was:
+/* begin */
+1: /*top*/
+2: int main() { return 0; }
+3: int t() { void ((*volatile p)()); p = (void ((*)()))main; return 0; }
+/* end */
+
+--------------------
+
+have_library: checking for main() in -lnsl... -------------------- yes
+
+"gcc -o conftest -I. -I/usr/lib/ruby/1.8/x86_64-linux -I. -I/home/people/risachan/Eos/include    -fno-strict-aliasing -g -g -O2  -fPIC   conftest.c  -L. -L/usr/lib -L/usr/lib -L/home/people/risachan/Eos/lib/X86LINUX64 -L/home/people/risachan/Eos/util/X86LINUX64/lib -L. -Wl,-Bsymbolic-functions -rdynamic -Wl,-export-dynamic    -lnl -lnr -lfftw3f -lgif -lasound -lBLT -ltk8.4 -ltcl8.4 -lglut -lGLU -lGL  -lruby1.8-static -lnsl -lnl -lnr -lfftw3f -lgif -lasound -lBLT -ltk8.4 -ltcl8.4 -lglut -lGLU -lGL  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+checked program was:
+/* begin */
+1: /*top*/
+2: int main() { return 0; }
+3: int t() { void ((*volatile p)()); p = (void ((*)()))main; return 0; }
+/* end */
+
+--------------------
+
+have_library: checking for main() in -lEosObjects... -------------------- yes
+
+"gcc -o conftest -I. -I/usr/lib/ruby/1.8/x86_64-linux -I. -I/home/people/risachan/Eos/include    -fno-strict-aliasing -g -g -O2  -fPIC   conftest.c  -L. -L/usr/lib -L/usr/lib -L/home/people/risachan/Eos/lib/X86LINUX64 -L/home/people/risachan/Eos/util/X86LINUX64/lib -L. -Wl,-Bsymbolic-functions -rdynamic -Wl,-export-dynamic    -lnsl -lnl -lnr -lfftw3f -lgif -lasound -lBLT -ltk8.4 -ltcl8.4 -lglut -lGLU -lGL  -lruby1.8-static -lEosObjects -lnsl -lnl -lnr -lfftw3f -lgif -lasound -lBLT -ltk8.4 -ltcl8.4 -lglut -lGLU -lGL  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+checked program was:
+/* begin */
+1: /*top*/
+2: int main() { return 0; }
+3: int t() { void ((*volatile p)()); p = (void ((*)()))main; return 0; }
+=======
+3: int t() { main(); return 0; }
+>>>>>>> origin/master
+/* end */
+
+--------------------
+

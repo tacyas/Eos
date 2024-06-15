@@ -1,0 +1,90 @@
+.SUFFIXES: .roi .smooth .shrink .pad .fit .corinfo .3dinfo .3dwholeinfo .3d4sinfo .lst .3dlst .padlst .3d .ds6 .3dwholelst .3dwhole .wholeds6 .3d4s .4sds6 .3d4sinfolst
+
+#SHELL=/bin/bash
+
+
+REFERENCE=1J4Z-move-shrink.stack
+
+.lst.padlst:
+	rm -f $*.padlst
+	for i in `cat $*.lst`; do \
+		FILENAME=`basename $$i .roi`; \
+		echo $$FILENAME; \
+		make $$FILENAME.pad ; \
+		echo $$FILENAME.pad >> $*.padlst; \
+	done
+
+.padlst.3dlst:
+	rm -f $*.3dlst
+	rm -f $*.3dwholelst
+	for i in `cat $*.padlst`; do \
+		FILENAME=`basename $$i .pad`; \
+		make $$FILENAME.fit ; \
+		make $$FILENAME.3dinfo ; \
+		cat $$FILENAME.3dinfo >> $*.3dlst ; \
+		make $$FILENAME.3dwholeinfo ; \
+		cat $$FILENAME.3dwholeinfo >> $*.3dwholelst ; \
+	done
+
+.padlst.3d4sinfolst:
+	rm -f $*.3d4sinfolst
+	for i in `cat $*.padlst`; do \
+		FILENAME=`basename $$i .pad`; \
+		make $$FILENAME.3d4sinfo ; \
+		cat $$FILENAME.3d4sinfo >> $*.3d4sinfolst ; \
+	done
+
+
+.roi.smooth:
+	mrcImageSmoothing -i $*.roi -o $*.smooth -m 1 -r 4 
+
+.smooth.shrink:
+	mrcImageShrink -i $*.smooth -o  $*.shrink -S 8
+
+.shrink.pad:
+	mrcImagePad -i $*.shrink -o $*.pad -W 32 -H 32 
+
+.pad.fit:
+	mrcImageAutoRotationCorrelation -i $*.pad -r $(REFERENCE) -fit  $*.fit -O $*.corinfo -n 72 -m 18 -nRot1 72 -nRot2 72 -nRot3 1 > /dev/null
+
+.fit.3dinfo:
+	awk '/Cor/ { print $$18,$$16,$$2,$$3,$$4,"0.0"}' $*.corinfo | sort -r | sed -e s/pad/fit/ > $*.3dinfolst
+	head -n 1 $*.3dinfolst | awk ' {print $$2,$$3,$$4,$$5,$$6,$$1'} > $*.3dinfo	
+
+.fit.3dwholeinfo:
+	awk '/Cor/ { print $$18,$$16,$$2,$$3,$$4,$$9,$$11,$$12}' $*.corinfo | sort -r | sed -e s/pad/shift/ > $*.3dwholeinfolst
+	head -n 1 $*.3dwholeinfolst | awk ' {print $$2,$$3,$$4,$$5,$$6,$$7,$$8,$$1'} > $*.3dwholeinfo	
+	X=`awk '{print -8*$$6; }' $*.3dwholeinfo`; \
+	Y=`awk '{print -8*$$7; }' $*.3dwholeinfo`; \
+	echo $$X,$$Y; mrcImageShift -i $*.roi -o $*.shift -x $$X -y $$Y -z 0	
+
+.3dlst.3d:
+	mrc2Dto3D -I $*.3dlst -o $*.3d -InterpolationMode 2 -Double -DoubleCounter $*.3dcounter -CounterThreshold 0.5 -m 1 -WeightMode 6
+
+.3d.ds6:
+	mrc2map -i $*.3d -o $*.ds6 -m 3 
+
+.3dwholelst.3dwhole:
+	mrc2Dto3D -I $*.3dwholelst -o $*.3dwhole -InterpolationMode 2 -Double -DoubleCounter $*.3dwholecounter -CounterThreshold 0.5 -m 1 -WeightMode 6
+.3dwhole.wholeds6:
+	mrc2map -i $*.3dwhole -o $*.wholeds6 -m 3 
+	ln -sf $*.wholeds6 $*.whole.ds6
+
+.fit.3d4sinfo:
+	awk '/Cor/ { print $$18,$$16,$$2,$$3,$$4,$$9,$$11,$$12}' $*.corinfo | sort -r | sed -e s/pad/shift/ > $*.3d4sinfolst
+	head -n 1 $*.3d4sinfolst | awk ' {print $$2,$$3,$$4,$$5,$$6,$$7,$$8,$$1'} > $*.3d4sinfo
+	X=`awk '{print -4*$$6; }' $*.3d4sinfo`; \
+	Y=`awk '{print -4*$$7; }' $*.3d4sinfo`; \
+	echo $$X,$$Y; 
+	mrcImageShrink -i $*.roi -o  $*.4shrink -S 4
+	mrcImagePad -i $*.4shrink -o $*.pad -W 64 -H 64
+	mrcImageShift -i $*.roi -o $*.4shift -x $$X -y $$Y -z 0
+
+.3d4sinfolst.3d4s:
+	 mrc2Dto3D -I $*.3d4sinfolst -o $*.3d4s -InterpolationMode 2 -Double -DoubleCounter $*.3d4scounter -CounterThreshold 0.5 -m 1 -WeightMode 6
+.3d4s.4sds6:
+	mrc2map -i $*.3d4s -o $*.4sds6 -m 3
+	ln -sf $*.4sds6 $*.4s.ds6
+
+
+		

@@ -1,0 +1,7 @@
+# OptionControlFile
+# FileFormat
+"-i1","-i1[nput]","InputDataFile","Essential","1","1","In1","inFile","NULL"
+"-i2","-i2[nput]","InputDataFile","Essential","1","1","In2","inFile","NULL"
+"-sm","-sm[ode]","Shift mode","Optional","1","1","shiftflag","Integer","0"
+"-v","-v[alue]","Optional value of shift","Optional","1","1","value","Integer","0"
+"-mm","-mm[ode]","Method mode","Optional","1","1","methodmode","Integer","0"

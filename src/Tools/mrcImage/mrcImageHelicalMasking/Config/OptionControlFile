@@ -1,0 +1,13 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-dz","-dz[deltaz]","deltaz(A)","Optional","1","1","dz","Real","27.3"
+"-dp","-dp[deltaphi]","deltaphi(degree)","Optional","1","1","dphi","Real","13.84"
+"-sz","-sz[startz]","startz(pixel)","Optional","1","1","sz","Integer","0"
+"-ez","-ez[startz]","endz(pixel)","Optional","1","1","ez","Integer","0"
+"-sphi","-sphi[startphi]","startphi(degree) for masking","Optional","1","1","sphi","Real","0"
+"-ephi","-ephi[startphi]","endphi(degree) for masking","Optional","1","1","ephi","Real","90"
+"-v","-v[alue]","value to pad","Optional","1","1","value","Real","0"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

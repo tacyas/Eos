@@ -1,0 +1,12 @@
+
+#include "mrcImage.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+extern void lmrcImageAddValue(mrcImage* out, mrcImage* in, float value, long mode);
+extern void lmrcImageAddValueCuda(mrcImage* out, mrcImage* in, float value, long mode);
+#ifdef __cplusplus
+};
+#endif
+

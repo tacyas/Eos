@@ -1,0 +1,117 @@
+#!../Display2.HP 
+
+proc display2MenuSet { } {
+	frame .menu -relief raised -bd 2
+
+	menubutton .menu.file      -text "File"        -underline 0 -menu .menu.file.m
+	menubutton .menu.seqfile   -text "File(Seq)"   -underline 0 -menu .menu.seqfile.m
+	menubutton .menu.edit      -text "Edit"        -underline 0 -menu .menu.edit.m
+	menubutton .menu.window    -text "Window"      -underline 0 -menu .menu.window.m
+	menubutton .menu.roi       -text "ROI"         -underline 0 -menu .menu.roi.m
+	menubutton .menu.operation -text "Operation"   -underline 0 -menu .menu.operation.m
+	menubutton .menu.info      -text "Information" -underline 0 -menu .menu.info.m
+	menubutton .menu.help      -text "Help"        -underline 0 -menu .menu.help.m
+	menubutton .menu.exit      -text "Exit"        -underline 0 -menu .menu.exit.m
+	
+	menuFileCreate	
+	menuSeqFileCreate	
+	menuEditCreate	
+	menuWindowCreate
+	menuRoiCreate	
+	menuInfoCreate	
+	menuHelpCreate
+	menuExitCreate
+}
+
+proc menuFileCreate { } {
+	set m [menu .menu.file.m]
+	$m add com -label "Open" -command fileOpenWinCreate 
+	$m add com -label "New"  -command fileNewWinCreate
+	$m add com -label "Save Image(PS)    As"       -command { 
+		global fileNameIn
+		global mainImage 
+		global Roi
+	
+		set name [ fileSave ]
+		if { $mainImage(thresHigh) != "No" } {
+			set thresHigh "-H $mainImage(thesHigh)"
+		} else {
+			set thresHigh " "
+		}
+		if { $mainImage(thresLow) != "No" } {
+			set thresLow "-L $mainImage(thesHigh)"
+		} else {
+			set thresLow " " 
+		}
+		set Zoom [expr $Roi(Zoom)*$mainImage(PSScale) ]
+
+		set cmd "mrcImagePrint -i $fileNameIn -o $name $thresLow $thresHigh -m 17 -S $Zoom"
+		puts $cmd
+		eval exec $cmd 
+	}
+	$m add com -label "Save Image(BYTE)  As"       -command { 
+		#puts "Not support"
+		global fileNameIn
+		global mainImage 
+	
+		set name [ fileSave ]
+		if { $mainImage(thresHigh) != "No" } {
+			set thresHigh "-Max $mainImage(thesHigh)"
+		} else {
+			set thresHigh " "
+		}
+		if { $mainImage(thresLow) != "No" } {
+			set thresLow "-Min $mainImage(thesHigh)"
+		} else {
+			set thresLow " " 
+		}
+
+		set cmd "mrcImageModeChange -i $fileNameIn -o $name $thresLow $thresHigh "
+		puts $cmd
+		eval exec $cmd 
+	}
+	$m add com -label "Save Canvas(PS)   As"       -command {
+		set name [file tail [ fileSave ]]
+		.main_canvas.canvas postscript -file $name -colormode color  -pageheight 11i -pagewidth 8.5i -pageanchor c
+	}
+	$m add separator
+	$m add com -label "Exit"                      -command {exit 0}
+}
+
+proc menuSeqFileCreate { } {
+	set m [menu .menu.seqfile.m]
+	$m add com -label "Open"  -command seqFileOpenWinCreate 
+	$m add com -label "New"   -command seqFileNewWinCreate
+}
+
+proc menuWindowCreate { } {
+	set m [menu .menu.window.m]
+	$m add com -label "New Window" -command {
+		exec Display2 &
+	}
+}
+
+proc menuInfoCreate { } {
+	set m [menu .menu.info.m]
+	$m add com -label "Display2 Info"    -command display2InformationWinCreate 
+	$m add com -label "mrcImage Info"    -command mrcImageInformationWinCreate 
+	$m add com -label "Image    Info"    -command imageInformationWinCreate 
+	$m add com -label "Roi      Info"    -command roiInformationWinCreate
+	$m add com -label "LayerLine  Info"  -command layerLineInformationWinCreate 
+	$m add com -label "Projection Info"  -command projectionInformationWinCreate 
+	$m add com -label "Scetion    Info"  -command sectionInformationWinCreate 
+	$m add com -label "CTF        Info"  -command ctfInformationWinCreate 
+	$m add com -label "UnitCell Info"    -command unitCellInformationWinCreate 
+	$m add com -label "Scale    Info"    -command scaleInformationWinCreate 
+}
+
+proc menuHelpCreate { } {
+	set m [menu .menu.help.m]
+	$m add com -label "Help"
+}
+
+proc menuExitCreate { } {
+	set m [menu .menu.exit.m ]
+	$m add com -label "Exit" -command { exit } 
+}
+

@@ -1,0 +1,22 @@
+<HTML>
+<BODY>
+<H1>hf2000Info</H1><BR>
+<H3>in hf2000.h</H3><BR>
+<PRE>
+typedef struct <A HREF="hf2000Info.html">hf2000Info </A>{ <BR>
+	char* deviceName; <BR>
+	struct termios IO; <BR>
+	struct termios prevIO; <BR>
+	int fd; <BR>
+	int flagClient;	 <BR>
+	int flagServer;	 <BR>
+	int serverSocket; <BR>
+	int serverFD; <BR>
+	char* hostname; <BR>
+	u_short port; <BR>
+	u_short maxPort; <BR>
+	u_short portSpeed; <BR>
+} hf2000Info; <BR>
+ 
+</PRE></HTML>
+</BODY>

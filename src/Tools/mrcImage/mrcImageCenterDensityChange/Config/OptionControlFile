@@ -1,0 +1,10 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-rmin","-r[adius]min","min radius[A]","Optional","1","1","rmin","Real","0"
+"-rmax","-r[adius]max","max radius[A]","Optional","1","1","rmax","Real","90"
+"-ratio","-ratio","ratio","Optional","1","1","ratio","Real","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"
+"-M","-M[ode]","radiusMode","Optional","1","1","radiusMode","Integer","0"

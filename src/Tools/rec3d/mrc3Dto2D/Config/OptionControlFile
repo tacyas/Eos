@@ -1,0 +1,14 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: mrcImage[3D]","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","Output: mrcImage[2D]","Optional","1","1","Out","outFile","NULL"
+"-fileList","-fileList","Output: mrcImage[2D] List ","Optional","3","1","filenamePrefix","String","2D","2","filenameSuffix","String","2d","3","filenameFormat","String","%s-%05d.%s"
+"-Rot1","-Rot1","OutputDataFile","Optional","3","1","Rot1Start","Real","0.0","2","Rot1End","Real","360.0","3","Rot1Delta","Real","10"
+"-Rot2","-Rot2","OutputDataFile","Optional","3","1","Rot2Start","Real","0.0","2","Rot2End","Real","360.0","3","Rot2Delta","Real","10"
+"-Rot3","-Rot3","OutputDataFile","Optional","3","1","Rot3Start","Real","0.0","2","Rot3End","Real","360.0","3","Rot3Delta","Real","10"
+"-EulerMode","-EulerMode","OutputDataFile","Optional","1","1","EulerMode","String","ZOYS"
+"-InterpolationMode","-InterpolationMode","OutputDataFile","Optional","1","1","InterpolationMode","Integer","1"
+"-AreaMode","-AreaMode","Cubic: 0, Globular: 1 ","Optional","1","1","AreaMode","Integer","0"
+"-pthread","-pthread","pthread: max","Optional","1","1","pthreadMax","Integer","1"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

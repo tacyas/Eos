@@ -1,0 +1,203 @@
+/*
+# %M% %Y% %I%
+# The latest update : %G% at %U%
+#
+#%Z% mrcImageFourierShellCorrelation ver %I%
+#%Z% Created by 
+#%Z%
+#%Z% Usage : mrcImageFourierShellCorrelation
+#%Z% Attention
+#%Z%
+*/
+static char __sccs_id[] = "%Z%mrcImageFourierShellCorrelation ver%I%; Date:%D% %Z%";
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>                  
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+
+#define DEBUG
+#include "genUtil.h"
+#include "mrcImage.h"
+
+/* prototype */
+void lmrcImageFourierShellCorrelation(double* data ,mrcImage* in1 ,mrcImage* in2,double delta ,double L ,double H ,int mode);
+
+void
+main(int argc, char* argv[]) 
+{
+	mrcImageFourierShellCorrelationInfo info;
+
+/* variables */
+	mrcImage in1;
+	mrcImage in2;
+	mrcImage tmp;
+	double* data,DX,DY,DZ;
+	int max;
+/* input patameters ,file open */
+	init0(&info);
+	argCheck(&info, argc, argv);
+	init1(&info);
+
+/* initialization */
+	mrcFileRead(&in1 ,info.In1 ,"in main" ,0);
+	mrcFileRead(&in2 ,info.In2 ,"in main" ,0);
+	DX=1/(in1.HeaderLength.x*in1.HeaderN.x);
+	DY=1/(in1.HeaderLength.y*in1.HeaderN.y);
+	DZ=1/(in1.HeaderLength.z*in1.HeaderN.z);
+	if (!info.flagdelta){
+	  info.delta=1/(in1.HeaderLength.x*in1.HeaderN.x);
+	}
+/* begin */
+	DEBUGPRINT("Program Start\n");
+	max=floor(sqrt(SQR(1/in1.HeaderLength.x)+SQR(1/in1.HeaderLength.y)+SQR(1/in1.HeaderLength.z) ) /info.delta /2  +0.5)+1;
+	if ( (data = (double *)malloc(sizeof(double)*max ) )== NULL ){
+	  fprintf(stderr ,"Enough memoly is not available.");
+	  exit(EXIT_FAILURE);
+	}
+	switch(info.mode2){
+	case 0:
+	  lmrcImageFourierShellCorrelation(data ,&in1 ,&in2 ,info.delta ,info.L ,info.H ,info.mode);
+	  break;
+	case 1:
+	  lmrc3DZ1ImgGet(&tmp ,&in2 ,info.z);
+	  lmrcImageFourierShellCorrelation(data ,&in1 ,&tmp ,info.delta ,info.L ,info.H ,info.mode);
+	  break;
+	}
+	exit(EXIT_SUCCESS);
+}
+
+void
+additionalUsage()
+{
+	fprintf(stderr, "----- mode -----\n");
+	fprintf(stderr, "0: Fourier shell correlation.\n");
+	fprintf(stderr, "1: Fourier shell phase residual.\n");
+	fprintf(stderr, "+2: Correlation between L and H\n");
+	fprintf(stderr, "----- mode 2 -----\n");
+	fprintf(stderr, "0: Correlation between same size images\n");
+	fprintf(stderr, "1: Correlation between 2D image and image extracted from 3D image.\n");
+}
+
+void lmrcImageFourierShellCorrelation(double* data ,mrcImage* in1 ,mrcImage* in2,double delta ,double L ,double H ,int mode)
+{
+/* variables */
+	mrcImage ft1;
+	mrcImage ft2;
+	int X,Y,Z,R,max;
+	int *N;
+	double *tmp1,*tmp2,*tmp3;
+	double rdata1,idata1,rdata2,idata2,XX,YY,ZZ,f1,f2,nr1,nr2,ni1,ni2,dr,di,d,dp,tmpR;
+/* begin */
+	if (mode/2){
+	  max = 2;
+	} else {
+	  max=floor(sqrt(SQR(1/in1->HeaderLength.x)+SQR(1/in1->HeaderLength.y)+SQR(1/in1->HeaderLength.z) ) /delta /2  +0.5)+1;
+	}
+	DEBUGPRINT1("max=%d\n",max);
+	if ( (tmp1 = (double *)malloc(sizeof(double)*max ) )== NULL ){
+	  fprintf(stderr ,"Enough memoly is not available.");
+	  exit(EXIT_FAILURE);
+	}
+	if ( (tmp2 = (double *)malloc(sizeof(double)*max ) )== NULL ){
+	  fprintf(stderr ,"Enough memoly is not available.");
+	  exit(EXIT_FAILURE);
+	}
+	if ( (tmp3 = (double *)malloc(sizeof(double)*max ) )== NULL ){
+	  fprintf(stderr ,"Enough memoly is not available.");
+	  exit(EXIT_FAILURE);
+	}
+	if ( (N = (int *)malloc(sizeof(int)*max ) )== NULL ){
+	  fprintf(stderr ,"Enough memoly is not available.");
+	  exit(EXIT_FAILURE);
+	}
+
+	for (R=0 ;R<max ;R++){
+	  tmp1[R]=tmp2[R]=tmp3[R]=0;
+	  N[R]=0;
+	  DEBUGPRINT1("%d ",R);
+	}
+	lmrcImageFFT(&ft1 ,in1 ,0);
+	lmrcImageFFT(&ft2 ,in2 ,0);
+	
+    
+	for (X=0; X<=ft1.HeaderN.x/2.0; X++) {
+	  DEBUGPRINT1("%d ",X);
+	  for (Y=-ft1.HeaderN.y/2.0; Y<ft1.HeaderN.y/2.0; Y++) {
+	    for (Z=-ft1.HeaderN.z/2.0; Z<ft1.HeaderN.z/2.0; Z++) {
+	      mrcPixelDataGet(&ft1, X, Y, Z, &rdata1, mrcPixelRePart, mrcPixelHowNearest);
+	      mrcPixelDataGet(&ft1, X, Y, Z, &idata1, mrcPixelImPart, mrcPixelHowNearest);
+	      mrcPixelDataGet(&ft2, X, Y, Z, &rdata2, mrcPixelRePart, mrcPixelHowNearest);
+	      mrcPixelDataGet(&ft2, X, Y, Z, &idata2, mrcPixelImPart, mrcPixelHowNearest);
+	      XX = X/(ft1.HeaderLength.x*ft1.HeaderN.x);
+	      YY = Y/(ft1.HeaderLength.y*ft1.HeaderN.y);
+	      ZZ = Z/(ft1.HeaderLength.z*ft1.HeaderN.z);
+	      tmpR=XX*XX+YY*YY+ZZ*ZZ;
+	      if (mode/2){
+		if (tmpR < H*H && tmpR > L*L){
+		  R=0;
+		} else {
+		  R=1;
+		}
+	      } else {
+		R=floor( sqrt(tmpR)/delta +0.5);
+	      }
+	      switch (mode%2){
+	      case 0:
+		tmp1[R] += rdata1*rdata2 + idata1*idata2;
+		tmp2[R] += rdata1*rdata1 + idata1*idata1;
+		tmp3[R] += rdata2*rdata2 + idata2*idata2;
+		break;
+	      case 1:
+		f1 = rdata1*rdata1 + idata1*idata1;
+		f2 = rdata2*rdata2 + idata2*idata2;
+		if (f1 != 0 && f2 != 0 ){
+		  f1=sqrt(f1);
+		  f2=sqrt(f2);
+		  tmp2[R] += f1*f2;
+		  nr1=rdata1/f1;
+ 		  ni1=idata1/f1;
+		  nr2=rdata2/f2;
+		  ni2=idata2/f2;
+		  dr=nr1-nr2;
+		  di=ni1-ni2;
+		  if (dr != 0.0 ){
+		    d=sqrt(dr*dr+di*di);
+		    dp=2*asin(d/2);
+		    tmp1[R] += f1*f2*dp;
+		  }
+		}
+		break;
+	      }
+	      N[R]++;
+	    }
+	  }
+	}
+	for (R=0 ;R<max ;R++){
+	  switch (mode%2){
+	  case 0:
+	    if (tmp2[R]!=0 &&  tmp3[R]!=0 ){
+	      data[R]=tmp1[R]/sqrt(tmp2[R]*tmp3[R]);
+	    }else{
+	      data[R]=0.0;
+	    }
+	    break;
+	    case 1:
+	      if (tmp2[R]!=0){
+		data[R]=tmp1[R]/tmp2[R];
+	      }else{
+		data[R]=0.0;
+	      }
+	      break;
+	    }
+	  if (mode/2 == 0) {
+	    fprintf(stdout,"%f %f %d \n",R*delta ,data[R],N[R]);
+	  }
+	}
+	if (mode/2 == 1){
+	  fprintf(stdout,"%f %f %f \n",H,L,data[0]);
+	}
+}
+
+	      

@@ -1,0 +1,4 @@
+OBJECTNAME = mrcImage1dShiftByCorrelation
+EXTRA_LIB  =
+EXTRA_CCOPTS =
+EXTRA_INC =

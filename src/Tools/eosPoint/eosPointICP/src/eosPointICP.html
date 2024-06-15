@@ -1,0 +1,38 @@
+<HTML>
+<HEAD>
+<TITLE>eosPointICP</TITLE>
+</HEAD>
+<BODY>
+<H1>eosPointICP</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: eosPointICP
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :Input: eosPoint
+    [-i[nput]t[ype]      InType              (2         ).as(Integer             ) ] :Optional  :eosPointType
+    [-i[nput]Mat[rix]    InMat               (NULL      ).as(inFile              ) ] :Optional  :Input: Matrix3D for initial
+    [-r[eference]        Ref                 (NULL      ).as(inFile              ) ] :Essential :Input: esoPoint
+    [-r[eference]t[ype]  RefType             (2         ).as(Integer             ) ] :Optional  :Input: esoPoint
+    [-r[eference]Mat[rix]RefMat              (NULL      ).as(inFile              ) ] :Optional  :Input: Matrix3D for initial
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-o[utput]t[ype]     OutType             (2         ).as(Integer             ) ] :Essential :OutputDataFile
+    [-EAMode             EAMode              (ZEYS      ).as(String              ) ] :Optional  :Euler Angle
+    [-R[atio]            Ratio               (1.0       ).as(Real                ) ] :Optional  :Mag
+    [-Iter[ationLimit]   IterationLimit      (10000     ).as(Integer             ) ] :Optional  :IteretionLimit
+    [-Pattern            Pattern             (10        ).as(Integer             ) ] :Optional  :Pickup Pattern
+    [-Thres[hold]        ScoreThreshold      (0.0       ).as(Real                ) ] :Optional  :Threshold
+    [-Omit               Omit                (100000.0  ).as(Real                ) ] :Optional  :OmitPointfrom Score
+    [-Pick[upPercent]    Pickup              (0.8       ).as(Real                ) ] :Optional  :Pickup Percent
+    [-flag2D             flag2D              (0         ).as(Integer             ) ] :Optional  :2D(1) or 3D(0)
+    [-debug              Debug               (0         ).as(Integer             ) ] :Optional  :Debug Mode
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+----- Additional Usage -----
+eosPointFormat
+type-0: x y z
+type-1: x y z sig
+type-2: x y z sigx sigy sigz
+type-3: x y z sig sigx sigy sigz
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,8 @@
+# OptionControlFile
+# FileFormat
+"-i2","-i[nput]2","Input","Optional","2","1","In2x","inFile::mrcImage","NULL","2","In2y","inFile::mrcImage","NULL" 
+"-i3","-i[nput]3","Input","Optional","3","1","In3x","inFile::mrcImage","NULL","2","In3y","inFile::mrcImage","NULL","3","In3z","inFile::mrcImage","NULL" 
+"-o","-o[utput]","Output::MagOfCur3D or CurOf2D","Essential","1","1","Out","outFile::mrcImage","NULL"
+"-o3","-o[utput]3","OutputDataFile","Optional","3","1","Out3x","outFile::mrcImage","NULL","2","Out3y","outFile::mrcImage","NULL","3","Out3z","outFile::mrcImage","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

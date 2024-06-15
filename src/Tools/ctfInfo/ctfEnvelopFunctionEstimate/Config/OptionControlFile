@@ -1,0 +1,8 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input:","Essential","1","1","In","inFile::mrcImage","NULL"
+"-o","-o[utput]","Output:","Optional","1","1","Out","outFile::ASCII","stdout"
+"-degree","-degree","[dim]","Optional","1","1","degree","Integer","6"
+"-Range","-Range","[/A]","Optional","2","1","CutLow","Real","0.01","2","CutHigh","Real","0.2"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

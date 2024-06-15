@@ -1,0 +1,101 @@
+/*
+# mrcMultiFFTCentralSectionsCompare : $Revision$  
+# $Date$ 
+# Created by $Author$
+# Usage : mrcMultiFFTCentralSectionsCompare
+# Attention
+#   $Loccker$
+#  	$State$ 
+#
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>                  
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+
+#define DEBUG
+#include "genUtil.h"
+#include "lmrcFFTCentralSection.h"
+//#include "Class.h"
+
+/*
+Example:
+typedef struct lmrcMultiFFTCentralSectionsCompareInfo {
+	float a;
+	int   b;
+} lmrcMultiFFTCentralSectionsCompareInfo;
+
+typedef enum lmrcMultiFFTCentralSectionsCompareMode {
+	a=0,
+	b=1
+} lmrcMultiFFTCentralSectionsCompareMode;
+*/
+
+int
+main(int argc, char* argv[]) 
+{
+	mrcMultiFFTCentralSectionsCompareInfo info;
+	lmrcMultiFFTCentralSectionsCompareInfo linfo;
+	mrcImage in;
+	mrcImage volume;
+	int i,len;
+
+	init0(&info);
+    argCheck(&info, argc, argv);
+    init1(&info);
+
+	DEBUGPRINT("Program Start\n");
+
+	mrcFileRead(&in, info.In2D, "in main", 0);
+	mrcFileRead(&volume, info.In3D, "in main", 0);
+	
+	strncpy(linfo.EulerMode, info.EulerMode, 4);
+	strncpy(linfo.llinfo.llinfo.EulerMode, info.EulerMode, 4);
+	linfo.llinfo.llinfo.TransX = info.TransX;
+	linfo.llinfo.llinfo.TransY = info.TransY;
+	linfo.llinfo.llinfo.InterpMode = info.InterpMode;
+
+	//Rot1
+	linfo.llinfo.Rot1Start = info.Rot1Start*RADIAN;
+	linfo.llinfo.Rot1End = info.Rot1End*RADIAN;
+	linfo.llinfo.Rot1Delta = info.Rot1Delta*RADIAN;
+	linfo.llinfo.nRot1 = MAX(1,(int)(fabs((linfo.llinfo.Rot1End - linfo.llinfo.Rot1Start)/linfo.llinfo.Rot1Delta)+0.5));
+
+	//Rot2
+	linfo.llinfo.Rot2Start = info.Rot2Start*RADIAN;
+	linfo.llinfo.Rot2End = info.Rot2End*RADIAN;
+	linfo.llinfo.Rot2Delta = info.Rot2Delta*RADIAN;
+	linfo.llinfo.nRot2 = MAX(1,(int)(fabs((linfo.llinfo.Rot2End - linfo.llinfo.Rot2Start)/linfo.llinfo.Rot2Delta)+0.5));
+	
+	//Rot3
+	linfo.llinfo.Rot3Start = info.Rot3Start*RADIAN;
+	linfo.llinfo.Rot3End = info.Rot3End*RADIAN;
+	linfo.llinfo.Rot3Delta = info.Rot3Delta*RADIAN;
+	linfo.llinfo.nRot3 = MAX(1,(int)(fabs((linfo.llinfo.Rot3End - linfo.llinfo.Rot3Start)/linfo.llinfo.Rot3Delta)+0.5));
+	
+	linfo.llinfo.RotSize = ((linfo.llinfo.nRot1))*((linfo.llinfo.nRot2))*((linfo.llinfo.nRot3));
+	DEBUGPRINT1("RotSize: %d\n",linfo.llinfo.RotSize);
+	
+	lmrcMultiFFTCentralSectionsCompareInfoOut Out[linfo.llinfo.RotSize];
+	
+	lmrcMultiFFTCentralSectionsCompare(Out, &in, &volume, &linfo, info.mode);
+	
+	lmrcMultiFFTCentralSectionsCompareNormalization(Out, &linfo, info.mode);
+
+	lmrcMultiFFTCentralSectionsCompareInfoWrite(info.fptOut, info.In2D, Out, &linfo, info.mode);
+
+	lmrcMultiFFTCentralSectionsCompareInfoSort(Out, 0, linfo.llinfo.RotSize);
+	for(i=0; i<linfo.llinfo.RotSize; i++){
+	DEBUGPRINT1("%f \n", Out[i].Prob);
+	}
+
+	exit(EXIT_SUCCESS);
+}
+
+void
+additionalUsage()
+{
+	fprintf(stderr, "----- Additional Usage -----\n");
+}

@@ -1,0 +1,31 @@
+<HTML>
+<HEAD>
+<TITLE>mrcImage3DSymmetryFind</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImage3DSymmetryFind</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImage3DSymmetryFind
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :Input: MRC(3D)
+    [-o[utput]           Out                 (stdout    ).as(outFile             ) ] :Optional  :Output: SymmetryFindParameters
+    [-a[verage]          Avg                 (NULL      ).as(outFile             ) ] :Optional  :Output: SymmetryAverage
+    [-S[paceGroupNumber] ISGN                (0         ).as(Integer             ) ] :Optional  :SpaceGroupNumber
+    [-Rot[ation]Mode     RotMode             (XOYS      ).as(String              ) ] :Optional  :EulerMode
+    [-Rot1               minRot1             (0.        ).as(Real                ) 
+                         maxRot1             (360.      ).as(Real                ) 
+                         dRot1               (1.0       ).as(Real                ) ] :Optional  :[degree]
+    [-Rot2               minRot2             (-90.      ).as(Real                ) 
+                         maxRot2             (90.       ).as(Real                ) 
+                         dRot2               (1.0       ).as(Real                ) ] :Optional  :[degree]
+    [-dCos               dCos                (1         ).as(Integer             ) ] :Optional  :dCos
+    [-CorMode            corMode             (16        ).as(Integer             ) ] :Optional  :CorrelationMode
+    [-OffsetMode         OffsetMode          (0         ).as(Integer             ) ] :Optional  :OffsetMode
+    [-InterpolationMode  InterpolationMode   (2         ).as(Integer             ) ] :Optional  :InterpolationMode
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+</PRE>
+</BODY>
+</HTML>

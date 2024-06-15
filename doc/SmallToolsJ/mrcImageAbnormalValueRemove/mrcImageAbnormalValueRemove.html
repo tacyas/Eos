@@ -1,0 +1,212 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageAbnormalValueRemove</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageAbnormalValueRemove<br></h2></b></font>
+	<h4></h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>オプション</th>
+				<th>必須項目/選択項目</th>
+				<th>NULL</th>
+				<th>デフォルト</th>
+			</tr>
+			<tr>
+				<td>-i</td>
+				<td>必須</td>
+				<td>入力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-o</td>
+				<td>必須</td>
+				<td>出力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-v</td>
+				<td>選択</td>
+				<td></td>
+				<td>3.0</td>
+			</tr>
+			<tr>
+				<td>-u</td>
+				<td>選択</td>
+				<td></td>
+				<td>UnsignedMax(65535) UnsignedHalf(16384)</td>
+			</tr>
+			<tr>
+				<td>-m</td>
+				<td>選択</td>
+				<td>モード</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-h</td>
+				<td>選択</td>
+				<td>ヘルプを表示</td>
+				<td>　</td>
+			</tr>
+		</table>
+
+<!-- モード詳細 -->
+
+	<br>
+	<br>
+	<caption><b>モードの詳細</b></caption>
+	<table border="1">
+	<div align="left">
+		<tr>
+			<th>モード</th>
+			<th>説明</th>
+		</tr>
+		<tr>
+			<td>0</td>
+			<td>ランダム値</td>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>近似値</td>
+		</tr>
+	</div>
+	</table>
+
+	<h4>******実行例******</h4>
+
+<!-- 入力ファイル説明 -->
+	
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="b120-2.png" border="0" alt="b120-2.png(6742 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-65.0178<br>
+				94.4699<br>
+				4.85274<br>
+				20.4635<br>
+				0.255794<br></p>
+			</td>
+		</tr>
+	</table>
+	
+<!-- 出力結果 -->
+	
+	<br>
+	<br>
+	<caption><font color="blue">------必須項目のオプションのみの場合------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="b120-2.outdata.png" border="0" alt="b120-2.outdata.png(6999 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-56.108<br>
+				66.0024<br>
+				4.49193<br>
+				19.7521<br>
+				0.246901<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-v------</font></caption><br>
+	<div>r=1で実行</div>
+	<table>
+		<tr>
+			<td><img src="b120-2.outdata-v1.png" border="0" alt="b120-2.outdata-v1.png(6475 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-62.7258<br>
+				74.644<br>
+				4.1715<br>
+				14.3336<br>
+				0.17917<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>r=5で実行</div>
+	<table>
+		<tr>
+			<td><img src="b120-2.outdata-v5.png" border="0" alt="b120-2.outdata-v5.png(6742 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-65.0178<br>
+				94.4699<br>
+				4.85274<br>
+				20.4635<br>
+				0.255794<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-mode------</font></caption><br>
+	<div>mode=0で実行</div>
+	<table>
+		<tr>
+			<td><img src="b120-2.outdata.png" border="0" alt="b120-2.outdata.png(6999 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-56.108<br>
+				66.0024<br>
+				4.49193<br>
+				19.7521<br>
+				0.246901<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>mode=1で実行</div>
+	<table>
+		<tr>
+			<td><img src="b120-2.outdata-m1.png" border="0" alt="b120-2.outdata-m1.png(7007 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-56.108<br>
+				66.0024<br>
+				4.6678<br>
+				19.8468<br>
+				0.248085<br></p>
+			</td>
+		</tr>
+	</table>
+
+
+</body>
+</html>

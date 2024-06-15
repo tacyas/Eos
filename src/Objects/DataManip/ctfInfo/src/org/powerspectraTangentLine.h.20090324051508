@@ -1,0 +1,25 @@
+/*
+# powerspectraTangentLine.h : $Revision$  
+# $Date$ 
+# Created by $Author$
+# Usage : powerspectraTangentLine.h 
+# Attention
+#   $Loccker$
+#  	$State$ 
+#
+*/
+/* $Log$ */
+#ifndef POWER_SPECTRA_TANGENT_LINE_H
+#define POWER_SPECTRA_TANGENT_LINE_H
+
+#include "mrcImage.h"
+#include "ctfInfo.h"
+#include "./ctfInfoWrite2.h"
+
+/*prototype begin*/
+extern void TangentLine(floatVector* spacing, floatVector* scatter,float** belowCoefficient,float** aboveCoefficient ,ctfInfo* ini,lctfDetermineInfo* info,int mode); 
+
+
+/*prototype end*/
+
+#endif /*POWER_SPECTRA_TANGENT_LINE*/

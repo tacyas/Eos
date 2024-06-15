@@ -1,0 +1,7 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input:mrcImage(Image)","Essential","1","1","In","inFile::mrcImage","NULL"
+"-o","-o[utput]","Output:mrcImage(FT)","Essential","1","1","Out","outFile::mrcImage","NULL"
+"-C","-C[entre]","Centre","Optional","3","1","CentreX","Real","-1","2","CentreY","Real","-1","3","CentreZ","Real","-1"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

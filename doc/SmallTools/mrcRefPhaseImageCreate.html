@@ -1,0 +1,20 @@
+<HTML>
+<HEAD>
+<TITLE>mrcRefPhaseImageCreate</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcRefPhaseImageCreate</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcRefPhaseImageCreate
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-p[ower]            Power               (1         ).as(Real                ) ] :Optional  :Use (|F|^p ) to create fourier phase image
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+    [-C[utoff]           Cutoff              (-1.0      ).as(Real                ) ] :Optional  :Mode 0:If |F|<Cutoff ,this pixel is not used.Default:Mean/10 
+ Mode 1:|F|<Cutoff*Mean is used to cut.Default:0.1
+</PRE>
+</BODY>
+</HTML>

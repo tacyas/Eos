@@ -1,0 +1,4 @@
+OBJECTNAME = mrcImagePad
+EXTRA_LIB  = -lgsl
+EXTRA_CCOPTS =
+EXTRA_INC =

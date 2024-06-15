@@ -1,0 +1,9 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: ","Essential","1","1","In","inFile","NULL"
+"-I","-I[nput]","Input: Result Filename Header","Essential","1","1","InResHead","String","test.out"
+"-I2","-I[nput]2","Input: Iteration Number","Optional","1","1","InResTail","Integer","0"
+"-neg","-neg[lect]","Input: Neglect","Optional","1","1","Neg","Real","1e-6"
+"-o","-o[utput]","OutputDataFile","Optional","1","1","Out","outFile","stdout"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","1"

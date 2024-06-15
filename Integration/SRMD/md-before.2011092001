@@ -1,0 +1,208 @@
+#/bin/sh
+echo "Program Start"
+#--Version1.2.3.14
+#thisProtein is potentialProtein in md*
+
+##
+##  PDB for MD: Initail Model
+##
+thisProtein="CPRHO.3245"
+thisProteinPSFDir="../psf/"
+thisProteinPSF="$thisProtein.psf"
+thisProteinPDBDir="../MRCandPDBsource/"
+thisProteinPDB="$thisProtein.pdb"
+##"DIVIDE MODE"			
+##	DEFAULT  :　default SRMD		
+##	COMPLEX  :  SRMD for complex
+##	DISVALUE :  SRMD without designated region
+DIVIDE_MODE='COMPLEX'
+#FitProteinForRMSoutput="MyosinMMD_mini.pdb"
+##
+## Contraint: MRC such as EM map 
+##
+PotentialMode='MAP'
+PotentialDir="../MRCandPDBsource/"
+Potential="CPRHO-4.mrc3d"
+Molecular=110000
+LowPassMode=4
+LowPass1=0.1
+LowPass2=0.05
+LowPass3=0.03
+LowPass4=0.01
+LowPass5=0.005
+minimum_step=4500
+##
+## SRMDBase
+##
+SRMDBaseDir="$HOME/Eos/Integration/SRMD/"
+SRMDParamDir=$SRMDBaseDir
+SRMDParam=par_all27_prot_lipid_na_merge_all22_FAD_FMN_NAP_ver2.inp
+
+#
+#
+FirstCoor=file.000000.coor
+namdmode()
+{
+	case $HOSTNAME in
+		'pc33')
+			NAMDOPTION="+idlepoll"
+			NAMDOPTION2="+isomalloc_sync"
+			;;
+
+		'pc38')	
+			NAMDOPTION="+idlepoll"
+			NAMDOPTION2="+isomalloc_sync"
+			;;
+		'pc37')	
+			NAMDOPTION="+idlepoll"
+			NAMDOPTION2="+isomalloc_sync"
+			;;
+	
+		*)
+			NAMDOPTION=""
+
+	esac
+
+}
+mapSet()
+{
+	if [ -d output ]
+	then
+		echo ""Create output""
+	else
+		echo "Good Luck!!"
+		mkdir mrc
+		mkdir output
+		mkdir dcd
+		mkdir data
+	fi
+	echo "PotentialMode:: $PotentialMode"
+	case $PotentialMode in 	
+		'MAP')
+			echo "PotentialMode::MAP"
+			echo "$PotentialDir/$Potential mrc/$thisProtein.mrc"
+			cp $PotentialDir/$Potential mrc/$thisProtein.mrc
+			;;	
+		'PDB')
+			echo "PotentialMode::PDB"
+			pdb2mrc -i $PotentialDir/$Potential -o mrc/$thisProtein.mrc -sig 3 
+			;;
+		*) 
+			echo "Check PotentialMode!!"
+			echo "Current Implemented Mode:  PDB  : PDB"
+			echo "                           MAP  : MRC"
+			;;
+	esac	
+	mrcImageLowPassFilter -i mrc/$thisProtein.mrc -o mrc/$thisProtein.Low.1.mrc -m $LowPassMode -hvp $LowPass1
+	mrcImageLowPassFilter -i mrc/$thisProtein.mrc -o mrc/$thisProtein.Low.2.mrc -m $LowPassMode -hvp $LowPass2
+	mrcImageLowPassFilter -i mrc/$thisProtein.mrc -o mrc/$thisProtein.Low.3.mrc -m $LowPassMode -hvp $LowPass3
+	mrcImageLowPassFilter -i mrc/$thisProtein.mrc -o mrc/$thisProtein.Low.4.mrc -m $LowPassMode -hvp $LowPass4
+	mrcImageLowPassFilter -i mrc/$thisProtein.mrc -o mrc/$thisProtein.Low.5.mrc -m $LowPassMode -hvp $LowPass5
+}
+
+##
+##
+##
+mapVolumeCalculation()
+{
+	echo "$thisProtein.mrc" > data/mrcTest
+	mrcImageVolumeCalc -i mrc/$thisProtein.mrc -n 1 -M $Molecular -I >> data/mrcTest
+	echo "mrcImageVolumeCalc -i mrc/$thisProtein.mrc -n 1 -M $Molecular -I "
+
+	i=1
+	while [ $i -le 5 ]
+	do
+		echo "$thisProtein.Low.$i.mrc" >> data/mrcTest
+		mrcImageVolumeCalc -i mrc/$thisProtein.Low.$i.mrc -n 1 -M $Molecular -I  >> data/mrcTest
+		i=`expr $i + 1`
+	done
+	grep '( 70):' data/mrcTest > mrcCalc
+	cat mrcCalc
+	RMS_Contour=`sed -n 1p mrcCalc | awk '{print $3}'`
+}
+
+#
+#
+configFileSetting()
+{
+	echo "thisProtein=$thisProtein"  			>  config.SRMD 
+	echo "thisProteinPDB=$thisProteinPDB"  			>>  config.SRMD
+	echo "DIVIDE_MODE=$DIVIDE_MODE"		>>  config.SRMD 
+	echo "thisProteinPDBDir=$thisProteinPDBDir"			>>  config.SRMD
+	echo "thisProteinPSFDir=$thisProteinPSFDir" | sed -e s/\\//\\\\\\\\\\\//g >> config.SRMD 
+	echo "thisProteinPSF=$thisProteinPSF"      	>> config.SRMD 
+	echo "Potential=$Potential"      		>> config.SRMD 
+	echo "PotentialMode=$PotentialMode"      		>> config.SRMD 	
+	echo "SRMDBaseDir=$SRMDBaseDir"    	  >> config.SRMD 
+	echo "ParamDir=$SRMDParamDir"               | sed -e s/\\//\\\\\\\\\\\//g >> config.SRMD 
+	echo "ParamFile=$SRMDParam"    			>> config.SRMD 
+	echo "NAMDOPTION=$NAMDOPTION"			>> config.SRMD
+	echo "NAMDOPTION2=$NAMDOPTION2"			>> config.SRMD 
+	echo "minimum_step=$minimum_step"			>> config.SRMD 
+	echo "FitProteinForRMSoutput=$FitProteinForRMSoutput"	>> config.SRMD
+	echo "RMS_Contour=$RMS_Contour"			>> config.SRMD
+	#echo "filename=$FirstCoor"				>> config.SRMD 
+}
+
+
+##
+##
+##
+pdbChange()
+{
+cp $thisProteinPDBDir/$thisProteinPDB output/file.000000.coor
+cp $thisProteinPDBDir/$thisProteinPDB output/$thisProtein.coor
+cp $thisProteinPDBDir/$thisProteinPDB output/	
+}
+
+namdmode
+mapSet
+mapVolumeCalculation
+
+##
+## >?????
+## 
+pdbChange
+cp $SRMDBaseDir/test.res ../
+#cp $thisProteinPDBDir/$thisProteinPDB output/$thisProtein.coor
+#cp $thisProteinPDBDir/$thisProteinPDB ./output/
+#
+#
+#
+if [ -f pdbMove.out ]
+then
+	rm *.out
+else
+	echo "Not Out File"
+fi
+
+#
+# Prepare md
+#
+if [ -f md ]
+then
+	echo "No Way."
+else
+	echo "'SRMDS' Get You!!"
+	echo "SRMDBaseDir=$SRMDBaseDir"
+	cp $SRMDBaseDir/md .
+
+fi
+filenameConfig=config.SRMD.4.param
+filename=config.SRMD.param
+conum=1
+	if [ -f $filename ]
+	then
+		mv $filename $filename.`date +%Y%m%d%H%M%S` 
+	fi
+	cut -f 3 -d" " ./mrcCalc >contour.txt 
+	while read LINE; do
+	echo "contour$conum=$LINE"
+	echo "contour$conum=$LINE" >>Contour	
+	conum=` expr $conum + 1 `
+	done < "./contour.txt"
+	source ./Contour
+	sed -e s/qqqqq/$contour1/ -e s/wwwww/$contour2/ -e s/eeeee/$contour3/ -e s/rrrrr/$contour4/ -e s/ttttt/$contour5/ -e s/yyyyy/$contour6/ $SRMDBaseDir/$filenameConfig > ./$filename
+	#cp $SRMDBaseDir/$filenameConfig ./$filename
+
+configFileSetting

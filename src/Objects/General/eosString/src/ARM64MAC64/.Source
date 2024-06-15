@@ -1,0 +1,55 @@
+SRC = \
+stringGet.c \
+stringGetFromFile.c \
+stringIsSame.c \
+stringUtil.c \
+
+OBJ = \
+stringGet.o \
+stringGetFromFile.o \
+stringIsSame.o \
+stringUtil.o \
+
+SHAREDOBJ = \
+stringGet.sharedo \
+stringGetFromFile.sharedo \
+stringIsSame.sharedo \
+stringUtil.sharedo \
+
+REALOBJ = \
+ARM64MAC64/stringGet.o \
+ARM64MAC64/stringGetFromFile.o \
+ARM64MAC64/stringIsSame.o \
+ARM64MAC64/stringUtil.o \
+
+REALSHAREDOBJ = \
+ARM64MAC64/stringGet.sharedo \
+ARM64MAC64/stringGetFromFile.sharedo \
+ARM64MAC64/stringIsSame.sharedo \
+ARM64MAC64/stringUtil.sharedo \
+
+OBJDEBUG = \
+stringGet.debugo \
+stringGetFromFile.debugo \
+stringIsSame.debugo \
+stringUtil.debugo \
+
+REALOBJDEBUG = \
+ARM64MAC64/stringGet.debugo \
+ARM64MAC64/stringGetFromFile.debugo \
+ARM64MAC64/stringIsSame.debugo \
+ARM64MAC64/stringUtil.debugo \
+
+OBJCUDAGDB = \
+stringGet.cudagdb.o \
+stringGetFromFile.cudagdb.o \
+stringIsSame.cudagdb.o \
+stringUtil.cudagdb.o \
+
+REALOBJCUDAGDB = \
+ARM64MAC64/stringGet.cudagdb.o \
+ARM64MAC64/stringGetFromFile.cudagdb.o \
+ARM64MAC64/stringIsSame.cudagdb.o \
+ARM64MAC64/stringUtil.cudagdb.o \
+
+

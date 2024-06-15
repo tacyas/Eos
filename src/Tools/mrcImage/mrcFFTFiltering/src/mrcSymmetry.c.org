@@ -1,0 +1,322 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#define GLOBAL_DECLARATION       
+#include "../inc/config.h"
+#include "genUtil.h"
+
+extern void lmrcSynmetryP2(mrcImage* fft1, mrcImage* fft0, mrcSynmetryInfo* info);
+extern void lmrcSynmetryP3(mrcImage* fft1, mrcImage* fft0, mrcSynmetryInfo* info);
+
+void
+main(int argc, char* argv[])
+{
+    mrcImage fft0;
+    mrcImage fft1;
+    mrcSynmetryInfo info;
+
+    init0(&info);
+    argCheck(&info, argc, argv);
+    init1(&info);
+    mrcFileRead(&fft0, info.inFileName, "from Main Routine", 0);
+    lmrcSynmetry(&fft1, &fft0, &info);
+    outputSynmetry(&info);
+    mrcFileWrite(&fft1, info.outFileName, "from Main Routine", 0);
+}
+
+void
+outputSynmetry(mrcSynmetryInfo* info)
+{
+    double x, y;
+    int ix, iy;
+    int nx, ny;
+
+    nx = rint((info->end.x-info->start.x)/info->d.x + 1);
+    ny = rint((info->end.y-info->start.y)/info->d.y + 1);
+
+    fprintf(info->fptRes, "%10s : ", "deltay\x");
+    for(x=info->start.x, ix=0; x<=info->end.x && ix<nx; x+=info->d.x, ix++) {
+        fprintf(info->fptRes, "%10.4g ", x);
+    }
+    fprintf(info->fptRes, "\n");
+    for(y=info->start.y, iy=0; y<=info->end.y && iy<ny; y+=info->d.y, iy++) {
+        fprintf(info->fptRes, "%10.4g : ", y);
+        for(x=info->start.x, ix=0; x<=info->end.x && ix<nx; x+=info->d.x, ix++) {
+            fprintf(info->fptRes, "%10.4g ", info->PhaseResidue[ix+nx*iy]);
+        }
+        fprintf(info->fptRes, "\n");
+    }
+    fprintf(info->fptRes, "%10s : %10.4g at (%10.4g, %10.4g)\n", "Min", info->minValue, info->min.x, info->min.y);
+}
+
+void
+lmrcSynmetry(mrcImage* fft1, mrcImage* fft0, mrcSynmetryInfo* info)
+{
+    fft1->Header = fft0->Header;
+    mrcInit(fft1, NULL);
+
+    switch(info->mode) {
+        case mrcSynmetryP2: {
+            lmrcSynmetryP2(fft1, fft0, info);
+            break;
+        }
+        case mrcSynmetryP3: {
+            lmrcSynmetryP3(fft1, fft0, info);
+            break;
+        }
+        defautl: {
+            fprintf(stderr, "Not Supported Mode");
+            exit(EXIT_FAILURE);
+        }
+    }
+}
+
+void
+lmrcSynmetryP2(mrcImage* fft1, mrcImage* fft0, mrcSynmetryInfo* info)
+{
+    double x, y;
+    int  ix, iy;
+
+    int iv1, iv2;
+    float iX, iY;
+    double re, im;
+    double r0, i0;
+    double r1, i1;
+    int nx, ny;
+
+    nx = rint((info->end.x-info->start.x)/info->d.x + 1);
+    ny = rint((info->end.y-info->start.y)/info->d.y + 1);
+    info->PhaseResidue = (double*)memoryAllocate(sizeof(double)*nx*ny, "in lmrcSynmetryP2");
+    info->Normal       = (double*)memoryAllocate(sizeof(double)*nx*ny, "in lmrcSynmetryP2");
+    for(x=info->start.x, ix=0; x<=info->end.x && ix<nx; x+=info->d.x, ix++) {
+        for(y=info->start.y, iy=0; y<=info->end.y && iy<ny; y+=info->d.y, iy++) {
+            info->Normal[ix + iy*nx] = 0.0;
+            info->PhaseResidue[ix + iy*nx] = 0.0;
+            for(iv1=0; -fft1->HeaderN.x/2.0 <= iv1*info->v1.x && iv1*info->v1.x < fft1->HeaderN.x/2.0
+                     &&-fft1->HeaderN.y/2.0 <= iv1*info->v1.y && iv1*info->v1.y < fft1->HeaderN.y/2.0; iv1++) {
+                for(iv2=0; -fft1->HeaderN.x/2.0 <= iv1*info->v1.x + iv2*info->v2.x && iv1*info->v1.x + iv2*info->v2.x < fft1->HeaderN.x/2.0
+                         &&-fft1->HeaderN.y/2.0 <= iv1*info->v1.y + iv2*info->v2.y && iv1*info->v1.y + iv2*info->v2.y < fft1->HeaderN.y/2.0 ; iv2++) {
+                    iX = rint(iv1*info->v1.x + iv2*info->v2.x);
+                    iY = rint(iv1*info->v1.y + iv2*info->v2.y);
+                    mrcPixelDataGet(fft0, iX, iY, 0.0, &re, mrcPixelRePart, mrcPixelHowNearest);
+					mrcPixelDataGet(fft0, iX, iY, 0.0, &im, mrcPixelImPart, mrcPixelHowNearest);
+                    r0 = re*cos( 2*PI*(x*iX/fft1->HeaderN.x+y*iY/fft1->HeaderN.y))-im*sin( 2*PI*(x*iX/fft1->HeaderN.x+y*iY/fft1->HeaderN.y)); /*  iX,  iY */
+                    i0 = re*sin( 2*PI*(x*iX/fft1->HeaderN.x+y*iY/fft1->HeaderN.y))+im*cos( 2*PI*(x*iX/fft1->HeaderN.x+y*iY/fft1->HeaderN.y));
+                    r1 = re*cos(-2*PI*(x*iX/fft1->HeaderN.x+y*iY/fft1->HeaderN.y))+im*sin(-2*PI*(x*iX/fft1->HeaderN.x+y*iY/fft1->HeaderN.y)); /* -iX, -iY */
+                    i1 = re*sin(-2*PI*(x*iX/fft1->HeaderN.x+y*iY/fft1->HeaderN.y))-im*cos(-2*PI*(x*iX/fft1->HeaderN.x+y*iY/fft1->HeaderN.y));
+                    info->Normal[ix + iy*nx] += sqrt(r0*r0+i0*i0+r1*r1+i1*i1);
+                    info->PhaseResidue[ix + iy*nx] += sqrt((r0-r1)*(r0-r1)+(i0-i1)*(i0-i1));
+                }
+                for(iv2=0; -fft1->HeaderN.x/2.0 <= -iv1*info->v1.x + iv2*info->v2.x && -iv1*info->v1.x + iv2*info->v2.x < fft1->HeaderN.x/2.0
+                         &&-fft1->HeaderN.y/2.0 <= -iv1*info->v1.y + iv2*info->v2.y && -iv1*info->v1.y + iv2*info->v2.y < fft1->HeaderN.y/2.0 ; iv2++) {
+                    iX = rint(-iv1*info->v1.x + iv2*info->v2.x);
+                    iY = rint(-iv1*info->v1.y + iv2*info->v2.y);
+                    mrcPixelDataGet(fft0, iX, iY, 0.0, &re, mrcPixelRePart, mrcPixelHowNearest);
+					mrcPixelDataGet(fft0, iX, iY, 0.0, &im, mrcPixelImPart, mrcPixelHowNearest);
+                    r0 = re*cos( 2*PI*(x*iX/fft1->HeaderN.x+y*iY/fft1->HeaderN.y))-im*sin( 2*PI*(x*iX/fft1->HeaderN.x+y*iY/fft1->HeaderN.y)); /*  iX,  iY */
+                    i0 = re*sin( 2*PI*(x*iX/fft1->HeaderN.x+y*iY/fft1->HeaderN.y))+im*cos( 2*PI*(x*iX/fft1->HeaderN.x+y*iY/fft1->HeaderN.y));
+                    r1 = re*cos(-2*PI*(x*iX/fft1->HeaderN.x+y*iY/fft1->HeaderN.y))+im*sin(-2*PI*(x*iX/fft1->HeaderN.x+y*iY/fft1->HeaderN.y)); /* -iX, -iY */
+                    i1 = re*sin(-2*PI*(x*iX/fft1->HeaderN.x+y*iY/fft1->HeaderN.y))-im*cos(-2*PI*(x*iX/fft1->HeaderN.x+y*iY/fft1->HeaderN.y));
+                    info->Normal[ix + iy*nx] += sqrt(r0*r0+i0*i0+r1*r1+i1*i1);
+                    info->PhaseResidue[ix + iy*nx] += sqrt((r0-r1)*(r0-r1)+(i0-i1)*(i0-i1));
+                }
+            }
+        }
+    }
+
+    /* Synmetry Data Set */
+    info->minValue = info->PhaseResidue[0]/info->Normal[0];
+    info->min.x = info->start.x; 
+    info->min.y = info->start.y;;
+    for(x=info->start.x, ix=0; x<=info->end.x && ix<nx; x+=info->d.x, ix++) {
+        for(y=info->start.y, iy=0; y<=info->end.y && iy<ny; y+=info->d.y, iy++) {
+            info->PhaseResidue[ix+iy*nx] /= info->Normal[ix+iy*nx];
+            if(info->PhaseResidue[ix+iy*nx]<info->minValue) {
+                info->minValue = info->PhaseResidue[ix+iy*nx];
+                info->min.x = x;
+                info->min.y = y;
+            }
+        }
+    }
+
+    /* fftData */
+    for(iX=-fft1->HeaderN.x/2.0; iX<fft1->HeaderN.x/2.0; iX++) {
+        for(iY=-fft1->HeaderN.y/2.0; iY<fft1->HeaderN.y/2.0; iY++) {
+            mrcPixelDataSet(fft1, iX, iY, 0.0, 0.0, mrcPixelRePart);
+			mrcPixelDataSet(fft1, iX, iY, 0.0, 0.0, mrcPixelImPart);
+        }
+    }
+    for(iv1=0; -fft1->HeaderN.x/2.0 <= iv1*info->v1.x && iv1*info->v1.x < fft1->HeaderN.x/2.0
+             &&-fft1->HeaderN.y/2.0 <= iv1*info->v1.y && iv1*info->v1.y < fft1->HeaderN.y/2.0; iv1++) {
+        for(iv2=0; -fft1->HeaderN.x/2.0 <= iv1*info->v1.x + iv2*info->v2.x && iv1*info->v1.x + iv2*info->v2.x < fft1->HeaderN.x/2.0
+                && -fft1->HeaderN.y/2.0 <= iv1*info->v1.y + iv2*info->v2.y && iv1*info->v1.y + iv2*info->v2.y < fft1->HeaderN.y/2.0 ; iv2++) {
+            iX = rint(iv1*info->v1.x + iv2*info->v2.x);
+            iY = rint(iv1*info->v1.y + iv2*info->v2.y);
+            mrcPixelDataGet(fft0, iX, iY, 0.0, &re, mrcPixelRePart, mrcPixelHowNearest);
+			mrcPixelDataGet(fft0, iX, iY, 0.0, &im, mrcPixelImPart, mrcPixelHowNearest);
+            r0 = re*cos( 2*PI*(info->min.x*iX/fft1->HeaderN.x+info->min.y*iY/fft1->HeaderN.y))-im*sin( 2*PI*(info->min.x*iX/fft1->HeaderN.x+info->min.y*iY/fft1->HeaderN.y)); /*  iX,  iY */
+            i0 = re*sin( 2*PI*(info->min.x*iX/fft1->HeaderN.x+info->min.y*iY/fft1->HeaderN.y))+im*cos( 2*PI*(info->min.x*iX/fft1->HeaderN.x+info->min.y*iY/fft1->HeaderN.y));
+            mrcPixelDataSet(fft1, iX, iY, 0.0, r0, mrcPixelRePart);
+			mrcPixelDataSet(fft1, iX, iY, 0.0, 0.0, mrcPixelImPart);
+        }
+        for(iv2=0; -fft1->HeaderN.x/2.0 <= -iv1*info->v1.x + iv2*info->v2.x && -iv1*info->v1.x + iv2*info->v2.x < fft1->HeaderN.x/2.0
+                && -fft1->HeaderN.y/2.0 <= -iv1*info->v1.y + iv2*info->v2.y && -iv1*info->v1.y + iv2*info->v2.y < fft1->HeaderN.y/2.0 ; iv2++) {
+            iX = rint(-iv1*info->v1.x + iv2*info->v2.x);
+            iY = rint(-iv1*info->v1.y + iv2*info->v2.y);
+            mrcPixelDataGet(fft0, iX, iY, 0.0, &re, mrcPixelRePart, mrcPixelHowNearest);
+			mrcPixelDataGet(fft0, iX, iY, 0.0, &im, mrcPixelImPart, mrcPixelHowNearest);
+            r0 = re*cos( 2*PI*(info->min.x*iX/fft1->HeaderN.x+info->min.y*iY/fft1->HeaderN.y))-im*sin( 2*PI*(info->min.x*iX/fft1->HeaderN.x+info->min.y*iY/fft1->HeaderN.y)); /*  iX,  iY */
+            i0 = re*sin( 2*PI*(info->min.x*iX/fft1->HeaderN.x+info->min.y*iY/fft1->HeaderN.y))+im*cos( 2*PI*(info->min.x*iX/fft1->HeaderN.x+info->min.y*iY/fft1->HeaderN.y));
+            mrcPixelDataSet(fft1, iX, iY, 0.0, r0, mrcPixelRePart);
+			mrcPixelDataSet(fft1, iX, iY, 0.0, 0.0, mrcPixelImPart);
+        }
+
+        for(iv2=0; -fft1->HeaderN.x/2.0 <= iv1*info->v1.x + iv2*info->v2.x && iv1*info->v1.x + iv2*info->v2.x < fft1->HeaderN.x/2.0
+                && -fft1->HeaderN.y/2.0 <= iv1*info->v1.y + iv2*info->v2.y && iv1*info->v1.y + iv2*info->v2.y < fft1->HeaderN.y/2.0 ; iv2--) {
+            iX = rint(iv1*info->v1.x + iv2*info->v2.x);
+            iY = rint(iv1*info->v1.y + iv2*info->v2.y);
+            mrcPixelDataGet(fft0, iX, iY, 0.0, &re, mrcPixelRePart, mrcPixelHowNearest);
+			mrcPixelDataGet(fft0, iX, iY, 0.0, &im, mrcPixelImPart, mrcPixelHowNearest);
+            r0 = re*cos( 2*PI*(info->min.x*iX/fft1->HeaderN.x+info->min.y*iY/fft1->HeaderN.y))-im*sin( 2*PI*(info->min.x*iX/fft1->HeaderN.x+info->min.y*iY/fft1->HeaderN.y)); /*  iX,  iY */
+            i0 = re*sin( 2*PI*(info->min.x*iX/fft1->HeaderN.x+info->min.y*iY/fft1->HeaderN.y))+im*cos( 2*PI*(info->min.x*iX/fft1->HeaderN.x+info->min.y*iY/fft1->HeaderN.y));
+            mrcPixelDataSet(fft1, iX, iY, 0.0, r0, mrcPixelRePart);
+			mrcPixelDataSet(fft1, iX, iY, 0.0, 0.0, mrcPixelImPart);
+        }
+        for(iv2=0; -fft1->HeaderN.x/2.0 <= -iv1*info->v1.x + iv2*info->v2.x && -iv1*info->v1.x + iv2*info->v2.x < fft1->HeaderN.x/2.0
+                && -fft1->HeaderN.y/2.0 <= -iv1*info->v1.y + iv2*info->v2.y && -iv1*info->v1.y + iv2*info->v2.y < fft1->HeaderN.y/2.0 ; iv2--) {
+            iX = rint(-iv1*info->v1.x + iv2*info->v2.x);
+            iY = rint(-iv1*info->v1.y + iv2*info->v2.y);
+            mrcPixelDataGet(fft0, iX, iY, 0.0, &re, mrcPixelRePart, mrcPixelHowNearest);
+			mrcPixelDataGet(fft0, iX, iY, 0.0, &im, mrcPixelImPart, mrcPixelHowNearest);
+            r0 = re*cos( 2*PI*(info->min.x*iX/fft1->HeaderN.x+info->min.y*iY/fft1->HeaderN.y))-im*sin( 2*PI*(info->min.x*iX/fft1->HeaderN.x+info->min.y*iY/fft1->HeaderN.y)); /*  iX,  iY */
+            i0 = re*sin( 2*PI*(info->min.x*iX/fft1->HeaderN.x+info->min.y*iY/fft1->HeaderN.y))+im*cos( 2*PI*(info->min.x*iX/fft1->HeaderN.x+info->min.y*iY/fft1->HeaderN.y));
+            mrcPixelDataSet(fft1, iX, iY, 0.0, r0, mrcPixelRePart);
+			mrcPixelDataSet(fft1, iX, iY, 0.0, 0.0, mrcPixelImPart);
+        }
+    }
+}
+
+void
+lmrcSynmetryP3(mrcImage* fft1, mrcImage* fft0, mrcSynmetryInfo* info)
+{
+    double x, y;
+    int  ix, iy;
+
+    int iv1, iv2;
+    float iX, iY;
+    double re, im;
+    double r0, i0;
+    double r1, i1;
+    int nx, ny;
+
+    nx = rint((info->end.x-info->start.x)/info->d.x + 1);
+    ny = rint((info->end.y-info->start.y)/info->d.y + 1);
+    info->PhaseResidue = (double*)memoryAllocate(sizeof(double)*nx*ny, "in lmrcSynmetryP3");
+    info->Normal       = (double*)memoryAllocate(sizeof(double)*nx*ny, "in lmrcSynmetryP3");
+    for(x=info->start.x, ix=0; x<=info->end.x && ix<nx; x+=info->d.x, ix++) {
+        for(y=info->start.y, iy=0; y<=info->end.y && iy<ny; y+=info->d.y, iy++) {
+            info->Normal[ix + iy*nx] = 0.0;
+            info->PhaseResidue[ix + iy*nx] = 0.0;
+            for(iv1=0; -fft1->HeaderN.x/2.0 <= iv1*info->v1.x && iv1*info->v1.x < fft1->HeaderN.x/2.0
+                     &&-fft1->HeaderN.y/2.0 <= iv1*info->v1.y && iv1*info->v1.y < fft1->HeaderN.y/2.0; iv1++) {
+                for(iv2=0; -fft1->HeaderN.x/2.0 <= iv1*info->v1.x + iv2*info->v2.x && iv1*info->v1.x + iv2*info->v2.x < fft1->HeaderN.x/2.0
+                         &&-fft1->HeaderN.y/2.0 <= iv1*info->v1.y + iv2*info->v2.y && iv1*info->v1.y + iv2*info->v2.y < fft1->HeaderN.y/2.0 ; iv2++) {
+                    iX = rint(iv1*info->v1.x + iv2*info->v2.x);
+                    iY = rint(iv1*info->v1.y + iv2*info->v2.y);
+                    mrcPixelDataGet(fft0, iX, iY, 0.0, &re, mrcPixelRePart, mrcPixelHowNearest);
+					mrcPixelDataGet(fft0, iX, iY, 0.0, &im, mrcPixelImPart, mrcPixelHowNearest);
+                    r0 = re*cos( 2*PI*(x*iX/fft1->HeaderN.x+y*iY/fft1->HeaderN.y))-im*sin( 2*PI*(x*iX/fft1->HeaderN.x+y*iY/fft1->HeaderN.y)); /*  iX,  iY */
+                    i0 = re*sin( 2*PI*(x*iX/fft1->HeaderN.x+y*iY/fft1->HeaderN.y))+im*cos( 2*PI*(x*iX/fft1->HeaderN.x+y*iY/fft1->HeaderN.y));
+                    r1 = re*cos(-2*PI*(x*iX/fft1->HeaderN.x+y*iY/fft1->HeaderN.y))+im*sin(-2*PI*(x*iX/fft1->HeaderN.x+y*iY/fft1->HeaderN.y)); /* -iX, -iY */
+                    i1 = re*sin(-2*PI*(x*iX/fft1->HeaderN.x+y*iY/fft1->HeaderN.y))-im*cos(-2*PI*(x*iX/fft1->HeaderN.x+y*iY/fft1->HeaderN.y));
+                    info->Normal[ix + iy*nx] += sqrt(r0*r0+i0*i0+r1*r1+i1*i1);
+                    info->PhaseResidue[ix + iy*nx] += sqrt((r0-r1)*(r0-r1)+(i0-i1)*(i0-i1));
+                }
+                for(iv2=0; -fft1->HeaderN.x/2.0 <= -iv1*info->v1.x + iv2*info->v2.x && -iv1*info->v1.x + iv2*info->v2.x < fft1->HeaderN.x/2.0
+                         &&-fft1->HeaderN.y/2.0 <= -iv1*info->v1.y + iv2*info->v2.y && -iv1*info->v1.y + iv2*info->v2.y < fft1->HeaderN.y/2.0 ; iv2++) {
+                    iX = rint(-iv1*info->v1.x + iv2*info->v2.x);
+                    iY = rint(-iv1*info->v1.y + iv2*info->v2.y);
+                    mrcPixelDataGet(fft0, iX, iY, 0.0, &re, mrcPixelRePart, mrcPixelHowNearest);
+					mrcPixelDataGet(fft0, iX, iY, 0.0, &im, mrcPixelImPart, mrcPixelHowNearest);
+                    r0 = re*cos( 2*PI*(x*iX/fft1->HeaderN.x+y*iY/fft1->HeaderN.y))-im*sin( 2*PI*(x*iX/fft1->HeaderN.x+y*iY/fft1->HeaderN.y)); /*  iX,  iY */
+                    i0 = re*sin( 2*PI*(x*iX/fft1->HeaderN.x+y*iY/fft1->HeaderN.y))+im*cos( 2*PI*(x*iX/fft1->HeaderN.x+y*iY/fft1->HeaderN.y));
+                    r1 = re*cos(-2*PI*(x*iX/fft1->HeaderN.x+y*iY/fft1->HeaderN.y))+im*sin(-2*PI*(x*iX/fft1->HeaderN.x+y*iY/fft1->HeaderN.y)); /* -iX, -iY */
+                    i1 = re*sin(-2*PI*(x*iX/fft1->HeaderN.x+y*iY/fft1->HeaderN.y))-im*cos(-2*PI*(x*iX/fft1->HeaderN.x+y*iY/fft1->HeaderN.y));
+                    info->Normal[ix + iy*nx] += sqrt(r0*r0+i0*i0+r1*r1+i1*i1);
+                    info->PhaseResidue[ix + iy*nx] += sqrt((r0-r1)*(r0-r1)+(i0-i1)*(i0-i1));
+                }
+            }
+        }
+    }
+
+    /* Synmetry Data Set */
+    info->minValue = info->PhaseResidue[0]/info->Normal[0];
+    info->min.x = info->start.x; 
+    info->min.y = info->start.y;;
+    for(x=info->start.x, ix=0; x<=info->end.x && ix<nx; x+=info->d.x, ix++) {
+        for(y=info->start.y, iy=0; y<=info->end.y && iy<ny; y+=info->d.y, iy++) {
+            info->PhaseResidue[ix+iy*nx] /= info->Normal[ix+iy*nx];
+            if(info->PhaseResidue[ix+iy*nx]<info->minValue) {
+                info->minValue = info->PhaseResidue[ix+iy*nx];
+                info->min.x = x;
+                info->min.y = y;
+            }
+        }
+    }
+
+    /* fftData */
+    for(iX=-fft1->HeaderN.x/2.0; iX<fft1->HeaderN.x/2.0; iX++) {
+        for(iY=-fft1->HeaderN.y/2.0; iY<fft1->HeaderN.y/2.0; iY++) {
+            mrcPixelDataSet(fft1, iX, iY, 0.0, 0.0, mrcPixelRePart);
+			mrcPixelDataSet(fft1, iX, iY, 0.0, 0.0, mrcPixelImPart);
+        }
+    }
+    for(iv1=0; -fft1->HeaderN.x/2.0 <= iv1*info->v1.x && iv1*info->v1.x < fft1->HeaderN.x/2.0
+             &&-fft1->HeaderN.y/2.0 <= iv1*info->v1.y && iv1*info->v1.y < fft1->HeaderN.y/2.0; iv1++) {
+        for(iv2=0; -fft1->HeaderN.x/2.0 <= iv1*info->v1.x + iv2*info->v2.x && iv1*info->v1.x + iv2*info->v2.x < fft1->HeaderN.x/2.0
+                && -fft1->HeaderN.y/2.0 <= iv1*info->v1.y + iv2*info->v2.y && iv1*info->v1.y + iv2*info->v2.y < fft1->HeaderN.y/2.0 ; iv2++) {
+            iX = rint(iv1*info->v1.x + iv2*info->v2.x);
+            iY = rint(iv1*info->v1.y + iv2*info->v2.y);
+            mrcPixelDataGet(fft0, iX, iY, 0.0, &re, mrcPixelRePart, mrcPixelHowNearest);
+			mrcPixelDataGet(fft0, iX, iY, 0.0, &im, mrcPixelImPart, mrcPixelHowNearest);
+            r0 = re*cos( 2*PI*(info->min.x*iX/fft1->HeaderN.x+info->min.y*iY/fft1->HeaderN.y))-im*sin( 2*PI*(info->min.x*iX/fft1->HeaderN.x+info->min.y*iY/fft1->HeaderN.y)); /*  iX,  iY */
+            i0 = re*sin( 2*PI*(info->min.x*iX/fft1->HeaderN.x+info->min.y*iY/fft1->HeaderN.y))+im*cos( 2*PI*(info->min.x*iX/fft1->HeaderN.x+info->min.y*iY/fft1->HeaderN.y));
+            mrcPixelDataSet(fft1, iX, iY, 0.0, r0, mrcPixelRePart);
+			mrcPixelDataSet(fft1, iX, iY, 0.0, 0.0, mrcPixelImPart);
+        }
+        for(iv2=0; -fft1->HeaderN.x/2.0 <= -iv1*info->v1.x + iv2*info->v2.x && -iv1*info->v1.x + iv2*info->v2.x < fft1->HeaderN.x/2.0
+                && -fft1->HeaderN.y/2.0 <= -iv1*info->v1.y + iv2*info->v2.y && -iv1*info->v1.y + iv2*info->v2.y < fft1->HeaderN.y/2.0 ; iv2++) {
+            iX = rint(-iv1*info->v1.x + iv2*info->v2.x);
+            iY = rint(-iv1*info->v1.y + iv2*info->v2.y);
+            mrcPixelDataGet(fft0, iX, iY, 0.0, &re, mrcPixelRePart, mrcPixelHowNearest);
+			mrcPixelDataGet(fft0, iX, iY, 0.0, &im, mrcPixelImPart, mrcPixelHowNearest);
+            r0 = re*cos( 2*PI*(info->min.x*iX/fft1->HeaderN.x+info->min.y*iY/fft1->HeaderN.y))-im*sin( 2*PI*(info->min.x*iX/fft1->HeaderN.x+info->min.y*iY/fft1->HeaderN.y)); /*  iX,  iY */
+            i0 = re*sin( 2*PI*(info->min.x*iX/fft1->HeaderN.x+info->min.y*iY/fft1->HeaderN.y))+im*cos( 2*PI*(info->min.x*iX/fft1->HeaderN.x+info->min.y*iY/fft1->HeaderN.y));
+            mrcPixelDataSet(fft1, iX, iY, 0.0, r0, mrcPixelRePart);
+			mrcPixelDataSet(fft1, iX, iY, 0.0, 0.0, mrcPixelImPart);
+        }
+
+        for(iv2=0; -fft1->HeaderN.x/2.0 <= iv1*info->v1.x + iv2*info->v2.x && iv1*info->v1.x + iv2*info->v2.x < fft1->HeaderN.x/2.0
+                && -fft1->HeaderN.y/2.0 <= iv1*info->v1.y + iv2*info->v2.y && iv1*info->v1.y + iv2*info->v2.y < fft1->HeaderN.y/2.0 ; iv2--) {
+            iX = rint(iv1*info->v1.x + iv2*info->v2.x);
+            iY = rint(iv1*info->v1.y + iv2*info->v2.y);
+            mrcPixelDataGet(fft0, iX, iY, 0.0, &re, mrcPixelRePart, mrcPixelHowNearest);
+			mrcPixelDataGet(fft0, iX, iY, 0.0, &im, mrcPixelImPart, mrcPixelHowNearest);
+            r0 = re*cos( 2*PI*(info->min.x*iX/fft1->HeaderN.x+info->min.y*iY/fft1->HeaderN.y))-im*sin( 2*PI*(info->min.x*iX/fft1->HeaderN.x+info->min.y*iY/fft1->HeaderN.y)); /*  iX,  iY */
+            i0 = re*sin( 2*PI*(info->min.x*iX/fft1->HeaderN.x+info->min.y*iY/fft1->HeaderN.y))+im*cos( 2*PI*(info->min.x*iX/fft1->HeaderN.x+info->min.y*iY/fft1->HeaderN.y));
+            mrcPixelDataSet(fft1, iX, iY, 0.0, r0, mrcPixelRePart);
+			mrcPixelDataSet(fft1, iX, iY, 0.0, 0.0, mrcPixelImPart);
+        }
+        for(iv2=0; -fft1->HeaderN.x/2.0 <= -iv1*info->v1.x + iv2*info->v2.x && -iv1*info->v1.x + iv2*info->v2.x < fft1->HeaderN.x/2.0
+                && -fft1->HeaderN.y/2.0 <= -iv1*info->v1.y + iv2*info->v2.y && -iv1*info->v1.y + iv2*info->v2.y < fft1->HeaderN.y/2.0 ; iv2--) {
+            iX = rint(-iv1*info->v1.x + iv2*info->v2.x);
+            iY = rint(-iv1*info->v1.y + iv2*info->v2.y);
+            mrcPixelDataGet(fft0, iX, iY, 0.0, &re, mrcPixelRePart, mrcPixelHowNearest);
+			mrcPixelDataGet(fft0, iX, iY, 0.0, &im, mrcPixelImPart, mrcPixelHowNearest);
+            r0 = re*cos( 2*PI*(info->min.x*iX/fft1->HeaderN.x+info->min.y*iY/fft1->HeaderN.y))-im*sin( 2*PI*(info->min.x*iX/fft1->HeaderN.x+info->min.y*iY/fft1->HeaderN.y)); /*  iX,  iY */
+            i0 = re*sin( 2*PI*(info->min.x*iX/fft1->HeaderN.x+info->min.y*iY/fft1->HeaderN.y))+im*cos( 2*PI*(info->min.x*iX/fft1->HeaderN.x+info->min.y*iY/fft1->HeaderN.y));
+            mrcPixelDataSet(fft1, iX, iY, 0.0, r0, mrcPixelRePart);
+			mrcPixelDataSet(fft1, iX, iY, 0.0, 0.0, mrcPixelImPart);
+        }
+    }
+}

@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageResolutionEstimateForFilaments</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageResolutionEstimateForFilaments<br></h2></b></font>
+	<h4></h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>オプション</th>
+				<th>必須項目/選択項目</th>
+				<th>説明</th>
+				<th>デフォルト</th>
+			</tr>
+			<tr>
+				<td>-i1</td>
+				<td>選択</td>
+				<td>入力ファイル１設定（３D）</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-i2</td>
+				<td>選択</td>
+				<td>入力ファイル２設定（３D）</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-d</td>
+				<td>選択</td>
+				<td>刻み幅の設定</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-H</td>
+				<td>選択</td>
+				<td>閾値の最大濃度値を設定</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-m</td>
+				<td>選択</td>
+				<td>モード選択</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-h</td>
+				<td>選択</td>
+				<td>ヘルプを表示</td>
+				<td>　</td>
+			</tr>
+			</div>
+		</table>
+
+<!-- モード説明 -->
+
+	<br>
+	<caption><b>モードの詳細</b></caption>
+	<table border="1">
+		<div align="left">
+			<tr>
+				<th>モード</th>
+				<th>説明</th>
+			</tr>
+			<tr>
+				<td>0</td>
+				<td>Fourier shell correlation</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>Fourier shell phase residual</td>
+			</tr>
+		</div>
+	</table>
+
+	<br>	
+	<h4>******実行例******</h4>
+
+<!-- 入力ファイル説明 -->
+
+	<caption><font color="blue">------入力ファイル１の画像（ｚ軸の切断面）------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="121p-noise0.1section.png" border="0" alt="121p-noise0.1section.png(8245 byte)" width="100" height="102"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-0.52019<br>
+				2.26217<br>
+				0.00147712<br>
+				0.109091<br>
+				0.000106952<br></p>
+			</td>
+		</tr>
+	</table>
+	<div><img src="121p-noise0.1section-info.png" border="0" alt="121p-noise0.1section-info.png(9438 byte)" width="560" height="238"></div>
+
+	<br>
+	<br>
+	<caption><font color="blue">------入力ファイル２の画像（ｚ軸の切断面）------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="121p-noise0.5section.png" border="0" alt="121p-noise0.5section.png(9679 byte)" width="100" height="102"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-2.5782<br>
+				3.1285<br>
+				0.000781539<br>
+				0.501657<br>
+				0.000491821<br></p>
+			</td>
+		</tr>
+	</table>
+	<div><img src="121p-noise0.5.section-info.png" border="0" alt="121p-noise0.5.section-info.png(9391 byte)" width="554" height="237"></div>
+
+<!-- 実行結果 -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション指定なしの実行結果------</font></caption><br>
+	<div><img src="outdata.png" border="0" alt="outdata.png(13490 byte)" width="145" height="692"></div>
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-d------</font></caption><br>
+	<div>-d=0.1で実行<br>
+	<img src="outdata-d0.1.png" border="0" alt="outdata-d0.1.png(1268 byte)" width="152" height="68"></div>
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-H------</font></caption><br>
+	<div>-H=0.1で実行<br>
+	<img src="outdata.-H0.1.png" border="0" alt="outdata.-H0.1.png(13721 byte)" width="143" height="694"></div>
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-m------</font></caption><br>
+	<div>モード：１<br>
+	<img src="outdata-m1.png" border="0" alt="outdata-m1.png(14062 byte)" width="145" height="693"></div>
+
+
+</body>
+</html>

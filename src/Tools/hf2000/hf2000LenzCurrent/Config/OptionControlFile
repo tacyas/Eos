@@ -1,0 +1,10 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Optional","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Optional","1","1","Out","outFile","stdout"
+"-tty","-tty","TTY","Optional","1","1","tty","String","/dev/ttyS1"
+"-speed","-speed","TTY","Optional","1","1","speed","Integer","4800"
+"-which","-which[Lenz]","Lenz:C1/C2/C3/OBJ/I1/I2/P1/P2","Optional","1","1","which","String","OBJ"
+"-I","-I[nteractive]","[sec]","Optional","1","1","Interactive","Integer","5"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

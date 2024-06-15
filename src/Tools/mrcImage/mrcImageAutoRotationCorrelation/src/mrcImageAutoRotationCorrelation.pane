@@ -1,0 +1,56 @@
+-F 4.3 1 0 52x1+0+0 +0+0 'Cantata' cantata
+  -M 1 1 52x1+0+0 +1+0 ' ' subform
+    -P 1 0 52x1+0+1 +0+0 ' ' mrcImageAutoRotationCorrelation
+      -D 1 0 9x1+0+0 'Options' _gui_options
+        -H 1  6x1+0+0 'License' 'license' $BOOTSTRAP/repos/license/License license
+        -E
+        -R 1 0 1 5x1+35+0 'Run' 'execute operation' $EOS/bin/mrcImageAutoRotationCorrelation
+        -H 1  5x1+41+0 'Help' 'help page' $EOS/src/Tools/mrcImage/mrcImageAutoRotationCorrelation/doc/mrcImageAutoRotationCorrelation.doc help
+        -Q 1 0 5.25x1+47+0 'Close'
+        -I 1 0 1 1 0 1 -1x1+1+1.500000 ' ' 'In' 'Input: testImage [mrcImage]' i
+        -I 1 0 1 1 0 1 -1x1+1+3.000000 ' ' 'Ref' 'Input: refImage [mrcImage]' r
+        -i 1 0 1 0 0 -1x1+1+4.500000 0 0 1 0 0 'nRot1' 'Rotation number of Ref for Rot1: Def 1' nRot1
+        -i 1 0 1 0 0 -1x1+1+6.000000 0 0 1 0 0 'nRot2' 'Rotation number of Ref for Rot2: Def 1' nRot2
+        -i 1 0 1 0 0 -1x1+1+7.500000 0 0 1 0 0 'nRot3' 'Rotation number of Ref for Rot3: Def 1' nRot3
+        -f 1 0 1 0 0 -1x1+1+9.000000 0 0 1.000000 0 0 0 'dRot1' 'Delta Angle [Degree] of Ref for Rot1; Def.: 360/nRot1' dRot1
+        -f 1 0 1 0 0 -1x1+1+10.500000 0 0 1.000000 0 0 0 'dRot2' 'Delta Angle [Degree] of Ref for Rot2; Def.: 360/nRot2' dRot2
+        -f 1 0 1 0 0 -1x1+1+12.000000 0 0 1.000000 0 0 0 'dRot3' 'Delta Angle [Degree] of Ref for Rot3; Def.: 360/nRot3' dRot3
+        -f 1 0 1 0 0 -1x1+1+13.500000 0 0 0.000000 0 0 0 'startRot1' 'Start Angle [Degree] of Ref for Rot1; Def.: 0' startRot1
+        -f 1 0 1 0 0 -1x1+1+15.000000 0 0 0.000000 0 0 0 'startRot2' 'Start Angle [Degree] of Ref for Rot2; Def.: 0' startRot2
+        -f 1 0 1 0 0 -1x1+1+16.500000 0 0 0.000000 0 0 0 'startRot3' 'Start Angle [Degree] of Ref for Rot3; Def.: 0' startRot3
+        -i 1 0 1 0 0 -1x1+1+18.000000 0 0 0 0 0 'StackOrder' 'Stack Order for Stacked 2D of references, refer to attention' StackOrder
+        -O 1 0 1 0 0 1 -1x1+1+19.500000 ' ' 'Out' 'Output: Parameter [mrcImage-format]' o
+        -O 1 0 1 0 0 1 -1x1+1+21.000000 ' ' 'OutASC' 'Output: Parameter [ASCII] ' O
+        -O 1 0 1 0 0 1 -1x1+1+22.500000 ' ' 'corFile' 'Correation Map at Maximum (Linear) [mrcImage-format]' cor
+        -O 1 0 1 0 0 1 -1x1+1+24.000000 ' ' 'corFile2' 'Correation Map2 at Maximum (Set Mode Correlation)[mrcImage-format]' cor2
+        -O 1 0 1 0 0 1 -1x1+1+25.500000 ' ' 'corAllFile' 'Correation Map with All Rotation [mrcImage-format]' corAll
+        -O 1 0 1 0 0 1 -1x1+1+27.000000 ' ' 'fitFile' 'Output: rotatedImage at Maximum(Linear Correlation) [mrcImage]' fit
+        -O 1 0 1 0 0 1 -1x1+1+28.500000 ' ' 'fitFile2' 'Output: rotatedImage at Maximum(Set Correlation mode) [mrcImage]' fit2
+        -i 1 0 1 0 0 -1x1+1+30.000000 0 0 0 0 0 'RefineMode' 'RefinementStep: Linear:0 or SetMode:1' RefineMode
+        -f 1 0 1 0 0 -1x1+1+31.500000 0 0 36.000000 0 0 0 'Rot' 'Input: Rotation around the vertical axis against image plane: dRot = 360/n [degree]' n
+        -I  1 0 0 1 0 1 -1x1+1+33 ' ' '-5.0' 'minAngle' Input: SearchRange: Rotation around the vertical axis against image plane 
+        -i 1 0 1 0 0 -1x1+1+34.500000 0 0 1 0 0 'refStep1' 'SearchStep for Ref: Each Image along Rot1' refStep1
+        -i 1 0 1 0 0 -1x1+1+36.000000 0 0 1 0 0 'refStep2' 'SearchStep for Ref: Each Image along Rot2' refStep2
+        -i 1 0 1 0 0 -1x1+1+37.500000 0 0 1 0 0 'refStep3' 'SearchStep for Ref: Each Image along Rot3' refStep3
+        -I  1 0 0 1 0 1 -1x1+1+39 ' ' '-360' 'nRot1AreaMin' number of Ref for Rot1
+        -I  1 0 0 1 0 1 -1x1+1+40 ' ' '-360' 'nRot2AreaMin' number of Ref for Rot2
+        -I  1 0 0 1 0 1 -1x1+1+42 ' ' '-360' 'nRot3AreaMin' number of Ref for Rot3
+        -I  1 0 0 1 0 1 -1x1+1+43 ' ' '1.0' 'MagRangeMin' Magnification Range
+        -i 1 0 1 0 0 -1x1+1+45.000000 0 0 1 0 0 'Iter' 'Iteration for Rotation around the vertical axis against image plane' Iter
+        -i 1 0 1 0 0 -1x1+1+46.500000 0 0 0 0 0 'Method' '0: Correlation, 1: SSDA' Method
+        -I  1 0 0 1 0 1 -1x1+1+48 ' ' '0' 'sminx' SearchRegion [pixel]: used in lmrcImageAutoRotationCorrelation 
+        -t 1 0 1 0 0 6x1+1+49 'Shift' 'Image Shift, when in > ref' Shift
+        -f 1 0 1 0 0 -1x1+1+51.000000 0 0 27.300000 0 0 0 'RepeatX' 'RepeatX[A]' RepeatX
+        -f 1 0 1 0 0 -1x1+1+52.500000 0 0 5.000000 0 0 0 'RepeatXDelta' 'RepeatXDelta[A]' RepeatXDelta
+        -f 1 0 1 0 0 -1x1+1+54.000000 0 0 27.300000 0 0 0 'RepeatY' 'RepeatY[A]' RepeatY
+        -f 1 0 1 0 0 -1x1+1+55.500000 0 0 5.000000 0 0 0 'RepeatYDelta' 'RepeatYDelta[A]' RepeatYDelta
+        -t 1 0 1 0 0 6x1+1+57 'Xshift' 'X-Shift Only' Xshift
+        -t 1 0 1 0 0 6x1+1+58 'NoShift' 'No-Shift' NoShift
+        -O 1 0 1 0 0 1 -1x1+1+60.000000 ' ' 'Log' 'Output: LogFile' Log
+        -i 1 0 1 0 0 -1x1+1+61.500000 0 0 1 0 0 'pvm' 'Task Number' pvm
+        -I 1 0 1 0 0 1 -1x1+1+63.000000 ' ' 'pvmList' 'ConfigurationFile' pvmList
+        -I 1 0 1 0 0 1 -1x1+1+64.500000 ' ' 'configFile' 'ConfigurationFile' c
+        -i 1 0 1 0 0 -1x1+1+66.000000 0 0 0 0 0 'mode' 'Mode' m
+    -E
+  -E
+-E

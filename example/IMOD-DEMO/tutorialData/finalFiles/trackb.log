@@ -1,0 +1,31 @@
+
+ RO image file on unit   1 : BBb.preali     Size=        31234
+
+ Number of columns, rows, sections .........    512    512     61
+ Map mode ..................................    0
+ Start cols, rows, sects, grid x,y,z .......    0    0    0     512   512    61
+ Pixel spacing (Angstroms)..................  20.20      20.20      20.20    
+ Cell angles ...............................   90.000   90.000   90.000
+ Fast, medium, slow axes ...................    X    Y    Z
+ Origin on x,y,z ...........................  0.000      0.000      0.000    
+ Minimum density ...........................  0.68912E-06
+ Maximum density ...........................   253.17    
+ Mean density ..............................   175.01    
+ tilt angles (original,current) ............  0.0   0.0   0.0   0.0   0.0   0.0
+ Space group,# extra bytes,idtype,lens .....       0     122       0       0
+
+     5 Titles :
+SerialEM: Digitized by Gatan Camera on TF30             30-Sep-03  13:39:31    
+          Tilt axis rotation angle = -12.5                                     
+REDUCEMONT: recut and reduced by factor of  2            3-Nov-03  15:45:19    
+clip: resized image.                                     3-Nov-03  15:47:36    
+NEWSTACK: Images copied, transformed, floated to means  19-Oct-06  20:56:27    
+
+
+ FORMATTED  ro  file opened: BBb.rawtlt
+Starting object   1, round  1,  25 contours
+For object  1, round  1: 25 contours, points missing =    0
+For object  1, round  2: 25 contours, points missing =    0
+
+Obj cont:  Views on which points are missing
+ Total points missing = 0

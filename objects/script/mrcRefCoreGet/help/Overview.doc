@@ -1,0 +1,8 @@
+.onlineHelp EOS mrcRefCoreGet "Introduction to mrcRefCoreGet"
+.
+.section 1 "Introduction to mrcRefCoreGet"
+.
+.\" This is the help page associated with the Help button on
+.\" the toplevel window of mrcRefCoreGet
+If you are reading this text,
+you should report it as a bug :-)

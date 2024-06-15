@@ -1,0 +1,29 @@
+<HTML>
+<HEAD>
+<TITLE>mrcImageFilterCreate</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageFilterCreate</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageFilterCreate
+Options:
+    [-i[nput]            In                  (stdin     ).as(inFile              ) ] :Optional  :Input: ASCII
+    [-o[utput]           Out                 (stdout    ).as(outFile             ) ] :Optional  :Output: mrcImage
+    [-nx                 Nx                  (512       ).as(Integer             ) ] :Essential :ImageSize: x
+    [-ny                 Ny                  (512       ).as(Integer             ) ] :Optional  :ImageSize: y
+    [-nz                 Nz                  (1         ).as(Integer             ) ] :Optional  :ImageSize: z
+    [-sx                 Sx                  (3         ).as(Integer             ) ] :Essential :FilterSize: x
+    [-sy                 Sy                  (3         ).as(Integer             ) ] :Optional  :FilterSize: y
+    [-sz                 Sz                  (1         ).as(Integer             ) ] :Optional  :FilterSize: z
+    [-v[erbose]                                                                    ] :Optional  :Verbose
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-M[ode]             Mode                (0         ).as(Integer             ) ] :Optional  :Mode: Filter shape
+    [-m[ode]             mode                (2         ).as(Integer             ) ] :Optional  :mode: output mrc
+----- Additional Usage -----
+>>>> Input file Format nx0 y0 z0 weight0
+x1 y1 z1 weight1
+......          
+</PRE>
+</BODY>
+</HTML>

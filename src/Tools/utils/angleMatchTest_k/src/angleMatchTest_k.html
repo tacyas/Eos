@@ -1,0 +1,26 @@
+<HTML>
+<HEAD>
+<TITLE>angleMatchTest_k</TITLE>
+</HEAD>
+<BODY>
+<H1>angleMatchTest_k</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: angleMatchTest_k
+Options:
+    [-i[nput]1           In1                 (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-i[nput]2           In2                 (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-s[tep]s[ize]       SS                  (15        ).as(Integer             ) ] :Optional  :StepSize
+    [-o[utput]           Out                 (stdout    ).as(outFile             ) ] :Optional  :OutputDataFile
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+>>>>> InputFileFormat
+filename MODE Rot1 Rot2 Rot3
+....
+>>>>> Algorithm 
+1. Calc each unit directional vector
+   (sin(Rot2)*cos(Rot1), sin(Rot2)*sin(Rot1), cos(Rot2))
+</PRE>
+</BODY>
+</HTML>

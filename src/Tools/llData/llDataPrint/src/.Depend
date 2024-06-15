@@ -1,0 +1,84 @@
+argCheck.o: argCheck.c \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/stdio.h \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/stdarg.h \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/va-alpha.h \
+ /usr/include/standards.h /usr/include/sys/seek.h \
+ /usr/include/va_list.h \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/sys/types.h \
+ /usr/include/mach/machine/vm_types.h /usr/include/sys/select.h \
+ /usr/include/getopt.h \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/sys/limits.h \
+ /usr/include/machine/machlimits.h /usr/include/sys/syslimits.h \
+ /usr/include/machine/machtime.h /usr/include/sys/rt_limits.h \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/stdlib.h \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/string.h \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/math.h \
+ ../inc/config.h ../inc/../inc/llDataPrint.h \
+ /tkyemg/dn5500vs/work1/people/tkys/Eos/include/genUtil.h \
+ /tkyemg/dn5500vs/work1/people/tkys/Eos/include/String.h \
+ /tkyemg/dn5500vs/work1/people/tkys/Eos/include/File.h \
+ /tkyemg/dn5500vs/work1/people/tkys/Eos/include/Memory.h
+init.o: init.c \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/stdio.h \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/stdarg.h \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/va-alpha.h \
+ /usr/include/standards.h /usr/include/sys/seek.h \
+ /usr/include/va_list.h \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/sys/types.h \
+ /usr/include/mach/machine/vm_types.h /usr/include/sys/select.h \
+ /usr/include/getopt.h \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/sys/limits.h \
+ /usr/include/machine/machlimits.h /usr/include/sys/syslimits.h \
+ /usr/include/machine/machtime.h /usr/include/sys/rt_limits.h \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/stdlib.h \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/string.h \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/math.h \
+ ../inc/config.h ../inc/../inc/llDataPrint.h \
+ /tkyemg/dn5500vs/work1/people/tkys/Eos/include/genUtil.h \
+ /tkyemg/dn5500vs/work1/people/tkys/Eos/include/String.h \
+ /tkyemg/dn5500vs/work1/people/tkys/Eos/include/File.h \
+ /tkyemg/dn5500vs/work1/people/tkys/Eos/include/Memory.h
+llDataPrint.o: llDataPrint.c \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/stdio.h \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/stdarg.h \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/va-alpha.h \
+ /usr/include/standards.h /usr/include/sys/seek.h \
+ /usr/include/va_list.h \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/sys/types.h \
+ /usr/include/mach/machine/vm_types.h /usr/include/sys/select.h \
+ /usr/include/getopt.h \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/sys/limits.h \
+ /usr/include/machine/machlimits.h /usr/include/sys/syslimits.h \
+ /usr/include/machine/machtime.h /usr/include/sys/rt_limits.h \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/stdlib.h \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/string.h \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/math.h \
+ ../inc/config.h ../inc/../inc/llDataPrint.h
+usage.o: usage.c \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/stdio.h \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/stdarg.h \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/va-alpha.h \
+ /usr/include/standards.h /usr/include/sys/seek.h \
+ /usr/include/va_list.h \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/sys/types.h \
+ /usr/include/mach/machine/vm_types.h /usr/include/sys/select.h \
+ /usr/include/getopt.h \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/sys/limits.h \
+ /usr/include/machine/machlimits.h /usr/include/sys/syslimits.h \
+ /usr/include/machine/machtime.h /usr/include/sys/rt_limits.h \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/stdlib.h \
+ ../inc/config.h ../inc/../inc/llDataPrint.h
+util.o: util.c \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/stdio.h \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/stdarg.h \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/va-alpha.h \
+ /usr/include/standards.h /usr/include/sys/seek.h \
+ /usr/include/va_list.h \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/sys/types.h \
+ /usr/include/mach/machine/vm_types.h /usr/include/sys/select.h \
+ /usr/include/getopt.h \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/sys/limits.h \
+ /usr/include/machine/machlimits.h /usr/include/sys/syslimits.h \
+ /usr/include/machine/machtime.h /usr/include/sys/rt_limits.h \
+ /usr/local/lib/gcc-lib/alpha-dec-osf3.2/2.7.0/include/stdlib.h \
+ ../inc/config.h ../inc/../inc/llDataPrint.h

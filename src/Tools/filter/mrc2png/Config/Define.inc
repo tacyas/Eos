@@ -1,0 +1,4 @@
+OBJECTNAME = mrc2png
+EXTRA_LIB  = -lpng
+EXTRA_CCOPTS =
+EXTRA_INC =

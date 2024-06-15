@@ -1,0 +1,7 @@
+# OptionControlFile
+# FileFormat
+"-tty","-tty","DeviceFile","Optional","1","1","tty","String","/dev/ttyS1"
+"-speed","-speed","SerialPort Speed","Optional","1","1","speed","Integer","4800"
+"-S","-S[erver]","host port: As Server: Default Shell mode","Optional","2","1","Host","String","tkyemg-pc06","2","Server","Integer","6000"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

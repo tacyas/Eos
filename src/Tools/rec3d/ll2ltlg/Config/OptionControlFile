@@ -1,0 +1,13 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-t","-t[itle]","Title","Optional","1","1","Title","String","NULL"
+"-l","-l[lMax]","llMax","Optional","1","1","llMax","Integer","1"
+"-D","-D[elRInv]","delRInv[A]","Optional","1","1","delRInv","Real","1.0"
+"-R","-R[MaxInv]","RMaxInv[A]","Optional","1","1","RMaxInv","Real","1.0"
+"-d","-d[elr]","delr[A]","Optional","1","1","delr","Real","1.0"
+"-r","-r[Max]","rMax[A]","Optional","1","1","rMax","Real","1.0"
+"-f","-f[lagOutputInfo]","flagOutputInfo","Optional","1","1","flagOutputInfo","Integer","0"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

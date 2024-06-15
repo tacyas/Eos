@@ -1,0 +1,12 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input","Essential","1","1","In","inFile::mrcImage","NULL"
+"-o","-o[utput]","Output","Essential","1","1","Out","outFile::mrcImage","NULL"
+"-dTheta","-d[elta]Theta","DeltaTheta[degree]","Optional","1","1","DeltaTheta","Real","1.0"
+"-dRho","-d[elta]Rho","DeltaRho[pixel]","Optional","1","1","DeltaRho","Real","1.0"
+"-M","-M[ode]","HoughTransformMode","Optional","1","1","HoughMode","Integer","0"
+"-width","-width","Width[pixel]","Optional","2","1","widthMin","Real","0","2","widthMax","Integer","0"
+"-widthOut","-widthOut","Width[pixel]","Optional","1","1","widthOut","Real","0"
+"-IM","-I[nterpolation]M[ode]","mrcImageMode: HowToGet","Optional","1","1","InterpolationMode","Integer","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

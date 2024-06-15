@@ -1,0 +1,469 @@
+#!/usr/local/bin/wish -f
+#
+# Start
+#
+proc roiAreaCreateStart {c x y} {
+	global mousePressed
+	global Roi
+
+	set mousePressed(mode)   1
+	set mousePressed(startx) $x
+	set mousePressed(starty) $y
+	switch $Roi(MultiShape) {
+		On {
+			#
+			set Roi(CurrentID)    $Roi(TotalN)
+			set Roi(CurrentColor) $Roi(SelectColor)
+			incr Roi(TotalN) 
+		}
+		Off {
+			#
+			$c delete $Roi(CurrentObject)
+		}
+	}
+
+	# Create ROI	
+	switch $Roi(Shape)  {
+		Rectangle {
+			if { $Roi(AngleLock) == "On" } {
+				global rectanglePoints
+				set currentAngle [ expr $rectanglePoints(angle)/180.0*3.141592653589 	]
+			} else {
+				set currentAngle 0
+			}
+			if { $Roi(SizeLock) == "On" } {
+				global rectanglePoints
+				debugPrint "SizeLock Start: $mousePressed(startx)  $mousePressed(starty)"
+				set XX [ expr $rectanglePoints(width) /2 ]
+				set YY [ expr $rectanglePoints(height)/2 ] 
+				#puts "$XX $YY $$currentAngle"
+
+				set X  [ expr -$XX*cos($currentAngle) + $YY*sin($currentAngle) ] 
+				set Y  [ expr -$XX*sin($currentAngle) - $YY*cos($currentAngle) ]
+				set rectanglePoints(x0) [expr $mousePressed(startx)+$X ]  
+				set rectanglePoints(y0) [expr $mousePressed(starty)+$Y ]   
+				#puts "$X $Y"
+
+				set X  [ expr  $XX*cos($currentAngle) + $YY*sin($currentAngle) ] 
+				set Y  [ expr  $XX*sin($currentAngle) - $YY*cos($currentAngle) ]
+				set rectanglePoints(x1) [expr $mousePressed(startx)+$X ]  
+				set rectanglePoints(y1) [expr $mousePressed(starty)+$Y ]   
+				#puts "$X $Y"
+
+				set X  [ expr  $XX*cos($currentAngle) - $YY*sin($currentAngle) ] 
+				set Y  [ expr  $XX*sin($currentAngle) + $YY*cos($currentAngle) ]
+				set rectanglePoints(x2) [expr $mousePressed(startx)+$X ]  
+				set rectanglePoints(y2) [expr $mousePressed(starty)+$Y ]   
+				#puts "$X $Y"
+
+				set X  [ expr  -$XX*cos($currentAngle) - $YY*sin($currentAngle) ] 
+				set Y  [ expr  -$XX*sin($currentAngle) + $YY*cos($currentAngle) ] 
+				set rectanglePoints(x3) [expr $mousePressed(startx)+$X ]  
+				set rectanglePoints(y3) [expr $mousePressed(starty)+$Y ]   
+				#puts "$X $Y"
+
+				set Roi(CurrentObject) [rectangleCreate $c \
+					$rectanglePoints(x0) \
+					$rectanglePoints(y0) \
+					$rectanglePoints(x1) \
+					$rectanglePoints(y1) \
+					$rectanglePoints(x2) \
+					$rectanglePoints(y2) \
+					$rectanglePoints(x3) \
+					$rectanglePoints(y3) \
+										]
+				set Roi(Action) Move
+			} else {
+				set Roi(CurrentObject) [roiRectangleCreate $c \
+					$mousePressed(startx) $mousePressed(starty) \
+					$mousePressed(startx) $mousePressed(starty)]
+			}
+		}
+		TiltRectangle {
+			if { $Roi(AngleLock) == "On" } {
+				global rectanglePoints
+				set currentAngle [ expr $rectanglePoints(angle)/180.0*3.141592653589 	]
+			} else {
+				set currentAngle 0
+			}
+			if { $Roi(SizeLock) == "On" } {
+				global rectanglePoints
+				debugPrint "SizeLock Start: $mousePressed(startx)  $mousePressed(starty)"
+				set XX [ expr $rectanglePoints(width) /2 ]
+				set YY [ expr $rectanglePoints(height)/2 ] 
+				#puts "$XX $YY $$currentAngle"
+
+				set X  [ expr -$XX*cos($currentAngle) + $YY*sin($currentAngle) ] 
+				set Y  [ expr -$XX*sin($currentAngle) - $YY*cos($currentAngle) ]
+				set rectanglePoints(x0) [expr $mousePressed(startx)+$X ]  
+				set rectanglePoints(y0) [expr $mousePressed(starty)+$Y ]   
+				#puts "$X $Y"
+
+				set X  [ expr  $XX*cos($currentAngle) + $YY*sin($currentAngle) ] 
+				set Y  [ expr  $XX*sin($currentAngle) - $YY*cos($currentAngle) ]
+				set rectanglePoints(x1) [expr $mousePressed(startx)+$X ]  
+				set rectanglePoints(y1) [expr $mousePressed(starty)+$Y ]   
+				#puts "$X $Y"
+
+				set X  [ expr  $XX*cos($currentAngle) - $YY*sin($currentAngle) ] 
+				set Y  [ expr  $XX*sin($currentAngle) + $YY*cos($currentAngle) ]
+				set rectanglePoints(x2) [expr $mousePressed(startx)+$X ]  
+				set rectanglePoints(y2) [expr $mousePressed(starty)+$Y ]   
+				#puts "$X $Y"
+
+				set X  [ expr  -$XX*cos($currentAngle) - $YY*sin($currentAngle) ] 
+				set Y  [ expr  -$XX*sin($currentAngle) + $YY*cos($currentAngle) ] 
+				set rectanglePoints(x3) [expr $mousePressed(startx)+$X ]  
+				set rectanglePoints(y3) [expr $mousePressed(starty)+$Y ]   
+				#puts "$X $Y"
+
+				set Roi(CurrentObject) [rectangleCreate $c \
+					$rectanglePoints(x0) \
+					$rectanglePoints(y0) \
+					$rectanglePoints(x1) \
+					$rectanglePoints(y1) \
+					$rectanglePoints(x2) \
+					$rectanglePoints(y2) \
+					$rectanglePoints(x3) \
+					$rectanglePoints(y3) \
+										]
+				set Roi(Action) Move
+			} else {
+				set Roi(CurrentObject) [roiRectangleCreate $c \
+					$mousePressed(startx) $mousePressed(starty) \
+					$mousePressed(startx) $mousePressed(starty)]
+			}
+		}
+		Line {
+			set Roi(CurrentObject) [roiLineCreate $c \
+				$mousePressed(startx) $mousePressed(starty) \
+				$mousePressed(startx) $mousePressed(starty)]
+		}
+		Spline {
+			set Roi(CurrentObject) [roiSplineBegin $c \
+				$mousePressed(startx) $mousePressed(starty) \
+				$mousePressed(startx) $mousePressed(starty)]
+		}
+		default {
+			puts stderr "Not supported Shape"
+		}
+	}
+}
+
+#
+# Motion
+#
+proc roiAreaCreateMotion {c x y} {
+	global mousePressed
+	global Roi
+
+	if { $mousePressed(mode) == 1 } {
+		$c delete $Roi(CurrentObject)
+		set mousePressed(endx) $x
+		set mousePressed(endy) $y
+		switch $Roi(Shape) {
+			Rectangle {
+				set Roi(CurrentObject) [ roiRectangleCreate $c \
+					$mousePressed(startx) $mousePressed(starty) \
+					$mousePressed(endx)   $mousePressed(endy) ]
+			}
+			TiltRectangle {
+				set Roi(CurrentObject) [ roiRectangleCreate $c \
+					$mousePressed(startx) $mousePressed(starty) \
+					$mousePressed(endx)   $mousePressed(endy) ]
+			}
+			Line {
+				set Roi(CurrentObject) [ roiLineCreate $c  \
+					$mousePressed(startx) $mousePressed(starty) \
+					$mousePressed(endx)   $mousePressed(endy) ]
+			}
+			Spline {
+				set Roi(CurrentObject) [ roiSplineStroke $c  \
+					$mousePressed(startx) $mousePressed(starty) \
+					$mousePressed(endx)   $mousePressed(endy) ]
+			}
+			default {
+				puts stderr "Not supported Shape"
+			}
+		}
+	}
+}
+
+#
+# End
+#
+proc roiAreaCreateEnd {c x y} {
+	global mousePressed
+	global Roi
+
+	if { $mousePressed(mode) == 1 } {
+		$c delete $Roi(CurrentObject)
+		set mousePressed(endx) $x
+		set mousePressed(endy) $y
+		set mousePressed(mode) 2 
+		switch $Roi(Shape) {
+			Rectangle {
+				set Roi(CurrentObject) [roiRectangleCreate $c \
+					$mousePressed(startx) $mousePressed(starty) \
+					$mousePressed(endx)   $mousePressed(endy)]
+			}
+			TiltRectangle {
+				set Roi(CurrentObject) [roiRectangleCreate $c \
+					$mousePressed(startx) $mousePressed(starty) \
+					$mousePressed(endx)   $mousePressed(endy)]
+			}
+			Line {
+				set Roi(CurrentObject) [roiLineCreate $c \
+					$mousePressed(startx) $mousePressed(starty) \
+					$mousePressed(endx) $mousePressed(endy)]
+			}
+			Spline {
+				set Roi(CurrentObject) [roiSplineEnd $c  \
+					$mousePressed(startx) $mousePressed(starty) \
+					$mousePressed(endx) $mousePressed(endy) ]
+			}
+			default {
+				puts stderr "Not supported Shape"
+			}
+		}
+	}
+	set mousePressed(mode) 0
+}
+
+
+proc roiAreaAllRedraw { } {
+	global Roi
+
+	for { set i 0 } { $i < $Roi(TotalN) } { incr i } {
+		roiAreaRedraw $i
+	}
+}
+
+proc roiAreaRedraw { i } {
+	global Roi
+
+	if { [ info exists Roi([subst $i],Object) ] } {
+		$Roi(Canvas) delete $Roi([subst $i],Object)
+	}
+	if { [ info exists Roi([subst $i],NumObject) ] } {
+		$Roi(Canvas) delete $Roi([subst $i],NumObject)
+	}
+	switch $Roi([subst $i],Shape) {
+		Rectangle {
+			set Roi($i,Object) [ rectangleCreate $Roi(Canvas) \
+				$Roi([subst $i],x0)  $Roi([subst $i],y0)  \
+				$Roi([subst $i],x1)  $Roi([subst $i],y1)  \
+				$Roi([subst $i],x2)  $Roi([subst $i],y2)  \
+				$Roi([subst $i],x3)  $Roi([subst $i],y3)  ] 
+				set cx [ expr ($Roi([subst $i],x0)+$Roi([subst $i],x2))/2 ]
+				set cy [ expr ($Roi([subst $i],y0)+$Roi([subst $i],y2))/2 ]
+		}
+		TiltRectangle {
+			set Roi($i,Object) [ rectangleCreate $Roi(Canvas) \
+				$Roi([subst $i],x0)  $Roi([subst $i],y0)  \
+				$Roi([subst $i],x1)  $Roi([subst $i],y1)  \
+				$Roi([subst $i],x2)  $Roi([subst $i],y2)  \
+				$Roi([subst $i],x3)  $Roi([subst $i],y3)  ] 
+				set cx [ expr ($Roi([subst $i],x0)+$Roi([subst $i],x2))/2 ]
+				set cy [ expr ($Roi([subst $i],y0)+$Roi([subst $i],y2))/2 ]
+		}
+		Line {
+			set Roi($i,Object) [ lineCreate $Roi(Canvas)  \
+				$Roi([subst $i],x0)  $Roi([subst $i],y0)  \
+				$Roi([subst $i],x1)  $Roi([subst $i],y1)  ] 
+		}
+		default {
+			puts stderr "Not supported in roiAreaAllRedraw"
+		}
+	}
+	switch $Roi(MultiNumber) {
+		On {
+			set Roi($i,NumObject) [ numberCreate $Roi(Canvas) $i \
+				$cx  $cy ]	
+		}
+	}
+}
+
+proc roiRectangleCreate { c startx starty endx endy } {
+	global rectanglePoints
+	global mousePressed
+
+	if { $startx < $endx } {
+		set blx $startx
+		set trx $endx
+	} else {
+		set blx $endx
+		set trx $startx
+	}
+	if { $starty < $endy } {
+		set bly $starty
+		set try $endy
+	} else {
+		set bly $endy
+		set try $starty
+	}
+
+	set rectanglePoints(x0) $blx
+	set rectanglePoints(y0) $bly
+	set rectanglePoints(x1) $trx
+	set rectanglePoints(y1) $bly
+	set rectanglePoints(x2) $trx
+	set rectanglePoints(y2) $try
+	set rectanglePoints(x3) $blx
+	set rectanglePoints(y3) $try
+	
+	debugPrint "$startx $rectanglePoints(x0)"
+
+	if { $mousePressed(mode) == 2 } {
+		#knobShow $c $rectanglePoints(x0) $rectanglePoints(y0)
+		#knobShow $c $rectanglePoints(x1) $rectanglePoints(y1)
+		#knobShow $c $rectanglePoints(x2) $rectanglePoints(y2)
+		#knobShow $c $rectanglePoints(x3) $rectanglePoints(y3)
+	}
+	return [ rectangleCreate $c \
+				$rectanglePoints(x0) $rectanglePoints(y0) \
+				$rectanglePoints(x1) $rectanglePoints(y1) \
+				$rectanglePoints(x2) $rectanglePoints(y2) \
+				$rectanglePoints(x3) $rectanglePoints(y3) ]
+}
+
+proc numberCreate { c i x y } {
+	return [ $c create text \
+		[ coordGetInMainImageToCanvas $c x $x ] [coordGetInMainImageToCanvas $c y $y ] \
+		-text $i -fill red ] 
+}
+
+proc rectangleCreate { c x0 y0 x1 y1 x2 y2 x3 y3 } {
+	global rectanglePoints
+	global mainImage
+	global Roi
+
+	set rectanglePoints(width)  [ pointDistance $x0 $y0 $x1 $y1 ] 
+	set rectanglePoints(height) [ pointDistance $x0 $y0 $x3 $y3 ] 
+	set rectanglePoints(angle)  [ vectorAngle   $x0 $y0 $x1 $y1 ] 
+	#
+	#
+	#
+	set rectanglePoints(realwidth)  [ expr $rectanglePoints(width)  * $mainImage(lx) ] 
+	set rectanglePoints(realheight) [ expr $rectanglePoints(height) * $mainImage(ly) ] 
+	#
+	#
+	#
+	return [ $c create line \
+		[ coordGetInMainImageToCanvas $c x $x0 ]  [ coordGetInMainImageToCanvas $c y $y0 ] \
+		[ coordGetInMainImageToCanvas $c x $x1 ]  [ coordGetInMainImageToCanvas $c y $y1 ] \
+		[ coordGetInMainImageToCanvas $c x $x2 ]  [ coordGetInMainImageToCanvas $c y $y2 ] \
+		[ coordGetInMainImageToCanvas $c x $x3 ]  [ coordGetInMainImageToCanvas $c y $y3 ] \
+		[ coordGetInMainImageToCanvas $c x $x0 ]  [ coordGetInMainImageToCanvas $c y $y0 ] \
+		-arrow last -fill $Roi(CurrentColor) -width $Roi(LineWidth) ]
+}
+
+proc roiLineCreate { c startx starty endx endy } {
+	global mainImage
+	global linePoints
+	global mousePressed
+	global Roi
+
+	set linePoints(x0) $startx
+	set linePoints(y0) $starty
+	set linePoints(x1) $endx
+	set linePoints(y1) $endy
+
+	set linePoints(length)    [ expr sqrt(($startx-$endx)*($startx-$endx)+($starty-$endy)*($starty-$endy)) ] 
+	set linePoints(absLength) [ expr sqrt(($startx-$endx)*($startx-$endx)*$mainImage(lx)*$mainImage(lx)\
+										 +($starty-$endy)*($starty-$endy)*$mainImage(ly)*$mainImage(ly)) ]
+
+	if { $mousePressed(mode) == 2 } {
+		#knobShow $c $linePoints(x0) $linePoints(y0)
+		#knobShow $c $linePoints(x1) $linePoints(y1)
+	}
+	return [ lineCreate $c $linePoints(x0) $linePoints(y0) $linePoints(x1) $linePoints(y1) ]
+}
+
+proc lineCreate { c x0 y0 x1 y1 } {
+	global Roi
+	set height [ lindex [ $c cget -scrollregion] 3 ]
+	debugPrint $Roi(LineWidth)
+	return [ $c create line \
+							[ coordGetInMainImageToCanvas $c x $x0 ]  [ coordGetInMainImageToCanvas $c y $y0 ] \
+							[ coordGetInMainImageToCanvas $c x $x1 ]  [ coordGetInMainImageToCanvas $c y $y1 ] \
+							-arrow last -fill $Roi(CurrentColor) -width $Roi(LineWidth) ]
+}
+
+
+proc roiSplineInit { c } {
+	global splinePoints
+
+	catch { unset splinePoints }
+	return 
+}
+
+proc roiSplineBegin { c startx starty endx endy } {
+	global splinePoints
+
+	if { ! [ info exists splinePoints(N) ] } {
+		set splinePoints(N) 0 
+		set splinePoints(x0) $startx 
+		set splinePoints(y0) $starty
+	}
+	return [ roiSplineStroke $c $startx $starty $endx $endy]
+}
+
+proc roiSplineStroke { c startx starty endx endy } {
+	global splinePoints
+
+	if { [ info exists splinePoints(N) ] } {
+		set next [ expr $splinePoints(N) + 1 ]
+		set  splinePoints(x$next) $endx 
+		set  splinePoints(y$next) $endy
+		set points {}
+		for { set i 0 } {$i <= $next } {incr i} {
+			append points \
+				[ coordGetInMainImageToCanvas $c x $splinePoints(x$i)] " " \
+				[ coordGetInMainImageToCanvas $c y $splinePoints(y$i)] " " 
+		}
+		return [ splineCreate $c $points ]
+	}
+}
+
+proc roiSplineEnd { c startx starty endx endy } {
+	global splinePoints
+
+	if { [ info exists splinePoints(N) ] } {
+		incr splinePoints(N)
+		set  splinePoints(x$splinePoints(N)) $endx 
+		set  splinePoints(y$splinePoints(N)) $endy
+		set points {}
+		for { set i 0 } {$i <= $splinePoints(N)} {incr i} {
+			append points [ coordGetInMainImageToCanvas $c x $splinePoints(x$i)] " " \
+						  [ coordGetInMainImageToCanvas $c y $splinePoints(y$i)] " " 
+		}
+	}
+	return [ splineCreate $c $points ]
+}
+
+proc splineCreate { c points } {
+	global Roi
+	return [ eval {$c create line } $points \
+		{-tag line -joinstyle round -smooth false -arrow last -fill $Roi(CurrentColor) } ]
+}
+
+proc knobShow { c x y } {
+	global Roi
+
+
+	set height [ $c cget -height ]
+	set yy [ expr $height - $y ]
+	set item [ $c create rectangle [expr $x-2] [expr $yy-2] [expr $x+3] [expr $yy+3] -fill gray75 -outline gray75 ]
+	$c addtag knob(now) withtag $Roi(CurrentObject)
+}
+
+proc knobHide { c x y } {
+	global Roi
+
+	set height [ $c cget -height ]
+	set yy [ expr $height - $y ]
+	set item [ $c create rectangle [expr $x-2] [expr $yy-2] [expr $x+3] [expr $yy+3] -fill gray75 -outline gray75 ]
+	$c delete knob(now) 
+}
+

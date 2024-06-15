@@ -1,0 +1,403 @@
+/*
+# pdbView : $Revision$  
+# $Date$ 
+# Created by $Author$
+# Usage : pdbView
+# Attention
+#   $Loccker$
+#  	$State$ 
+#
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include "vtk.h"
+
+#include "eosAxisSource.hh"
+#include "./eosRuler.hh"              
+#include "eosRuler.cc"
+
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+
+#define DEBUG
+#include "genUtil.h"
+#include "pdbFile.h"
+
+
+/*
+Example:
+typedef struct lpdbViewInfo {
+	float a;
+	int   b;
+} lpdbViewInfo;
+
+typedef enum lpdbViewMode {
+	a=0,
+	b=1
+} lpdbViewMode;
+*/
+
+
+int
+main(int argc, char* argv[]) 
+{
+  eosAxisSource axisClass;
+  eosAxisSource axisClass2;
+  
+  eosRuler ruler;
+  
+  
+  pdbViewInfo info;
+  pdbFile pdb;
+  pdbFile* ppdb;
+
+  ppdb = &pdb;
+  
+  init0(&info);
+  argCheck(&info, argc, argv);
+  init1(&info);
+  
+  DEBUGPRINT("Program Start\n");
+  cout << "start C++\n";
+  pdbFileRead(info.fptIn, &pdb);
+  
+  vtkRenderer *ren = vtkRenderer::New();
+  vtkRenderWindow *renWindow = vtkRenderWindow::New();
+  renWindow->AddRenderer(ren);
+  vtkRenderWindowInteractor *iren = vtkRenderWindowInteractor::New();
+  iren->SetRenderWindow(renWindow);
+  
+  axisClass.Draw(ren);
+  
+  //axisClass2.SetScale(2);
+  axisClass2.SetLength(2);
+  axisClass2.Draw(ren);
+  
+  ruler.SetDivision(1.5);
+  ruler.SetScaleLength(15);
+  ruler.Draw(ren);
+  
+  //CreateMoleculeModel
+
+  /*
+vtkVectorText *test[26];
+
+
+ vtkRenderer *ren = vtkRenderer::New();
+  vtkRenderWindow *renWin = vtkRenderWindow::New();
+    ren->AddActor(test);
+  */
+
+  /*
+    double moleculeRadius = 1.6;
+    float x,y,z;
+    vtkAssembly* moleData = vtkAssembly::New();
+
+    pdbFileTop(ppdb);
+    while(1){
+       if(pdbFileIsCA(ppdb)){
+	 pdbFileCoordGet(ppdb, &x, &y, &z);
+	 vtkSphereSource* molecule = vtkSphereSource::New();
+	 molecule->SetRadius(moleculeRadius);
+	 molecule->SetThetaResolution(5);
+	 molecule->SetPhiResolution(5);
+	 molecule->SetCenter(0,0,0);
+	 vtkPolyDataMapper* moleculeMapper = vtkPolyDataMapper::New();
+	 moleculeMapper->SetInput(molecule->GetOutput());
+	 vtkActor* moleculeActor= vtkActor::New();
+	 moleculeActor->SetMapper(moleculeMapper);
+	 moleculeActor->SetPosition(x,y,z);
+	 moleculeActor->GetProperty()->SetColor(0.5,0.5,0.5);
+	 moleData->AddPart(moleculeActor);
+       }
+       else {
+	 pdbFileCoordGet(ppdb, &x, &y, &z);
+	 vtkSphereSource* molecule = vtkSphereSource::New();
+	 molecule->SetRadius(moleculeRadius/2);
+	 molecule->SetThetaResolution(3);
+	 molecule->SetPhiResolution(3);
+	 molecule->SetCenter(0,0,0);
+	 vtkPolyDataMapper* moleculeMapper = vtkPolyDataMapper::New();
+	 moleculeMapper->SetInput(molecule->GetOutput());
+	 vtkActor* moleculeActor= vtkActor::New();
+	 moleculeActor->SetMapper(moleculeMapper);
+	 moleculeActor->SetPosition(x,y,z);
+	 moleculeActor->GetProperty()->SetColor(0.6,0.7,0.8);
+	 moleData->AddPart(moleculeActor);     
+	 }
+
+
+       if(pdbFileEnd(ppdb)){
+	 break;
+       } else {
+	 pdbFileNext(ppdb);
+       }
+  }
+  
+  ren->AddActor(moleData);  
+
+  */
+
+
+  /*
+
+    double moleculeRadius = 1.6;
+    float x,y,z;
+    vtkAssembly* moleData = vtkAssembly::New();
+
+    pdbFileTop(ppdb);
+    while(1){
+       if(pdbFileIsAtom(ppdb)){
+	 pdbFileCoordGet(ppdb, &x, &y, &z);
+	 vtkSphereSource* molecule = vtkSphereSource::New();
+	 molecule->SetRadius(moleculeRadius);
+	 molecule->SetThetaResolution(5);
+	 molecule->SetPhiResolution(5);
+	 molecule->SetCenter(0,0,0);
+	 vtkPolyDataMapper* moleculeMapper = vtkPolyDataMapper::New();
+	 moleculeMapper->SetInput(molecule->GetOutput());
+	 vtkActor* moleculeActor= vtkActor::New();
+	 moleculeActor->SetMapper(moleculeMapper);
+	 moleculeActor->SetPosition(x,y,z);
+	 moleculeActor->GetProperty()->SetColor(0.5,0.5,0.5);
+	 moleData->AddPart(moleculeActor);
+       }
+       if(pdbFileEnd(ppdb)){
+	 break;
+       } else {
+	 pdbFileNext(ppdb);
+       }
+  }
+  
+  ren->AddActor(moleData);  
+
+  */
+
+
+
+
+
+
+
+
+
+
+  //Create an actor and give it cone geometry
+  vtkConeSource *cone = vtkConeSource::New();
+  cone->SetResolution(30);
+  cone->SetHeight(5);
+  cone->SetRadius(3);
+  vtkPolyDataMapper *coneMapper = vtkPolyDataMapper::New();
+  coneMapper->SetInput(cone->GetOutput());
+  vtkActor *coneActor = vtkActor::New();
+  coneActor->SetMapper(coneMapper);
+  coneActor->GetProperty()->SetColor(1.0,0.0,0.0);
+  coneActor->SetPosition(0,5,0);
+  
+  //Mine Create
+  vtkConeSource *cone2 = vtkConeSource::New();
+  cone2->SetResolution(6);
+  cone2->SetHeight(2);
+  cone2->SetRadius(3);
+  vtkPolyDataMapper *coneMapper2=vtkPolyDataMapper::New();
+  coneMapper2->SetInput(cone2->GetOutput());
+  vtkActor *coneActor2 = vtkActor::New();
+  coneActor2->SetMapper(coneMapper2);
+  coneActor2->GetProperty()->SetColor(0.2,0.8,0.7);
+  
+  //Cube
+  vtkCubeSource *cube = vtkCubeSource::New();
+  cube->SetCenter(0,0,0);
+  cube->SetXLength(3);
+  cube->SetYLength(3);
+  cube->SetZLength(3);
+  //cube->SetBounds(0.0,0.5,0.0,0.3,0.0,0.2);
+  vtkPolyDataMapper *cubeMapper = vtkPolyDataMapper::New();
+  cubeMapper->SetInput(cube->GetOutput());
+  vtkActor *cubeActor = vtkActor::New();
+  cubeActor->SetMapper(cubeMapper);
+  cubeActor->GetProperty()->SetOpacity(0.5);
+  cubeActor->GetProperty()->SetColor(0.4,0.4,0.7);
+  
+  //LineX
+  vtkLineSource *lineX = vtkLineSource::New();
+  lineX->SetPoint1(0,0,0);
+  lineX->SetPoint2(5,0,0);
+  vtkPolyDataMapper *lineXMapper = vtkPolyDataMapper::New();
+  lineXMapper->SetInput(lineX->GetOutput());
+  vtkActor *lineXActor = vtkActor::New();
+  lineXActor->SetMapper(lineXMapper);
+  lineXActor->GetProperty()->SetColor(1.0,0,0);
+  
+
+    //LineY
+    vtkLineSource *lineY = vtkLineSource::New();
+    lineY->SetPoint1(0,0,0);
+    lineY->SetPoint2(0,5,0);
+    vtkPolyDataMapper *lineYMapper = vtkPolyDataMapper::New();
+    lineYMapper->SetInput(lineY->GetOutput());
+    vtkActor *lineYActor = vtkActor::New();
+    lineYActor->SetMapper(lineYMapper);
+    lineYActor->GetProperty()->SetColor(0,1.0,0);
+
+
+    //LineZ
+    vtkLineSource *lineZ = vtkLineSource::New();
+    lineZ->SetPoint1(0,0,0);
+    lineZ->SetPoint2(0,0,5);
+    vtkPolyDataMapper *lineZMapper = vtkPolyDataMapper::New();
+    lineZMapper->SetInput(lineZ->GetOutput());
+    vtkActor *lineZActor = vtkActor::New();
+    lineZActor->SetMapper(lineZMapper);
+    lineZActor->GetProperty()->SetColor(0,0,1.0);
+
+
+    //Grid
+    /*
+    int n;
+
+    n=3;
+    vtkAssembly* grid3D = vtkAssembly::New();
+    int i;
+    int j;
+
+    //X
+
+    for(i=-1*n;i<n;i++)
+      {
+
+	for(j=-1*n;j<n;j++)
+	  {
+
+	vtkLineSource* gridX = vtkLineSource::New();
+	gridX->SetPoint1(-1*n,0,0);
+	gridX->SetPoint2(n,0,0);
+	vtkPolyDataMapper *gridXMapper = vtkPolyDataMapper::New();
+	gridXMapper->SetInput(gridX->GetOutput());
+	vtkActor *gridXActor = vtkActor::New();
+	gridXActor->SetMapper(gridXMapper);
+	
+	gridXActor->SetPosition(0,j,i);
+	gridXActor->GetProperty()->SetColor(1.0,0.0,0.0);
+	grid3D->AddPart(gridXActor);
+
+	  }
+
+      }
+
+    //Y
+
+    for(i=-1*n;i<n;i++)
+      {
+
+	for(j=-1*n;j<n;j++)
+	  {
+
+	vtkLineSource* gridY = vtkLineSource::New();
+	gridY->SetPoint1(0,-1*n,0);
+	gridY->SetPoint2(0,n,0);
+	vtkPolyDataMapper *gridYMapper = vtkPolyDataMapper::New();
+	gridYMapper->SetInput(gridY->GetOutput());
+	vtkActor *gridYActor = vtkActor::New();
+	gridYActor->SetMapper(gridYMapper);
+	
+	gridYActor->SetPosition(i,0,j);
+	gridYActor->GetProperty()->SetColor(0.0,1.0,0.0);
+	grid3D->AddPart(gridYActor);
+
+	  }
+
+      }
+
+    //Z
+
+    for(i=-1*n;i<n;i++)
+      {
+
+	for(j=-1*n;j<n;j++)
+	  {
+
+	vtkLineSource* gridZ = vtkLineSource::New();
+	gridZ->SetPoint1(0,0,-1*n);
+	gridZ->SetPoint2(0,0,n);
+	vtkPolyDataMapper *gridZMapper = vtkPolyDataMapper::New();
+	gridZMapper->SetInput(gridZ->GetOutput());
+	vtkActor *gridZActor = vtkActor::New();
+	gridZActor->SetMapper(gridZMapper);
+	
+	gridZActor->SetPosition(i,j,0);
+	gridZActor->GetProperty()->SetColor(0.0,0.0,1.0);
+	grid3D->AddPart(gridZActor);
+
+	  }
+
+      }
+
+
+
+
+    
+    ren->AddActor(grid3D);
+    
+    
+    */
+
+
+
+
+
+    //MineDotted
+    //vtkPoints *point = vtkPoints::New();
+    //point->SetPoints(5,5,5);
+
+    //assign our actor to the renderer
+
+    //ren->AddActor(coneActor);
+    //ren->AddActor(coneActor2);
+    //ren->AddActor(pointActor);
+    //ren->AddActor(cubeActor);
+    ren->AddActor(lineXActor);
+    ren->AddActor(lineYActor);
+    ren->AddActor(lineZActor);
+    //ren->AddActor(axisActor);
+    //ren->AddActor(arrowActor);
+
+    //ren->AddActor(ruleActor);
+
+    ren->SetBackground(0,0,0);
+
+    ren->ResetCamera();
+
+    renWindow->SetSize(400,400);
+
+    //draw the resulting scene
+    renWindow->Render();
+
+    //Begin mouse interaction
+    iren->Start();
+
+
+    //mine
+    //vtkLine *line = vtkLine::New();
+    //float lineCoords[2][1];
+
+    //line->GetPointIds()->SetId(0,0);
+    //line->GetPointIds()->SetId(1,1);
+
+    //lineCoords[0][0]=.25;
+    //lineCoords[1][0]=.75;
+
+
+
+
+
+	exit(EXIT_SUCCESS);
+}
+
+void
+additionalUsage()
+{
+	fprintf(stderr, "----- Additional Usage -----\n");
+}

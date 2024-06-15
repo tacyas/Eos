@@ -1,0 +1,14 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-ix","-ix[initial x]","Initial x(pixel)","Optional","1","1","ix","Integer","NULL"
+"-ia","-ia[initial alpha]","Initial alpha(degree)","Optional","1","1","ia","Real","0"
+"-r","-r[eference]","ReferenceFile","Optional","1","1","Ref","inFile","NULL"
+"-dy","-dy[deltay]","Deltay","Optional","1","1","Dy","Integer","10"
+"-xrange","-xrange","x range to search (pixel)","Optional","1","1","xrange","Integer","3"
+"-arange","-arange","alpha range to search (degree)","Optional","1","1","arange","Integer","2"
+"-v","-v[alue]","Value of Peak Pixel :for mode2","Optional","1","1","Value","Real","1"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"
+"-M","-M[ode2]","Mode2","Optional","1","1","mode2","Integer","0"

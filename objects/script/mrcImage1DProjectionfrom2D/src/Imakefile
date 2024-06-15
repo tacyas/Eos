@@ -1,0 +1,19 @@
+#define DoNotAutoRecreate NO
+
+#include EOS_INCLUDE
+
+OBJECT_TYPE = script
+
+TOOLBOX_NAME = eos
+
+OBJECT_NAME = mrcImage1DProjectionfrom2D
+
+BINARY_NAME = mrcImage1DProjectionfrom2D
+
+INSTPGMFLAGS =
+
+SCRIPTS = \
+	mrcImage1DProjectionfrom2D.ksh
+
+#define KKSH_DEF
+#include <Script.template>

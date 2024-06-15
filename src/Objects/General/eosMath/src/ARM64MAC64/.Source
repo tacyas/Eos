@@ -1,0 +1,28 @@
+SRC = \
+eosMathStatistics.c \
+
+OBJ = \
+eosMathStatistics.o \
+
+SHAREDOBJ = \
+eosMathStatistics.sharedo \
+
+REALOBJ = \
+ARM64MAC64/eosMathStatistics.o \
+
+REALSHAREDOBJ = \
+ARM64MAC64/eosMathStatistics.sharedo \
+
+OBJDEBUG = \
+eosMathStatistics.debugo \
+
+REALOBJDEBUG = \
+ARM64MAC64/eosMathStatistics.debugo \
+
+OBJCUDAGDB = \
+eosMathStatistics.cudagdb.o \
+
+REALOBJCUDAGDB = \
+ARM64MAC64/eosMathStatistics.cudagdb.o \
+
+

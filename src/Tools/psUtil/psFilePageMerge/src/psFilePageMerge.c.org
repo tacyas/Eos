@@ -1,0 +1,72 @@
+/*
+# %M% %Y% %I%
+# The latest update : %G% at %U%
+#
+#%Z% psFilePageMerge ver %I%
+#%Z% Created by 
+#%Z%
+#%Z% Usage : psFilePageMerge
+#%Z% Attention
+#%Z%
+*/
+static char __sccs_id[] = "%Z%psFilePageMerge ver%I%; Date:%D% %Z%";
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>                  
+#define GLOBAL_DECLARATION
+#include "psFile.h"
+#include "../inc/config.h"
+#undef DEBUG
+
+extern void lpsFilePageMerge(FILE* ps1, FILE* psOut, int page);
+
+void
+main(int argc, char* argv[]) 
+{
+	long status;
+	psFilePageMergeInfo info;
+
+	init0(&info);
+    argCheck(&info, argc, argv);
+    init1(&info);
+	lpsFilePageMerge(info.fptIn, info.fptOut, info.Page);
+	exit(EXIT_SUCCESS);
+}
+
+void
+lpsFilePageMerge(FILE* ps1fpt, FILE* psOutfpt, int page)
+{
+	psFile ps1;
+	psFile psOut;
+	char buffer[248000];
+	int i;
+
+	psOut.fpt=psOutfpt;
+	psOut.info.page=0;
+	psFileRead(&ps1,ps1fpt,0);
+
+	fseek (ps1fpt,0L,SEEK_SET);
+	fread (buffer, ps1.headEnd, 1, ps1fpt);
+	fwrite(buffer, ps1.headEnd, 1, psOutfpt);
+
+	ps1.current=ps1.top;
+	psFileInit(&psOut, 1);
+	while(NULL!=ps1.current){
+		psFilePageStart(&psOut, 1);
+		for(i=0; i<page; i++) {
+			fseek (ps1fpt, ps1.current->start,                    SEEK_SET);
+			fread (buffer, (ps1.current->end-ps1.current->start), 1, ps1fpt);
+			fwrite(buffer, (ps1.current->end-ps1.current->start), 1, psOutfpt);
+			fwrite("grestore\n", sizeof("grestore\n"), 1, psOutfpt); 
+			ps1.current=ps1.current->next;
+		}
+		psFilePageEnd(&psOut,0);
+		psOut.info.page++;
+	}
+	psFileEnd(&psOut);
+}
+void
+additionalUsage()
+{
+}

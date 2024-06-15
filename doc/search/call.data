@@ -1,0 +1,245 @@
+
+createContour lmrc2contour.o 
+createContourALine psFileContour.o psFileContour3D.o 
+compress gifencod.o 
+GIFNextPixel gifcompr.o 
+psFileCircleCreate psFileImage.o 
+psFileContour mrcImagePrint.o 
+psFileEnd lllDataPrint.o mrcImagePrint.o 
+psFileImage mrcImagePrint.o 
+psFileImageByCircles mrcImagePrint.o 
+psFileImageCentre mrcImagePrint.o 
+psFileImageScale mrcImagePrint.o 
+psFileImageSpaceRestore psFileContour.o mrcImagePrint.o 
+psFileImageSpaceRotateRestore mrcImagePrint.o 
+psFileImageSpaceRotateSet mrcImagePrint.o 
+psFileImageSpaceSet psFileContour.o mrcImagePrint.o 
+psFileInit lllDataPrint.o mrcImagePrint.o 
+psFilePageEnd lllDataPrint.o mrcImagePrint.o 
+psFilePageStart lllDataPrint.o mrcImagePrint.o 
+psFileString mrcImagePrint.o 
+psFileIsEndPage psFileRead.o 
+psFileIsStartPage psFileRead.o 
+mnbrak 10.5.o 
+mnbrak 10.5.o 
+brent 10.5.o 
+brent 10.5.o 
+linmin 10.6.o 
+frprmn lllDataAxisSearch2.o lllDataFit2.o 
+covsrt 15.5.o 
+mrqmin lmrcImageNormalizing.o lctfDetermination.o 
+gaussj 15.5.o 
+gammln 6.4.o 6.2.o 
+betai lmrcImagesFTest.o lmrcImagesTTest.o lmrcImagesVarianceAnalysis.o lmrcImagesVarianceMap.o 
+free_ivector 2.1.o 8.2.o 
+free_matrix 15.5.o 
+free_vector 10.5.o 10.6.o 13.10.o 15.5.o 2.3.o mrcImagefuncmin.o 11.1.o 
+ivector 2.1.o 8.2.o lmrcImageNormalizing.o lctfDetermination.o 
+matrix 15.5.o lmrcImageNormalizing.o mrcImagefuncmin.o lctfDetermination.o arrayPCA.o 
+nrerror 10.2.o 10.6.o 2.1.o 2.3.o 6.4.o 8.2.o mrcImagefuncmin.o 6.2.o 11.1.o 
+vector 10.5.o 10.6.o 13.10.o 15.5.o 2.3.o lmrcImageNormalizing.o mrcImagefuncmin.o lctfDetermination.o 11.1.o arrayPCA.o 
+ctfFunction ctfWeight.o ctfZeroPoint.o lllDataCTFCompensate.o lllDataCTFObservation.o lllDataFit.o lllDataFitUtil.o lllDataMultiCTFCompensation.o lllDataSingleCTFCompensation.o lmrcImageCTFDetermination.o lmrcImageCTFObservation.o lmrcImageMultiCTFCompensation.o tkctfInfo.o lctfDetermination.o 
+ctfNoise2Function tkctfInfo.o 
+ctfNoise2PowerFunction tkctfInfo.o 
+ctfNoiseFunction tkctfInfo.o 
+ctfNoisePowerFunction tkctfInfo.o 
+ctfScatteringFunction tkctfInfo.o 
+ctfSignalFunction tkctfInfo.o 
+ctfSignalPowerFunction tkctfInfo.o 
+wavelengthOfElectron thonRing.o lmrcImageCTFSN.o lctfDetermination.o 
+ctfWeightForCorrection lmrcImageCTFCompensation.o lmrcImageCTFDetermination.o 
+ctfZeroPoint lllExtractCtfinfFileCreate.o tkctfInfo.o 
+largeIPFree tkImgFmtlargeIP.o 
+largeIPHeaderRead tkImgFmtlargeIP.o 
+llDataSizeCheck lllDataAdd.o 
+llDataError llDataRead.o llDataWrite.o 
+llDataLayerNumberGet llDataRead.o lllDataEquatorAdd.o lllDataExtract.o 
+llDataNLNumberGet lllDataMergeDifferentN.o 
+llDataValueGet llDataRead.o lllDataEquatorAdd.o lllDataExtract.o lllDataInterpolate.o lllDataMergeDifferentN.o lllDataRescaling.o lllDataDifferenceCalc.o 
+llDataDataInit llDataRead.o lllDataContributionCalcDifferentN.o lllDataEquatorAdd.o lllDataExtract.o lllDataMergeDifferentN.o lllDataRescaling.o lllExtract.o lllExtractWithSeparation.o 
+llDataFree llDataRead.o lllDataAxisSearchAndAverage.o lllDataFitUtil.o lllDataPhaseShift.o lllExtractWithSeparation.o 
+llDataHeaderInit llDataRead.o lllDataContributionCalcDifferentN.o lllDataEquatorAdd.o lllDataExtract.o lllDataMergeDifferentN.o lllDataRescaling.o lllExtract.o lllExtractWithSeparation.o 
+llDataInit lllDataInterpolate.o 
+llDataInitWithReference llDataRead.o lllDataAxisSearchAndAverage.o lllDataFit.o lllDataPhaseShift.o lllExtractWithSeparation.o lllDataDifferenceCalc.o 
+llDataAttributesSet2 lllDataMergeDifferentN.o 
+llDataFandPHISet llDataRead.o lllDataAdd.o lllDataCTFObservation.o lllDataEquatorAdd.o lllDataExtract.o lllDataFit.o lllDataFitAndAverage.o lllDataFitUtil.o lllDataInterpolate.o lllDataMergeDifferentN.o lllDataMultiCTFCompensation.o lllDataRescaling.o lllDataSingleCTFCompensation.o lllDataDifferenceCalc.o 
+llDataRRInfoSet llDataRead.o lllDataInterpolate.o lllDataRescaling.o 
+llDataRRSet lllDataEquatorAdd.o lllDataExtract.o lllDataMergeDifferentN.o 
+llDataReAndImSet lllDataPhaseShift.o lllExtractWithSeparation.o 
+farSidePhaseGet lllDataAdd.o lllDataAvgTo.o 
+llDataFmaxSet lllDataAxisSearch.o 
+llDataRValueSet lllDataCTFObservation.o lllDataFit.o lllDataFitUtil.o lllDataLowPassFiltering.o lllDataSingleCTFCompensation.o 
+llDataTableBetweenTwollDataCreate lllDataAxisSearch.o lllDataAxisSearchAndAverage.o lllDataFit.o 
+llDataZValueSet lllDataFit.o 
+lllDataAttributeCopy llDataInit.o lllDataContributionCalcDifferentN.o lllDataPhaseShift.o 
+lllDataClear lllDataEquatorAdd.o lllDataExtract.o lllDataMergeDifferentN.o lllDataMultiCTFCompensation.o 
+lllDataCopy lllDataDifferenceCalc.o 
+lllDataDevidedByReal lllDataAxisSearchAndAverage.o 
+lllDataHeaderCopy llDataInit.o 
+lllDataMultiplyReal lllDataDifferenceCalc.o 
+nearSidePhaseGet lllDataAdd.o lllDataAxisSearch.o lllDataFit.o lllDataFit2.o 
+lllDataAdd2 lllDataAxisSearchAndAverage.o 
+lllDataAverage lllDataFitAndAverage.o 
+lllDataAxisSearch lllDataAxisSearchAndAverage.o 
+lllDataFit lllDataFitAndAverage.o 
+lllDataFitWithFile lllDataFitAndAverage.o 
+__lllDataFitPValueMergedLL0 lllDataFit.o 
+__lllDataFitQValueMergedLL0 lllDataFit.o 
+__lllDataFitRValueMergedLL0 lllDataFit.o 
+lllDataFitParamInverse lllDataPhaseShift.o 
+lllDataFitllCTFSet lllDataFit.o 
+lllDataNewFittedParameterSet0 lllDataAxisSearch.o lllDataFit.o 
+lllDataMergeDifferentN lllExtractWithSeparation.o 
+lllDataMultiCTFCompensation lllDataAverage.o lllDataFitAndAverage.o 
+lllDataPhaseShiftInter lllDataMultiCTFCompensation.o 
+lllDataPhaseShiftIntra lllDataAxisSearchAndAverage.o 
+lllDatarMaxLimit lllExtractWithSeparation.o 
+lllDatarMaxLimitCheck lllDatarMaxLimitForSeparation.o 
+ltlgDataAllocate lll2ltlg.o ltlgDataReadFile.o 
+ltlgDataGet2 ltlgDataPrint.o 
+fft_free lmrcImageFFT.o 
+fftnf lmrcImageFFT.o 
+lfft2d lmrcImageCTFSN.o 
+lmrcFFTFGconj lmrcImageCorrelation.o 
+lmrcFSInfo tkImgFmtMRC.o 
+lmrcFSInfoScatteringAngularDistributionAverage tkImgFmtMRC.o lctfDetermination.o 
+lmrcFSInfoScatteringAngularDistributionSD lctfDetermination.o 
+lmrcFSInfoSpacing tkImgFmtMRC.o lctfDetermination.o 
+lmrcImageCTFCompensation lmrcImageCorrelationWithCTFCompensation.o 
+lmrcImageCTFObservation lmrcImageMultiCTFCompensation.o 
+lmrcImageCorrelation lmrcImageCorrelationWithCTFCompensation.o lmrcImageSymmetryFind.o lmrcImageSinogram.o 
+lmrcImageCrystalCreate lmrcImageCTFDetermination.o 
+__lmrcImageDensityNormalizationByImage8 lmrcImageDensityFittingToAnotherImage.o 
+lmrcImageFFT lmrcImageBandPassFilter.o lmrcImageCTFDetermination.o lmrcImageCorrelation.o lmrcImageCorrelationWithCTFCompensation.o lmrcImageFourierPowerSpectrum.o lmrcImageHighPassFilter.o lmrcImageLowPassFilter.o lmrcImageMultiCTFCompensation.o lmrcImageRhoFiltering.o mrcImageCheckFFT.o mrcImageUtilityforVariance.o lmrcImageTransformDescartesIntoPolar.o lmrcImageCommonLine.o 
+lmrcImageFFTFirstDimensionOnly lmrcImageSymmetryFind.o 
+lmrcImageMaxDataGet lFRET.o lmrcImageSinogram.o 
+lmrcImageModeChange lmrcImageDensity.o 
+lmrcImagePad lmrcImageCTFDetermination.o lmrcImageMontageCreate.o 
+lmrcImagePixelSummationOfProbabilityGetByImage lmrcImageFirstNoiseReductionByRelaxation.o 
+lmrcImageProjection lmrcImageCTFDetermination.o 
+lmrcImageRotation2DPeriodicBoundary lmrcImageCorrelation.o lmrcImageSinogram.o 
+lmrcImageSSDAAutomaticThresholdAndFineSearch lmrcImageCorrelation.o 
+lmrcImageSecondNoiseReductionByRelaxationDijValueCalculate lmrcImageSecondNoiseReductionByRelaxationDijValueSet.o 
+lmrcImageShift lmrcImageCorrelation.o lmrcImageSymmetryFind.o lmrcImageCentre.o lmrcImageCommonLine.o 
+lmrcImageSolventFlattening lmrcImageCTFDetermination.o 
+lmrcImageStudentCalculate lmrcImageDensityFittingToAnotherImage.o 
+lmrcImageSummationCalculate lmrcImageSigmaCalculate.o lmrcImageDensityFittingToAnotherImage.o 
+lmrcImagesStatDataGet lmrcImagesFTest.o lmrcImagesTTest.o lmrcImagesVarianceAnalysis.o lmrcImagesVarianceMap.o 
+lmrcImagesTTest lmrcImageSymmetryFind.o 
+lmrcImageCheckSameSize lmrcImageCTFDetermination.o 
+mrcError mrcImageGet.o mrcImageInit.o mrcImageRead.o mrcImageSet.o mrcImageUtil.o mrcImageWrite.o 
+mrcPixelDataGet lmrc2contour.o tkImgFmtMRC.o lmrc2gif.o ctfDeterminationFromPhaseComparison.o lltlg2mrc.o lfft2d.o lmrcFFTFGconj.o lmrcFFTFxG.o lmrcFFTInfo.o lmrcImageAsProbability.o lmrcImageBandPassFilter.o lmrcImageCTFCompensation.o lmrcImageCTFDetermination.o lmrcImageCTFObservation.o lmrcImageCTFSN.o lmrcImageCVE.o lmrcImageConnection.o lmrcImageCorrelation.o lmrcImageCrystalCreate.o lmrcImageDataMaxAndMinGetByImage.o lmrcImageDataStraightCopy.o lmrcImageDensityInverse.o lmrcImageDensityNormalizationByImage.o lmrcImageFFT.o lmrcImageFirstNoiseReductionByRelaxation.o lmrcImageFourierPowerSpectrum.o lmrcImageHighPassFilter.o lmrcImageHighlighting.o lmrcImageLowPassFilter.o lmrcImageMasking.o lmrcImageMaxDataGet.o lmrcImageModeChange.o lmrcImageModelCreate.o lmrcImageMontageCreate.o lmrcImageMultiCTFCompensation.o lmrcImageMultiplying.o lmrcImageNormalizing.o lmrcImagePad.o lmrcImagePixelSummationOfProbabilityGetByImage.o lmrcImageProjection.o lmrcImageROI3D.o lmrcImageRadialDistribution.o lmrcImageRhoFiltering.o lmrcImageRotation.o lmrcImageSSDA.o lmrcImageSamplingUnitChange.o lmrcImageSecondNoiseReductionByRelaxation.o lmrcImageSecondNoiseReductionByRelaxationQValueSet.o lmrcImageShift.o lmrcImageShrink.o lmrcImageSigmaCalculate.o lmrcImageSmoothing.o lmrcImageSolventFlattening.o lmrcImageSubstractionCalc.o lmrcImageSummationCalculate.o lmrcImageSymmetryFind.o lmrcImageTfunction.o lmrcImageWindowing.o lmrcImagesFTest.o lmrcImagesStatDataGet.o lmrcImagesTTest.o mrcImageCopy.o mrcImageInfo.o mrcImageOperation.o mrcImagePrint.o mrcImageSectionGet.o mrcImageSet.o mrcImageToIntImage.o mrcImageWrite2.o mrcImagefuncmin.o mrcRefUtil.o lpdb2mrc2d.o lpdb2mrc3d.o lllExtract.o mrcImageDataSet.o lmrcImageDensityFittingToAnotherImage.o lpdbSurface.o lmrcImageContourSurface.o lmrcImageCorrelationinSpace.o lmrcImageMove.o lmrcImagesVarianceAnalysis.o lmrcImagesVarianceMap.o lFRET.o lmrcImageCentre.o lmrcImageSubtractionCalc.o lmrcImageTransformDescartesIntoPolar.o lmrcImageBinalization.o lmrcImageDensity.o lmrcImageROI2D.o lmrcImageEdgeAverage.o lmrcFFTExpression.o lmrcImageCommonLine.o lmrcImageSinogram.o vtkmrcImageReader.o 
+lmrcImageHistgram lmrcImageMultiCTFCompensation.o lmrcImageNormalizing.o 
+lmrcImageHistgram5 tkImgFmtMRC.o 
+lmrcImageInformation tkImgFmtMRC.o lmrcImageCTFDetermination.o lmrcImageCVE.o lmrcImageCorrelation.o lmrcImageHighlighting.o lmrcImageTfunction.o lFRET.o lmrcImageTransformDescartesIntoPolar.o 
+lmrcImageXProjection tkImgFmtMRC.o lmrcImageSinogram.o 
+lmrcImageXSection tkImgFmtMRC.o 
+lmrcImageYProjection tkImgFmtMRC.o 
+lmrcImageYSection tkImgFmtMRC.o 
+mrcDefaultHeaderValueSet lmrcImageCorrelation.o lmrcImageFilterCreate.o lmrcImageCommonLine.o 
+mrcHiddenDataSet mrcImageSectionGet.o mrcImageWrite.o 
+mrcImageFree tkImgFmtMRC.o lmrcImageCTFDetermination.o lmrcImageCorrelation.o lmrcImageMontageCreate.o lmrcImageMultiCTFCompensation.o lmrcImageRhoFiltering.o lmrcImageSymmetryFind.o mrcImageWrite2.o mrcImageRuby.o lmrcImageSinogram.o 
+mrcInit tkImgFmtMRC.o lllDataAxisSearch.o lllDataFit.o lltlg2mrc.o lfft2d.o lmrcFFTFGconj.o lmrcFFTFxG.o lmrcFFTInfo.o lmrcImageBandPassFilter.o lmrcImageCTFDetermination.o lmrcImageCTFObservation.o lmrcImageCTFSN.o lmrcImageCVE.o lmrcImageConnection.o lmrcImageCorrelation.o lmrcImageCrystalCreate.o lmrcImageDensityNormalizationByImage.o lmrcImageFFT.o lmrcImageHighPassFilter.o lmrcImageHighlighting.o lmrcImageLowPassFilter.o lmrcImageMasking.o lmrcImageModeChange.o lmrcImageMontageCreate.o lmrcImageMultiCTFCompensation.o lmrcImageMultiplying.o lmrcImageNormalizing.o lmrcImagePad.o lmrcImageProjection.o lmrcImageROI3D.o lmrcImageRhoFiltering.o lmrcImageRotation.o lmrcImageSamplingUnitChange.o lmrcImageShift.o lmrcImageShrink.o lmrcImageSmoothing.o lmrcImageSolventFlattening.o lmrcImageSphere.o lmrcImageSubstractionCalc.o lmrcImageSymmetryFind.o lmrcImageTfunction.o lmrcImagesFTest.o lmrcImagesStatDataGet.o lmrcImagesTTest.o mrcImageInfo.o mrcImageOperation.o mrcImagePrint.o mrcImageRead.o mrcImageSectionGet.o mrcImageToIntImage.o mrcImageUtilityforVariance.o mrcImageWrite2.o mrcRefUtil.o lpdb2mrc2d.o lpdb2mrc3d.o lmrcImageFilterCreate.o lmrcImageDensityFittingToAnotherImage.o lmrcImageContourSurface.o lmrcImageMove.o lmrcImagesVarianceAnalysis.o lmrcImagesVarianceMap.o lmrcImageSubtractionCalc.o lmrcImageTransformDescartesIntoPolar.o lmrcImageBinalization.o lmrcImageROI2D.o mrcImageRuby.o lmrcFFTExpression.o lmrcImageCommonLine.o lmrcImageSinogram.o 
+mrcInfoPrint mrcImageRead.o mrcImageWrite.o 
+mrcFileRead tkImgFmtMRC.o lmrcImageCTFDetermination.o vtkmrcImageReader.o 
+mrcHeaderRead lmrcImageCTFDetermination.o mrcImageInit.o 
+mrcImageRead tkImgFmtMRC.o 
+mrcPixelDataSet tkImgFmtMRC.o lllDataAxisSearch.o lllDataFit.o lltlg2mrc.o lfft2d.o lmrcFFTFGconj.o lmrcFFTFxG.o lmrcFFTInfo.o lmrcImageAsProbability.o lmrcImageBandPassFilter.o lmrcImageCTFCompensation.o lmrcImageCTFDetermination.o lmrcImageCTFObservation.o lmrcImageCTFSN.o lmrcImageCVE.o lmrcImageConnection.o lmrcImageCorrelation.o lmrcImageCrystalCreate.o lmrcImageDataStraightCopy.o lmrcImageDensityInverse.o lmrcImageDensityNormalizationByImage.o lmrcImageFFT.o lmrcImageFirstNoiseReductionByRelaxation.o lmrcImageHighPassFilter.o lmrcImageHighlighting.o lmrcImageLowPassFilter.o lmrcImageMasking.o lmrcImageModeChange.o lmrcImageModelCreate.o lmrcImageMontageCreate.o lmrcImageMultiCTFCompensation.o lmrcImageMultiplying.o lmrcImageNormalizing.o lmrcImagePad.o lmrcImagePixelSummationOfProbabilityGetByImage.o lmrcImageProjection.o lmrcImageROI3D.o lmrcImageRhoFiltering.o lmrcImageRotation.o lmrcImageSamplingUnitChange.o lmrcImageSecondNoiseReductionByRelaxation.o lmrcImageSecondNoiseReductionByRelaxationQValueSet.o lmrcImageShift.o lmrcImageShrink.o lmrcImageSmoothing.o lmrcImageSolventFlattening.o lmrcImageSphere.o lmrcImageSubstractionCalc.o lmrcImageSymmetryFind.o lmrcImageTfunction.o lmrcImageWindowing.o lmrcImagesFTest.o lmrcImagesStatDataGet.o lmrcImagesTTest.o mrcImageCopy.o mrcImageInfo.o mrcImageOperation.o mrcImagePrint.o mrcImageSectionGet.o mrcImageToIntImage.o mrcImageWrite2.o mrcRefUtil.o lpdb2mrc2d.o lpdb2mrc3d.o mrcImageDataSet.o lmrcImageFilterCreate.o lmrcImageDensityFittingToAnotherImage.o lmrcImageContourSurface.o lmrcImageMove.o lmrcImagesVarianceAnalysis.o lmrcImagesVarianceMap.o lFRET.o lmrcImageSubtractionCalc.o lmrcImageTransformDescartesIntoPolar.o lmrcImageBinalization.o lmrcImageROI2D.o lmrcFFTExpression.o lmrcImageCommonLine.o lmrcImageSinogram.o 
+mrcStatDataSet tkImgFmtMRC.o lltlg2mrc.o lmrcImageFFT.o lmrcImageModeChange.o lmrcImageMontageCreate.o lmrcImageMultiCTFCompensation.o lmrcImageMultiplying.o lmrcImagePad.o lmrcImageSubstractionCalc.o lmrcImageSymmetryFind.o mrcImageInfo.o mrcImageToIntImage.o mrcImageUtilityforVariance.o mrcImageWrite.o mrcRefUtil.o lpdb2mrc2d.o lpdb2mrc3d.o lmrcImageSubtractionCalc.o lmrcImageTransformDescartesIntoPolar.o lmrcImageBinalization.o lmrcFFTExpression.o 
+mrcTailerInit mrcImageRead.o mrcImageSectionGet.o 
+IsFT tkImgFmtMRC.o lmrcImageCorrelation.o mrcImageCheckFFT.o mrcImageInfo.o mrcImagePrint.o mrcImageSet.o lmrcImageFilterCreate.o vtkmrcImageReader.o 
+IsImage tkImgFmtMRC.o lmrcImageBandPassFilter.o lmrcImageCTFSN.o lmrcImageCorrelation.o lmrcImageCorrelationWithCTFCompensation.o lmrcImageFFT.o lmrcImageFourierPowerSpectrum.o lmrcImageHighPassFilter.o lmrcImageLowPassFilter.o mrcImageCheckFFT.o mrcImageInfo.o mrcImagePrint.o mrcImageSet.o lmrcImageFilterCreate.o vtkmrcImageReader.o 
+mrcFileWrite tkImgFmtMRC.o lllDataAxisSearch.o lllDataFit.o lmrcImageSymmetryFind.o mrcImageWrite2.o 
+brent 10.5.o 
+brent 10.5.o 
+mnbrak 10.5.o 
+mnbrak 10.5.o 
+llmrcImageAdd lmrcImageSymmetryFind.o 
+lmrcImageFTSetbyRArray mrcImageUtilityforVariance.o 
+lmrcImageMultiplyingbyMrc mrcImageUtilityforVariance.o 
+lpdb2mrc3d lpdbSurface.o 
+pdbFileCoordGet lpdb2mrc2d.o lpdb2mrc3d.o pdbInfoGet.o lpdbSurface.o lpdbCoordInfo.o 
+pdbFileResidueNameGet pdbUtil.o 
+pdbInfoGet lpdbSurface.o 
+pdbTrans pdbRotation.o 
+pdbFileAppend lpdbSelectedAtom.o pdbFileRead.o 
+pdbFileEnd lpdb2mrc2d.o lpdb2mrc3d.o pdbInfoGet.o 
+pdbFileIsAtom lpdb2mrc2d.o lpdb2mrc3d.o pdbFileRead.o pdbGet.o pdbInfoGet.o pdbSet.o lpdbSurface.o lpdbCoordInfo.o 
+pdbFileIsCA lpdbSelectedAtom.o pdbInfoGet.o pdbSecondaryStructure.o 
+pdbFileIsHelix pdbSecondaryStructure.o 
+pdbFileIsSecondaryStructure pdbSecondaryStructure.o 
+pdbFileIsSheet pdbSecondaryStructure.o 
+pdbFileIsTurn pdbSecondaryStructure.o 
+pdbFileNew lpdbSelectedAtom.o pdbFileRead.o 
+pdbFileNext lpdb2mrc2d.o lpdb2mrc3d.o lpdbSelectedAtom.o pdbFileWrite.o pdbInfoGet.o pdbSet.o pdbSecondaryStructure.o 
+pdbFileNextAtom lpdbSurface.o 
+pdbFileNextCA pdbSecondaryStructure.o 
+pdbFileOneRecordCopy lpdbSelectedAtom.o 
+pdbFilePrevCA pdbSecondaryStructure.o 
+pdbFileRecordPrint pdbFileWrite.o 
+pdbFileSecondaryStructureRecordPrint pdbFileWrite.o 
+pdbFileTop lpdb2mrc2d.o lpdb2mrc3d.o lpdbSelectedAtom.o pdbFileWrite.o pdbInfoGet.o lpdbSurface.o pdbSecondaryStructure.o 
+lllExtractdYEstimate lmrcImageCTFDetermination.o 
+arrayInit arrayRead.o arrayPCA.o 
+fileLineNumberGet lmrcImageROI2D.o 
+fileLineNumberGet2 lmolecularEnvelope.o 
+fileOpen lll2ltlg.o lllDataCTFCompensate.o lltlg2mrc.o fileInit.o tkctfInfo.o 
+matrix3DFileFormat pdbTrans.o 
+matrix3DFileRead pdbTrans.o 
+matrix3DFileWrite pdbTrans.o 
+matrix3DInit matrix3DEulerAngleSet.o matrix3DFile.o matrix3DRotation.o matrix3DTranslation.o 
+matrix3DMultiply matrix3DEulerAngleSet.o matrix3DRotation.o 
+matrix3DMultiplyVector lmrcImageRhoFiltering.o pdbTrans.o 
+matrix3DRotationSet matrix3DEulerAngleSet.o 
+matrix3DRotationSetXYZ pdbRotation.o 
+matrix3DRotationSetYXZ pdbRotation.o 
+matrix3DRotationSetZXY pdbRotation.o 
+matrix3DRotationSetZYX pdbRotation.o 
+memoryAllocate contourCreate.o tkImgFmtMRC.o avsFileInit.o avsFileSet.o psFileContour.o psFileContour3D.o psFileInit.o psFileRead.o llDataInit.o llDataUtil.o lll2ltlg.o lllDataInterpolate.o lllDataLowPassFiltering.o lllDataMultiCTFCompensation.o lllDatarMaxLimit.o ltlgDataAllocate.o lmrcImageCTFDetermination.o lmrcImageCTFSN.o lmrcImageDensityNormalizationByImage.o lmrcImageFFT.o lmrcImageFourierPowerSpectrum.o lmrcImageMontageCreate.o lmrcImageMultiCTFCompensation.o lmrcImagePad.o lmrcImageSecondNoiseReductionByRelaxationQValueSet.o lmrcImageSmoothing.o lmrcImageSymmetryFind.o mrcImageInfo.o mrcImagePrint.o mrcImageTailer.o pdbUtil.o lllDataSeparationInfoRead.o arrayInit.o memoryCopy.o stringGet.o stringUtil.o Vector.o lVectorSpline2D.o lmrcImageFilterCreate.o lmrcImagesVarianceAnalysis.o lmrcImagesVarianceMap.o lmolecularEnvelope.o ctfInfoRead.o lFRET.o pdbSecondaryStructure.o lmrcImageDensity.o lmrcImageROI2D.o mrcImageRuby.o lmrcImageEdgeAverage.o emDataRead.o 
+memoryByteSwap avsFileWrite.o ltlgDataReadFile.o ltlgDataWriteFile.o mrcImageRead.o emDataRead.o 
+memoryClear mrcImageInit.o memoryAllocate.o lmrcImagesVarianceAnalysis.o lmrcImageEdgeAverage.o 
+socketClientCreate hf2000Init.o 
+socketMultiServerCreate hf2000Init.o 
+pow2nn lfft2d.o 
+stringGetIntegerDataFromField pdbSecondaryStructure.o 
+stringGetNthIntegerData lll2ltlg.o lllDataCTFCompensate.o lllDataWeightSet.o lltlg2mrc.o ltlgDataWeightModify.o mrcImageSet.o lpdbSelectedAtom.o lllDataSeparationInfoRead.o arrayRead.o lhf2000SpecimenPosition.o ctfInfoRead.o 
+stringGetNthRealData lll2ltlg.o lllDataCTFCompensate.o lllDataWeightSet.o lltlg2mrc.o mrcImageSet.o arrayRead.o matrix3DFile.o lmrcImageFilterCreate.o lmolecularEnvelope.o ctfInfoRead.o lFRET.o lmrcImageROI2D.o 
+stringGetNthWord lll2ltlg.o lllDataCTFCompensate.o lltlg2mrc.o lpdbSelectedAtom.o stringGetFromFile.o ctfInfoRead.o lFRET.o lmrcImageROI2D.o 
+stringGetWordFromField pdbSecondaryStructure.o 
+__getStringData fileInfo.o 
+stringGetFromFile psFileRead.o lll2ltlg.o lllDataCTFCompensate.o lllDataWeightSet.o lltlg2mrc.o ltlgDataWeightModify.o mrcImageSet.o lpdbSelectedAtom.o lllDataSeparationInfoRead.o arrayRead.o matrix3DFile.o lmrcImageFilterCreate.o lmolecularEnvelope.o ctfInfoRead.o lFRET.o lmrcImageROI2D.o 
+stringIsSame psFileUtil.o lFRET.o 
+stringLength lltlg2mrc.o ltlgDataWeightModify.o stringIsSame.o 
+doubleVectorInit lmrcFFTInfo.o lmrcImageSymmetryFind.o 
+floatVectorFree tkImgFmtMRC.o pdbTrans.o matrix3DMultiplyVector.o 
+floatVectorInit lmrcFFTInfo.o lmrcImageRadialDistribution.o lmrcImageRhoFiltering.o lmrcImageSymmetryFind.o pdbTrans.o matrix3DMultiplyVector.o lctfDetermination.o lmrcImageDensity.o 
+hf2000Close ltkhf2000.o 
+hf2000Init ltkhf2000.o 
+hf2000Read hf2000Command.o hf2000Init.o lhf2000LenzCurrent.o lhf2000SpecimenPosition.o ltkhf2000.o 
+hf2000Write hf2000Command.o hf2000Init.o lhf2000LenzCurrent.o lhf2000SpecimenPosition.o ltkhf2000.o 
+lhf2000LenzCurrentGet0 ltkhf2000.o 
+lhf2000SpecimenPositionGet ltkhf2000.o 
+lhf2000SpecimenPositionSet ltkhf2000.o 
+mrcImageDataSet lmrcImageModelCreate.o 
+fit lmrcImageDensityNormalizationByImage.o 
+gammq 15.2.o 
+lmrcImageContourSurfaceCreate lpdbSurface.o 
+lmolecularEnvelopeDataGet ctfFunction.o lctfDetermination.o 
+lmolecularEnvelopeFileRead tkctfInfo.o ctfInfoRead.o 
+ctfInfoRead tkctfInfo.o 
+ctfInfoWrite tkctfInfo.o 
+lDescartesAxisCalc lmrcImageTransformDescartesIntoPolar.o 
+lPolarCoordIntoDescartesCoord lmrcImageTransformDescartesIntoPolar.o 
+lmrcImageCenterOfMassCalculate lmrcImageTransformDescartesIntoPolar.o 
+lmrcImageShiftCenterOfMassIntoImageCenter lmrcImageCommonLine.o 
+lmrcImageMeanSubtraction lmrcImageSymmetryFind.o 
+lmrcImageMinSubtraction lmrcImageSymmetryFind.o 
+lmrcImageTransformDescartesIntoPolar lmrcImageCorrelation.o lmrcImageSymmetryFind.o 
+eigsrt arrayPCA.o 
+jacobi arrayPCA.o 
+pdbSecondaryStructureSetFromPDB pdbFileRead.o 
+Init_mrc eosRuby.o 
+lmrcImageEdgeAverage lmrcImageMontageCreate.o 
+lmrcFFTExpression lmrcImageSymmetryFind.o 
+lmrcImageSinogramCorrelation lmrcImageCommonLine.o 
+lmrcImageSinogramCreate lmrcImageCommonLine.o 

@@ -1,0 +1,157 @@
+<HTML>
+<HEAD>
+<TITLE> makegeneral </TITLE>
+</HEAD>
+<BODY>
+<H1> makegeneral </H1>
+<H2>Function</H2>
+	This shell program will be used in maketool and makeobj.
+<H2> Usage </H2>
+<PRE>
+	$ makegeneral [World] [ClassName] [ObjectName] [Action]
+</PRE>
+<UL>
+	<LI> World <DL>
+		<DT> Tools
+			<DD> You will use this argument when you create a new tool following Eos.
+		<DT> Objects
+			<DD> You will use this argument when you create a new object-oriented library 
+	</DL>
+	<LI> ClassName : Class Name to which a new object is attributted
+	<LI> ObjectName : Name of object
+	<LI> Action <DL>
+		<DT> All
+			<DD> All files and environment will be set up. A new default control file will be supplied.
+		<DT> AllFollowingControlFile
+			<DD> All files and environment will be supplied following a control file you prepared except for a main-source file. 
+		<DT> EnvironmentOnly
+			<DD> You will use this argument when you want to use Eos environment and create a new tool which belong to Eos.
+	</DL>
+</UL>
+<HR>
+<H2> Source Code Structure </H2>
+<H3> Enviroment Varilabls  </H3>
+<UL>
+	<LI> Predefined variables <DL>
+		<DT> EOS_HOME
+			<DD> Eos Top pathname 
+	</DL>
+	<LI> Used variables inside <DL>
+		<DT> WorldHomeDir
+			<DD> ${EOS_HOME}/src
+		<DT> ObjectClassHomeDir
+			<DD> ${WorldHomeDir}/Objects
+		<DT> ToolClassHomeDir
+			<DD> ${WorldHomeDir}/Tools
+		<DT> World
+			<DD> Tools | Objects
+		<DT> ClassName
+			<DD> Class Name of an implemented object/tool
+		<DT> ObjectName
+			<DD> Name of an implemented object
+		<DT> Action
+			<DD> Action
+		<DT> Name
+			<DD> return temporary value of NameRead fucntion 
+	</DL>
+</UL>
+<H3> Function </H3>
+<UL>
+	<LI> General <DL>
+		<DT> usage
+			<DD> print usage this tool
+		<DT> NameList 
+			<DD> Show directories except for a directory named Config
+			<DD> arg1: Name of a directory including named one.
+			<DD> Full: arg1
+		<DT> NameShow
+			<DD> Show a list of implemented tools/objects/classes. Create ${Full}/Config/Source.lst
+			<DD> arg1: full pathname including inplemented
+			<DD> arg2: Tools | Objects | Class
+			<DD> Full: arg1
+			<DD> Target: arg2
+		<DT> NameRead 
+			<DD> Get a name of a implemented tool/object/class 
+			<DD> arg1: Full pathname including a implemented tool/object/class
+			<DD> arg2: Tools | Objects | Class
+			<DD> Name: Wanted name
+			<DD> Full: arg1
+			<DD> Target: arg2
+			<DD> ans: Y|y
+		<DT> DirCheckAndMake
+			<DD> Check and Create new directories, i.e., ${Full}/${Name} and ${Full}/${Name}
+			<DD> arg1: full pathname of a directory including a implemented directory
+			<DD> arg2: a directory name to be implemented
+			<DD> arg3: Tools | Objects | Class 
+			<DD> Full: arg1
+			<DD> Name: arg2
+			<DD> World: arg3
+			<DD> ans: Y|y
+		<DT> NewNameAddToMakefile
+			<DD> Add a new name in Makefile.
+			<DD> arg1: Full pathname of Makefile. 
+			<DD> arg2: name of an implemented tool/class/object.
+			<DD> arg3: Class| Objects | Tools
+			<DD> Full: arg1
+			<DD> Name: arg2
+			<DD> World: arg3
+	<LI> World : Tools | Objects <DL>
+		<DT> WorldNameShow
+		<DT> WorldNameRead
+			<DD> World: Tools | Objects
+		<DT> WorldDirCheckAndMake
+	</DL>
+	<LI> Object : <DL>
+		<DT> ObjectClassNameShow
+		<DT> ObjectClassNameRead
+			<DD> ObjectClassName 
+		<DT> ObjectClassDirCheckAndMake
+		<DT> ObjectNameShow
+		<DT> ObjectNameRead
+			<DD> ObjectName 
+		<DT> ObjectDirCheckAndMake
+		<DT> ObjectActionRead
+			<DD> Action:
+		<DT> ObjectClassDirModifyFollowingAction
+		<DT> ObjectDirModifyFollowingAction
+	</DL>
+	<LI> Tool : <DL>
+		<DT> ToolClassNameShow
+		<DT> ToolClassNameRead
+			<DD> ToolClassName 
+		<DT> ToolClassDirCheckAndMake
+		<DT> ToolNameShow
+		<DT> ToolNameRead
+			<DD> ToolName 
+		<DT> ToolDirCheckAndMake
+		<DT> ToolActionRead
+			<DD> Action:
+		<DT> ToolClassDirModifyFollowingAction <OL>
+			<LI> Create src, bin, doc, sccs, src/Tools, src/Config.
+			<LI> Create Makefile in Tools
+		</OL>
+		<DT> ToolDirModifyFollowingAction <OL>
+			<LI> Create a new tool directory.
+			<LI> Register a new tool name in Makefile. 
+			<LI> Set Eos environment files and directories. <OL>
+				<LI> Create directories, tool, tool/src <I>etc.</I>.
+				<LI> Create Config/Define.inc and Config/Define.inc
+				<LI> Set Makefile
+				<LI> Set src/Makefile, src/.Depend, and src/.Source
+			</OL> 
+			<LI> Set a option control file.
+			<LI> Create prototype source codes.
+		</OL>
+	</DL>
+</UL>
+<H3> Template Directory </H3>
+<UL>
+	<LI> ${EOS_HOME}/src/Config/Template/ToolTemplate.Dir
+	<LI> ${EOS_HOME}/src/Config/Template/ToolClassTemplate.Dir
+	<LI> ${EOS_HOME}/src/Config/Template/ToolHomeTemplate.Dir
+	<LI> ${EOS_HOME}/src/Config/Template/ObjectTemplate.Dir
+	<LI> ${EOS_HOME}/src/Config/Template/ObjectClassTemplate.Dir
+	<LI> ${EOS_HOME}/src/Config/Template/ObjectHomeTemplate.Dir
+</UL>
+</BODY>
+</HTML>

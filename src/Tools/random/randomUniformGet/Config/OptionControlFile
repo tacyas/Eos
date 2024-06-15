@@ -1,0 +1,8 @@
+# OptionControlFile
+# FileFormat
+"-o","-o[utput]","OutputDataFile","Optional","1","1","Out","outFile","stdout"
+"-min","-min","Minimum of Number","Optional","1","1","min","Real","0.0"
+"-max","-max","Maximum of Number","Optional","1","1","max","Real","1.0"
+"-n","-n[umber]","Number","Optional","1","1","num","Integer","1"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

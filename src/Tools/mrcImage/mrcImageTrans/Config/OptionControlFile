@@ -1,0 +1,7 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: mrc3D","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","Output: mrc3D","Essential","1","1","Out","outFile","NULL"
+"-M","-M[atrix]","Input: Matrix3D","Essential","1","1","InMatrix","inFile","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

@@ -1,0 +1,79 @@
+#!/bin/sh
+# 
+# sccsEdit  1.3
+#
+# The latest update : 05/14/97 at 23:22:38
+#
+#@(#) A new SCCS file is created if no SCCS. If one have SCCS, delta commands.
+#@(#) 
+#
+#@(#) Usage : sccsPut [SourceFileName]
+#
+#@(#) Attention
+#@(#)
+#@(#) Parameter: 
+#@(#)    Essential:
+#@(#)       SourceFileName
+#@(#)    Optional:
+#@(#) 
+
+# Store Flags
+FlagsCharacter="-"
+
+while [ `echo $1 | cut -c1` = "-" ]
+do
+	parms="$ {parms} $1"
+	shift 
+done
+
+case $# in
+	0) # No filename 
+		echo "Enter SourceFileName"
+		read filename
+		;;
+	1) # 
+		filename=$1
+		;;
+	*) #
+		filename="$*"
+		;;
+esac
+#
+EosSCCSHome=$EOS_HOME/sccs
+currentDir=`pwd`
+
+for file in ${filename}
+do
+	FullName=${currentDir}/${file}	
+	Name=`basename ${FullName}`
+	Dir=`dirname ${FullName}`
+	echo Full=${FullName} Name=${Name} EosHome=$EOS_HOME
+
+	currentSCCSDir=`echo $Dir | awk '{gsub(/\/[.a-zA-Z0-9\/]*\/Eos\//, ""); print $0}'` 
+	sccsDir=${EosSCCSHome}/${currentSCCSDir}
+	echo sccsDir=${sccsDir} currentSCCSDir=${currentSCCSDir}
+
+	if [ -x $file ]
+	then 
+		Executable="+x"
+	else
+		Executable="-x"
+	fi
+	if [ -h $file ]
+	then
+		Link="yes"
+	else
+		Link="no"
+	fi
+	cd ${Dir}
+	if [ -f ${sccsDir}/s.${Name} ] 
+	then
+		get -e ${sccsDir}/s.${Name}
+	else
+		echo "No sccs files are found."
+	fi
+	chgrp Eos ${Name}
+	chmod 644 ${Name}
+	chmod ${Executable} ${Name}
+done
+

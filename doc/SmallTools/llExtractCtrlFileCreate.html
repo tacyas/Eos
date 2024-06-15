@@ -1,0 +1,39 @@
+<HTML>
+<HEAD>
+<TITLE>llExtractCtrlFileCreate</TITLE>
+</HEAD>
+<BODY>
+<H1>llExtractCtrlFileCreate</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: llExtractCtrlFileCreate
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Optional  :InputDataFile
+    [-o[utput]           Out                 (stdout    ).as(outFile             ) ] :Optional  :OutputDataFile
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-t                  turn                (-6        ).as(Integer             ) ] :Optional  :Turn
+    [-u                  unit                (13        ).as(Integer             ) ] :Optional  :Unit
+    [-N                  nstrand             (1         ).as(Integer             ) ] :Optional  :N-strand
+    [-Y1                 Y1                  (36        ).as(Integer             ) ] :Optional  :Y1 [pixel]: The Position of LayerLine which l = |t| i.e., |n|=1&&m=0 for the first time
+    [-Y0                 Y0                  (78        ).as(Integer             ) ] :Optional  :Y0 [pixel]: The Position of LayerLine which n = 0 , l != 0 for the first time
+    [-rmax               rmax                (250       ).as(Real                ) ] :Optional  :rmax[A]
+    [-Rmax               Rmax                (0.1       ).as(Real                ) ] :Optional  :Rmax[/A]
+    [-lx                 lx                  (5.0       ).as(Real                ) ] :Optional  :Pixel Size
+    [-ly                 ly                  (5.0       ).as(Real                ) ] :Optional  :Pixel Size
+    [-nx                 nx                  (1000.0    ).as(Real                ) ] :Optional  :Image Size[Pixel]
+    [-ny                 ny                  (1000.0    ).as(Real                ) ] :Optional  :Image Size[Pixel]
+    [-center             center              (500.0     ).as(Real                ) ] :Optional  :Center of nx (center of filament)[Pixel]
+    [-layerline          layerline           (21.0      ).as(Real                ) ] :Optional  :Number of Layer Line
+    [-Ax                 Ax                  (5000.0    ).as(Real                ) ] :Optional  :Length of nx (lx * nx)[A]
+    [-dY                 dY                  (12.0      ).as(Real                ) ] :Optional  :Range of Layer Line[pixel]
+    [-truePitch          truePitch           (430       ).as(Real                ) ] :Optional  :True Pitch
+    [-PixelSize          PixelSize           (5         ).as(Real                ) ] :Optional  :Pixel Size [A]
+    [-deltadY            deltadY             (0.5       ).as(Real                ) ] :Optional  :A range of deltadY to determine dY.[pixel]
+    [-m[ode]             mode                (1         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+----- mode -----
+    0: for myosin  t=1 u=9
+    1: for anything
+</PRE>
+</BODY>
+</HTML>

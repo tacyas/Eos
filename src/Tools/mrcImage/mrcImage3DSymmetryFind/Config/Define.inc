@@ -1,0 +1,4 @@
+OBJECTNAME = mrcImage3DSymmetryFind
+EXTRA_LIB  =
+EXTRA_CCOPTS =
+EXTRA_INC =

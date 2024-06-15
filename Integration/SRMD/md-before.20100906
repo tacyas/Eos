@@ -1,0 +1,141 @@
+#/bin/sh
+echo "Program Start"
+
+#--Version1.1.0
+#thisProtein is potentialProtein in md*
+
+##
+##  PDB for MD: Initail Model
+##
+thisProtein="MyosinVOM"
+thisProteinPSFDir="/E/"
+thisProteinPSF="$thisProtein.psf"
+
+##
+## Contraint: MRC such as EM map 
+##
+PotentialMode="MAP"
+PotentialDir="../moto/"
+Potential="MyosinVOM_mini.mrc"
+LowPassMode=4
+LowPass1=0.1
+LowPass2=0.05
+LowPass3=0.03
+LowPass4=0.01
+LowPass5=0.005
+
+##
+## SRMDBase
+##
+SRMDBaseDir="$HOME/Eos/Integration/SRMD/"
+
+#
+#
+mapSet()
+{
+	if [ -d output ]
+	then
+		echo ""Create output""
+	else
+		echo "Good Luck!!"
+		mkdir mrc
+		mkdir output
+		mkdir dcd
+		mkdir data
+	fi
+
+	case PotentialMode in 	
+		'MAP')
+			cp $PotentialDir/$Potential mrc/$thisProtein.mrc
+			;;	
+		'PDB')
+			pdb2mrc -i $PotentialDir/$Potential -o mrc/$thisProtein.mrc -sig 3 
+			;;
+		*) 
+			echo "Check PotentialMode!!"
+			echo "Current Implemented Mode:  PDB  : PDB"
+			echo "                           MAP  : MRC"
+			;;
+	esac	
+	mrcImageLowPassFilter -i mrc/$thisProtein.mrc -o mrc/$thisProtein.Low.1.mrc -m $LowPassMode -hvp $LowPass1
+	mrcImageLowPassFilter -i mrc/$thisProtein.mrc -o mrc/$thisProtein.Low.2.mrc -m $LowPassMode -hvp $LowPass2
+	mrcImageLowPassFilter -i mrc/$thisProtein.mrc -o mrc/$thisProtein.Low.3.mrc -m $LowPassMode -hvp $LowPass3
+	mrcImageLowPassFilter -i mrc/$thisProtein.mrc -o mrc/$thisProtein.Low.4.mrc -m $LowPassMode -hvp $LowPass4
+	mrcImageLowPassFilter -i mrc/$thisProtein.mrc -o mrc/$thisProtein.Low.5.mrc -m $LowPassMode -hvp $LowPass5
+}
+
+##
+##
+##
+mapVolumeCalculation()
+{
+	echo "$thisProtein.mrc" > data/mrcTest
+	mrcImageVolumeCalc -i mrc/$thisProtein.mrc -M $Molecular -I >> data/mrcTest
+
+	i=1
+	while [ $i -le 5 ]
+	do
+		echo "$thisProtein.Low.$i.mrc" >> data/mrcTest
+		mrcImageVolumeCalc -i mrc/$thisProtein.Low.$i.mrc -M $Molecular -I  >> data/mrcTest
+		i=`expr $i + 1`
+	done
+	grep '( 70):' data/mrcTest > mrcCalc
+	cat mrcCalc
+}
+
+#
+#
+configFileSetting()
+{
+	echo "thisProtein=$thisProtein"  			>  config.SRMD 
+	echo "thisProteinPSFDir=$thisProteinPSFDir" >> config.SRMD 
+	echo "thisProteinPSF=$thisProteinPSF"      	>> config.SRMD 
+	echo "Potential=$Potential"      			>> config.SRMD 
+	echo "SRMDBaseDir=$SRMDBaseDir"    			>> config.SRMD 
+}
+
+
+##
+##
+##
+pdbChange()
+{
+	cp ../file.0000.coor output/file.0000.coor
+}
+
+mapSet
+mapVolumeCalculation
+
+##
+## >?????
+## 
+pdbChange
+cp $SRMDBaseDir/test.res
+
+#
+#
+#
+if [ -f pdbMove.out ]
+then
+	rm *.out
+else
+	echo "Not Out File"
+fi
+
+#
+# Prepare md
+#
+if [ -f md ]
+then
+	echo "No Way."
+else
+	echo "'SRMDS' Get You!!"
+	cp $SRMDBaseDir/md .
+
+	filename=config.SRMD.param
+	if [ -f $filename ] ;  then
+		mv $filename $filename.`date +%Y%m%d%H%M%S` 
+	fi
+	cp $SRMDBaseDir/$filename .
+
+fi

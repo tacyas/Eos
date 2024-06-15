@@ -1,0 +1,17 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","TestData","Optional","1","1","In","inFile","NULL"
+"-w","-w[eight]","Weight","Optional","1","1","Weight","Real","1.0"
+"-I","-I[nput]","TestData Set","Optional","1","1","InList","inFileList","NULL"
+"-r","-r[ef]","Ref, Model Data","Essential","1","1","Ref","inFile","NULL"
+"-o","-o[utput]","Output: ","Optional","1","1","Out","outFile","stdout"
+"-RR","-RR[ange]","Ring Range","Optional","2","1","Rmin","Real","0.0","2","Rmax","Real","0.1"
+"-dR","-dR[ange]","Ring Width","Optional","1","1","dR","Real","0.0"
+"-nS","-nS[ector]","Sector Number","Optional","1","1","nSector","Integer","1"
+"-dA","-dA[lpha]","delta Alpha","Optional","1","1","dAlpha","Real","5"
+"-XMax","-XMax","Xmax: If not set, one calc Xmax","Optional","1","1","XMax","Real","0.0"
+"-AS","-A[uto]S[cale]","Auto Scaling","Optional","0"
+"-AAS","-A[llArea]A[uto]S[cale]","All Area Auto Scaling","Optional","1","1","AASRMax","Real","0.05"
+"-RS","-RS[cale]","R Scaling","Optional","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

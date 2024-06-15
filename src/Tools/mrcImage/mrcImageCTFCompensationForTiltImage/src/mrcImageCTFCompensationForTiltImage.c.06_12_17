@@ -1,0 +1,155 @@
+/*
+# mrcImageCTFCompensationForTiltImage : $Revision$  
+# $Date$ 
+# Created by $Author$
+# Usage : mrcImageCTFCompensationForTiltImage
+# Attention
+#   $Loccker$
+#  	$State$ 
+#
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>                  
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+
+#define DEBUG
+#include "genUtil.h"
+#include "mrcImage.h"
+#include "File.h"
+#include "String.h"
+#include "mrcImage.h"
+#include "lmrcImageROI2D.h"
+#include "lmrcImageMontage.h"
+	 
+
+
+/*
+Example:
+typedef struct lmrcImageCTFCompensationForTiltImageInfo {
+	float a;
+	int   b;
+} lmrcImageCTFCompensationForTiltImageInfo;
+
+typedef enum lmrcImageCTFCompensationForTiltImageMode {
+	a=0,
+	b=1
+} lmrcImageCTFCompensationForTiltImageMode;
+*/
+
+int
+main(int argc, char* argv[]) 
+{
+	mrcImageCTFCompensationForTiltImageInfo info;
+	lmrcImageROIsInfo linfo;
+	mrcImage in;
+	mrcImage *rois;
+	mrcImage out;
+	double pixelData,pixelDataBuff,pixelDataSum,test;
+	double padSize = 0.0;
+	int    padNumber = 0;
+	int    i,j,k;
+	double centerx = 0.0;
+	double centery =0.0;
+	double weight = 0.0;
+	
+	init0(&info);
+    argCheck(&info, argc, argv);
+    init1(&info);
+
+	DEBUGPRINT("Program Start\n");
+	if(info.flagInfo) {
+	    lmrcImageROIsInformationGet(info.fptInfo, &linfo);
+	} else {
+		fprintf(stderr, "No information to extract ROIs\n");
+		exit(EXIT_FAILURE);
+	}
+
+	mrcFileRead(&in, info.In, "main", 0);
+	mrcFileRead(&out, info.In, "main", 0);
+	
+	out.HeaderMode = mrcFloatImage;
+	mrcInit(&out, NULL);
+
+/*	if( info.cut > 0){
+		mrcPixelDataGet(&in, 0.0, 0.0, 0.0, &padSize,mrcPixelRePart, mrcPixelHowNearest);
+		fprintf(stdout,"padSize = %lf\n",padSize);
+	}
+	for( i = 0 ; i < in.HeaderN.x ; i++){
+		for( j = 0; j < in.HeaderN.y; j++){
+			if( (i < info.cut) || (j < info.cut) || ((in.HeaderN.x - i) <= info.cut) || ((in.HeaderN.y - j) <= info.cut)){
+				mrcPixelDataSet(&out, i, j, 0.0, padSize, mrcPixelRePart);
+			}
+		}
+	}*/
+	in.HeaderMode = mrcFloatImage;
+	mrcInit(&in, NULL);
+	fprintf(stdout,"%d %d\n", in.HeaderN.x,  in.HeaderN.y);
+
+/*	for( i = 0 + info.cut; i < in.HeaderN.x - info.cut; i++){
+		for( j = 0 + info.cut ; j < in.HeaderN.y - info.cut; j++){
+			mrcPixelDataGet(&in, i, j, 0.0, &pixelData,mrcPixelRePart, mrcPixelHowNearest);
+			mrcPixelDataSet(&in, i, j, 0.0, 0.0, mrcPixelRePart);
+			mrcPixelDataSet(&out, i, j, 0.0, 0.0, mrcPixelRePart);
+		}
+	}
+*/
+	rois = (mrcImage*)memoryAllocate(sizeof(mrcImage)*linfo.numROI, "in main (rois)");
+	
+	for(k=0; k < 1/*linfo.numROI*/; k++) {
+		if( (k % 10) == 0){
+			fprintf(stderr,"%3d/%3d\n",k,linfo.numROI);
+		}
+		mrcFileRead(&(rois[k]), linfo.ROI[k].FileName, "main", 0);
+		centerx = (linfo.ROI[k].brx - linfo.ROI[k].blx)/2.0;
+		centery = (linfo.ROI[k].try - linfo.ROI[k].bry)/2.0;
+		fprintf(stdout,"%lf %lf\n",centerx,centery);
+		for(i = 0; i < linfo.ROI[k].brx - linfo.ROI[k].blx ; i++){
+			for(j = 0; j < linfo.ROI[k].try - linfo.ROI[k].bry ; j++){
+				weight = ( ((centerx -abs( centerx - i))/centerx) * ((centery -abs( centery - j))/centery) );
+				fprintf(stdout,"%f %f %d %d %f\n",centerx,centery,i,j,weight);
+				pixelData = 0.0;
+				pixelDataBuff = 0.0;
+				mrcPixelDataGet(&(rois[k]), i, j, 0.0, &pixelData,mrcPixelRePart, mrcPixelHowNearest);
+				mrcPixelDataGet(&out, i + linfo.ROI[k].blx , j +  linfo.ROI[k].bly, 0.0, &pixelDataBuff, mrcPixelRePart, mrcPixelHowNearest);
+				pixelDataSum = pixelData + pixelDataBuff;
+				mrcPixelDataSet(&out, i + linfo.ROI[k].blx , j +  linfo.ROI[k].bly, 0.0, pixelDataSum, mrcPixelRePart);
+				mrcPixelDataGet(&in, i + linfo.ROI[k].blx , j +  linfo.ROI[k].bly, 0.0, &pixelDataBuff, mrcPixelRePart, mrcPixelHowNearest);
+				mrcPixelDataSet(&in, i + linfo.ROI[k].blx , j +  linfo.ROI[k].bly, 0.0, pixelDataBuff + 1.0, mrcPixelRePart);
+			}
+		}
+	}
+	
+	for( i = 0 + info.cut; i < in.HeaderN.x - info.cut; i++){
+		for( j = 0 + info.cut ; j < in.HeaderN.y - info.cut; j++){
+			mrcPixelDataGet(&in, i, j, 0.0, &pixelDataBuff, mrcPixelRePart, mrcPixelHowNearest);
+			mrcPixelDataGet(&out, i, j, 0.0, &pixelData, mrcPixelRePart, mrcPixelHowNearest);
+			//fprintf(stdout,"%4d %4d %7.2f %3.2f %7.2f \n",i,j,pixelData,pixelDataBuff,pixelData/pixelDataBuff);
+			if( pixelDataBuff > 0.0){
+				mrcPixelDataSet(&out, i, j, 0.0, pixelData / pixelDataBuff, mrcPixelRePart);
+				padSize += pixelData / pixelDataBuff;
+				padNumber ++;
+			}
+		}
+	}
+
+
+	for( i = 0 ; i < in.HeaderN.x ; i++){
+		for( j = 0; j < in.HeaderN.y; j++){
+			if( (i < info.cut) || (j < info.cut) || ((in.HeaderN.x - i) <= info.cut) || ((in.HeaderN.y - j) <= info.cut)){
+				mrcPixelDataSet(&out, i, j, 0.0, padSize/padNumber, mrcPixelRePart);
+			}
+		}
+	}
+	mrcFileWrite(&out, info.Out, "main", 0);
+
+	exit(EXIT_SUCCESS);
+}
+
+void
+additionalUsage()
+{
+	fprintf(stderr, "----- Additional Usage -----\n");
+}

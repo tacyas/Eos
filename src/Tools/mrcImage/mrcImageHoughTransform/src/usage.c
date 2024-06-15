@@ -1,0 +1,42 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "../inc/config.h"
+
+void
+usage(char* thisProgram)
+{
+    fprintf(stderr, "Usage: %s\n", thisProgram);
+    fprintf(stderr, "Options:\n");
+    fprintf(stderr, "    [-i[nput]            In                  (NULL      ).as(inFile::mrcImage    ) ] :Essential :Input\n");
+    fprintf(stderr, "    [-o[utput]           Out                 (NULL      ).as(outFile::mrcImage   ) ] :Essential :Output\n");
+    fprintf(stderr, "    [-d[elta]Theta       DeltaTheta          (1.0       ).as(Real                ) ] :Optional  :DeltaTheta[degree]\n");
+    fprintf(stderr, "    [-d[elta]Rho         DeltaRho            (1.0       ).as(Real                ) ] :Optional  :DeltaRho[pixel]\n");
+    fprintf(stderr, "    [-M[ode]             HoughMode           (0         ).as(Integer             ) ] :Optional  :HoughTransformMode\n");
+    fprintf(stderr, "    [-width              widthMin            (0         ).as(Real                ) \n                         widthMax            (0         ).as(Integer             ) ] :Optional  :Width[pixel]\n");
+    fprintf(stderr, "    [-widthOut           widthOut            (0         ).as(Real                ) ] :Optional  :Width[pixel]\n");
+    fprintf(stderr, "    [-I[nterpolation]M[ode]InterpolationMode   (0         ).as(Integer             ) ] :Optional  :mrcImageMode: HowToGet\n");
+    fprintf(stderr, "    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile\n");
+    fprintf(stderr, "    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode\n");
+    additionalUsage();
+}
+
+void
+htmlBeforeUsage(char* thisProgram)
+{
+    fprintf(stderr, "<HTML>\n");
+    fprintf(stderr, "<HEAD>\n");
+    fprintf(stderr, "<TITLE>%s</TITLE>\n", thisProgram);
+    fprintf(stderr, "</HEAD>\n");
+    fprintf(stderr, "<BODY>\n");
+    fprintf(stderr, "<H1>%s</H1>\n", thisProgram);
+    fprintf(stderr, "<H2>Usage</H2>\n");
+    fprintf(stderr, "<PRE>\n");
+}
+
+void
+htmlAfterUsage(char* thisProgram)
+{
+    fprintf(stderr, "</PRE>\n");
+    fprintf(stderr, "</BODY>\n");
+    fprintf(stderr, "</HTML>\n");
+}

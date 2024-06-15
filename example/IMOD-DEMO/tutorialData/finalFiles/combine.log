@@ -1,0 +1,10 @@
+This is the master log file for combine.com
+It will end with COMBINE SUCCESSFULLY COMPLETED upon success
+Look in individual log files for the results of particular operations
+ 
+Running solvematch.com
+Initial registration found, next running matchvol1.com
+Matchvol finished, next running patchcorr.com
+Patchcrawl3d found displacements, next running matchorwarp.com
+Matchvol or Warpvol finished, next running volcombine.com
+COMBINE SUCCESSFULLY COMPLETED

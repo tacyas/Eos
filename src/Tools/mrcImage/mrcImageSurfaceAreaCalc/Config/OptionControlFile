@@ -1,0 +1,9 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile::mrcImage","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile::mrcImage","NULL"
+"-oS","-o[utput]S[urface]","Output:Surface","Optional","1","1","OutSurface","outFile::mrcImage","NULL"
+"-oSA","-o[utput]S[urface]A[rea]","Output:Surface","Optional","1","1","OutSurfaceArea","outFile::ASCII","stdout"
+"-n","-n[eighbor]","Neighbor: 6(0)|18|26","Optional","1","1","Neighbor","Integer","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

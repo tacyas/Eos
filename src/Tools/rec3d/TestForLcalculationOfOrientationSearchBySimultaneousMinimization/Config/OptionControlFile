@@ -1,0 +1,17 @@
+# OptionControlFile
+# FileFormat
+"-I","-I[nputFileList]","InputDataFileList","Essential","1","1","In","inFileListNoOpen","NULL"
+"-iid","-i[nput]i[nitial]d[ata]","InputInitialDataFile","Essential","1","1","iid","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"
+"-m2","-m[ode]2","Mode2","Optional","1","1","mode2","Integer","0"
+"-dt","-dt[heta]","dtheta","Optional","1","1","dtheta","Integer","0"
+"-dp","-dp[si]","dpsi","Optional","1","1","dpsi","Integer","0"
+"-ep","-e[rror]p[oint]","ErrorPoint","Optional","1","1","ep","Integer","0"
+"-mL","-m[ode]L[calculation]","Mode of L calculation","Optional","1","1","modeL","Integer","0"
+"-mTA","-m[ode]T[hreshold]A[ngularweight]","Mode of threshold of Angular weight","Optional","1","1","modeTA","Integer","0"
+"-L","-L[ogFile]","LogFileName","Optional","1","1","Log","outFile","stdout"
+"-L2","-L[ogFile]2","LogFileName2 : phi theta psi","Optional","1","1","Log2","outFile","stdout"
+"-m2","-m[rcImage]2[D]","mrcImage 2D name","Optional","1","1","m2","outFile","NULL"
+"-m3","-m[rcImage]3[D]","mrcImage 3D name","Optional","1","1","m3","outFile","NULL"

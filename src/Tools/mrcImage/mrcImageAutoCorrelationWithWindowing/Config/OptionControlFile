@@ -1,0 +1,9 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input","Essential","1","1","In","inFile::mrcImage","NULL"
+"-o","-o[utput]","Output","Essential","1","1","Out","outFile::mrcImage","NULL"
+"-oc","-o[utput]c[entre]","OutputDataFile","Optional","1","1","OutCentre","outFile::mrcImage","NULL"
+"-O","-O[utput]","Output WindowedFile","Optional","1","1","OutWin","outFile::mrcImage","NULL"
+"-Wy","-W[indowing]y","Window Height: N.y * 1/Wy","Optional","1","1","Wy","Real","6"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

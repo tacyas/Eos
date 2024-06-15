@@ -1,0 +1,11 @@
+# OptionControlFile
+# FileFormat
+"-i1","-i[nput]1","Past","Essential","1","1","In1","inFile::mrcImage","NULL"
+"-i2","-i[nput]2","Present","Essential","1","1","In2","inFile::mrcImage","NULL"
+"-i3","-i[nput]3","Future","Optional","1","1","In3","inFile::mrcImage","NULL"
+"-v3","-v[elocity]3","Velocity","Optional","3","1","Vx","inFile::mrcImage","NULL","1","Vy","inFile::mrcImage","NULL","1","Vz","inFile::mrcImage","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-E","-E[nlarge]","Enlarge","Optional","1","1","Enlarge","Real","1"
+"-oA","-o[utput]A","OutputDataFile","Optional","1","1","OutAVG","outFile::mrcImage","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

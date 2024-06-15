@@ -1,0 +1,32 @@
+<HTML>
+<HEAD>
+<TITLE> SCCS on Eos</TITLE>
+</HEAD>
+<BODY>
+<H1> SCCS on Eos</H1>
+SCCS: Unix Source Code Control System
+<DL>
+	<DT> <A HREF="sccsPut.html">sccsPut</A>
+		<DD> make source codes read-only and register current version of source codes.
+	<DT> <A HREF="sccsEdit.html">sccsEdit</A>
+		<DD> make source codes editable and modify source codes.
+</DL>
+<H2> Usage : </H2>
+<UL>
+	<LI> When you want to modify old codes, <UL>
+<PRE>
+	$ make get
+		or
+	$ sccsEdit SourceCodeName
+</PRE>
+	</UL>
+	<LI> When you want to register new source codes, <UL>
+<PRE>
+	$ make put
+		or 
+	$ sccsPut  SourceCodeName
+</PRE>
+	</UL>
+</UL>
+</BODY>
+</HTML>

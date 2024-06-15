@@ -1,0 +1,52 @@
+#--Step
+# MainLoop Iteration Number; < 9999 is better because of filename format %04d
+max=5000
+
+#--ConfigFile
+run=20
+run2=2000
+run_first=5000
+normal_run=200
+Low_run=400
+free_run=$run2
+langevinDanping=10
+tempSt=300
+tempBu=400
+tempS=$tempSt
+
+minimum_step=200
+#--Parameter
+burst=30000
+weight=5.0
+weight2=3.0
+
+Contour=31.75
+Contour1=30.33
+Contour2=27.45
+Contour3=23.86
+Contour4=11.74
+Contour5=3.74
+Rotate=1
+Seed=0.0
+
+#--VarienceInit
+PotentialFlag=0
+free_On=0
+LowOn=5
+q=0
+d=0
+LowPassFlag=0
+dcd_limit=10
+firstLowLimit=80
+LowLimit=0
+template="yes"
+template2="no"
+template3="template3"
+
+#--InitCalculate
+free=`expr $max - 500`
+burst=`expr $burst - $run`
+burst2_next=15000
+burst2=`expr $burst + $burst2_next`
+burst_next=30000
+#-----

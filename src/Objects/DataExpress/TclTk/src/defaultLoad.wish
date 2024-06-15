@@ -1,0 +1,22 @@
+proc defaultLoad { { filename "default" } { dir "~/.Eos/" } { procdef defaultLoadProcTemplate } } {
+	if [ file isdirectory $dir ] {
+		#
+	} else {
+		file mkdir $dir
+	}
+
+	if [ file exists $filename ] {
+		source $filename
+	} elseif [ file exists $dir/$filename ] {
+		source $dir/$filename
+	} else {
+		eval "$procdef $dir/$filename"
+	}
+}
+
+proc defaultLoadProcTemplate { f } {
+	fpt [ open $f r 600 ] 
+	puts $fpt "option add font {{Arial} 10}"
+}
+
+

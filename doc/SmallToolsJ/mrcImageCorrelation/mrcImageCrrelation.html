@@ -1,0 +1,615 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageCrrelation</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageCorrelation<br></h2></b></font>
+	<h4>相関図を作成する</h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+	<table border="1">
+		<div align="left">
+		<tr>
+			<th>オプション</th>
+			<th>必須項目/選択項目</th>
+			<th>説明</th>
+			<th>デフォルト</th>
+		</tr>
+		<tr>
+			<td>-i</td>
+			<td>必須</td>
+			<td>入力ファイル設定</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-o</td>
+			<td>必須</td>
+			<td>出力ファイル設定</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-O</td>
+			<td>選択</td>
+			<td>出力ファイル設定</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-r</td>
+			<td>必須</td>
+			<td>参照ファイル設定</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-c</td>
+			<td>選択</td>
+			<td>相関関係の詳細をファイルに書き込む</td>
+			<td>stdout</td>
+		</tr>
+		<tr>
+			<td>-a</td>
+			<td>選択</td>
+			<td>２つの画像の平均画像ファイル</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-s</td>
+			<td>選択</td>
+			<td>入力ファイルをシフトする</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-refine</td>
+			<td>選択</td>
+			<td>改良点を設定</td>
+			<td>(RefineStep RefineRange RefineMode)→(0.25 3.0 2)<br>
+			RefineStep：刻み幅の設定<br>
+			RefineRange：範囲の設定<br>
+			RefineMode：モードの設定</td>
+		</tr>
+		<tr>
+			<td>-m</td>
+			<td>選択</td>
+			<td>モード１</td>
+			<td>0</td>
+		</tr>
+		<tr>
+			<td>-M</td>
+			<td>選択</td>
+			<td>モード２</td>
+			<td>0</td>
+		</tr>
+		<tr>
+			<td>-h</td>
+			<td>選択</td>
+			<td>ヘルプを表示</td>
+			<td>　</td>
+		</tr>
+	</table>
+
+<!-- モード説明 -->
+
+	<br>
+	<caption><b>モード１の詳細</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>モード</th>
+				<th>説明</th>
+			</tr>
+			<tr>
+				<td>0</td>
+				<td>正規相関：FxG*</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>位相相関：FxG*/|FxG*|</td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td>位相相関：FxG*/sqrt(|FxG*|)</td>
+			</tr>
+			<tr>
+				<td>3</td>
+				<td>標準化された正規相関：FxG*/(|F||G|)</td>
+			</tr>
+			<tr>
+				<td>16</td>
+				<td>(0,0) = 0</td>
+			</tr>
+			</div>
+		</table>
+	<br>
+	
+	<br>
+	<caption><b>モード２の詳細</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>モード</th>
+				<th>説明</th>
+			</tr>
+			<tr>
+				<td>0</td>
+				<td>高速フーリエ変換による相関関係。出力はmrcImageファイル</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>正規空間で増える位相関係。出力は実際の値で表示される</td>
+			</tr>
+			</div>
+		</table>
+	<br>
+		
+	<h4>******実行例******</h4>
+
+<!-- 入力ファイル説明 -->
+
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td>ノイズあり</td>
+			<td></td>
+			<td></td>
+			<td>　　　　</td>
+			<td>ノイズなし</td>
+		</tr>
+		<tr>
+			<td><img src="b112.png" border="0" alt="b112.png(6711 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-45.2205<br>
+				61.1583<br>
+				1.34228<br>
+				13.1981<br>
+				0.164976<br></p>
+			</td>
+			<td></td>
+			<td><img src="a044.png" border="0" alt="a044.png(1690 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				39.0578<br>
+				1.30214<br>
+				5.13643<br>
+				0.0642053<br></p>
+			</td>
+		</tr>
+	</table>
+
+
+<!-- 参照ファイル説明 -->
+	<br>
+	<br>
+	<caption><font color="blue">------参照ファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="b116.png" border="0" alt="b116.png(6703 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-44.5884<br>
+				62.2917<br>
+				1.20602<br>
+				13.084<br>
+				0.16355<br></p>
+			</td>
+			<td><img src="b060.png" border="0" alt="b060.png(1706 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				40.8834<br>
+				1.30222<br>
+				5.16838<br>
+				0.0646047<br></p>
+			</td>
+		</tr>
+	</table>
+	
+<!-- オプション　-o -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-o------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="b116.out.png" border="0" alt="b116.out.png(6335 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-696.555<br>
+				2670.19<br>
+				129.504<br>
+				439.371<br>
+				5.49214<br></p>
+			</td>
+			<td><img src="a044.out.png" border="0" alt="a044.out.png(2525 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-0.000195313<br>
+				2169.32<br>
+				135.653<br>
+				368.225<br>
+				4.60281<br></p>
+			</td>
+		</tr>
+	</table>
+	
+<!-- オプション　-O -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-O------</font></caption><br>
+	<div>オプション-Oでは、オプション-refineを設定しなければならない<br>
+	-refineを1.75 70 0に設定</div>
+	<table>
+		<tr>
+			<td><img src="b116.Out0.png" border="0" alt="b116.Out0.png(6264 byte)" width="81" height="81"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">1.23885<br>
+				1.44004<br>
+				1.39867<br>
+				0.0198941<br>
+				0.000245606<br></p>
+			</td>
+			<td><img src="a044.Out0.png" border="0" alt="a044.Out0.png(2918 byte)" width="81" height="81"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0.262565<br>
+				1.41038<br>
+				1.31497<br>
+				0.177727<br>
+				0.00219416<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>-refineを1.75 70 1に設定</div>
+	<table>
+		<tr>
+			<td><img src="b116.Out1.png" border="0" alt="b116.Out1.png(6583 byte)" width="81" height="81"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">1.45204<br>
+				1.63609<br>
+				1.56799<br>
+				0.0183415<br>
+				0.000226438<br></p>
+			</td>
+			<td><img src="a044.Out1.png" border="0" alt="a044.Out1.png(5601 byte)" width="81" height="81"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0.696388<br>
+				1.63042<br>
+				1.51598<br>
+				0.109251<br>
+				0.00134878<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>-refineを1.75 70 2に設定</div>
+	<table>
+		<tr>
+			<td><img src="b116.Out2.png" border="0" alt="b116.Out2.png(6660 byte)" width="81" height="81"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">1.71269<br>
+				1.86756<br>
+				1.81222<br>
+				0.0163492<br>
+				0.000201842<br></p>
+			</td>
+			<td><img src="a044.Out2.png" border="0" alt="a044.Out2.png(5931 byte)" width="81" height="81"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">1.12474<br>
+				1.99758<br>
+				1.77708<br>
+				0.097391<br>
+				0.00120236<br></p>
+			</td>
+		</tr>
+	</table>
+	
+<!-- オプション　-c -->	
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-c------</font></caption><br>
+	<div>下記のようなデータが格納されたファイルが作成される<br>
+	オプション-Mが0の場合<br>
+	<img src="a044.out-cM0.png" border="1" alt="a044.out-cM0.png(1250 byte)" width="215" height="46"><br>
+	<br>
+	オプション-Mが1の場合<br>
+	<img src="a044.out-cM1.png" border="1" alt="a044.out-cM1.png(513 byte)" width="154" height="21">
+	</div>
+	
+<!-- オプション　-a -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-a------</font></caption><br>
+	<div></div>
+	<table>
+		<tr>
+			<td><img src="b116.out-a1.png" border="0" alt="b116.out-a1.png(6505 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-35.1267<br>
+				59.0675<br>
+				1.27415<br>
+				10.1106<br>
+				0.126383<br></p>
+			</td>
+			<td><img src="a044.Out-a1.png" border="0" alt="a044.Out-a1.png(1724 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				38.1336<br>
+				1.30218<br>
+				5.09747<br>
+				0.0637183<br></p>
+			</td>
+		</tr>
+	</table>
+	
+<!-- オプション　-s -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-s------</font></caption><br>
+	<div></div>
+	<table>
+		<tr>
+			<td><img src="b116.out-s1.png" border="0" alt="b116.out-s1.png(6705 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-44.5884<br>
+				62.2917<br>
+				1.20602<br>
+				13.084<br>
+				0.16355<br></p>
+			</td>
+			<td><img src="a044.Out-s1.png" border="0" alt="a044.Out-s1.png(1690 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				39.0578<br>
+				1.30214<br>
+				5.13643<br>
+				0.0642053<br></p>
+			</td>
+		</tr>
+	</table>
+	
+<!-- オプション　-m -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-m------</font></caption><br>
+	<div>モード：０</div>
+	<table>
+		<tr>
+			<td><img src="b116.out.png" border="0" alt="b116.out.png(6335 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-696.555<br>
+				2670.19<br>
+				129.504<br>
+				439.371<br>
+				5.49214<br></p>
+			</td>
+			<td><img src="a044.out.png" border="0" alt="a044.out.png(2525 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-0.000195313<br>
+				2169.32<br>
+				135.653<br>
+				368.225<br>
+				4.60281<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>モード：１</div>
+	<table>
+		<tr>
+			<td><img src="b116.out-m1.png" border="0" alt="b116.out-m1.png(6831 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-3.67017<br>
+				3.71466<br>
+				0.0125<br>
+				0.999922<br>
+				0.012499<br></p>
+			</td>
+			<td><img src="a044.out-m1.png" border="0" alt="a044.out-m1.png(5657 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-9.80742<br>
+				7.48342<br>
+				0.0125<br>
+				0.999922<br>
+				0.012499<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>モード：２</div>
+	<table>
+		<tr>
+			<td><img src="b116.out-m2.png" border="0" alt="b116.out-m2.png(6578 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-44.7368<br>
+				62.2468<br>
+				1.27232<br>
+				11.938<br>
+				0.149225<br></p>
+			</td>
+			<td><img src="a044.out-m2.png" border="0" alt="a044.out-m2.png(4136 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-6.01609<br>
+				44.7194<br>
+				1.30218<br>
+				5.11859<br>
+				0.0639824<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>モード：３</div>
+	<table>
+		<tr>
+			<td><img src="b116.out-m3.png" border="0" alt="b116.out-m3.png(6335 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-0.0672328<br>
+				0.257732<br>
+				0.0125<br>
+				0.0424089<br>
+				0.000530111<br></p>
+			</td>
+			<td><img src="a044.out-m3.png" border="0" alt="a044.out-m3.png(2525 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-1.78814e-08<br>
+				0.199896<br>
+				0.0125<br>
+				0.0339307<br>
+				0.000424134<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>モード：１６</div>
+	<table>
+		<tr>
+			<td><img src="b116.out-m16.png" border="0" alt="b116.out-m16.png(6335 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-826.059<br>
+				2540.68<br>
+				-5.7012e-07<br>
+				439.371<br>
+				5.49214<br></p>
+			</td>
+			<td><img src="a044.out-m16.png" border="0" alt="a044.out-m16.png(2525 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-135.653<br>
+				2033.67<br>
+				1.28926e-07<br>
+				368.225<br>
+				4.60281<br></p>
+			</td>
+		</tr>
+	</table>
+
+	
+</body>
+</html>

@@ -1,0 +1,11 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","Output: ASCII","Optional","1","1","Out","outFile","stdout"
+"-O","-O[utputMRC]","Output: MRC","Optional","1","1","Out2","outFile","NULL"
+"-centre","-centre","[pixel]","Optional","2","1","Cx","Real","0.0","2","Cy","Real","0.0"
+"-Cs","-Cs[phere]","[pixel]","Optional","3","1","Csx","Real","0.0","2","Csy","Real","0.0","3","Csz","Real","0.0"
+"-Avg","-Avg","flagAvg: Averaged Intensity","Optional","0"
+"-Inv","-Inv","flagInv: Inversed Intensity","Optional","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

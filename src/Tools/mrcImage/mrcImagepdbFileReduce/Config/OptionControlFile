@@ -1,0 +1,11 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-p","-p[dbfile]","InputPdbFile","Essential","1","1","Pdb","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-t","-t[hreshold]","Threshold","Essential","1","1","Th","Real","0"
+"-r","-r[adius]","Radius of Atom","Optional","1","1","R","Real","1"
+"-v","-v[alue]","Value for pixels in pdbFile","Optional","1","1","Value","Real","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-IT","-IT[interfacethreshold]","Threshold for interface recognition.","Optional","1","1","ITh","Real","0"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

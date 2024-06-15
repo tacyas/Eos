@@ -1,0 +1,488 @@
+# %M% %Y% %I%
+# The latest update : %G% at %U%
+#
+#%Z% Display2Info.wish ver %I%
+#%Z% Created by 
+#%Z%
+#%Z% Usage : Display2Info.wish
+#%Z% Attention
+#%Z%
+
+proc histgramGraphCreate { f } {
+	global mainImage
+	global fileNameIn
+	
+	set mainImage(thresLow)  [ mrcInfoGet $fileNameIn thresLow ]
+	set mainImage(thresHigh) [ mrcInfoGet $fileNameIn thresHigh ]
+	#puts $mainImage(thresLow)	
+	#puts $mainImage(thresHigh)	
+	#puts $mainImage(HistNum)
+
+	# hist and histx
+	mrcInfoSet HistNum $mainImage(HistNum) 
+	set hist [ mrcInfoGet $fileNameIn Hist ] 
+	set i 0
+	while {$i<$mainImage(HistNum)} {
+		lappend histx [ expr $i*($mainImage(thresHigh)-$mainImage(thresLow))/($mainImage(HistNum)-1.0)+$mainImage(thresLow) ] 
+		#puts "[ lindex $histx $i ] [ lindex $hist $i ]"
+		set i [ expr $i+1 ]
+	}
+
+	#Graph
+	if [ catch { set histGraph  [ graph $f ] } ] {
+		set histGraph $mainImage(histGraph)
+		$histGraph element delete line1 
+	} else {
+		$histGraph pen create histPen
+	}
+	$histGraph element create line1 -xdata $histx -ydata $hist 
+	$histGraph pen configure histPen -pixels 0 
+	$histGraph element configure line1 -pen histPen 
+	$histGraph configure -title "" 
+	if { $mainImage(thresLow) < $mainImage(thresHigh) } {
+		$histGraph axis configure x -title "Density"   \
+			-min $mainImage(thresLow) -max $mainImage(thresHigh) -loose yes -majorticks { } \
+			-hide no -ticklength 0.1i 
+	} else {
+		$histGraph axis configure x -title "Density"   \
+			-max $mainImage(thresLow) -min $mainImage(thresHigh) -loose yes -majorticks { } \
+			-hide no -ticklength 0.1i 
+	}
+	$histGraph axis configure y -title "Frequency" \
+		-min 0 -max 1  -loose yes  \
+		-hide no -ticklength 0.1i -showticks yes -majorticks {}
+	$histGraph legend configure -position right \
+		-hide no 
+	#
+    Blt_ZoomStack    $histGraph
+	Blt_Crosshairs   $histGraph
+	Blt_ActiveLegend $histGraph
+	Blt_ClosestPoint $histGraph
+
+	return $histGraph
+}
+
+proc display2InformationWinCreate { } {
+	global mainImage
+	global fileNameIn
+	global Roi
+	
+	if [ catch { toplevel .display2Info -bd 4 -class Display2Info } ] {
+		raise .display2Info
+		return 
+	} else {
+		set w               .display2Info 
+
+		#Graph
+		set histGraph  [ histgramGraphCreate $w.histGraph  ]
+		set mainImage(histGraph) $histGraph
+
+		# Window 
+		label $w.title -text "Display Information"
+
+		# Contrast Adjustment
+		set f [ frame $w.contrast ]
+		CommandEntry $f.high      High 4 fileReopen -textvar mainImage(thresHigh)
+		CommandEntry $f.low       Low  4 fileReopen -textvar mainImage(thresLow)
+		CommandEntry $f.contrast  Cont 4 "global mainImage; mrcInfoSet Contrast $mainImage(Contrast); fileReopen" -textvar mainImage(Contrast) 
+		checkbutton  $f.log -text Log -variable mainImage(flagLog) -command fileReopen
+		checkbutton  $f.pow -text Pow -variable mainImage(flagPow) -command fileReopen
+		#checkbutton  $f.log -text Log -variable mainImage(flagLog)
+		#checkbutton  $f.pow -text Pow -variable mainImage(flagPow)
+		pack $f.high $f.low $f.contrast $f.log $f.pow -side left -fill x
+		#pack $f.high $f.low $f.contrast -side left -fill x
+
+		# Action
+		set f [ frame $w.action ]
+		button $f.redraw -text redraw -command fileReopen
+		button $f.rehist -text rehist -command {
+			global mainImage
+			fileReopen 
+			set mainImage(histGraph) [ histgramGraphCreate .display2Info.histGraph ]
+		}
+		pack $f.redraw $f.rehist -side left -fill x
+
+		# Sectioning
+		set f [ frame $w.section ]
+		button $f.next -text NextZ -command { 
+			global mainImage
+			set mainImage(z) [expr ($mainImage(z)+1)] 
+			fileReopen
+		}
+		CommandEntry $f.z z 4 fileReopen -textvar mainImage(z)
+		button $f.prev -text PrevZ -command { 
+			global mainImage
+			set mainImage(z) [expr ($mainImage(z)-1)] 
+			fileReopen
+		}
+		pack $f.prev $f.z $f.next -side left -fill x
+
+		# Zoom
+		set f [ frame $w.zoom ]
+		CommandEntry $f.zoom  Zoom  5 fileReopen -textvar Roi(Zoom) 
+		CommandEntry $f.zoomX ZoomX 5 fileReopen -textvar Roi(ZoomX) 
+		CommandEntry $f.zoomY ZoomY 5 fileReopen -textvar Roi(ZoomY) 
+		pack $f.zoom $f.zoomX $f.zoomY -side left -fill x
+
+		pack \
+			 $w.contrast \
+			 $w.histGraph \
+			 $w.action \
+			 $w.section \
+			 $w.zoom \
+			 -side top -fill y
+
+	}
+}
+
+proc fileReopen { } {
+	global fileNameIn 
+	global mainImage
+	global fileNameIn
+
+	mrcInfoSet z $mainImage(z) 
+	mrcInfoGet $fileNameIn ReHist
+	fileOpen $fileNameIn
+}
+
+proc mrcImageInformationWinCreate { } {
+	global mainImage
+	global fileNameIn 
+
+	if [ catch { toplevel .mrcImageInfo -bd 4 -class MrcImageInfo } ] {
+		raise .mrcImageInfo
+	} else {
+		set mrcImageInfoWin .mrcImageInfo 
+		mrcInfoSet HistNum $mainImage(HistNum)
+		set hist            [ mrcInfoGet $fileNameIn Hist ] 
+
+		set i 0
+		while {$i<$mainImage(HistNum)} {  
+			lappend histx [expr $i*($mainImage(max)-$mainImage(min))/255.0+$mainImage(min)] 
+			set i [ expr $i+1]
+		}
+		set histGraph       .mrcImageInfo.histGraph
+		graph $histGraph
+		$histGraph element create line1 -xdata $histx -ydata $hist 
+		$histGraph pen create histPen
+		$histGraph pen configure histPen -pixels 0 
+		$histGraph element configure line1 -pen histPen 
+		$histGraph configure -title "" 
+		label $mrcImageInfoWin.title -text "mrcImage Information"
+		CommandEntry $mrcImageInfoWin.min min 4 echo -textvar mainImage(min)
+		CommandEntry $mrcImageInfoWin.max max 4 echo -textvar mainImage(max)
+		CommandEntry $mrcImageInfoWin.mean mean 4 echo -textvar mainImage(mean)
+		CommandEntry $mrcImageInfoWin.nx nx 4 echo -textvar mainImage(width)
+		CommandEntry $mrcImageInfoWin.ny ny 4 echo -textvar mainImage(height)
+		CommandEntry $mrcImageInfoWin.nz nz 4 echo -textvar mainImage(nz)
+		pack $mrcImageInfoWin.title -side top
+		pack $mrcImageInfoWin.min \
+			 $mrcImageInfoWin.max \
+			 $mrcImageInfoWin.mean \
+			 $mrcImageInfoWin.nx\
+			 $mrcImageInfoWin.ny\
+			 $mrcImageInfoWin.nz\
+			 $histGraph \
+			 -side top -fill y
+     	Blt_ZoomStack    $histGraph
+	    Blt_Crosshairs   $histGraph
+		Blt_ActiveLegend $histGraph
+		Blt_ClosestPoint $histGraph
+	}
+}
+
+proc imageInformationWinCreate { } {
+	global Point
+
+	if [ catch { toplevel .imageInfo -bd 4 -class ImageInfo } ] {
+		raise .imageInfo
+	} else {
+		set w .imageInfo 
+		label $w.title -text "Image Information"
+		pack  $w.title -side top
+
+		set f [ frame $w.posX ] 
+		CommandEntry $f.x      x  4  echo -textvar Point(x)
+		CommandEntry $f.rx     "" 1 echo  -textvar Point(realx)
+		CommandEntry $f.rX     "" 1 echo  -textvar Point(realX)
+		pack $f.x $f.rx $f.rX -side left
+
+		set f [ frame $w.posY ] 
+		CommandEntry $f.y      y  4 echo -textvar Point(y)
+		CommandEntry $f.ry     "" 1 echo -textvar Point(realy)
+		CommandEntry $f.rY     "" 1 echo -textvar Point(realY)
+		pack $f.y $f.ry $f.rY -side left
+
+		set f [ frame $w.r ] 
+		CommandEntry $f.sr     r   4 echo -textvar Point(r)
+		CommandEntry $f.br     1/r 4 echo -textvar Point(R)
+		pack $f.sr $f.br -side left
+
+		set f [ frame $w.posDat ] 
+		CommandEntry $f.posDat    d 4 echo -textvar Point(dat)
+		pack $f.posDat -side left
+
+		set f [ frame $w.density ]
+		for { set y -2 } { $y <=2  } { incr y } {
+			set ff [ frame $f.fr$y ]
+			for { set x -2 } { $x <=2  } { incr x } {
+				entry $ff.en$x -relief sunken -textvar Point(dat,$x,$y)	
+				pack $ff.en$x -side left
+			}
+			pack $ff -side top 
+		}
+
+		pack $w.posX $w.posY $w.r $w.posDat $w.density -side top -fill y
+	}
+}		
+
+proc layerLineInformationWinCreate { } {
+	global Point
+	global mainImage
+	global LayerLine
+
+	if [ catch { toplevel .layerLineInfo -bd 4 -class LayerLineInfo } ] {
+		raise .layerLineInfo
+	} else {
+		set w .layerLineInfo
+		label $w.title -text "Layer Line Information"
+		set f [ frame $w.llinfo0 ]
+		CommandEntry $f.turn      turn   		10 layerLineRecreate -textvar LayerLine(turn)
+		CommandEntry $f.unit      unit   		10 layerLineRecreate -textvar LayerLine(unit)
+		CommandEntry $f.nstrand   strand 		10 layerLineRecreate -textvar LayerLine(n-strand)
+		CommandEntry $f.truePitch truePitch     10 layerLineRecreate -textvar LayerLine(truePitch)
+		pack $f.turn $f.unit $f.nstrand $f.nstrand  -side left
+
+		set f [ frame $w.llinfo1 ]
+		CommandEntry $f.truePitch truePitch     10 layerLineRecreate -textvar LayerLine(truePitch)
+		CommandEntry $f.dY        dY            10 layerLineRecreate -textvar LayerLine(dY)
+		pack $f.truePitch $f.dY -side left 
+
+		set f [ frame $w.request ]
+		CommandEntry $f.reqL      requiredL     10 layerLineRecreate -textvar LayerLine(l)
+		pack $f.reqL -side left
+
+		set f [ frame $w.imageInfo ]
+		CommandEntry $f.ly   	  ly            5 layerLineRecreate -textvar mainImage(ly)
+		CommandEntry $f.ny   	  ny            5 layerLineRecreate -textvar mainImage(height)
+		CommandEntry $f.dY        dY            5 layerLineRecreate -textvar LayerLine(dY)
+		pack $f.ly $f.ny $f.dY -side left 
+
+		set f [ frame $w.nextImageInfo ]
+		CommandEntry $f.ly   	  ly            5 layerLineRecreate -textvar LayerLine(nextLy)
+		CommandEntry $f.ny   	  ny            5 layerLineRecreate -textvar LayerLine(nextHeight)
+		CommandEntry $f.dY        dY            5 layerLineRecreate -textvar LayerLine(nextdY)
+		pack $f.ly $f.ny $f.dY -side left 
+
+		button $w.create -text Create -command layerLineCreate
+		button $w.clear  -text Clear  -command layerLineClear 
+
+		pack $w.title $w.llinfo0 $w.llinfo1 $w.request $w.imageInfo $w.nextImageInfo \
+			-side top -fill x 
+		pack $w.create $w.clear -side left -fill x 
+	}
+}
+
+#
+# Projection
+#
+proc projectionInformationWinCreate { } {
+	global fileNameIn
+	global mainImage
+	global Projection	
+
+	set w .projectionInfo
+
+	if [ catch { toplevel $w -bd 4 -class projectionInfo } ] {
+		raise $w 
+	} else {
+		set Projection(X) [ mrcInfoGet $fileNameIn ProjX ]
+		set Projection(Y) [ mrcInfoGet $fileNameIn ProjY ]
+
+		#puts $Projection(Y)
+		label $w.title -text "Projection Information"
+		pack $w.title -side top
+
+		set f [ frame $w.which]
+		button $f.which  -text $Projection(which) -command projectionChange 
+		CommandEntry $f.scale        x            4 projectionRecreate -textvar Projection(scale)
+		pack $f.which $f.scale -side left
+		pack $f -side top 
+
+		set f [ frame $w.action ]
+		button $f.create -text Create -command projectionCreate 
+		button $f.clear  -text Clear  -command projectionClear 
+		pack $f.create $f.clear -side left 
+		pack $f -side top
+	}
+}
+
+#
+# Section
+# 
+proc sectionInformationWinCreate { } {
+	global fileNameIn
+	global mainImage
+	global Section 
+	
+	set w .sectionInfo
+
+	if [ catch { toplevel $w -bd 4 -class sectionInfo } ] {
+		raise $w
+	} else {
+		if [ info exists Section(Initialize) ]  {
+		} else {
+			sectionInit
+		}
+
+		label $w.title -text $Section(Win,Title) 
+		pack $w.title -side top
+
+		set f [ frame $w.which]
+		button $f.which  -text $Section(which) -command sectionChange 
+		CommandEntryWithUpDown $f.at    " = " 3 sectionNextCreate Section(at)     Section(atDelta)
+		CommandEntryWithUpDown $f.scale " I*" 3 sectionNextCreate Section(scale)  Section(scaleDelta)
+		pack $f.which $f.at $f.scale -side left
+		pack $f -side top 
+
+		set f $w.option 
+		RadioButtonsCreateWithPack $f "mode" left Section(mode) normal min float 	
+		pack $f -side top
+
+		set f [ frame $w.index ]
+		CommandEntry $f.current "cur" 3 echo -textvar Section(Current)  
+		CommandEntry $f.num     "num" 3 echo -textvar Section(Num)
+		pack $f.current $f.num -side left
+		pack $f -side top
+
+		set f [ frame $w.action ]
+		button $f.create   -text Create      -command sectionCreate
+		button $f.recreate -text RecreateAll -command sectionRecreateAll
+		button $f.clear    -text Clear       -command sectionClear 
+		button $f.clearAll -text ClearAll    -command sectionClearAll
+		pack $f.create $f.recreate $f.clear $f.clearAll -side left 
+		pack $f -side top
+	}
+}
+
+#
+# CTF
+#
+proc ctfInformationWinCreate { } {
+	global mainImage
+
+	catch [ namespace import ::CTF::ctfInfo* ]
+	::CTF::Init [ array get mainImage ]
+	::CTF::Win  .ctfInfo
+}
+
+#
+# unit cell
+#
+proc unitCellInformationWinCreate { } {
+	global mainImage
+	global UnitCell
+
+	set w .unitCell
+
+	if [ catch { toplevel $w -bd 4 -class unitCellInfo } ] {
+		raise $w
+	} else {
+		label $w.title -text "Unit Cell Information"
+		pack $w.title -side top
+
+		set UnitCell(canvas) $mainImage(canvas)
+
+		set f [ frame $w.unitCell]
+		set ff [ frame $f.dimension ]
+		label $ff.title -text "Dimension"
+		CommandEntry $ff.dimension dim 4 unitCellRecreate -textvar UnitCell(dimension) 
+		pack $ff.title $ff.dimension -side left
+		pack $ff -side top
+
+		set ff [ frame $f.axis1 ]
+		label $ff.title -text "Axis1"
+		CommandEntry $ff.x x 4 unitCellRecreate -textvar UnitCell(axis1,x) 
+		CommandEntry $ff.y y 4 unitCellRecreate -textvar UnitCell(axis1,y) 
+		CommandEntry $ff.z z 4 unitCellRecreate -textvar UnitCell(axis1,z) 
+		pack $ff.title $ff.x $ff.y $ff.z -side left
+		pack $ff -side top
+
+		set ff [ frame $f.axis2 ]
+		label $ff.title -text "Axis2"
+		CommandEntry $ff.x x 4 unitCellRecreate -textvar UnitCell(axis2,x) 
+		CommandEntry $ff.y y 4 unitCellRecreate -textvar UnitCell(axis2,y) 
+		CommandEntry $ff.z z 4 unitCellRecreate -textvar UnitCell(axis2,z) 
+		pack $ff.title $ff.x $ff.y $ff.z -side left
+		pack $ff -side top
+
+		set ff [ frame $f.axis3 ]
+		label $ff.title -text "Axis3"
+		CommandEntry $ff.x x 4 unitCellRecreate -textvar UnitCell(axis3,x) 
+		CommandEntry $ff.y y 4 unitCellRecreate -textvar UnitCell(axis3,y) 
+		CommandEntry $ff.z z 4 unitCellRecreate -textvar UnitCell(axis3,z) 
+		pack $ff.title $ff.x $ff.y $ff.z -side left
+		pack $ff -side top
+
+		set ff [ frame $f.angle ]
+		label $ff.title -text "Angle"
+		CommandEntry $ff.alpha alpha 5 unitCellRecreate -textvar UnitCell(alpha) 
+		CommandEntry $ff.beta  beta  5 unitCellRecreate -textvar UnitCell(beta) 
+		CommandEntry $ff.gamma gamma 5 unitCellRecreate -textvar UnitCell(gamma) 
+		pack $ff.title $ff.alpha $ff.beta $ff.gamma -side left
+		pack $ff -side top
+
+		set ff [ frame $f.n ]
+		label $ff.title -text "nPoint"
+		CommandEntry $ff.n1 n1 4 unitCellRecreate -textvar UnitCell(axis1,n) 
+		CommandEntry $ff.n2 n2 4 unitCellRecreate -textvar UnitCell(axis2,n) 
+		CommandEntry $ff.n3 n3 4 unitCellRecreate -textvar UnitCell(axis3,n) 
+		pack $ff.title $ff.n1 $ff.n2 $ff.n3 -side left
+		pack $ff -side top
+
+		set ff [ frame $f.size ]
+		label $ff.title -text "Box"
+		CommandEntry $ff.x x 4 unitCellRecreate -textvar UnitCell(box,x) 
+		CommandEntry $ff.y y 4 unitCellRecreate -textvar UnitCell(box,y) 
+		CommandEntry $ff.z z 4 unitCellRecreate -textvar UnitCell(box,z) 
+		pack $ff.title $ff.x $ff.y $ff.z -side left
+		pack $ff -side top
+
+		pack $f -side top
+	}
+}
+
+#
+# scale
+#
+proc scaleInfoWinCreate { } {
+	global fileNameIn
+	global mainImage
+	global Scale 
+	
+	set w .scale
+
+	if [ catch { toplevel $w -bd 4 -class scaleInfo } ] {
+		raise $w 
+	} else {
+		label $w.title -text "Scale Info"
+		pack $w.title -side top
+
+		set f [ frame $w.which]
+		button $f.which  -text $Section(which) -command scaleChange 
+		CommandEntry $f.scale        x            4 scaleRecreate -textvar Section(scale)
+		CommandEntry $f.at           at           4 scaleRecreate -textvar Section(at)
+		pack $f.which $f.scale $f.at -side left
+		pack $f -side top 
+
+		set f [ frame $w.action ]
+		button $f.create -text Create -command scaleCreate 
+		button $f.clear  -text Clear  -command scaleClear 
+		pack $f.create $f.clear -side left 
+		pack $f -side top
+	}
+}
+
+proc noAction { } {
+    puts "No action"
+}

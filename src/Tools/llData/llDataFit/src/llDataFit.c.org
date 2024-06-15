@@ -1,0 +1,189 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>                  
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+#include "llData.h"
+
+extern void llDataFitParamOutput(THIS_PROGRAM_INFO* info);
+extern void llDataFitDataOutput(llData* llIn, THIS_PROGRAM_INFO* info);
+extern void llDataFitDataOutput0(llData* llIn, THIS_PROGRAM_INFO* info);
+
+void
+main(int argc, char* argv[]) 
+{
+    llData*   llIn;
+    THIS_PROGRAM_INFO info;
+    int i, j;
+    FILE* fpt;
+
+	init0(&info);
+    argCheck(&info, argc, argv);
+    init1(&info);
+    
+	/* Input File */
+    llIn=(llData*)memoryAllocate(info.flagInFile*sizeof(llData), "in Main");
+    for(i=0; i<info.flagInFile; i++) {
+        fpt = fileOpen(info.inFileNameList[i], "r");
+        llDataFileRead(fpt, &(llIn[i]), 0);
+        fclose(fpt);
+        lllDataWeightSet(info.fptL, &(llIn[i]), 0.0, 0);
+        llIn[i].truePitch = info.truePitch;
+    }
+    
+	/* paraF Allocate */
+    info.paraFit=(llDataFittedParam**)memoryAllocate(info.flagInFile*sizeof(llDataFittedParam*), "in Main");
+    for(i=0; i<info.flagInFile; i++) {
+        info.paraFit[i]=(llDataFittedParam*)memoryAllocate(info.flagInFile*sizeof(llDataFittedParam), "in Main");
+    }
+    
+	/* Fitting */
+    for(i=0; i<info.flagInFile; i++) {
+        for(j=0; j<info.flagInFile; j++) {
+        	if(i>j) {
+            	info.paraFit[i][j] = info.paraFit[j][i];
+	        } else {
+	            info.paraFit[i][j].Para = info.Range.Para;
+                lllDataFit(&(llIn[i]), &(llIn[j]), &(info.paraFit[i][j]), info.mode);
+	        }
+            fprintf(stdout, "(%d, %d) = (%s, %s) finished\n", i, j, info.inFileNameList[i], info.inFileNameList[j]);
+        }
+    }
+    
+	/* Output */
+    llDataFitParamOutput(&info);
+    llDataFitDataOutput(llIn, &info);
+}
+
+void
+llDataFitDataOutput(llData* llIn, THIS_PROGRAM_INFO* info)
+{
+    int i;
+    
+	if(info->mode&PVALUE_MODE) {
+        info->flagOutFile=info->flagOutFileP;
+        info->flagAveFile=info->flagAveFileP;
+        for(i=0; i<info->flagOutFile; i++) {
+            info->paraFit[0][i].Para = info->paraFit[0][i].PPara;
+        }
+        info->outFileNameList = info->outFileNameListP;
+        info->fptAve = info->fptAveP;
+		llDataFitDataOutput0(llIn, info);
+    }
+	if(info->mode&QVALUE_MODE) {
+        info->flagOutFile=info->flagOutFileQ;
+        info->flagAveFile=info->flagAveFileQ;
+        for(i=0; i<info->flagOutFile; i++) {
+            info->paraFit[0][i].Para = info->paraFit[0][i].QPara;
+        }
+        info->outFileNameList = info->outFileNameListQ;        
+        info->fptAve = info->fptAveQ;        
+		llDataFitDataOutput0(llIn, info);
+    }
+	if(info->mode&RVALUE_MODE) {
+        info->flagOutFile=info->flagOutFileR;
+        info->flagAveFile=info->flagAveFileR;
+        for(i=0; i<info->flagOutFile; i++) {
+            info->paraFit[0][i].Para = info->paraFit[0][i].RPara;        
+        }
+        info->outFileNameList = info->outFileNameListR;                
+        info->fptAve = info->fptAveR;
+		llDataFitDataOutput0(llIn, info);
+    }
+}
+
+void
+llDataFitDataOutput0(llData* llIn, THIS_PROGRAM_INFO* info)
+{
+    llData* llOut; /* llOut[info->OutFile] is Averaged llData */
+    int i;
+    FILE* fpt;
+
+    if(info->flagOutFile||info->flagAveFile) {
+        llOut=(llData*)memoryAllocate((info->flagOutFile+1)*sizeof(llData), "refer to info->flagOutFile in main");
+		if(info->flagAveFile) {
+            info->flagAveFile = info->flagOutFile;
+            llOut[info->flagAveFile] = llIn[0];
+            llDataInit(&(llOut[info->flagAveFile]));
+			lllDataAttributeCopy(&(llOut[info->flagAveFile]), &(llIn[0]));
+        }
+	    for(i=0; i<info->flagOutFile; i++) {
+            llOut[i] = llIn[i];
+            llDataInit(&(llOut[i]));
+            lllDataPhaseShiftInter(&(llOut[i]), &(llIn[i]), &(info->paraFit[0][i]));
+            if(info->flagOutFile) {
+                fpt = fileOpen(info->outFileNameList[i], "w");
+	            llDataFileWrite(fpt, &(llOut[i]), 0);
+                fclose(fpt);
+            }
+            if(info->flagAveFile) {
+                lllDataAdd(&(llOut[info->flagAveFile]), &(llOut[i]));
+            }
+        }
+		if(info->flagAveFile) {
+       		lllDataDevidedByReal(&(llOut[info->flagAveFile]), (llDataParaTypeReal)info->flagAveFile);
+			llDataFileWrite(info->fptAve, &(llOut[info->flagAveFile]), 0);
+		}
+    }
+}
+
+void
+llDataFitParamOutput(THIS_PROGRAM_INFO* info)
+{
+    llDataParaTypeInteger i, j;
+    
+	if(info->flagPFile) {
+	    for(i=0; i<info->flagInFile; i++) {
+    	    for(j=0; j<info->flagInFile; j++) {
+        	    fprintf(info->fptP, "%15.6f %15.6f ", info->paraFit[i][j].PPara.R*DEGREE, info->paraFit[i][j].PParaInv.R*DEGREE);
+	        }
+    	    fprintf(info->fptP, "\n");
+    	    for(j=0; j<info->flagInFile; j++) {
+        	    fprintf(info->fptP, "%15.6f %15.6f ", info->paraFit[i][j].PParaInv.R*DEGREE, info->paraFit[i][j].PPara.R*DEGREE);
+	        }
+    	    fprintf(info->fptP, "\n");
+	    }
+    }
+	if(info->flagQFile) {
+	    for(i=0; i<info->flagInFile; i++) {
+    	    for(j=0; j<info->flagInFile; j++) {
+        	    fprintf(info->fptQ, "%15.6f %15.6f ", info->paraFit[i][j].QPara.R*DEGREE, info->paraFit[i][j].QParaInv.R*DEGREE);
+	        }
+    	    fprintf(info->fptQ, "\n");
+    	    for(j=0; j<info->flagInFile; j++) {
+        	    fprintf(info->fptQ, "%15.6f %15.6f ", info->paraFit[i][j].QParaInv.R*DEGREE, info->paraFit[i][j].QPara.R*DEGREE);
+	        }
+    	    fprintf(info->fptQ, "\n");
+	    }
+    }
+	if(info->flagRFile) {
+	    for(i=0; i<info->flagInFile; i++) {
+    	    for(j=0; j<info->flagInFile; j++) {
+        	    fprintf(info->fptR, "%15.6f %15.6f ", info->paraFit[i][j].RPara.R*DEGREE, info->paraFit[i][j].RParaInv.R*DEGREE);
+	        }
+    	    fprintf(info->fptR, "\n");
+    	    for(j=0; j<info->flagInFile; j++) {
+        	    fprintf(info->fptR, "%15.6f %15.6f ", info->paraFit[i][j].RParaInv.R*DEGREE, info->paraFit[i][j].RPara.R*DEGREE);
+	        }
+    	    fprintf(info->fptR, "\n");
+	    }
+    }
+    for(i=0; i<info->flagInFile; i++) {
+        for(j=0; j<info->flagInFile; j++) {
+            fprintf(info->fptOut2, "%s %s %15.6f %15.6f %15.6f %15.6f %15.6f %15.6f %15.6f %15.6f %15.6f %15.6f %15.6f %15.6f %d\n", 
+                info->inFileNameList[i], info->inFileNameList[j],
+                info->paraFit[i][j].PPara.R*DEGREE, info->paraFit[i][j].PPara.phi.Value*DEGREE,  info->paraFit[i][j].PPara.z.Value,  info->paraFit[i][j].PPara.r.Value,
+                info->paraFit[i][j].QPara.R*DEGREE, info->paraFit[i][j].QPara.phi.Value*DEGREE,  info->paraFit[i][j].QPara.z.Value,  info->paraFit[i][j].QPara.r.Value,
+                info->paraFit[i][j].RPara.R*PERCENT,info->paraFit[i][j].RPara.phi.Value*DEGREE,  info->paraFit[i][j].RPara.z.Value,  info->paraFit[i][j].RPara.r.Value,
+                 1);
+            fprintf(info->fptOut2, "%s %s %15.6f %15.6f %15.6f %15.6f %15.6f %15.6f %15.6f %15.6f %15.6f %15.6f %15.6f %15.6f %d\n", 
+                info->inFileNameList[i], info->inFileNameList[j],
+                info->paraFit[i][j].PPara.R*DEGREE, info->paraFit[i][j].PPara.phi.Value*DEGREE,  info->paraFit[i][j].PPara.z.Value,  info->paraFit[i][j].PPara.r.Value,
+                info->paraFit[i][j].QPara.R*DEGREE, info->paraFit[i][j].QPara.phi.Value*DEGREE,  info->paraFit[i][j].QPara.z.Value,  info->paraFit[i][j].QPara.r.Value,
+                info->paraFit[i][j].RPara.R*PERCENT,info->paraFit[i][j].RPara.phi.Value*DEGREE,  info->paraFit[i][j].RPara.z.Value,  info->paraFit[i][j].RPara.r.Value,
+                -1);
+        }
+    }
+}
+

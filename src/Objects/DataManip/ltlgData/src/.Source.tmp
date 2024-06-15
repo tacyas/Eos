@@ -1,0 +1,6 @@
+ltlgDataAllocate.c
+ltlgDataGet.c
+ltlgDataPrint.c
+ltlgDataReadFile.c
+ltlgDataWeightModify.c
+ltlgDataWriteFile.c

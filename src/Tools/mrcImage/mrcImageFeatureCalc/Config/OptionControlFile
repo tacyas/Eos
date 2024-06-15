@@ -1,0 +1,15 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input:binary(BandW)","Essential","1","1","In","inFile::mrcImage","NULL"
+"-r","-r[erencence]","Input:reference(density)","Optional","1","1","Ref","inFile::mrcImage","NULL"
+"-o","-o[utput]","Output:","Optional","1","1","Out","outFile::ASCII","stdout"
+"-oGC","-o[utput]GC","Output:gc","Optional","1","1","OutGC","outFile::mrcImage","NULL"
+"-oL","-o[utput]L[abel]","Output:Label","Optional","1","1","OutLabel","outFile::mrcImage","NULL"
+"-oP","-o[utput]P[eprimeter]","Output:Perimeter","Optional","1","1","OutPerimeter","outFile::mrcImage","NULL"
+"-oC","-o[utput]C[hainID]","Output:ChainID","Optional","1","1","OutChain","outFile::mrcImage","NULL"
+"-oS","-o[utput]S[urfaceArea]","Output:SurfaceArea","Optional","1","1","OutSurfaceArea","outFile::mrcImage","NULL"
+"-oD","-o[utput]D[ensityWeightedArea]","Output:DensityWeightedArea","Optional","1","1","OutDensityWeightedArea","outFile::mrcImage","NULL"
+"-n","-n[eighbor]","Neighbor: [4(0)|8 or 6(0)|18|26]","Optional","1","1","neighbor","Integer","0"
+"-d","-d[ensity]","Input:density","Optional","1","1","InDensity","inFile::mrcImage","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

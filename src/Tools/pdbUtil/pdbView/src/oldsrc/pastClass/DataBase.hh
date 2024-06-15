@@ -1,0 +1,29 @@
+#ifndef DATA_BASE_HH
+#define DATA_BASE_HH
+
+#include <pgsql/libpq-fe.h>
+
+class DataBase{
+protected:
+  PGconn *con;
+  PGresult *res;
+  char* host;
+  char* port;
+  char* dbName;
+public:
+
+  DataBase();
+  void ConnectToDataBase();
+  void SetDataBaseInfo(char* hostN, char* portN, char* dbN);
+  void DisplayAll(PGresult *res);
+  void DropTable(char* TableName);
+  void DeleteTable(char* TableName);
+  void CloseDataBase();
+};
+
+
+
+
+
+
+#endif /* DATA_BASE_HH */

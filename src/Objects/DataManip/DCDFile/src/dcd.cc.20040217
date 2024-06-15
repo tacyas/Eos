@@ -1,0 +1,727 @@
+#include<stdio.h>
+#include "../inc/DCDFile.h"
+
+/*
+
+*/
+
+DCD::DCD()
+{ 
+  seek=0;
+  count=0;
+  fp = NULL; // Initialize the DCD file pointer
+
+  coordinate_data = new float[1];
+  XCenterPosition=0.0;
+  YCenterPosition=0.0;
+  ZCenterPosition=0.0;
+  xsum=0.0;
+  ysum=0.0;
+  zsum=0.0;
+}
+
+DCD::~DCD()
+{
+  delete coordinate_data;
+  //  delete x;
+  // delete y;
+  // delete z;  
+}
+
+void DCD::HeaderRead(char* in_filename,char* out_filename)
+{
+  char* head_data;
+  int branch;
+
+  Open(in_filename, "r");
+
+ for(branch=0;branch<HeaderBranchNumber; branch++)
+ {
+   fseek(fp,seek,SEEK_SET);
+   fread(&tag_data,sizeof(int),1,fp);
+   seek=seek+tag_data+8;
+   head_data=(char*)malloc(sizeof(char)*tag_data); 
+   fread(head_data,sizeof(char),tag_data,fp);
+
+   if(branch==0)
+   {
+     if((fp=fopen(out_filename,"w"))==NULL)
+     {
+       cout << "NOT OUTPUTFILE!!\n" << endl;
+       exit(1);
+     }
+    }
+
+   else
+   {
+     if((fp=fopen(out_filename,"a"))==NULL)
+     {
+       cout << "NOT OUTPUTFILE!!\n" << endl;
+       exit(1);
+     }
+    }
+ 
+   if(branch==0)
+   {
+     nfile=(int)*((int*)(head_data+4*1));
+     step1=(int)*((int*)(head_data+4*2));
+     stepInterval=(int)*((int*)(head_data+4*3));
+     totalRun=(int)*((int*)(head_data+4*4));
+     fprintf(fp,"file=%d\n",nfile);
+     fprintf(fp,"step1=%d\n",step1);
+     fprintf(fp,"stepInterval=%d\n",stepInterval);
+     fprintf(fp,"totalRun=%d\n",totalRun);
+   }
+   if(branch==1)
+   {
+     fprintf(fp,"<<");
+     for(int i=4;i<tag_data-4;i++)
+     {    
+       file_title[i]=head_data[i];
+       fprintf(fp,"%c",file_title[i]);
+      }
+     fprintf(fp,">>");
+     fprintf(fp,"\n");
+   }
+   if(branch==2)
+   {
+    atomicity=(int)*((int*)(head_data));
+    fprintf(fp,"atomicity=%d\n",atomicity);
+   }
+ }
+	Close();
+}
+   
+void DCD::Open(char* filename,char* mode)
+{ 
+  if((fp=fopen(filename,mode))==NULL)
+  {
+   if(mode=="r")
+   {
+     cout << "NOT INPUTFILE!!\n" << endl;   
+     exit(1);
+   }
+   if(mode=="w" || mode=="a")
+   {
+     cout << "NOT OUTPUTFILE!!\n" << endl;   
+     exit(1);
+   }
+  }
+}
+
+void DCD::Close()
+{  
+  fclose(fp);
+  fp = NULL;
+}
+
+void DCD::Authentication(int start,int end,int interval)
+{
+ if(nfile>=100)
+ {
+   if(start>end)
+   {
+    cout <<"****************" << endl;
+    cout <<"<<Input error!>>" << endl;
+    cout <<"  start > end   " << endl;
+    cout <<"****************" << endl;
+    exit(0);
+   }
+   for(STEP=step1;STEP<=totalRun;STEP+=stepInterval)
+   { 
+     if(start==STEP)
+     {  
+       for(STEP2=step1;STEP2<=totalRun;STEP2+=stepInterval)
+       {       
+ 	 if(end==STEP2)
+	 {   
+           for(SINTERVAL=stepInterval;SINTERVAL<=totalRun;SINTERVAL+=stepInterval)
+	   {
+	     if(interval==SINTERVAL) return;
+             else
+             {	    
+               cout <<"*************************" << endl;
+	       cout <<"  <<Input error!>>" << endl;
+	       cout <<"##Error--->stepInterval##" << endl;
+	       cout <<"step1=" << step1 << endl;
+	       cout <<"stepInterval=" << stepInterval << endl;
+	       cout <<"totalRun=" << totalRun << endl;
+               cout <<"*************************" << endl;
+	       exit(0);
+             }
+	   }
+	 }
+	 if(STEP2+stepInterval>totalRun)
+         { 
+           for(SINTERVAL=stepInterval;SINTERVAL<=totalRun;SINTERVAL+=stepInterval)
+	   {
+             cout <<"*********************" << endl;
+	     cout <<"  <<Input error!>>" << endl;
+	     cout <<"##Error--->totalRun##" << endl;
+	     cout <<"step1=" << step1 << endl;
+	     cout <<"stepInterval=" << stepInterval << endl;
+	     cout <<"totalRun=" << totalRun << endl;
+             cout <<"*********************" << endl;
+	     exit(0);
+	   } 
+	 }   
+       }
+     } 
+   if(STEP+stepInterval>totalRun)
+   { 
+     cout <<"****************" << endl;
+     cout <<"<<Input error!>>" << endl;
+     cout <<"##Error--->step1" << endl;
+     cout <<"step1=" << step1 << endl;
+     cout <<"stepInterval=" << stepInterval << endl;
+     cout <<"totalRun=" << totalRun << endl;
+     cout <<"****************" << endl;
+     exit(0);
+   }
+  }
+ }
+
+ if(nfile<100)
+ {
+   if(end==100)
+   {
+     end=nfile;
+   }
+   else
+   {
+     if(start>end)
+     {
+      cout <<"****************" << endl;
+      cout <<"<<Input error!>>" << endl;
+      cout <<"  start > end   " << endl;
+      cout <<"****************" << endl;
+      exit(0);
+     }
+     for(STEP=step1;STEP<=totalRun;STEP+=stepInterval)
+     { 
+       if(start==STEP)
+       {  
+         for(STEP2=step1;STEP2<=totalRun;STEP2+=stepInterval)
+         {       
+ 	   if(end==STEP2)
+	   {   
+             for(SINTERVAL=stepInterval;SINTERVAL<=totalRun;SINTERVAL+=stepInterval)
+	     {
+	       if(interval==SINTERVAL) return;
+               else
+               { 	    
+                 cout <<"*************************" << endl;
+	         cout <<"     <<Input error!>>" << endl;
+	         cout <<"##Error--->stepInterval##" << endl;
+	         cout <<"step1=" << step1 << endl;
+	         cout <<"stepInterval=" << stepInterval << endl;
+	         cout <<"totalRun=" << totalRun << endl;
+                 cout <<"*************************" << endl;
+	         exit(0);
+               }
+	     }
+	   }
+	   if(STEP2+stepInterval>totalRun)
+           { 
+             for(SINTERVAL=stepInterval;SINTERVAL<=totalRun;SINTERVAL+=stepInterval)
+	     {
+               cout <<"*********************" << endl;
+	       cout <<"   <<Input error!>>" << endl;
+	       cout <<"##Erorr--->totalRun##" << endl;
+	       cout <<"step1=" << step1 << endl;
+	       cout <<"stepInterval=" << stepInterval << endl;
+	       cout <<"totalRun=" << totalRun << endl;
+               cout <<"*********************" << endl;
+	       exit(0);
+	     } 
+	   }   
+         }
+       } 
+     if(STEP+stepInterval>totalRun)
+     { 
+       cout <<"******************" << endl;
+       cout <<" <<Input error!>>" << endl;
+       cout <<"##Error--->step1##" << endl;
+       cout <<"step1=" << step1 << endl;
+       cout <<"stepInterval=" << stepInterval << endl;
+       cout <<"totalRun=" << totalRun << endl;
+       cout <<"******************" << endl;
+       exit(0);
+     }
+    }
+   }
+ } 
+} 
+
+void DCD::CoordinateNew()
+{
+  x = new float*[nfile];
+  y = new float*[nfile];
+  z = new float*[nfile];
+  for(int ix=0; ix<nfile; ix++)
+  {
+    x[ix] = new float[atomicity];
+    y[ix] = new float[atomicity];
+    z[ix] = new float[atomicity];
+  }
+
+  XDistance = new float*[atomicity];
+  YDistance = new float*[atomicity];
+  ZDistance = new float*[atomicity];
+  Distance= new float*[atomicity];
+  for(int ix=0; ix<atomicity; ix++)
+  {
+   XDistance [ix] = new float[atomicity];
+   YDistance [ix] = new float[atomicity];
+   ZDistance [ix] = new float[atomicity];
+   Distance[ix] = new float[atomicity];
+  }
+
+  dist = new int*[200];
+  for(int ix=0; ix<200; ix++)
+  {
+    dist[ix] = new int[nfile];
+  }
+}
+
+void DCD::Read(int start,int end,int interval)
+{  
+	int i, j;
+
+  fread(&tag_data,sizeof(int),1,fp);
+  seek=HeaderSize+4+(tag_data+8)*3*((start-step1)/stepInterval);
+  fseek(fp,seek,SEEK_SET);
+  for(j=start;j<=end;j+=interval)
+  {
+     for(i=0;i<tag_data/4;i++)
+     {
+       fread(coordinate_data,sizeof(float),1,fp);
+       x[count][i]=(float)*((float*)coordinate_data);
+     }
+     fseek(fp,8,SEEK_CUR);
+     for(i=0;i<tag_data/4;i++) 
+     {
+       fread(coordinate_data,sizeof(float),1,fp);
+       y[count][i]=(float)*((float*)coordinate_data);
+     }
+     fseek(fp,8,SEEK_CUR);
+     for(i=0;i<tag_data/4;i++)
+     {
+       fread(coordinate_data,sizeof(float),1,fp);
+       z[count][i]=(float)*((float*)coordinate_data);
+     }
+     count+=1;
+     if(interval==stepInterval)
+     {
+       seek=8;
+     }
+     else
+     {
+       seek=8+((tag_data+8)*3*(interval/stepInterval-1));
+     }
+     fseek(fp,seek,SEEK_CUR);
+  }
+}
+
+void DCD::Write(int start,int end,int interval)
+{ 
+int k, i;
+  fprintf(fp,"<start=%d,end=%d,interval=%d>\n",start,end,interval);
+  fprintf(fp,"------------------------------------------------------\n");
+  for(k=0;k<count;k++)
+  { 
+    fprintf(fp,"          [X]            [Y]            [Z]\n");
+    for(i=0;i<tag_data/4;i++)  
+    {  
+      fprintf(fp,"%3d : %3.6e  %3.6e  %3.6e\n",i+1,x[k][i],y[k][i],z[k][i]);  
+    }  
+  }
+}
+
+void DCD::Read()
+{
+	int i;
+  seek=276;
+  fseek(fp,seek,SEEK_SET);
+  fread(&tag_data,sizeof(int),1,fp);
+  for(count=0;count<nfile;count++)
+  { 
+   for(i=0;i<tag_data/4;i++)
+     {
+       fread(coordinate_data,sizeof(float),1,fp);
+       x[count][i]=(float)*((float*)coordinate_data);
+     }
+     fseek(fp,8,SEEK_CUR);
+     for(i=0;i<tag_data/4;i++) 
+     {
+       fread(coordinate_data,sizeof(float),1,fp);
+       y[count][i]=(float)*((float*)coordinate_data);
+     }
+     fseek(fp,8,SEEK_CUR);
+     for(i=0;i<tag_data/4;i++)
+     {
+       fread(coordinate_data,sizeof(float),1,fp);
+       z[count][i]=(float)*((float*)coordinate_data);
+     }
+     fseek(fp,8,SEEK_CUR);
+   }
+}
+
+void DCD::Write()
+{
+	int k;
+  fprintf(fp,"------------------------------------------------------\n");
+  fprintf(fp,"          [X]            [Y]            [Z]\n");
+ 
+  for(k=0;k<count;k++)
+  { 
+  fprintf(fp,"[[%d]]\n",k+1);
+    for(int i=0;i<tag_data/4;i++)  
+    {  
+      fprintf(fp,"%3d : %3.6e  %3.6e  %3.6e\n",i+1,x[k][i],y[k][i],z[k][i]);  
+    }  
+  }  
+}
+
+void DCD::SerectAtomGet(int serectAtom)
+{
+	int i;
+  if(serectAtom > atomicity)
+  { 
+    cout << " << Not Atom!!>>" <<endl;
+    cout << "    Atom= " << atomicity <<endl;
+    exit(0);
+  }
+  seek=276;
+  fseek(fp,seek,SEEK_SET);
+  fread(&tag_data,sizeof(int),1,fp);
+  for(count=0;count<nfile;count++)
+  {
+    for(i=0;i<tag_data/4;i++)
+    {
+      fread(coordinate_data,sizeof(float),1,fp);
+      if(i==serectAtom-1)
+      {
+       x[count][i]=(float)*((float*)coordinate_data);
+      }
+     } 
+     fseek(fp,8,SEEK_CUR);
+    for(i=0;i<tag_data/4;i++)
+    {
+      fread(coordinate_data,sizeof(float),1,fp);
+      if(i==serectAtom-1)
+      {
+       y[count][i]=(float)*((float*)coordinate_data);
+      }
+     }  
+     fseek(fp,8,SEEK_CUR);
+    for(i=0;i<tag_data/4;i++)
+    {
+      fread(coordinate_data,sizeof(float),1,fp);
+      if(i==serectAtom-1)
+      {
+       z[count][i]=(float)*((float*)coordinate_data);
+      }
+     }  
+     fseek(fp,8,SEEK_CUR);
+   } 
+}  
+
+void DCD::SerectAtomWrite(int serectAtom)
+{
+	int k;
+  fprintf(fp,"------------------------------------------------------\n");
+  fprintf(fp,"          [X]            [Y]            [Z]\n");
+  int i=serectAtom-1;  
+  for(k=0;k<count;k++)
+  {
+     fprintf(fp,"%3d : %3.6e  %3.6e  %3.6e\n",k+1,x[k][i],y[k][i],z[k][i]);  
+  }
+}
+
+void DCD::CenterPositionGet()
+{
+	int i;
+ /* if((fp=fopen(filename,mode))==NULL)
+  {
+     printf("Not inputfile!!%s\n",filename);
+     exit(1);
+  }*/
+
+  seek=276;
+  fseek(fp,seek,SEEK_SET);
+  fread(&tag_data,sizeof(int),1,fp);
+  for(count=0;count<nfile;count++)
+  { 
+    for(i=0;i<tag_data/4;i++)
+    {
+      fread(coordinate_data,sizeof(float),1,fp);
+      xsum=xsum+*coordinate_data;
+    }
+    fseek(fp,8,SEEK_CUR);
+    for(i=0;i<tag_data/4;i++) 
+    {
+      fread(coordinate_data,sizeof(float),1,fp);
+      ysum=ysum+*coordinate_data;
+    }
+    fseek(fp,8,SEEK_CUR);
+    for(i=0;i<tag_data/4;i++)
+    {
+      fread(coordinate_data,sizeof(float),1,fp);
+      zsum=zsum+*coordinate_data;
+    }
+    fseek(fp,8,SEEK_CUR);
+  }
+  XCenterPosition=xsum/((float)nfile*(float)atomicity);
+  YCenterPosition=ysum/((float)nfile*(float)atomicity);
+  ZCenterPosition=zsum/((float)nfile*(float)atomicity);
+}
+
+void DCD::CenterPositionWrite()
+{
+// fprintf(fp,"sum=%e\n",sum);
+ fprintf(fp,"X-CenterPosition=%e\n",XCenterPosition);
+ fprintf(fp,"Y-CenterPosition=%e\n",YCenterPosition);
+ fprintf(fp,"Z-CenterPosition=%e\n",ZCenterPosition);
+}
+
+void DCD::CenterSerectAtomDistanceGet(int serectAtom)
+{  
+  int i=serectAtom-1;
+  for(int k=0;k<count;k++)
+  {
+     XDistance[k][i]=(XCenterPosition-x[k][i])*(XCenterPosition-x[k][i]);  
+     YDistance[k][i]=(YCenterPosition-y[k][i])*(YCenterPosition-y[k][i]);  
+     ZDistance[k][i]=(ZCenterPosition-z[k][i])*(ZCenterPosition-z[k][i]);
+     Distance[k][i]=sqrt(XDistance[k][i]+YDistance[k][i]+ZDistance[k][i]);
+  }
+}
+
+void DCD::CenterSerectAtomDistanceWrite(int serectAtom)
+{
+  fprintf(fp,"------------------------------------------------------\n");
+ // fprintf(fp,"        [XDistance]    [YDistance]    [ZDistance]\n");
+  int i=serectAtom-1;
+  for(int k=0;k<count;k++)
+  {
+   // fprintf(fp,"%3d: %3.6e  %3.6e  %3.6e\n",k+1,XDistance[k][i],YDistance[k][i],ZDistance[k][i]);
+   fprintf(fp,"%3d: %3.6e\n",k+1,Distance[k][i]);
+  }
+}
+
+void DCD::AtomAtomDistanceGet(int serectAtom,int serectAtom2)
+{
+	int i;
+  float** xx;
+  float** yy;
+  float** zz;
+
+  xx = new float*[nfile];
+  yy = new float*[nfile];
+  zz = new float*[nfile];
+  for(int ix=0; ix<nfile; ix++)
+  {
+    xx[ix] = new float[atomicity];
+    yy[ix] = new float[atomicity];
+    zz[ix] = new float[atomicity];
+  }
+
+  if(serectAtom > atomicity || serectAtom2 > atomicity)
+  { 
+    cout << " << Not Atom!!>>" <<endl;
+    cout << "    Atom= " << atomicity <<endl;
+    exit(0);
+  }
+
+  seek=276;
+  fseek(fp,seek,SEEK_SET);
+  fread(&tag_data,sizeof(int),1,fp);
+  for(count=0;count<nfile;count++)
+  {
+    for(i=0;i<tag_data/4;i++)
+    {
+      fread(coordinate_data,sizeof(float),1,fp);
+      if(i==serectAtom-1)
+      {
+       x[count][i]=(float)*((float*)coordinate_data);
+      }
+     } 
+     fseek(fp,8,SEEK_CUR);
+    for(i=0;i<tag_data/4;i++)
+    {
+      fread(coordinate_data,sizeof(float),1,fp);
+      if(i==serectAtom-1)
+      {
+       y[count][i]=(float)*((float*)coordinate_data);
+      }
+     }  
+     fseek(fp,8,SEEK_CUR);
+    for(i=0;i<tag_data/4;i++)
+    {
+      fread(coordinate_data,sizeof(float),1,fp);
+      if(i==serectAtom-1)
+      {
+       z[count][i]=(float)*((float*)coordinate_data);
+      }
+     }  
+     fseek(fp,8,SEEK_CUR);
+   } 
+  
+  seek=276;
+  fseek(fp,seek,SEEK_SET);
+  fread(&tag_data,sizeof(int),1,fp);
+  for(count=0;count<nfile;count++)
+  {
+    for(i=0;i<tag_data/4;i++)
+    {
+      fread(coordinate_data,sizeof(float),1,fp);
+      if(i==serectAtom2-1)
+      {
+       xx[count][i]=(float)*((float*)coordinate_data);
+      }
+     } 
+     fseek(fp,8,SEEK_CUR);
+    for(i=0;i<tag_data/4;i++)
+    {
+      fread(coordinate_data,sizeof(float),1,fp);
+      if(i==serectAtom2-1)
+      {
+       yy[count][i]=(float)*((float*)coordinate_data);
+      }
+     }  
+     fseek(fp,8,SEEK_CUR);
+    for(i=0;i<tag_data/4;i++)
+    {
+      fread(coordinate_data,sizeof(float),1,fp);
+      if(i==serectAtom2-1)
+      {
+       zz[count][i]=(float)*((float*)coordinate_data);
+      }
+     }  
+     fseek(fp,8,SEEK_CUR);
+   }
+
+  for(int k=0;k<count;k++)
+ {
+     int i=serectAtom-1;
+     XDistance[k][i]=(x[k][serectAtom-1]-xx[k][serectAtom2-1])*(x[k][serectAtom-1]-xx[k][serectAtom2-1]);  
+     YDistance[k][i]=(y[k][serectAtom-1]-yy[k][serectAtom2-1])*(y[k][serectAtom-1]-yy[k][serectAtom2-1]);  
+     ZDistance[k][i]=(z[k][serectAtom-1]-zz[k][serectAtom2-1])*(z[k][serectAtom-1]-zz[k][serectAtom2-1]);  
+     Distance[k][i]=sqrt(XDistance[k][i]+YDistance[k][i]+ZDistance[k][i]);
+  }  
+}
+
+void DCD::AtomChangeFromAtomRead(int serectAtom,int serectAtom2)
+{
+	int i;
+  seek=276;
+  fseek(fp,seek,SEEK_SET);
+  fread(&tag_data,sizeof(int),1,fp);
+  for(count=0;count<nfile;count++)
+  {
+    for(i=0;i<tag_data/4;i++)
+    {
+      fread(coordinate_data,sizeof(float),1,fp);
+      if(i==serectAtom-1)
+      {
+       x[count][i]=(float)*((float*)coordinate_data);
+       }
+     } 
+     fseek(fp,8,SEEK_CUR);
+    for(i=0;i<tag_data/4;i++)
+    {
+      fread(coordinate_data,sizeof(float),1,fp);
+      if(i==serectAtom-1)
+      {
+       y[count][i]=(float)*((float*)coordinate_data);
+      }
+     }  
+     fseek(fp,8,SEEK_CUR);
+    for(i=0;i<tag_data/4;i++)
+    {
+      fread(coordinate_data,sizeof(float),1,fp);
+      if(i==serectAtom-1)
+      {
+       z[count][i]=(float)*((float*)coordinate_data);
+      }
+     }  
+     fseek(fp,8,SEEK_CUR);
+   } 
+
+
+  seek=276;
+  fseek(fp,seek,SEEK_SET);
+  fread(&tag_data,sizeof(int),1,fp);
+    for(i=0;i<tag_data/4;i++)
+    {
+      fread(coordinate_data,sizeof(float),1,fp);
+      if(i==serectAtom2-1)
+      {
+        XCenterPosition=(float)*((float*)coordinate_data);
+      }
+     } 
+     fseek(fp,8,SEEK_CUR);
+    for(i=0;i<tag_data/4;i++)
+    {
+      fread(coordinate_data,sizeof(float),1,fp);
+      if(i==serectAtom2-1)
+      {
+        YCenterPosition=(float)*((float*)coordinate_data);
+      }
+     }  
+     fseek(fp,8,SEEK_CUR);
+    for(i=0;i<tag_data/4;i++)
+    {
+      fread(coordinate_data,sizeof(float),1,fp);
+      if(i==serectAtom2-1)
+      {
+        ZCenterPosition=(float)*((float*)coordinate_data);
+      }
+     }  
+     fseek(fp,8,SEEK_CUR);
+
+}
+
+void DCD::DistanceDistribution()
+{
+	int k, i, j;
+  for(k=0;k<count;k+=100)
+  { 
+    for(i=0;i<atomicity;i++)
+    {
+      int atomicity2=atomicity+1;
+      atomicity2--;  
+      for(j=1;j<atomicity2;j++)
+      {
+        XDistance[i][j-1]=(x[k][i]-x[k][i+j])*(x[k][i]-x[k][i+j]);  
+        YDistance[i][j-1]=(y[k][i]-y[k][i+j])*(y[k][i]-y[k][i+j]);  
+        ZDistance[i][j-1]=(z[k][i]-z[k][i+j])*(z[k][i]-z[k][i+j]);
+        Distance[i][j-1]=sqrt(XDistance[i][j-1]+YDistance[i][j-1]+ZDistance[i][j-1]);
+
+        float b=0.0;
+        for(int a=1;a<200;a++)
+        {
+          if(Distance[i][j-1]>=b && Distance[i][j-1]<b+0.2)
+          dist[a][k]++;
+          b+=0.2;
+        }
+       }
+     }
+  }
+}
+
+
+void DCD::DistanceDistributionWrite()
+{
+	int k;
+  fprintf(fp,"------------------------------------------------------\n");
+  for(k=0;k<count;k+=100)
+  {
+    for(int a=1;a<200;a++)
+    {
+     //fprintf(fp,"%d %d %d\n",k+1,a,dist[a][k]);
+      fprintf(fp,"%d %d %d\n",a,k+1,dist[a][k]);
+    }
+      fprintf(fp,"\n");
+  }
+}

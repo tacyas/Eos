@@ -1,0 +1,299 @@
+/*
+# pdbView : $Revision$  
+# $Date$ 
+# Created by $Author$
+# Usage : pdbView
+# Attention
+#   $Loccker$
+#  	$State$ 
+#
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <vtk.h>
+              
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+
+#define DEBUG
+#include "genUtil.h"
+
+#include "pdbFile.h"
+
+
+
+/*
+Example:
+typedef struct lpdbViewInfo {
+	float a;
+	int   b;
+} lpdbViewInfo;
+
+typedef enum lpdbViewMode {
+	a=0,
+	b=1
+} lpdbViewMode;
+*/
+
+int
+main(int argc, char* argv[]) 
+{
+	pdbViewInfo info;
+	pdbFile pdb;
+
+	init0(&info);
+    argCheck(&info, argc, argv);
+    init1(&info);
+
+	DEBUGPRINT("Program Start\n");
+
+    pdbFileRead(info.fptIn, &pdb);
+
+    vtkRenderer *ren = vtkRenderer::New();
+    vtkRenderWindow *renWindow = vtkRenderWindow::New();
+    renWindow->AddRenderer(ren);
+    vtkRenderWindowInteractor *iren = vtkRenderWindowInteractor::New();
+    iren->SetRenderWindow(renWindow);
+
+    //Create an actor and give it cone geometry
+    vtkConeSource *cone = vtkConeSource::New();
+    cone->SetResolution(30);
+    cone->SetHeight(5);
+    cone->SetRadius(3);
+    vtkPolyDataMapper *coneMapper = vtkPolyDataMapper::New();
+    coneMapper->SetInput(cone->GetOutput());
+    vtkActor *coneActor = vtkActor::New();
+    coneActor->SetMapper(coneMapper);
+    coneActor->GetProperty()->SetColor(1.0,0.0,0.0);
+    coneActor->SetPosition(0,5,0);
+
+    //Mine Create
+    vtkConeSource *cone2 = vtkConeSource::New();
+    cone2->SetResolution(6);
+    cone2->SetHeight(2);
+    cone2->SetRadius(3);
+    vtkPolyDataMapper *coneMapper2=vtkPolyDataMapper::New();
+    coneMapper2->SetInput(cone2->GetOutput());
+    vtkActor *coneActor2 = vtkActor::New();
+    coneActor2->SetMapper(coneMapper2);
+    coneActor2->GetProperty()->SetColor(0.2,0.8,0.7);
+
+    //Cube
+    vtkCubeSource *cube = vtkCubeSource::New();
+    cube->SetCenter(0,0,0);
+    cube->SetXLength(3);
+    cube->SetYLength(3);
+    cube->SetZLength(3);
+    //cube->SetBounds(0.0,0.5,0.0,0.3,0.0,0.2);
+    vtkPolyDataMapper *cubeMapper = vtkPolyDataMapper::New();
+    cubeMapper->SetInput(cube->GetOutput());
+    vtkActor *cubeActor = vtkActor::New();
+    cubeActor->SetMapper(cubeMapper);
+    cubeActor->GetProperty()->SetOpacity(0.5);
+    cubeActor->GetProperty()->SetColor(0.4,0.4,0.7);
+
+    //Sphere
+    vtkSphereSource *sphere = vtkSphereSource::New();
+    sphere->SetCenter(0,0,0);
+    sphere->SetRadius(0.5);
+    vtkPolyDataMapper *sphereMapper = vtkPolyDataMapper::New();
+    sphereMapper->SetInput(sphere->GetOutput());
+    vtkActor *sphereActor = vtkActor::New();
+    sphereActor->SetMapper(sphereMapper);
+    //sphereActor->GetProperty()->SetOpacity(0.5);
+    sphereActor->GetProperty()->SetColor(0.9,0.4,0.8);
+
+
+    //LineX
+    vtkLineSource *lineX = vtkLineSource::New();
+    lineX->SetPoint1(0,0,0);
+    lineX->SetPoint2(5,0,0);
+    vtkPolyDataMapper *lineXMapper = vtkPolyDataMapper::New();
+    lineXMapper->SetInput(lineX->GetOutput());
+    vtkActor *lineXActor = vtkActor::New();
+    lineXActor->SetMapper(lineXMapper);
+    lineXActor->GetProperty()->SetColor(1.0,0,0);
+
+
+    //LineY
+    vtkLineSource *lineY = vtkLineSource::New();
+    lineY->SetPoint1(0,0,0);
+    lineY->SetPoint2(0,5,0);
+    vtkPolyDataMapper *lineYMapper = vtkPolyDataMapper::New();
+    lineYMapper->SetInput(lineY->GetOutput());
+    vtkActor *lineYActor = vtkActor::New();
+    lineYActor->SetMapper(lineYMapper);
+    lineYActor->GetProperty()->SetColor(0,1.0,0);
+
+
+    //LineZ
+    vtkLineSource *lineZ = vtkLineSource::New();
+    lineZ->SetPoint1(0,0,0);
+    lineZ->SetPoint2(0,0,5);
+    vtkPolyDataMapper *lineZMapper = vtkPolyDataMapper::New();
+    lineZMapper->SetInput(lineZ->GetOutput());
+    vtkActor *lineZActor = vtkActor::New();
+    lineZActor->SetMapper(lineZMapper);
+    lineZActor->GetProperty()->SetColor(0,0,1.0);
+
+
+    //Cylinder
+    vtkCylinderSource *axis = vtkCylinderSource::New();
+    axis->SetHeight(8);
+    axis->SetRadius(0.5);
+    axis->SetCenter(0,4,0);
+    axis->SetResolution(15);
+    vtkPolyDataMapper *axisMapper = vtkPolyDataMapper::New();
+    axisMapper->SetInput(axis->GetOutput());
+    vtkActor *axisActor = vtkActor::New();
+    axisActor->SetMapper(axisMapper);
+    axisActor->GetProperty()->SetColor(1.0,1.0,0.0);
+
+    //arrow
+    vtkConeSource *arrow = vtkConeSource::New();
+    arrow->SetResolution(20);
+    arrow->SetHeight(3);
+    arrow->SetRadius(1.5);
+    vtkPolyDataMapper *arrowMapper = vtkPolyDataMapper::New();
+    arrowMapper->SetInput(arrow->GetOutput());
+    vtkActor *arrowActor = vtkActor::New();
+    arrowActor->SetMapper(arrowMapper);
+    arrowActor->GetProperty()->SetColor(0.0,1.0,0.5);
+    arrowActor->RotateZ(90);
+    arrowActor->SetPosition(0,9,0);
+    arrowActor->GetProperty()->SetOpacity(0.5);
+
+
+    //CylinderY
+    vtkCylinderSource *axisX = vtkCylinderSource::New();
+    axisX->SetHeight(8);
+    axisX->SetRadius(0.5);
+    axisX->SetCenter(0,0,0);
+    axisX->SetResolution(15);
+    vtkPolyDataMapper *axisXMapper = vtkPolyDataMapper::New();
+    axisXMapper->SetInput(axisX->GetOutput());
+    vtkActor *axisXActor = vtkActor::New();
+    axisXActor->SetMapper(axisXMapper);
+    axisXActor->GetProperty()->SetColor(0,0.4,0.7);
+    axisXActor->RotateZ(90);
+    axisXActor->SetPosition(4,0,0);
+
+
+
+
+    //arrowY
+    vtkConeSource *arrowX = vtkConeSource::New();
+    arrowX->SetResolution(20);
+    arrowX->SetHeight(3);
+    arrowX->SetRadius(1.5);
+    vtkPolyDataMapper *arrowXMapper = vtkPolyDataMapper::New();
+    arrowXMapper->SetInput(arrowX->GetOutput());
+    vtkActor *arrowXActor = vtkActor::New();
+    arrowXActor->SetMapper(arrowXMapper);
+    arrowXActor->GetProperty()->SetColor(0.0,0.2,0.7);
+    //arrowXActor->RotateZ(90);
+    arrowXActor->SetPosition(9,0,0);
+
+
+    //CylinderZ
+    vtkCylinderSource *axisZ = vtkCylinderSource::New();
+    axisZ->SetHeight(8);
+    axisZ->SetRadius(0.5);
+    axisZ->SetCenter(0,0,0);
+    axisZ->SetResolution(15);
+    vtkPolyDataMapper *axisZMapper = vtkPolyDataMapper::New();
+    axisZMapper->SetInput(axisZ->GetOutput());
+    vtkActor *axisZActor = vtkActor::New();
+    axisZActor->SetMapper(axisZMapper);
+    axisZActor->GetProperty()->SetColor(0.7,0.4,0.7);
+    axisZActor->RotateX(90);
+    axisZActor->SetPosition(0,0,4);
+
+    //arrowZ
+    vtkConeSource *arrowZ = vtkConeSource::New();
+    arrowZ->SetResolution(20);
+    arrowZ->SetHeight(3);
+    arrowZ->SetRadius(1.5);
+    vtkPolyDataMapper *arrowZMapper = vtkPolyDataMapper::New();
+    arrowZMapper->SetInput(arrowZ->GetOutput());
+    vtkActor *arrowZActor = vtkActor::New();
+    arrowZActor->SetMapper(arrowZMapper);
+    arrowZActor->GetProperty()->SetColor(0.7,0.2,0.7);
+    arrowZActor->RotateY(-90);
+    arrowZActor->SetPosition(0,0,9);
+
+
+    //Point Source
+    vtkPointSource *point = vtkPointSource::New();
+    point->SetCenter(0,0,0);
+    point->SetNumberOfPoints(20);
+    point->SetRadius(5);
+    vtkPolyDataMapper *pointMapper=vtkPolyDataMapper::New();
+    pointMapper->SetInput(point->GetOutput());
+    vtkActor *pointActor = vtkActor::New();
+    pointActor->SetMapper(pointMapper);
+    pointActor->GetProperty()->SetColor(0.0,0.9,0.9);
+
+
+
+    //MineDotted
+    //vtkPoints *point = vtkPoints::New();
+    //point->SetPoints(5,5,5);
+
+    //assign our actor to the renderer
+
+    //ren->AddActor(coneActor);
+    //ren->AddActor(coneActor2);
+    //ren->AddActor(pointActor);
+    //ren->AddActor(cubeActor);
+    ren->AddActor(sphereActor);
+    ren->AddActor(lineXActor);
+    ren->AddActor(lineYActor);
+    ren->AddActor(lineZActor);
+    ren->AddActor(axisActor);
+    ren->AddActor(arrowActor);
+
+    ren->AddActor(axisXActor);
+    ren->AddActor(arrowXActor);
+
+    ren->AddActor(axisZActor);
+    ren->AddActor(arrowZActor);
+
+
+    ren->SetBackground(0,0,0);
+
+    ren->ResetCamera();
+
+    renWindow->SetSize(400,400);
+
+    //draw the resulting scene
+    renWindow->Render();
+
+    //Begin mouse interaction
+    iren->Start();
+
+
+    //mine
+    //vtkLine *line = vtkLine::New();
+    //float lineCoords[2][1];
+
+    //line->GetPointIds()->SetId(0,0);
+    //line->GetPointIds()->SetId(1,1);
+
+    //lineCoords[0][0]=.25;
+    //lineCoords[1][0]=.75;
+
+
+
+
+
+	exit(EXIT_SUCCESS);
+}
+
+void
+additionalUsage()
+{
+	fprintf(stderr, "----- Additional Usage -----\n");
+}

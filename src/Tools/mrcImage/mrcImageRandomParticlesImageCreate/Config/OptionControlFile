@@ -1,0 +1,9 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: ParticlesList[mrcImage]","Essential","1","1","In","inFileList","stdin"
+"-o","-o[utput]","Output: Image[mrcImage]","Essential","1","1","Out","outFile","stdout"
+"-N","-N","Input: ImageSize","Optional","2","1","Nx","Integer","1024","2","Ny","Integer","1024"
+"-seed","-seed","Input: Seed[]","Optional","1","1","Seed","Integer","0"
+"-InterpolationMode","-InterpolationMode","Input: InterpolationMode","Optional","1","1","InterpolationMode","Integer","2"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

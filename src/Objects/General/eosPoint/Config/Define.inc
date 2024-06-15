@@ -1,0 +1,3 @@
+OBJECTNAME = eosPoint
+EXTRA_INC =
+EXTRA_CCOPTS =

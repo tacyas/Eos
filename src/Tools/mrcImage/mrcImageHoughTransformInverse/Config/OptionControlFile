@@ -1,0 +1,10 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-Nx","-Nx","Nx[pixel]","Optional","1","1","Nx","Integer","100"
+"-Ny","-Ny","Ny[pixel]","Optional","1","1","Ny","Integer","100"
+"-d","-d[elta]","delta[A]","Optional","1","1","delta","Integer","1.0"
+"-M","-M[ode]","HoughMode","Optional","1","1","HoughSpaceMode","Integer","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

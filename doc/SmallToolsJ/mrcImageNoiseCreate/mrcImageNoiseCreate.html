@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageNoiseCreate</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageNoiseCreate<br></h2></b></font>
+	<h4>ノイズを作る</h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+	<table border="1">
+			<div align="left">
+			<tr>
+				<th>オプション</th>
+				<th>必須項目/選択項目</th>
+				<th>説明</th>
+				<th>デフォルト</th>
+			</tr>
+			<tr>
+				<td>-r</td>
+				<td>必須</td>
+				<td>参照ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-o</td>
+				<td>必須</td>
+				<td>出力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-s</td>
+				<td>選択</td>
+				<td>ノイズの標準偏差値を設定</td>
+				<td>1.0</td>
+			</tr>
+			<tr>
+				<td>-h</td>
+				<td>選択</td>
+				<td>ヘルプを表示</td>
+				<td>　</td>
+			</tr>
+			</div>
+		</table>
+	
+	<br>
+	<div>※出力ファイルは、参照ファイルと同じ情報（Nx,Ny,Nz,Lengthなど）を持つ</div>
+
+	<h4>******実行例******</h4>
+	
+<!-- 入力ファイル説明 -->
+
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="b120-2.png" border="0" alt="b120-2.png(2730 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				65.5929<br>
+				5.45036<br>
+				12.3043<br>
+				0.153804<br></p>
+			</td>
+		</tr>
+	</table>
+	
+<!-- 必須項目のみで出力 -->
+	<br>
+	<br>
+	<caption><font color="blue">------オプション必須項目のみの場合------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="b120-2.out.png" border="0" alt="b120-2.out.png(6893 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-3.53454<br>
+				3.3058<br>
+				0.0174581<br>
+				0.988206<br>
+				0.0123526<br></p>
+			</td>
+		</tr>
+	</table>
+	
+<!-- オプション　-s -->
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-s------</font></caption><br>
+	<div>ノイズの標準偏差値を10に設定</div>
+	<table>
+		<tr>
+			<td><img src="b120-2-s10.out.png" border="0" alt="b120-2-s10.out.png(6808 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-37.4746<br>
+				36.5747<br>
+				0.312798<br>
+				9.90576<br>
+				0.123822<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<br>
+	
+	<div>ノイズの標準偏差値を0.01に設定</div>
+	<table>
+		<tr>
+			<td><img src="b120-2-s0.01.out.png" border="0" alt="b120-2-s0.01.out.png(6849 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-0.0374746<br>
+				0.0365747<br>
+				7.87412e-05<br>
+				0.0100336<br>
+				0.00012542<br></p>
+			</td>
+		</tr>
+	</table>
+	
+</body>
+</html>

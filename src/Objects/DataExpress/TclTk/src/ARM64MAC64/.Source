@@ -1,0 +1,46 @@
+SRC = \
+tkImgFmtMRC.c \
+tkImgFmtlargeIP.c \
+tkctfInfo.c \
+
+OBJ = \
+tkImgFmtMRC.o \
+tkImgFmtlargeIP.o \
+tkctfInfo.o \
+
+SHAREDOBJ = \
+tkImgFmtMRC.sharedo \
+tkImgFmtlargeIP.sharedo \
+tkctfInfo.sharedo \
+
+REALOBJ = \
+ARM64MAC64/tkImgFmtMRC.o \
+ARM64MAC64/tkImgFmtlargeIP.o \
+ARM64MAC64/tkctfInfo.o \
+
+REALSHAREDOBJ = \
+ARM64MAC64/tkImgFmtMRC.sharedo \
+ARM64MAC64/tkImgFmtlargeIP.sharedo \
+ARM64MAC64/tkctfInfo.sharedo \
+
+OBJDEBUG = \
+tkImgFmtMRC.debugo \
+tkImgFmtlargeIP.debugo \
+tkctfInfo.debugo \
+
+REALOBJDEBUG = \
+ARM64MAC64/tkImgFmtMRC.debugo \
+ARM64MAC64/tkImgFmtlargeIP.debugo \
+ARM64MAC64/tkctfInfo.debugo \
+
+OBJCUDAGDB = \
+tkImgFmtMRC.cudagdb.o \
+tkImgFmtlargeIP.cudagdb.o \
+tkctfInfo.cudagdb.o \
+
+REALOBJCUDAGDB = \
+ARM64MAC64/tkImgFmtMRC.cudagdb.o \
+ARM64MAC64/tkImgFmtlargeIP.cudagdb.o \
+ARM64MAC64/tkctfInfo.cudagdb.o \
+
+

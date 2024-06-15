@@ -1,0 +1,28 @@
+-F 4.3 1 0 52x1+0+0 +0+0 'Cantata' cantata
+  -M 1 1 52x1+0+0 +1+0 ' ' subform
+    -P 1 0 52x1+0+1 +0+0 ' ' mrcImageGLCM
+      -D 1 0 9x1+0+0 'Options' _gui_options
+        -H 1  6x1+0+0 'License' 'license' $BOOTSTRAP/repos/license/License license
+        -E
+        -R 1 0 1 5x1+35+0 'Run' 'execute operation' $EOS/bin/mrcImageGLCM
+        -H 1  5x1+41+0 'Help' 'help page' $EOS/src/Tools/mrcImage/mrcImageGLCM/doc/mrcImageGLCM.doc help
+        -Q 1 0 5.25x1+47+0 'Close'
+        -I 1 0 1 1 0 1 -1x1+1+1.500000 ' ' 'In' 'Input' i
+        -O 1 0 1 0 0 1 -1x1+1+3.000000 ' ' 'Out' 'Output:GLImage' o
+        -O 1 0 1 0 0 1 -1x1+1+4.500000 ' ' 'OutInfo' 'Output:Information' O
+        -f 1 0 1 0 0 -1x1+1+6.000000 0 0 0.000000 0 0 0 'epsilon' 'SmallValueForLog' e
+        -f 1 0 1 0 0 -1x1+1+7.500000 0 0 1.000000 0 0 0 'thresHigh' 'HighCut' thresHigh
+        -f 1 0 1 0 0 -1x1+1+9.000000 0 0 0.000000 0 0 0 'thresLow' 'LowCut' thresLow
+        -f 1 0 1 0 0 -1x1+1+10.500000 0 0 0.000000 0 0 0 'exceptValue' 'Except Value' exceptValue
+        -f 1 0 1 0 0 -1x1+1+12.000000 0 0 2.000000 0 0 0 'range' 'mean+-range*sd (LowCut-HighCut)' range
+        -i 1 0 1 0 0 -1x1+1+13.500000 0 0 8 0 0 'nHist' 'GrayLevel' nHist
+        -i 1 0 1 0 0 -1x1+1+15.000000 0 0 1 0 0 'offset' 'Distance' offset
+        -i 1 0 1 0 0 -1x1+1+16.500000 0 0 15 0 0 'angleMode' 'Angle:1-0, 2-45, 4-90, 8-135 for 2D, 2^13-1=8191 for 3D' angle
+        -I  1 0 0 1 0 1 -1x1+1+18 ' ' '0' 'minAreaX' 
+        -I  1 0 0 1 0 1 -1x1+1+19 ' ' '0' 'minAreaY' 
+        -I  1 0 0 1 0 1 -1x1+1+21 ' ' '0' 'minAreaZ' 
+        -I 1 0 1 0 0 1 -1x1+1+22.500000 ' ' 'configFile' 'ConfigurationFile' c
+        -i 1 0 1 0 0 -1x1+1+24.000000 0 0 0 0 0 'mode' 'Mode' m
+    -E
+  -E
+-E

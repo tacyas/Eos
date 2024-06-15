@@ -1,0 +1,1 @@
+OBJECTNAME = pdb2mrc2d

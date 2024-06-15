@@ -1,0 +1,11 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: mrcImage","Essential","1","1","In","inFile::mrcImage","NULL"
+"-o","-o[utput]","Output: mrcImage:area","Essential","1","1","Out","outFile::mrcImage","NULL"
+"-O","-O[utput]","Output: ASCII: area info","Optional","1","1","OutInfo","outFile::ASCII","stdout"
+"-l","-l[abel]","Output: mrcImage:labeling","Optional","1","1","Label","outFile::mrcImage","NULL"
+"-OH","-O[utput]H[istgram]","Output: ASCII: area info","Optional","1","1","OutHist","outFile::ASCII","NULL"
+"-H","-H[istgram]","Delta","Optional","1","1","DelHist","Real","1"
+"-N","-N[eighbor]","Neighbor[4(0)|8 or 6(0)|18|26]","Optional","1","1","Neighbor","Real","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

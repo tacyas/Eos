@@ -1,0 +1,8 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: mrc","Essential","1","1","In","inFile::mrcImage","NULL"
+"-o","-o[utput]","Output: mrc","Essential","1","1","Out","outFile::mrcImage","NULL"
+"-v","-v[alue]","Value: o=i+v","Optional","1","1","Value","Real","0.0"
+"-cuda","-cuda","UseCuda","Optional","1","1","cudaDeviceID","Integer","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

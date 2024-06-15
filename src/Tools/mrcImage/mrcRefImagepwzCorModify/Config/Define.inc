@@ -1,0 +1,4 @@
+OBJECTNAME = mrcRefImagepwzCorModify
+EXTRA_LIB  =
+EXTRA_CCOPTS =
+EXTRA_INC =

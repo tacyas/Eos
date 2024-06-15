@@ -1,0 +1,60 @@
+#!../I686LINUX/Visualmake
+set readfile Makefile
+set writefile Makefile.tmp
+
+if [catch {open $readfile r} file1] {
+	puts stderr "Cannot open Makefile : $file1 "
+} else {
+	set x 1
+	frame .entryset
+	while {[gets $file1 line] >=0} {
+		if { [regexp {^(\#comment\#)+[a-zA-Z0-9]+$} "$line"]!=0 } {
+			frame .entryset.sep$x -width 140 -height 2 -borderwidth 1 -relief sunken
+			set variablecomment "[string range "$line" 9 end]"
+			label .entryset.label$variablecomment -font { {defaultgui} 11 bold italic } -text "$variablecomment" 
+			grid .entryset.label$variablecomment -row $x -column 0 -sticky e
+			grid .entryset.sep$x -row $x -column 1 -sticky e
+		} elseif { [regexp {^[A-Z][0-9a-zA-Z_]*=[-0-9a-zA-Z$()._]+$} "$line"] !=0 } {
+			set variable "[string replace "$line" [string wordend "$line" 0] end ]"
+			set parameter($variable) "[string replace "$line" 0 [string wordend "$line" 0]]"
+			label .entryset.label$variable -text "$variable"
+			entry .entryset.entry$variable -textvariable parameter($variable)
+			grid .entryset.label$variable -row $x -column 1 -sticky e
+			grid .entryset.entry$variable -row $x -column 2 -sticky e
+			grid rowconfigure .entryset 1 -weight 1
+			grid columnconfigure .entryset 1 -weight 1
+		}
+		incr x
+		pack .entryset -fill x -padx 4 -pady 4
+		}	
+	}
+	close $file1
+
+proc writeValue {} {
+	global parameter
+	global readfile
+	global writefile
+
+	if [catch {open $readfile r+} file] {
+		puts stderr "Cannot open Makefile : $file"
+	} else {
+		if [catch {open $writefile w+} file2] {
+		puts stderr "Cannot open Makefile.tmp : $file2"
+		} else {
+			while {[gets $file line] >=0} {
+				if { [array names parameter "[string replace "$line" [string wordend "$line" 3] end ]"] !="" } {
+					puts $file2 [string replace "$line" [string wordend "$line" 3] end ]=$parameter([string replace "$line" [string wordend "$line" 3] end ])
+				} else {
+					puts $file2 $line
+				}
+			}
+		}
+		close $file
+		close $file2
+		exec cp $writefile $readfile
+	}
+}	
+	button .save -text save -command { writeValue }
+	button .quit -text quit -command { exit }
+	pack .quit -side bottom -side left
+	pack .save -side left

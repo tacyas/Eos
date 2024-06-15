@@ -1,0 +1,116 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>                  
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+#include "llData.h"
+#define PI (3.141592653589793238)
+void
+main(int argc, char* argv[]) 
+{
+    mrcImage in;
+    llData   near;
+	llData	 far;
+	long status;
+    THIS_PROGRAM_INFO info;
+
+	init0(&info);
+    argCheck(&info, argc, argv);
+    init1(&info);
+    mrcFileRead(&in, info.inFileName, "main routine", 0);
+    THIS_ROUTINE/**/(&near, &far, &in, &info);
+    llDataFileWrite(info.fptOut1, &near, &status);
+    llDataFileWrite(info.fptOut2, &far, &status);
+}
+                           
+#define SQR(x) ((x)*(x))
+
+void
+THIS_ROUTINE/**/(llData* out1, llData* out2, mrcImage* in, THIS_PROGRAM_INFO* info)
+{
+	long l;
+	long count, i;
+	double R, delR, delZ;
+	llComplex* tmpllComplex;
+
+	/* data check */
+	if(info->xStep!=in->HeaderLength.x) {
+		fprintf(stderr, "xStep(%g) in CtrlFile is different from Length.x(%g) in mrcImage\n", info->xStep, in->HeaderLength.x);
+	}
+	if(info->yStep!=in->HeaderLength.y) {
+		fprintf(stderr, "yStep(%g) in CtrlFile is different from Length.y(%g) in mrcImage\n", info->yStep, in->HeaderLength.y);
+	}
+
+	delR = 1.0/(info->xStep*in->HeaderN.x);
+	delZ = 1.0/(info->yStep*in->HeaderN.y);
+    
+    if(delR!=info->delRInv) {
+        fprintf(stderr, "delRInv(%g) in CtrlFile is differnt from Length.x*N.x(%g) in mrcImage\n", info->delRInv, 1.0/delR);
+        fprintf(stderr, "Use delRInv\n");
+        delR = 1.0/info->delRInv;
+    }
+	out1->llMax = out2->llMax = info->llMax;
+	out1->nRMax = out2->nRMax = info->RMax;
+
+	llDataInit(out1);
+	llDataInit(out2);
+	count = 0;
+	for(l=0; l<info->llMax; l++) {
+		/* Near Side */
+		tmpllComplex = out1->LL[l].data;
+		out1->LL[l] = info->llDataInfo[l];
+		out1->LL[l].data = tmpllComplex;
+		out1->LL[l].Side = NearSide;
+		if(out1->LL[l].leftMax>info->RMax || out1->LL[l].rightMax>info->RMax) {
+			fprintf(stderr, "leftMax(%g) or rightMax(%g) in Layer Line (%d, (n,l)=(%d, %d)) is greater than RMax(%g) in CtrlFile\n",
+					out1->LL[l].leftMax, out1->LL[l].rightMax, l, out1->LL[l].nn, out1->LL[l].nl, info->RMax);
+			exit(EXIT_FAILURE);
+		}
+		if(out1->LL[l].nn>=0) {
+			for(R=out1->LL[l].leftMin, i=0; R<out1->LL[l].leftMax; R++, i++) {
+				out1->LL[l].data[i].RR = R*delR;	
+				mrcPixelDataGet(in, -R, out1->LL[l].Z, 0.0, &(out1->LL[l].data[i].F),   mrcPixelMag,    mrcPixelHowNearest);
+				mrcPixelDataGet(in, -R, out1->LL[l].Z, 0.0, &(out1->LL[l].data[i].PHI), mrcPixelPhase,  mrcPixelHowNearest);
+				out1->LL[l].data[i].PHI += 2*PI*out1->LL[l].data[i].RR*info->xShift; 
+			}
+		} else {
+			for(R=out1->LL[l].rightMin, i=0; R<out1->LL[l].rightMax; R++, i++) {
+				out1->LL[l].data[i].RR = R*delR;
+				mrcPixelDataGet(in, R, out1->LL[l].Z, 0.0, &(out1->LL[l].data[i].F),   mrcPixelMag,    mrcPixelHowNearest);
+				mrcPixelDataGet(in, R, out1->LL[l].Z, 0.0, &(out1->LL[l].data[i].PHI), mrcPixelPhase,  mrcPixelHowNearest);
+				out1->LL[l].data[i].PHI -= 2*PI*out1->LL[l].data[i].RR*info->xShift; 
+			}
+		}
+		out1->LL[l].nR = i;
+		/* Far Side */
+		tmpllComplex = out2->LL[l].data;
+		out2->LL[l] = info->llDataInfo[l];
+		out2->LL[l].data = tmpllComplex;
+        out2->LL[l].Side = FarSide;
+		if(out2->LL[l].leftMax>info->RMax || out2->LL[l].rightMax>info->RMax) {
+			fprintf(stderr, "leftMax(%g) or rightMax(%g) in Layer Line (%d, (n,l)=(%d, %d)) is greater than RMax(%g) in CtrlFile\n",
+					out2->LL[l].leftMax, out2->LL[l].rightMax, l, out2->LL[l].nn, out2->LL[l].nl, info->RMax);
+			exit(EXIT_FAILURE);
+		}
+		if(out2->LL[l].nn>=0) {
+			for(R=out2->LL[l].rightMin, i=0; R<out2->LL[l].rightMax; R++, i++) {
+				out2->LL[l].data[i].RR = R*delR;	
+				mrcPixelDataGet(in, R, out2->LL[l].Z, 0.0, &(out2->LL[l].data[i].F),   mrcPixelMag,    mrcPixelHowNearest);
+				mrcPixelDataGet(in, R, out2->LL[l].Z, 0.0, &(out2->LL[l].data[i].PHI), mrcPixelPhase,  mrcPixelHowNearest);
+				out2->LL[l].data[i].PHI -= 2*PI*out2->LL[l].data[i].RR*info->xShift; 
+			}
+		} else {
+			for(R=out2->LL[l].leftMin, i=0; R<out2->LL[l].leftMax; R++, i++) {
+				out2->LL[l].data[i].RR = R*delR;	
+				mrcPixelDataGet(in, -R, out2->LL[l].Z, 0.0, &(out2->LL[l].data[i].F),   mrcPixelMag,    mrcPixelHowNearest);
+				mrcPixelDataGet(in, -R, out2->LL[l].Z, 0.0, &(out2->LL[l].data[i].PHI), mrcPixelPhase,  mrcPixelHowNearest);
+				out2->LL[l].data[i].PHI += 2*PI*out2->LL[l].data[i].RR*info->xShift; 
+			}
+		}
+		out2->LL[l].nR = i;
+		count++;
+	}
+	out1->llMax = count; 
+	out2->llMax = count; 
+}

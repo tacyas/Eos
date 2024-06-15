@@ -1,0 +1,12 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Optional","1","1","In","inFile","stdin"
+"-o","-o[utput]","OutputDataFile","Optional","1","1","Out","outFile","stdout"
+"-oP","-oP[utput]","OutputParameter","Optional","1","1","Out2","outFile","NULL"
+"-kV","-kV","kV","Optional","1","1","kV","Real","200"
+"-Cs","-Cs","Cs[mm]","Optional","1","1","Cs","Real","1.7"
+"-Def","-Def","Def[A]","Optional","3","1","minDef","Real","0.0","2","maxDef","Real","200000.0","3","delDef","Real","1000.0"
+"-Amp","-Amp","AmpToPhase","Optional","3","1","minAmp","Real","0.0","2","maxAmp","Real","0.4","3","delAmp","Real","0.005"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"
+"-R","-R[/A]","ThonRing[/A]","Variable","1","1","R","Real","NULL"

@@ -1,0 +1,8 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input::mrcImage","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","Output::mrcImage","Essential","1","1","Out","outFile","NULL"
+"-f","-f[latField]","Input::mrcImage","Essential","1","1","Flat","inFile","NULL"
+"-d","-d[arkField]","Input::mrcImage","Optional","1","1","Dark","inFile","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

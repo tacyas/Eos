@@ -1,0 +1,8 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: DCD","Essential","1","1","In","inFile","NULL"
+"-ip","-i[nput]p[db]","Input: PDB","Optional","1","1","InPDB","inFile","NULL"
+"-o","-o[utput]","Output: ASCII","Essential","1","1","Out","outFile","NULL"
+"-op","-o[utput]p[db]","Output: PDB","Optional","1","1","OutPDB","outFile","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

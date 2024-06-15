@@ -1,0 +1,76 @@
+#!/bin/sh
+#
+# protoHTMLCreate  1.5
+#
+# The latest update : 12/22/95 at 17:25:21
+#
+#@(#) A new SCCS file is created if no SCCS. If one have SCCS, delta commands.
+#@(#)
+#
+#@(#) protoHTMLCreate SourceFileName
+#
+#@(#) Attention
+#@(#)
+#@(#) Parameter: 
+#@(#) Essential:
+#@(#) SourceFileName
+#@(#) Optional:
+#@(#)
+
+# Store Flags
+FlagsCharacter="-"
+
+case $# in 
+	0)
+		;;
+	*) # if option
+		while [ `echo $1 | cut -c1` = ${FlagsCharacter} ]
+		do
+				parms="$ {parms} $1"
+				shift 
+		done
+		;;
+esac	
+
+
+case $# in
+	0) # No filename 
+		echo "Enter SourceFileName"
+		read filename
+		;;
+	1) # 
+		filename=$1
+		;;
+	*) #
+		filename="$*"
+		;;
+esac
+
+#
+EosSCCSHome=$EOS_HOME/sccs
+currentDir=`pwd`
+
+for file in ${filename}
+do
+	FullName=${currentDir}/${file}	
+	Name=`basename ${FullName} .html`
+	Dir=`dirname ${FullName}`
+	
+	if [ -f ${FullName} ]
+	then
+		echo "${file} exits. Do you overwrite it ? (y/n)"
+		read ans
+		case $ans in 
+			'y'|'Y')
+			;;
+			'n'|'N')
+				exit
+			;;
+			*)
+				exit
+			;;
+		esac
+	fi
+    cat ${EOS_HOME}/sbin/protoHTMLCreate.Template | sed "s/Name/${Name}/" > ${FullName}
+	chmod +w ${FullName}
+done

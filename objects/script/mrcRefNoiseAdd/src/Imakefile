@@ -1,0 +1,19 @@
+#define DoNotAutoRecreate NO
+
+#include EOS_INCLUDE
+
+OBJECT_TYPE = script
+
+TOOLBOX_NAME = eos
+
+OBJECT_NAME = mrcRefNoiseAdd
+
+BINARY_NAME = mrcRefNoiseAdd
+
+INSTPGMFLAGS =
+
+SCRIPTS = \
+	mrcRefNoiseAdd.ksh
+
+#define KKSH_DEF
+#include <Script.template>

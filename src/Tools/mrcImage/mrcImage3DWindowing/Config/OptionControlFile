@@ -1,0 +1,11 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: mrcImage","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","Output: mrcImage","Essential","1","1","Out","outFile","NULL"
+"-center","-center","Center:","Optional","3","1","cx","Real","0","2","cy","Real","0","3","cz","Real","0"
+"-w","-w[idth]","Width","Optional","3","1","wx","Real","0","2","wy","Real","0","3","wz","Real","0"
+"-r","-r[dius]","Radius","Optional","1","1","r","Real","0"
+"-wr","-w[idth]r[dius]","Width for R","Optional","1","1","w","Real","0"
+"-wz","-w[idth]z","Width for z","Optional","1","1","widthz","Real","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

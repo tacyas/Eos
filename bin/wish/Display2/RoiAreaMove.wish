@@ -1,0 +1,155 @@
+#!/usr/local/bin/wish -f
+proc roiAreaMoveStart {c x y} {
+	global mousePressed
+	global Roi
+
+	set mousePressed(mode) 1
+	set mousePressed(startx) $x
+	set mousePressed(starty) $y
+
+	switch $Roi(Shape) {
+		Rectangle {
+		}
+		TiltRectangle {
+		}
+		Line {
+		}
+		Spline {
+		}
+		default {
+			puts "Not supported Action"
+		}
+	}
+}
+
+proc roiAreaMoveMotion {c x y} {
+	global Roi
+	global mousePressed
+
+	if { $mousePressed(mode) == 1 } {
+		set mousePressed(endx) $x
+		set mousePressed(endy) $y
+		$c delete $Roi(CurrentObject) 
+		switch $Roi(Shape) {
+			Rectangle {
+				rectangleMove $c $mousePressed(startx) $mousePressed(starty) $mousePressed(endx) $mousePressed(endy) 
+			}
+			TiltRectangle {
+				rectangleMove $c $mousePressed(startx) $mousePressed(starty) $mousePressed(endx) $mousePressed(endy) 
+			}
+			Line {
+				lineMove $c $mousePressed(startx) $mousePressed(starty) $mousePressed(endx) $mousePressed(endy) 
+			}
+			Spline {
+				splineMove $c $mousePressed(startx) $mousePressed(starty) $mousePressed(endx) $mousePressed(endy) 
+			}
+			default {
+				puts "Not supported Action"
+			}
+		}
+		set mousePressed(startx) $x
+		set mousePressed(starty) $y
+	}
+}
+
+proc roiAreaMoveEnd {c x y} {
+	global mousePressed
+	global Roi
+	
+	if { $mousePressed(mode) == 1 } {
+		set mousePressed(endx) $x
+		set mousePressed(endy) $y
+		$c delete $Roi(CurrentObject) 
+		switch $Roi(Shape) {
+			Rectangle {
+				rectangleMove $c $mousePressed(startx) $mousePressed(starty) $mousePressed(endx) $mousePressed(endy) 
+			}
+			TiltRectangle {
+				rectangleMove $c $mousePressed(startx) $mousePressed(starty) $mousePressed(endx) $mousePressed(endy) 
+			}
+			Line {
+				lineMove $c $mousePressed(startx) $mousePressed(starty) $mousePressed(endx) $mousePressed(endy) 
+			}
+			Spline {
+				splineMove $c $mousePressed(startx) $mousePressed(starty) $mousePressed(endx) $mousePressed(endy) 
+			}
+			default {
+				puts "Not supported Action"
+			}
+		}
+	}
+	set mousePressed(mode) 0
+}
+
+proc rectangleMove { c startx starty endx endy } {
+	global rectanglePoints 
+	global Roi
+
+	set delta(x) [expr $endx - $startx ]
+	set delta(y) [expr $endy - $starty ]
+
+	if { $rectanglePoints(x0) == ""  } {
+		set rectanglePoints(x0) [ expr $startx - $rectanglePoints(width)/2  ]
+		set rectanglePoints(y0) [ expr $starty - $rectanglePoints(height)/2 ]
+		set rectanglePoints(x1) [ expr $startx + $rectanglePoints(width)/2  ]
+		set rectanglePoints(y1) [ expr $starty - $rectanglePoints(height)/2 ]
+		set rectanglePoints(x2) [ expr $startx + $rectanglePoints(width)/2  ]
+		set rectanglePoints(y2) [ expr $starty + $rectanglePoints(height)/2 ]
+		set rectanglePoints(x3) [ expr $startx - $rectanglePoints(width)/2  ]
+		set rectanglePoints(y3) [ expr $starty + $rectanglePoints(height)/2 ]
+	} 
+	#puts $rectanglePoints(x0)
+	set rectanglePoints(x0) [ expr $rectanglePoints(x0) + $delta(x) ]
+	set rectanglePoints(y0) [ expr $rectanglePoints(y0) + $delta(y) ]
+	set rectanglePoints(x1) [ expr $rectanglePoints(x1) + $delta(x) ]
+	set rectanglePoints(y1) [ expr $rectanglePoints(y1) + $delta(y) ]
+	set rectanglePoints(x2) [ expr $rectanglePoints(x2) + $delta(x) ]
+	set rectanglePoints(y2) [ expr $rectanglePoints(y2) + $delta(y) ]
+	set rectanglePoints(x3) [ expr $rectanglePoints(x3) + $delta(x) ]
+	set rectanglePoints(y3) [ expr $rectanglePoints(y3) + $delta(y) ]
+
+	set Roi(CurrentObject) [ rectangleCreate $c \
+		$rectanglePoints(x0) $rectanglePoints(y0) \
+		$rectanglePoints(x1) $rectanglePoints(y1) \
+		$rectanglePoints(x2) $rectanglePoints(y2) \
+		$rectanglePoints(x3) $rectanglePoints(y3) ]
+	return $Roi(CurrentObject)
+}
+
+proc lineMove { c startx starty endx endy } {
+	global linePoints 
+	global Roi
+
+	set delta(x) [expr $endx - $startx ]
+	set delta(y) [expr $endy - $starty ]
+
+	set linePoints(x0) [ expr $linePoints(x0) + $delta(x) ]
+	set linePoints(y0) [ expr $linePoints(y0) + $delta(y) ]
+	set linePoints(x1) [ expr $linePoints(x1) + $delta(x) ]
+	set linePoints(y1) [ expr $linePoints(y1) + $delta(y) ]
+	set Roi(CurrentObject) [ lineCreate $c \
+		$linePoints(x0) $linePoints(y0) \
+		$linePoints(x1) $linePoints(y1) ]
+	return $Roi(CurrentObject)
+}
+
+proc splineMove { c startx starty endx endy } {
+	global splinePoints 
+	global Roi
+
+	set delta(x) [expr $endx - $startx ]
+	set delta(y) [expr $endy - $starty ]
+
+    set points {}
+
+    for { set i 0 } {$i <= $splinePoints(N)} {incr i} {
+		set splinePoints(x$i) [ expr $splinePoints(x$i) + $delta(x)/$Roi(Zoom) ] 
+		set splinePoints(y$i) [ expr $splinePoints(y$i) + $delta(y)/$Roi(Zoom) ] 
+        append points [ coordGetInMainImageToCanvas $c x $splinePoints(x$i)] " " \
+                      [ coordGetInMainImageToCanvas $c y $splinePoints(y$i)] " "
+    }
+
+    set Roi(CurrentObject) [ splineCreate $c $points ]
+
+	return $Roi(CurrentObject)
+}

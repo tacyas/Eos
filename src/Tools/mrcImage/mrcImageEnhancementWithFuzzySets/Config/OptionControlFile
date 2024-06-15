@@ -1,0 +1,9 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-Fe","-Fe","exponential fuzzifiers","Optional","1","1","Fe","Real","2"
+"-Fd","-Fd","denominational fuzzifiers","Optional","1","1","Fd","Real","52"
+"-r","-r","times of recursive filter","Optional","1","1","r","Integer","2"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

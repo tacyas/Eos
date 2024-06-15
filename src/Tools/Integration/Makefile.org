@@ -1,0 +1,8 @@
+include ../../Config/Define.inc
+include ../Config/Define.inc
+include Config/Define.inc
+
+SOURCE_FILE = \
+#LastSource
+
+include Config/Target.inc

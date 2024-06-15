@@ -1,0 +1,5 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: Makefile","Optional","1","1","In","String","Makefile"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

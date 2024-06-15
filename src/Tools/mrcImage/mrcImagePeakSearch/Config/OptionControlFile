@@ -1,0 +1,14 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: mrcImage","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","Output: mrcImage","Optional","1","1","Out","outFile","NULL"
+"-oB","-o[utput]B","Output: mrcImage:Binary","Optional","1","1","OutB","outFile","NULL"
+"-oL","-o[utput]L","Output: mrcImage:Label","Optional","1","1","OutL","outFile","NULL"
+"-oA","-o[utput]A","Output: mrcImage:Aarea","Optional","1","1","OutA","outFile","NULL"
+"-O","-O[utputPeakStatics]","Output as ASCII: Peak statics","Optional","1","1","OutStatics","outFile","stdout"
+"-t","-t[hreshold]","Input: Peak's values are more than t*sigma.","Optional","1","1","Sigma","Real","3.0"
+"-T","-T[hreshold]","Input: Peak's values are more than T.","Optional","1","1","Threshold","Real","0.0"
+"-a","-a[rea]","Input[A^2]: Peak's area are more than a.","Optional","1","1","Area","Real","6.0"
+"-A","-A[rea]","Input[pixel^2]: Peak's area are more than A.","Optional","1","1","AreaPixel","Real","9"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

@@ -1,0 +1,83 @@
+<HTML>
+<HEAD>
+<TITLE> FAQ </TITLE>
+</HEAD>
+<BODY BGCOLOR="ffffcc">
+<H1> FAQ </H1>
+ <!--#config timefmt="Last Modified : %y/%m/%d %H:%M:%S" --> <!--#flastmod file="index.html"-->
+<UL>
+<LI> Concerning Display2
+<OL>
+<LI> How does NEW differ from OPEN under FILE? 
+	<DD> NEW creates a new window (a new Display2 process) 
+	but OPEN does not create a new one because the same window are used to display a new image.
+	<DD> NEW has the function of NEW WINDOWN under WINDOW + OPEN under FILE.
+
+<LI> How can I use ROI (region of interest) button ?
+	<DD> The ROI button on the menu bar (and/or the middle button of your mouse in the case of no draw of ROI)  
+	shows what type ROI we are interested in.  
+	The ROI types we now support are 'rectangle', 'line' and 'spline'.  You cannot select a circle area because of 
+	mrc-File format.  But you can mask images by circle, using a small tool of mrcImageMasking.
+	<DD> Using 'Extract ROI(Real)' under FILE and Extract(Real) button in RoiInfo under Information, 
+	mrcImageROI(rectangle) or mrcImageUnbentROI(spline) will start following ROI area information.
+	In the case of Extract(Vertual), you can get the command of mrcImageROI/mrcImageUnbentROI with the argument information.  But the command will be only displayed without performing the command. 
+<LI> How can I suggest the area of ROI  ?
+	<DD> After decision of the ROI type, you can create the ROI using the left button of your mouse.
+	In the case of 'line' and 'rectangle', you should push the left button and drag the mouse to create the ROI.  
+	In the case of 'spline', you should push the button and drag the mouse some times.
+<LI> What is EDIT ?
+	<DD> After you created the first version area of ROI, you can cancel, move, resize and rotate the area 
+	by pushing the left button of mouse and drag your mouse, follwoing EDIT (and/or the middle button of your mouse).
+<LI> How can I use WINDOW ?
+	<DD> The new window command creates a new window as the NEW command under FILE 
+	except for no open of the desired file.  You can open the file using OPEN under FILE. 
+<LI> OPERATION:FFT
+	<DD> I know the operation of FFT has some bug.  This is a test-version operation.  
+	I now try to realize that small tools of Eos can be installed automatedly as OPERATION.
+	Please wait for success of this trial (1997/9/15).
+<LI> Display2Info:Infomation 
+	<DL>
+	<DT> HIGH/LOW 
+	<DD> HIGH means the whitest density and LOW means the blackest density.
+	Thus, you can get lighter display or darker display.   If HIGH < LOW, you will get the nega-image.
+	<DT> PREVZ/NEXTZ
+	<DD> In the case of three-dimensional images, you can get the 2D z-section images using PREVZ(Previous z)/NEXTZ(Next z).
+	</DL>
+</OL>
+<LI> Concerning FFT Operations
+<OL>
+<LI> Filtering (FFT space)
+	<DT> mrcFFTFiltering
+	<DD> Filtering follwing space-group.
+	<DT> mrcImageLowPassFilter
+	<DD> Low pass filtering
+	<DT> mrcImageHighPassFilter
+	<DD> High pass filtering
+<LI> mrcFFTFiltering 	
+	<DT> -vx, -vy
+	<DD> These options indicate two vectors of crystal.  
+	<DT> -sx, -sy
+	<DD> These options indicate the size of window size for filtering.
+</OL>
+<LI> Printing
+<OL>
+<LI> How to print images and FFT.
+	<DD> You can use a small tool of mrcImagePrint in both cases.
+</OL>
+<LI> Small tools
+<OL>
+<LI> mrcImageFourierPowerSpectrum 	
+	<DT> How to display a output 
+	<DD> Eos does not have a general display tool of graph.  
+	We usually use gnuplot(free) or Splus(commercial) or Excel(commercial).
+</OL>
+<LI> MISCELLANEOUS
+<OL>
+<LI> What is -c option ?
+	<DD> The "-c" option is one of reserved options.
+	Some tools use this option, while others do not use it. 
+	<DD> The reserved options are -m -h and -c.
+</OL>
+</UL>
+</BODY>
+</HTML>

@@ -1,0 +1,90 @@
+#!/bin/sh
+#
+# %M% %Y% %I%
+#
+# The latest update : %G% at %U%
+#
+#%Z% ctrl2header Function
+#%Z%
+#
+#%Z% Usage : ctrl2header SourceFileName
+#
+#%Z% Attention
+#%Z%
+#%Z% Parameter: 
+#%Z%     Essential:
+#%Z%         SourceFileName
+#%Z% Optional:
+#%Z%
+usage()
+{
+	echo "Usage: ctrl2header ToolName ControlFileName"
+	exit
+}
+
+
+# Store Flags
+FlagsCharacter="-"
+
+case $# in 
+	0)
+		;;
+	*)
+		while [ `echo $1 | cut -c1` = ${FlagsCharacter} ]
+		do
+			case $1 in
+				-h)
+					usage
+				;;
+			esac
+			parms="$ {parms} $1"
+			shift 
+		done
+		;;
+esac
+case $# in
+    0) # No filename 
+        echo "Class Name"
+        read ClassName
+        echo "Tool Name"
+        read ToolName
+        echo "Enter ControlSourceFileName"
+        read ControlFileName
+        ;;
+    1) # 
+        Class=$1
+        echo "Tool Name"
+        read ToolName
+        echo "Enter ControlSourceFileName"
+        read ControlFileName
+        ;;
+    2) # 
+        Class=$1
+        ToolName=$2
+        echo "Enter ControlSourceFileName"
+        read ControlFileName
+        ;;
+    3) # 
+        ClassName=$1
+        ToolName=$2
+        ControlFileName=$3
+        ;;
+    *) #
+        usage 
+        ;;
+esac
+
+#
+currentDir=`pwd`
+
+for file in ${ControlFileName}
+do
+	if [ -f src/util.c -o -f src/util.cc ] 
+	then
+		echo "util.c or util.cc has been implemented"
+	else
+		sed -f $EOS_HOME/sbin/sed/ctrlPre.sed ${ControlFileName} > ${ControlFileName}.tmp
+		awk -f $EOS_HOME/sbin/awk/ctrl2Function.awk -f $EOS_HOME/sbin/awk/ctrl2util.awk -v ClassName=${ClassName} -v ToolName=${ToolName} ${ControlFileName}.tmp >  src/util.c
+		rm ${ControlFileName}.tmp
+	fi
+done

@@ -1,0 +1,13 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-sD","-s[igma]D[ensity]","SigmaDensity","Optional","1","1","SigmaDensity","Real","2.0"
+"-kTD","-k[ernal]T[type]D[ensity]","KernelTypeForDensity","Optional","1","1","KernelTypeDensity","Integer","0"
+"-sS","-s[igma]S[pace]","SigmaSpace","Optional","1","1","SigmaSpace","Real","1.0"
+"-sS3","-s[igma]S[pace]3","SigmaSpace(3D)","Optional","3","1","SigmaSpaceX","Real","1.0","2","SigmaSpaceY","Real","1.0","3","SigmaSpaceZ","Real","1.0"
+"-kTS","-k[ernel]T[ype]S[pace]","KernelTypeForSpace","Optional","1","1","KernelTypeSpace","Integer","0"
+"-kS","-k[ernel]S[ize]","KernelSize","Optional","1","1","KernelSize","Integer","5"
+"-kS3","-k[ernel]S[ize]3","KernelSize(3D)","Optional","3","1","KernelSizeX","Integer","5","2","KernelSizeY","Integer","5","3","KernelSizeZ","Integer","5"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

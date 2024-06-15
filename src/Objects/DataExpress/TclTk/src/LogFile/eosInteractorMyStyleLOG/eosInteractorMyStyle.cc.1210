@@ -1,0 +1,621 @@
+#include "./eosStereoModeOn.hh"
+#include "./eosInteractorMyStyle.hh"
+
+//---------------------------------------------------------------------------
+eosInteractorMyStyle *eosInteractorMyStyle::New(const eosInteractorMyStyle& myStyle) 
+{
+  return new eosInteractorMyStyle(myStyle);
+}
+
+eosInteractorMyStyle *eosInteractorMyStyle::New() 
+{
+  return new eosInteractorMyStyle();
+}
+
+
+//----------------------------------------------------------------------------
+eosInteractorMyStyle::eosInteractorMyStyle():vtkInteractorStyle() 
+{
+}
+
+eosInteractorMyStyle::eosInteractorMyStyle(const eosInteractorMyStyle& myStyle):vtkInteractorStyle() 
+{
+  init(myStyle);
+}
+
+//----------------------------------------------------------------------------
+eosInteractorMyStyle::~eosInteractorMyStyle() 
+{
+  if(StereoState==STEREO_ON)
+    {
+      if ( this->OutlineActor ) 
+	{
+	  // if we change style when an object is selected, we must remove the
+	  // actor from the renderer
+	  if (this->CurrentRenderer) 
+	    {
+	      Ren->RemoveActor(this->OutlineActor);
+	      RenLeft->RemoveActor(this->OutlineActor);
+	      RenRight->RemoveActor(this->OutlineActor);
+	    }
+	  this->OutlineActor->Delete();
+	}
+      if ( this->OutlineMapper ) 
+	{
+	  this->OutlineMapper->Delete();
+	}
+      this->Outline->Delete();
+      this->Outline = NULL;
+      
+      if ( this->CurrentRenderer)
+	{
+	  Ren->UnRegister(this);
+	  Ren = NULL;
+	  RenLeft->UnRegister(this);
+	  RenLeft = NULL;
+	  RenRight->UnRegister(this);
+	  RenRight = NULL;
+	}
+      StereoState=STEREO_OFF;
+    }
+  
+  else
+  {
+      if ( this->OutlineActor ) 
+	{
+	  // if we change style when an object is selected, we must remove the
+	  // actor from the renderer
+	  if (this->CurrentRenderer) 
+	    {
+	      this->CurrentRenderer->RemoveActor(this->OutlineActor);
+	    }
+	  this->OutlineActor->Delete();
+	}
+      if ( this->OutlineMapper )
+	{
+	  this->OutlineMapper->Delete();
+	}
+      this->Outline->Delete();
+      this->Outline = NULL;
+      
+      if ( this->CurrentRenderer)
+	{
+	  this->CurrentRenderer->UnRegister(this);
+	  this->CurrentRenderer = NULL;
+	}
+      
+  }
+}
+
+//----------------------------------------------------------------------------
+void eosInteractorMyStyle::init(const eosInteractorMyStyle& src)
+{
+    StereoState = src.StereoState;
+    Ren=src.Ren;
+    RenLeft=src.RenLeft;
+    RenRight=src.RenRight;
+    Cam=src.Cam;
+    CamLeft=src.CamLeft;
+    CamRight=src.CamRight;
+    cam=src.cam;
+    rwi=src.rwi;
+    rwiStereo=src.rwiStereo;
+}
+
+int    eosInteractorMyStyle::StereoState = STEREO_OFF;
+/*
+vtkRenderer*    eosInteractorMyStyle::Ren=NULL;
+vtkRenderer*    eosInteractorMyStyle::RenLeft=NULL;
+vtkRenderer*    eosInteractorMyStyle::RenRight=NULL;
+vtkCamera*    eosInteractorMyStyle::Cam=NULL;
+vtkCamera*    eosInteractorMyStyle::CamLeft=NULL;
+vtkCamera*    eosInteractorMyStyle::CamRight=NULL;
+vtkCamera*    eosInteractorMyStyle::cam=NULL;
+vtkRenderWindowInteractor*    eosInteractorMyStyle::rwi=NULL;
+vtkRenderWindowInteractor*    eosInteractorMyStyle::rwiStereo=NULL;
+*/
+//----------------------------------------------------------------------------
+void eosInteractorMyStyle::UpdateInternalState(int ctrl, int shift, 
+                                             int X, int Y) 
+{
+  vtkInteractorStyle::UpdateInternalState(ctrl, shift , X, Y) ;
+
+}
+
+//----------------------------------------------------------------------------
+
+void eosInteractorMyStyle::SetAutoAdjustCameraClippingRange( int value )
+{
+  if ( value == this->AutoAdjustCameraClippingRange )
+    {
+    return;
+    }
+  
+  if ( value < 0 || value > 1 )
+    {
+    vtkErrorMacro("Value must be between 0 and 1 for" <<
+                  " SetAutoAdjustCameraClippingRange");
+    return;
+    }
+  
+  this->AutoAdjustCameraClippingRange = value;
+
+  this->Modified();
+}
+
+//----------------------------------------------------------------------------
+void eosInteractorMyStyle::ResetCameraClippingRange()
+{
+  if (StereoState==STEREO_ON)
+    {
+      if ( this->AutoAdjustCameraClippingRange )
+	{
+	  Ren->ResetCameraClippingRange();
+	  RenLeft->ResetCameraClippingRange();
+	  RenRight->ResetCameraClippingRange();
+	}     
+    }
+  else
+    {
+      if ( this->AutoAdjustCameraClippingRange )
+	{
+	  this->CurrentRenderer->ResetCameraClippingRange();
+	}
+    }
+}
+//----------------------------------------------------------------------------
+void eosInteractorMyStyle::OnChar(int ctrl, int shift, 
+                                      char keycode,
+                                      int repeatcount) 
+{
+
+  vtkInteractorStyle::OnChar(ctrl, shift, keycode, repeatcount);
+
+  switch (keycode)
+    {
+    case SPACE:
+               StereoState=(~StereoState)&1;
+      
+               if(StereoState==STEREO_ON){
+		 Ste = eosStereoModeOn::New();
+		 this->SetStereoWindow();
+		 Ste->eosStereoModeOnSet(rwi->GetRenderWindow());
+		 Ste->ShowWindow();
+		 this->State = VTKIS_STEREO;
+	       }
+               else{
+		 delete Ste;
+		 this->State = VTKIS_START;
+	       }
+               break;
+
+    case 'Q' :
+    case 'q' :
+    case 'e' :
+    case 'E' :
+      if(StereoState==STEREO_ON){
+	rwiStereo->ExitCallback();	
+      }
+      rwi->ExitCallback();
+      break;
+    }
+}
+
+
+
+//----------------------------------------------------------------------------
+void eosInteractorMyStyle::OnMouseMove(int ctrl, int shift, int x, int y)
+{
+  // Call the parent so the LastPos is set
+  vtkInteractorStyle::OnMouseMove(ctrl, shift, x, y);
+}
+
+//----------------------------------------------------------------------------
+
+void eosInteractorMyStyle::OnLeftButtonDown(int ctrl, int shift,
+                                                          int x, int y) 
+{
+  //
+  this->UpdateInternalState(ctrl, shift ,x, y);
+  //
+  this->FindPokedCamera(x, y);
+
+
+  if (this->HasObserver(vtkCommand::LeftButtonPressEvent)) 
+    {
+    this->InvokeEvent(vtkCommand::LeftButtonPressEvent,NULL);
+    }
+
+  else 
+    {
+    if (this->ShiftKey) 
+      { // I haven't got a Middle button !
+      if (this->CtrlKey) 
+        {
+        this->StartDolly();
+        }
+      else 
+        {
+        this->StartPan();
+        }
+      } 
+    else 
+      {
+      if (this->CtrlKey) 
+        {
+        this->StartSpin();
+        }
+      else 
+        {
+	  if(StereoState==STEREO_ON)
+	    {
+	      this->StartStereo();
+	    }
+	  else
+	    {
+	      this->StartRotate();
+	    }
+	}
+      }
+    }
+
+
+
+}
+
+//----------------------------------------------------------------------------
+void eosInteractorMyStyle::OnLeftButtonUp(int ctrl, int shift,
+                                              int x, int y) 
+{
+  //
+ this->UpdateInternalState(ctrl, shift, x, y);
+
+  //
+  if (this->HasObserver(vtkCommand::LeftButtonReleaseEvent)) 
+    {
+    this->InvokeEvent(vtkCommand::LeftButtonReleaseEvent,NULL);
+    }
+  else 
+    {
+    if (this->ShiftKey) 
+      {
+      if (this->CtrlKey) 
+        {
+        this->EndDolly();
+        }
+      else
+        {
+        this->EndPan();
+        }
+      } 
+
+    else 
+      {
+      if (this->CtrlKey) 
+        {
+        this->EndSpin();
+        }
+      else
+        {
+	  if(StereoState==STEREO_ON) 
+	    {
+	      this->EndStereo();
+	    }
+	  else
+	    {
+	      this->EndRotate();
+	    }
+	}
+      }
+    }
+}
+
+
+//----------------------------------------------------------------------------
+void eosInteractorMyStyle::SetInteractor(vtkRenderWindowInteractor *iren)
+{
+  this->vtkInteractorStyle::SetInteractor(iren);
+}
+
+
+//----------------------------------------------------------------------------
+void  eosInteractorMyStyle::StartState(int newstate) 
+{
+  vtkRenderWindowInteractor *rwI = this->Interactor;
+  this->State = newstate;
+
+  if(this->State==VTKIS_STEREO)
+    {
+      if (this->AnimState == VTKIS_ANIM_OFF) 
+	{	  
+	  rwi->GetRenderWindow()->SetDesiredUpdateRate(rwi->GetDesiredUpdateRate());
+	  rwiStereo->GetRenderWindow()->SetDesiredUpdateRate(rwiStereo->GetDesiredUpdateRate());
+	  
+	  if ( !rwi->CreateTimer(VTKI_TIMER_FIRST) || !rwiStereo->CreateTimer(VTKI_TIMER_FIRST)) 
+	    {
+	      vtkErrorMacro(<< "Timer start failed");
+	      this->State = VTKIS_START;
+	    }
+	}
+    }
+
+  else
+    { 
+      if (this->AnimState == VTKIS_ANIM_OFF) 
+	{
+	  rwI->GetRenderWindow()->SetDesiredUpdateRate(rwI->GetDesiredUpdateRate());
+	  if ( !rwI->CreateTimer(VTKI_TIMER_FIRST) ) 
+	    {
+	      vtkErrorMacro(<< "Timer start failed");
+	      this->State = VTKIS_START;
+	    }
+	}  
+      else 
+	{
+	  this->vtkInteractorStyle::StartState(newstate);
+	} 
+    }
+}
+//----------------------------------------------------------------------------
+void  eosInteractorMyStyle::StopState(int a) 
+{
+  vtkRenderWindowInteractor *rwI = this->Interactor;
+  this->State = VTKIS_START;
+
+  if(this->State==VTKIS_STEREO)
+    {
+      if (this->AnimState == VTKIS_ANIM_OFF) 
+	{   
+	  rwi->GetRenderWindow()->SetDesiredUpdateRate(rwi->GetDesiredUpdateRate());
+	  rwiStereo->GetRenderWindow()->SetDesiredUpdateRate(rwiStereo->GetDesiredUpdateRate());
+	  Ren->GetRenderWindow()->Render();
+	  RenLeft->GetRenderWindow()->Render();
+	}   
+    }
+  else
+    {
+      if (this->AnimState == VTKIS_ANIM_OFF) 
+	{   
+	  rwI->GetRenderWindow()->SetDesiredUpdateRate(rwI->GetStillUpdateRate());
+	  rwI->Render();
+	  if ( !rwI->DestroyTimer() ) 
+	    {
+	      vtkErrorMacro(<< "Timer stop failed");
+	    }
+	}   
+      else 
+	{
+	  this->vtkInteractorStyle::StopState();
+	} 
+    }
+  
+}
+
+//----------------------------------------------------------------------------
+void  eosInteractorMyStyle::StartStereo()
+{
+  if (this->State != VTKIS_START) 
+    {
+      return;
+    }
+  this->StartState(VTKIS_STEREO);  
+}
+//----------------------------------------------------------------------------
+void  eosInteractorMyStyle::EndStereo()
+{
+  if (this->State != VTKIS_STEREO) 
+    {
+      return;
+    }
+  this->StopState(2);
+}
+
+//----------------------------------------------------------------------------
+void eosInteractorMyStyle::OnTimer(void) 
+{
+
+  vtkRenderWindowInteractor *rwI = this->Interactor;
+  switch (this->State) 
+    {
+    //-----
+    case VTKIS_START:
+      // JCP Animation control
+      if (this->AnimState == VTKIS_ANIM_ON)
+        {
+	  if(StereoState==STEREO_ON)
+	    {
+	      //XMapWindow(dsp1,win1);
+	      
+	      rwi->DestroyTimer();
+	      rwiStereo->DestroyTimer();
+	      rwi->Render();
+	      rwiStereo->Render();
+	      rwi->CreateTimer(VTKI_TIMER_FIRST);
+	      rwiStereo->CreateTimer(VTKI_TIMER_FIRST);
+	    }
+	  else
+	    {
+	      //XUnmapWindow(dsp1,win1);
+	      
+	      rwI->DestroyTimer();
+	      rwI->Render();
+	      rwI->CreateTimer(VTKI_TIMER_FIRST);
+	    }
+	}
+      // JCP Animation control 
+      break;
+      //-----
+    case VTKIS_ROTATE:  // rotate with respect to an axis perp to look
+      this->RotateCamera(this->LastPos[0], this->LastPos[1]);
+      rwI->CreateTimer(VTKI_TIMER_UPDATE);
+      break;
+      //-----
+    case VTKIS_PAN: // move perpendicular to camera's look vector
+      this->PanCamera(this->LastPos[0], this->LastPos[1]);
+      rwI->CreateTimer(VTKI_TIMER_UPDATE);
+      break;
+      //-----
+    case VTKIS_ZOOM:
+      this->DollyCamera(this->LastPos[0], this->LastPos[1]);
+      rwI->CreateTimer(VTKI_TIMER_UPDATE);
+      break;
+      //-----
+    case VTKIS_SPIN:
+      this->SpinCamera(this->LastPos[0], this->LastPos[1]);
+      rwI->CreateTimer(VTKI_TIMER_UPDATE);
+      break;
+      //-----
+    case VTKIS_DOLLY:  // move along camera's view vector
+      break;
+      //-----
+    case VTKIS_USCALE:
+      break;
+      //-----
+    case VTKIS_STEREO:
+      this->StereoCamera(this->LastPos[0],this->LastPos[1]);
+      rwi->CreateTimer(VTKI_TIMER_UPDATE);
+      rwiStereo->CreateTimer(VTKI_TIMER_UPDATE);
+      break;
+      //-----
+    case VTKIS_TIMER:
+      rwI->Render();
+      rwI->CreateTimer(VTKI_TIMER_UPDATE);
+      break;
+       //-----
+    default :
+
+      break;
+    } 
+}
+//----------------------------------------------------------------------------
+void eosInteractorMyStyle::SetStereoCamera(vtkCamera* cam2,vtkCamera* cam3,
+                                           double rxf, double ryf)
+{
+  //vtkCamera *cam1=vtkCamera::New();
+
+  //cam1 = this->CurrentCamera;  
+  this->CurrentCamera->Azimuth(rxf);      
+  this->CurrentCamera->Elevation(ryf);
+  this->CurrentCamera->OrthogonalizeViewUp();
+  printf("cam OK\n");
+  
+  cam2->SetPosition(this->CurrentCamera->GetPosition());
+  cam2->SetFocalPoint(this->CurrentCamera->GetFocalPoint());
+  cam2->SetViewUp(this->CurrentCamera->GetViewUp());
+  cam2->Elevation(ryf);
+  cam2->OrthogonalizeViewUp();
+  printf("cam2 OK\n");
+  cam3->SetPosition(this->CurrentCamera->GetPosition());
+  cam3->SetFocalPoint(this->CurrentCamera->GetFocalPoint());
+  cam3->SetViewUp(this->CurrentCamera->GetViewUp());
+  cam3->Elevation(ryf);      
+  cam3->OrthogonalizeViewUp();  
+  printf("cam3 OK\n");
+}
+
+//----------------------------------------------------------------------------
+void eosInteractorMyStyle::StereoCamera(int x,int y)
+{
+  vtkRenderWindowInteractor *rwI = this->Interactor;
+
+  double rxf = (double)(x - this->Center[0]) * this->DeltaAzimuth;
+  double ryf = (double)(y - this->Center[1]) * this->DeltaElevation;
+
+  if(this->CurrentCamera==Cam)
+    {
+      SetStereoCamera(CamLeft,CamRight,rxf,ryf);
+      CamLeft->Azimuth(3.5+rxf);      
+      CamRight->Azimuth(-3.5+rxf);      
+    }
+  else if(this->CurrentCamera==CamLeft)
+    {
+      SetStereoCamera(Cam,CamRight,rxf,ryf);
+      CamRight->Azimuth(-7.0+rxf);
+      Cam->Azimuth(-3.5+rxf);         
+    }
+  else if(this->CurrentCamera==CamRight)
+    {
+      SetStereoCamera(CamLeft,Cam,rxf,ryf);
+      CamLeft->Azimuth(7.0+rxf);
+      Cam->Azimuth(3.5+rxf);
+    }
+
+  this->ResetCameraClippingRange();
+
+  if (rwI->GetLightFollowCamera())
+    {
+    this->CurrentLight->SetPosition(this->CurrentCamera->GetPosition());
+    this->CurrentLight->SetFocalPoint(this->CurrentCamera->GetFocalPoint());
+    }
+
+  
+  rwi->Render();
+  rwiStereo->Render(); 
+}
+
+//----------------------------------------------------------------------------
+void eosInteractorMyStyle::SetStereoRenderWindows(vtkRenderer* renLeft,vtkRenderer* renRight,vtkRenderWindowInteractor* irenStereo)
+{
+  CamLeft = renLeft->GetActiveCamera();
+  CamRight = renRight->GetActiveCamera();
+
+  RenLeft=renLeft;
+  RenRight=renRight;
+
+  rwiStereo=irenStereo; 
+}
+
+
+void eosInteractorMyStyle::SetStereoWindow()
+{
+  RenLeft=Ste->GetRendererLeft();
+  RenRight=Ste->GetRendererRight();
+
+  CamLeft = RenLeft->GetActiveCamera();
+  CamRight = RenRight->GetActiveCamera();
+
+  rwiStereo=Ste->GetStereoWindowInteractor(); 
+}
+
+//----------------------------------------------------------------------------
+void eosInteractorMyStyle::SetStereoRenderWindows(vtkRenderer* ren,vtkRenderWindowInteractor* iren)
+{
+  Cam = ren->GetActiveCamera();
+  Ren=ren;
+  rwi=iren;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

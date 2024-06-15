@@ -1,0 +1,134 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageDivideIntoTwoImages</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageDivideIntoTwoImages<br></h2></b></font>
+	<h4></h4>
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>オプション</th>
+				<th>必須項目/選択項目</th>
+				<th>NULL</th>
+				<th>デフォルト</th>
+			</tr>
+			<tr>
+				<td>-i</td>
+				<td>必須</td>
+				<td>入力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-o1</td>
+				<td>必須</td>
+				<td>出力ファイル1設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-o2</td>
+				<td>必須</td>
+				<td>出力ファイル2設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-m</td>
+				<td>選択</td>
+				<td>モード</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-h</td>
+				<td>選択</td>
+				<td>ヘルプを表示</td>
+				<td>　</td>
+			</tr>
+		</table>
+
+<!-- モード詳細 -->
+
+	<br>
+	<br>
+	<caption><b>モードの詳細</b></caption>
+	<table border="1">
+	<div align="left">
+		<tr>
+			<th>モード</th>
+			<th>説明</th>
+		</tr>
+		<tr>
+			<td>0</td>
+			<td>最も長い軸に垂直</td>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>ｘ軸に垂直</td>
+		</tr>
+		<tr>
+			<td>2</td>
+			<td>ｙ軸に垂直</td>
+		</tr>
+		<tr>
+			<td>3</td>
+			<td>ｚ軸に垂直</td>
+		</tr>
+	</div>
+	</table>
+
+	<h4>******実行例******</h4>
+
+<!-- 入力ファイル説明 -->
+	
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="b120-2.png" border="0" alt="b120-2.png(6742 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-65.0178<br>
+				94.4699<br>
+				4.85274<br>
+				20.4635<br>
+				0.255794<br></p>
+			</td>
+		</tr>
+	</table>
+	
+<!-- 出力結果 -->
+	
+	<br>
+	<br>
+	<caption><font color="blue">------必須項目のオプションのみの場合------</font></caption><br>
+	<div><img src="b120-2.outdata1.png" border="0" alt="b120-2.outdata1.png(3934 byte)" width="40" height="80"> <img src="b120-2.outdata2.png" border="0" alt="b120-2.outdata2.png(3889 byte)" width="40" height="80">
+	</div>
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-m------</font></caption><br>
+	<div>モード：１<br>
+			<td><img src="b120-2.outdata1-m1.png" border="0" alt="b120-2.outdata1-m1.png(3934 byte)" width="40" height="80"> <img src="b120-2.outdata2-m1.png" border="0" alt="b120-2.outdata2-m1.png(3889 byte)" width="40" height="80"></td>
+	</div>
+
+	<br>
+	<div>モード：２<br>
+			<td><img src="b120-2.outdata2-m2.png" border="0" alt="b120-2.outdata2-m2.png(3884 byte)" width="80" height="40"><br>
+			<br>
+			<img src="b120-2.outdata1-m2.png" border="0" alt="b120-2.outdata1-m2.png(3870 byte)" width="80" height="40"></td>
+	</div>	
+	
+	<br>
+	<div>モード：２<br>
+	今回の入力ファイルのｚ軸幅が１なので、分けることができない。</div>
+
+</body>
+</html>

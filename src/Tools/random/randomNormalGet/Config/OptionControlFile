@@ -1,0 +1,9 @@
+# OptionControlFile
+# FileFormat
+"-o","-o[utput]","OutputDataFile","Optional","1","1","Out","outFile","stdout"
+"-O","-O[utput]","OutputDataFile(mrcImage)","Optional","1","1","OutMRC","outFile","NULL"
+"-n","-n","number","Optional","1","1","N","Integer","100"
+"-a","-a[verage]","average","Optional","1","1","Ave","Real","0.0"
+"-sd","-sd","SD","Optional","1","1","SD","Real","1.0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

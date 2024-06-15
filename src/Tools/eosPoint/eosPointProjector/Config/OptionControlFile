@@ -1,0 +1,11 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: eosPoint","Optional","1","1","In","inFile::ASCII","stdin"
+"-it","-i[nput]t[ype]","Input: eosPointType","Optional","1","1","InType","Integer","3"
+"-o","-o[utput]","Output: eosPoint","Optional","1","1","Out","outFile::ASCII","stdout"
+"-ot","-o[utput]t[ype]","Input: eosPointType","Optional","1","1","OutType","Integer","3"
+"-EA","-E[uler]A[ngle]","Input: EulerAngleMode Rot1 Rot2 Rot3","Optional","4","1","EAMode","String","YOYS","2","Rot1","Real","0.0","3","Rot2","Real","0.0","4","Rot3","Real","0.0"
+"-I","-I[nput]","Input:  eosPointFileList","Optional","1","1","InList","inFileList::ASCII","NULL"
+"-O","-O[uput]","Output: eosPointFileList","Optional","1","1","OutList","outFileList::ASCII","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

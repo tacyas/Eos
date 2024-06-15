@@ -1,0 +1,204 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>pdbRotation</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>pdbRotation<br></h2></b></font>
+	<h4>pdbファイルを回転させる</h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+	<table border="1">
+		<div align="left">
+		<tr>
+			<th>オプション</th>
+			<th>必須項目/選択項目</th>
+			<th>説明</th>
+			<th>デフォルト</th>
+		</tr>
+		<tr>
+			<td>-i</td>
+			<td>必須</td>
+			<td>入力ファイル設定</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-o</td>
+			<td>必須</td>
+			<td>出力ファイル設定</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-ZXY</td>
+			<td>選択</td>
+			<td>Z軸→X軸→Y軸の順に回転</td>
+			<td>0.0　0.0　0.0</td>
+		</tr>
+		<tr>
+			<td>-ZYX</td>
+			<td>選択</td>
+			<td>Z軸→Y軸→X軸の順に回転</td>
+			<td>0.0　0.0　0.0</td>
+		</tr>
+		<tr>
+			<td>-YXZ</td>
+			<td>選択</td>
+			<td>Y軸→X軸→Z軸の順に回転</td>
+			<td>0.0　0.0　0.0</td>
+		</tr>
+		<tr>
+			<td>-XYZ</td>
+			<td>選択</td>
+			<td>X軸→Y軸→Z軸の順に回転</td>
+			<td>0.0　0.0　0.0</td>
+		</tr>
+		<tr>
+			<td>-EA</td>
+			<td>選択</td>
+			<td>オイラー角を設定</td>
+			<td>RotMode　0.0　0.0　0.0</td>
+		</tr>
+		<tr>
+			<td>-h</td>
+			<td>選択</td>
+			<td>ヘルプを表示</td>
+			<td>　</td>
+		</tr>
+	</table>
+	
+<!-- RotModeの設定の仕方 -->
+	
+	<br>
+	<br>
+	<caption><b>オプション-EAのRotModeの設定の詳細</b></caption>
+	<table>
+		<tr>
+			<td>一桁目：</td>
+			<td>どの軸から回転を始めるか設定</td>
+		</tr>
+		<tr>
+			<td>二桁目：</td>
+			<td>回転軸の順番を設定１</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>O…Z→Y→Xの順に回転軸を変更する<br>
+			E…Z→X→Yの順に回転軸を変更する</td>
+		</tr>
+		<tr>
+			<td>三桁目：</td>
+			<td>回転軸の順番の設定２</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>Y…順番を維持する<br>
+			N…順番を逆順にする</td>
+		</tr>
+		<tr>
+			<td>四桁目：</td>
+			<td>回転方法を設定</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>Y…物体そのものをまわす<br>
+			D…座標を移動させる</td>
+		</tr>
+	</table>
+	
+	<h4>******実行例******</h4>
+
+<!-- 入力ファイル詳細 -->
+
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<div><img src="121p.png" border="0" alt="121p.png(17496 byte)" width="183" height="168"><br>
+	pdbInfoでみた入力ファイルの詳細<br>
+	<img src="121p-Info.png" border="0" alt="121p-Info.png(2313 byte)" width="455" height="42"><br>
+	※オプション必須項目のみの場合の出力結果は入力ファイルと変わらない</div>
+	
+<!-- オプション -ZXY-->
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-ZXY------</font></caption><br>
+	<table>
+		<tr>
+		<td>z軸、x軸、y軸をすべて10で実行<br></td>
+		<td>　z軸、x軸、y軸をすべて100で実行<br></td></tr>
+		<tr><td><img src="121p.10zxy.png" border="0" alt="121p.10zxy.png(17618 byte)" width="188" height="167"><br></td>
+		<td><img src="121p.100zxy.png" border="0" alt="121p.100zxy.png(19010 byte)" width="193" height="182"><br></td></tr>
+	</table>
+	
+<!-- オプション -ZYX-->
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-ZYX------</font></caption><br>
+	<table>
+		<tr>
+		<td>z軸、y軸、x軸をすべて10で実行<br></td>
+		<td>　z軸、y軸、x軸をすべて100で実行<br></td></tr>
+		<td><img src="121p.10zyx.png" border="0" alt="121p.10zyx.png(15235 byte)" width="161" height="152"><br></td>
+		<td><img src="121p.100zyx.png" border="0" alt="121p.100zyx.png(13804 byte)" width="167" height="151"><br></td></tr>
+	</table>
+	
+<!-- オプション -YXZ-->
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-YXZ------</font></caption><br>
+	<table>
+		<tr>
+		<td>y軸、x軸、z軸をすべて10で実行<br></td>
+		<td>　y軸、x軸、z軸をすべて100で実行<br></td></tr>
+		<tr><td><img src="121p.10yxz.png" border="0" alt="121p.10yxz.png(15053 byte)" width="160" height="148"><br></td>
+		<td><img src="121p.100yxz.png" border="0" alt="121p.100yxz.png(16333 byte)" width="156" height="168"><br></td></tr>
+	</table>
+	
+<!-- オプション -ZXY-->
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-XYZ------</font></caption><br>
+	<table>
+		<tr>
+		<td>x軸、y軸、z軸をすべて10で実行<br></td>
+		<td>　x軸、y軸、z軸をすべて100で実行<br></td></tr>
+		<tr><td><img src="121p.10xyz.png" border="0" alt="121p.10xyz.png(15138 byte)" width="163" height="153"><br></td>
+		<td><img src="121p.100xyz.png" border="0" alt="121p.100xyz.png(16064 byte)" width="165" height="157"><br></td></tr>
+	</table>
+	
+<!-- 比較画像 -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------各オプションで作成した画像の比較------</font></caption><br>
+	<table>
+		<tr>
+		<td>すべての値を10で実行<br></td>
+		<td>　すべての値をすべて100で実行<br></td></tr>
+		<tr><td><img src="10goukei.png" border="0" alt="10goukei.png(35544 byte)" width="165" height="151"><br>
+		白…入力ファイル<br>
+		ピンク…オプション　-ZXY<br>
+		青…オプション　-ZYX<br>
+		黄色…オプション　-YXZ<br>
+		赤…オプション　-XYZ<br></td>
+		<td><img src="100goukei.png" border="0" alt="100goukei.png(76602 byte)" width="246" height="335"><br></td>
+		<td></td></tr>
+	</table>
+	
+<!-- オプション　-EA -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-EA------</font></caption><br>
+	<div>オプション　-EA XENS 30 30 30 で実行<br>
+	<img src="121p.ea.png" border="0" alt="121p.ea.png(37075 byte)" width="221" height="237"><br>
+	※白…入力画像、ピンク…処理画像
+	</div>
+		
+</body>
+</html>

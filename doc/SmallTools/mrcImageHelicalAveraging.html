@@ -1,0 +1,25 @@
+<HTML>
+<HEAD>
+<TITLE>mrcImageHelicalAveraging</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageHelicalAveraging</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageHelicalAveraging
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-dz[deltaz]         dz                  (27.3      ).as(Real                ) ] :Optional  :deltaz(A)
+    [-dp[deltaphi]       dp                  (-167.143  ).as(Real                ) ] :Optional  :deltaphi(degree)
+    [-N[umber]           N                   (1         ).as(Integer             ) ] :Optional  :Number of particles to average
+    [-W[idth]            W                   (1         ).as(Integer             ) ] :Optional  :Width to average [pixel].
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+0: Discrete.  Parameter N is needed.  
+1: Continuous.  Parameter W is needed.  
+2: Continuous.  Parameter W is needed.  Data are weighted by exp(- (dz/W)^2) 
+</PRE>
+</BODY>
+</HTML>

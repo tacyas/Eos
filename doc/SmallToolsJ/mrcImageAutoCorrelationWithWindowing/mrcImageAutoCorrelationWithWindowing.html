@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageAutoCorrelationWithWindowing</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageAdaptiveBinalization<br></h2></b></font>
+	<h4>適応二値化</h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>オプション</th>
+				<th>必須項目/選択項目</th>
+				<th>NULL</th>
+				<th>デフォルト</th>
+			</tr>
+			<tr>
+				<td>-i</td>
+				<td>選択</td>
+				<td>入力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-o</td>
+				<td>必須</td>
+				<td>出力ファイル1設定（Correlationした結果の出力ファイル）</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-O</td>
+				<td>選択</td>
+				<td>出力ファイル2設定（Windouwingした結果の出力ファイル）</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-Wy</td>
+				<td>選択</td>
+				<td>窓関数のサイズを設定</td>
+				<td>6</td>
+			</tr>
+			<tr>
+				<td>-h</td>
+				<td>選択</td>
+				<td>ヘルプを表示</td>
+				<td>　</td>
+			</tr>
+		</table>
+
+	<h4>******実行例******</h4>
+
+<!-- 入力ファイル説明 -->
+
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="b120.png" border="0" alt="b120.png(2730 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				65.5929<br>
+				5.45036<br>
+				12.3043<br>
+				0.153804<br></p>
+			</td>
+		</tr>
+	</table>
+
+<!-- 出力ファイル -->
+
+	<caption><font color="blue">------出力ファイル１------</font></caption><br>
+	<div>-Wyを指定しない場合（デフォルトのまま）</div>
+	<table>
+		<tr>
+			<td><img src="outdata-d.png" border="0" alt="outdata-d.png(997 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">2376.52<br>
+				2376.52<br>
+				2376.52<br>
+				nan<br>
+				nan<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>-Wy=2で実行</div>
+	<table>
+		<tr>
+			<td><img src="outdata1.png" border="0" alt="outdata1.png(4263 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">32.7383<br>
+				10204.5<br>
+				2493.07<br>
+				2021.73<br>
+				25.2717<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<caption><font color="blue">------出力ファイル２------</font></caption><br>
+	<div>-Wyを指定しない場合（デフォルトのまま）</div>
+	<table>
+		<tr>
+			<td><img src="outdata-dO.png" border="0" alt="outdata-dO.png(996 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">5.45036<br>
+				5.45036<br>
+				5.45036<br>
+				nan<br>
+				nan<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>-Wy=2で実行</div>
+	<table>
+		<tr>
+			<td><img src="outdata-o.png" border="0" alt="outdata-o.png(1920 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				65.5929<br>
+				5.71768<br>
+				9.73537<br>
+				0.121692<br></p>
+			</td>
+		</tr>
+	</table>
+
+</body>
+</html>

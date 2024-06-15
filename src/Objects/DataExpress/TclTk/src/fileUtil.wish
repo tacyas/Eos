@@ -1,0 +1,73 @@
+#
+#
+#
+proc fileCanBeOverwritten { filename } {
+	global flagFileCanBeOverwritten
+
+	if { [file exists $filename ] } {
+		set t [ toplevel .overwriteChecker ] 
+		label  $t.label -text "$filename Can be overwritten ?"
+		button $t.ok -text Yes -command { set flagFileCanBeOverwritten yes }
+		button $t.no -text No -command  { set flagFileCanBeOverwritten no }
+		pack $t.label $t.ok $t.no -side top 
+		tkwait variable flagFileCanBeOverwritten
+		destroy $t
+	} else {
+		set flagFileCanBeOverwritten yes 
+	}
+	return $flagFileCanBeOverwritten
+}
+
+#
+# Get Relative Pathname 
+#
+
+proc relativePathGet { absDir absPath } {
+	if { [ file exists $absPath ] } {
+		set listOfabsPath [ split [ file dirname $absPath ] / ] 
+		set path          [ file tail $absPath ]	
+	} else {
+		set listOfabsPath [ split [ file dirname $absPath ] / ] 
+		set path          [ file tail $absPath ]	
+	}
+	if { [ file isdirectory $absDir ] } {
+		if { 0 == [ string compare $absDir / ] } {
+			set listOfabsDir  [ split $absDir / ]
+		} else {
+			set listOfabsDir  [ split [ string trimright $absDir / ] / ] 
+		}
+	} else {
+		puts "Something wrong as for absDir in relativePathGet"
+		return {}
+	}
+
+	set nOfabsPath [ llength $listOfabsPath ] 
+	set nOfabsDir  [ llength $listOfabsDir  ]
+
+
+	for { set i 0 } { $i < $nOfabsPath && $i < $nOfabsDir } { incr i } {
+		if { 0 != [ string compare [ lindex $listOfabsPath $i ] \
+								   [ lindex $listOfabsDir  $i ] ] } {
+			break;
+		}
+	}
+
+	set relPath {}
+
+	for { set j $i } { $j < $nOfabsDir } { incr j } {
+		if { 0 == [ string length [ lindex $listOfabsDir $j ] ]  } {
+			append relPath /
+		} else {
+			append relPath ../
+		}
+	}
+	for { set j $i } { $j < $nOfabsPath } { incr j } {
+		append relPath [ lindex $listOfabsPath $j ]
+		append relPath /
+	}
+	
+	append relPath $path 
+
+	return $relPath
+}
+

@@ -1,0 +1,456 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageROIs</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageROI<br></h2></b></font>
+	<h4>関心領域設定（複数）</h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+	<table border="1">
+		<div align="left">
+		<tr>
+			<th>オプション</th>
+			<th>必須項目/選択項目</th>
+			<th>説明</th>
+			<th>デフォルト</th>
+		</tr>
+		<tr>
+			<td>-i</td>
+			<td>必須</td>
+			<td>入力ファイル設定</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-I</td>
+			<td>必須</td>
+			<td>Infomationファイルの設定</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-o</td>
+			<td>選択</td>
+			<td>合成ファイル設定</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-S</td>
+			<td>選択</td>
+			<td>拡大・収縮させる</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-width</td>
+			<td>選択</td>
+			<td>幅を設定</td>
+			<td>0.0</td>
+		</tr>
+		<tr>
+			<td>-height</td>
+			<td>選択</td>
+			<td>高さを設定</td>
+			<td>0.0</td>
+		</tr>
+		<tr>
+			<td>-M</td>
+			<td>選択</td>
+			<td>モード１</td>
+			<td>2</td>
+		</tr>
+
+		<tr>
+			<td>-m</td>
+			<td>選択</td>
+			<td>モード２</td>
+			<td>0</td>
+		</tr>
+			<tr>
+			<td>-h</td>
+			<td>選択</td>
+			<td>ヘルプを表示</td>
+			<td>　</td>
+		</tr>
+	</table>
+	
+<!-- モード説明 -->
+
+	<br>
+	<caption><b>モード１の詳細</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>モード</th>
+				<th>説明</th>
+			</tr>
+			<tr>
+				<td>0</td>
+				<td>byte</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>short</td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td>float</td>
+			</tr>
+			</div>
+		</table>
+		
+<!-- モード説明 -->
+
+	<br>
+	<caption><b>モード２の詳細</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>モード</th>
+				<th>説明</th>
+			</tr>
+			<tr>
+				<td>0</td>
+				<td>最短距離法</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>線形補間法</td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td>３次補間法</td>
+			</tr>
+			<tr>
+				<td>3</td>
+				<td>多項式法</td>
+			</tr>
+			</div>
+		</table>
+		
+	<h4>******実行例******</h4>	
+
+<!-- 入力ファイル説明 -->
+
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="input.png"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				255<br>
+				82.357<br>
+				119.241<br>
+				1.49051<br></p>
+			</td>
+			<td>ノイズを加えたものを使用<br>
+				　　－－－－－－＞</td>
+			<td><img src="inputnoise.r1.png" border="0" alt="inputnoise.r1.png(3081 byte)" width="81" height="81"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				255<br>
+				95.3804<br>
+				123.024<br>
+				1.51882<br></p>
+			</td>
+		</tr>
+	</table>
+	
+<!-- 入力ファイル説明 -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------Infomationファイルの内容------</font></caption><br>
+		<div>ファイル形式１: OutFileName Rect   blx bly brx bry trx try tlx tly<br>
+		※長方形の座標を指定<br>
+		<img src="infomation.png"><br><br>
+		ファイル形式２: OutFileName Rect2  centerx centery width height<br>
+		※画像の中心の座標、幅・高さを指定<br>
+		<img src="Infomation2.png" border="0" alt="Infomation2.png(743 byte)" width="321" height="18">
+		</div>
+	
+<!-- オプション必須項目のみの場合 -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション必須項目のみの場合の出力結果画像------</font></caption><br>
+	<div>Infomationファイルタイプ：Rect<br>
+	Infomationファイルの数分、画像が出力される</div>
+	<table>
+		<tr>
+			<td><img src="inputnoise-0000.roi.png" border="0" alt="inputnoise-0000.roi.png(1103 byte)" width="21" height="21" vspace="12" hspace="12"></td>
+			<td><img src="inputnoise-0001.roi.png" border="0" alt="inputnoise-0001.roi.png(1093 byte)" width="21" height="21" vspace="12" hspace="12"></td>
+			<td><img src="inputnoise-0002.roi.png" border="0" alt="inputnoise-0002.roi.png(1097 byte)" width="21" height="21" vspace="12" hspace="12"></td>
+			<td><img src="inputnoise-0003.roi.png" border="0" alt="inputnoise-0003.roi.png(1104 byte)" width="21" height="21" vspace="12" hspace="12"></td>
+			<td><img src="inputnoise-0004.roi.png" border="0" alt="inputnoise-0004.roi.png(1090 byte)" width="21" height="21" vspace="12" hspace="12"></td>
+			<td><img src="inputnoise-0005.roi.png" border="0" alt="inputnoise-0005.roi.png(1086 byte)" width="21" height="21" vspace="12" hspace="12"></td>
+			<td><img src="inputnoise-0006.roi.png" border="0" alt="inputnoise-0006.roi.png(1087 byte)" width="21" height="21" vspace="12" hspace="12"></td>
+			<td><img src="inputnoise-0007.roi.png" border="0" alt="inputnoise-0007.roi.png(1090 byte)" width="21" height="21" vspace="12" hspace="12"></td>
+		</tr>
+			<td><img src="inputnoise-0008.roi.png" border="0" alt="inputnoise-0008.roi.png(1094 byte)" width="21" height="21" vspace="12" hspace="12"></td>
+			<td><img src="inputnoise-0009.roi.png" border="0" alt="inputnoise-0009.roi.png(1090 byte)" width="21" height="21" vspace="12" hspace="12"></td>
+			<td><img src="inputnoise-0010.roi.png" border="0" alt="inputnoise-0010.roi.png(1098 byte)" width="21" height="21" vspace="12" hspace="12"></td>
+			<td><img src="inputnoise-0011.roi.png" border="0" alt="inputnoise-0011.roi.png(1100 byte)" width="21" height="21" vspace="12" hspace="12"></td>
+			<td><img src="inputnoise-0012.roi.png" border="0" alt="inputnoise-0012.roi.png(1101 byte)" width="21" height="21" vspace="12" hspace="12"></td>
+			<td><img src="inputnoise-0013.roi.png" border="0" alt="inputnoise-0013.roi.png(1101 byte)" width="21" height="21" vspace="12" hspace="12"></td>
+			<td><img src="inputnoise-0014.roi.png" border="0" alt="inputnoise-0014.roi.png(1098 byte)" width="21" height="21" vspace="12" hspace="12"></td>
+			<td><img src="inputnoise-0015.roi.png" border="0" alt="inputnoise-0015.roi.png(1103 byte)" width="21" height="21" vspace="12" hspace="12"></td>
+		</tr>
+	</table>
+	<div>Infomationファイルタイプ：Rect2<br>
+	<img src="inputnoise1-0000-m0.roi.png" border="0" alt="inputnoise1-0000-m0.roi.png(1576 byte)" width="46" height="40"><br></div>
+	
+	
+	
+<!-- 各オプションでの処理 -->
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-oを使用------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="inputnoise.r1.out.png" border="0" alt="inputnoise.r1.out.png(4157 byte)" width="210" height="42"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-168.927<br>
+				160.828<br>
+				-9.74867e-07<br>
+				111.57<br>
+				1.18799<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-Sを使用------</font></caption><br>
+	<div>Infomationファイルの15番を表示</div>
+	<table>
+		<tr>
+			<tr><td>-S=3の時</td></tr>
+			<td><img src="inputnoise-0015-S3.roi.png" border="0" alt="inputnoise-0015-S3.roi.png(2200 byte)" width="61" height="61"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				255<br>
+				99.9307<br>
+				124.111<br>
+				2.03461<br></p>
+			</td>
+		</tr>
+		<tr>
+			<tr><td>-S=5の時</td></tr>
+			<td><img src="inputnoise-0015-S5.roi.png" border="0" alt="inputnoise-0015-S5.roi.png(3439 byte)" width="101" height="101"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				255<br>
+				82.7682<br>
+				119.056<br>
+				1.17877<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-width,-heightを使用------</font></caption><br>
+	<div>-width=10,-height=10に設定</div>
+	<table>
+		<tr>
+			<td><img src="inputnoise-0015-w10h10.roi.png" border="1" alt="inputnoise-0015-w10h10.roi.png(971 byte)" width="10" height="10"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				255<br>
+				203.47<br>
+				101.588<br>
+				10.1588<br></p>
+			</td>
+		</tr>
+	</table>
+		<div>-width=50,-height=50に設定</div>
+	<table>
+		<tr>
+			<td><img src="inputnoise-0015-w50h50.roi.png" border="0" alt="inputnoise-0015-w50h50.roi.png(1746 byte)" width="50" height="50"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				255<br>
+				84.2792<br>
+				119.61<br>
+				2.3922<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<br>
+	<br>
+	<caption><font color="blue">------モード１：０～２での処理------</font></caption><br>
+	<div>Infomationファイル：Rectで実行</div>
+	<table>
+		<tr>
+			<tr><td>モード：０</td></tr>
+			<td><img src="inputnoise.r1.M0.png" border="0" alt="inputnoise.r1.M0.png(4521 byte)" width="210" height="42"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				165<br>
+				99.2579<br>
+				54.0903<br>
+				0.575951<br></p>
+			</td>
+		</tr>
+		<tr>
+			<tr><td>モード：１</td></tr>
+			<td><img src="inputnoise-r1.M1.png" border="0" alt="inputnoise-r1.M1.png(2287 byte)" width="210" height="42"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				65445<br>
+				25411.9<br>
+				31831.5<br>
+				338.94<br></p>
+			</td>
+		</tr>
+		<tr>
+			<tr><td>モード：２</td></tr>
+			<td><img src="inputnoise.r1.out.png" border="0" alt="inputnoise.r1.out.png(4157 byte)" width="210" height="42"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-168.927<br>
+				160.828<br>
+				-9.74867e-07<br>
+				111.57<br>
+				1.18799<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<br>
+	<br>
+	<caption><font color="blue">------モード２：０～２での処理------</font></caption><br>
+	<div>Infomationファイル：Rect2で実行</div>
+	<table>
+		<tr>
+			<tr><td>モード：０</td></tr>
+			<td><img src="inputnoise1-0000-m0.roi.png" border="0" alt="inputnoise1-0000-m0.roi.png(1576 byte)" width="46" height="40"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br>
+				合計<br></p>
+			</td>
+			<td><p align="left">0<br>
+				255<br>
+				106.696<br>
+				125.405<br>
+				2.92352<br>
+				196321<br></p>
+			</td>
+		</tr>
+		<tr>
+			<tr><td>モード：１</td></tr>
+			<td><img src="inputnoise1-0000-m1.roi.png" border="0" alt="inputnoise1-0000-m1.roi.png(1864 byte)" width="46" height="40"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br>
+				合計<br></p>
+			</td>
+			<td><p align="left">0<br>
+				255<br>
+				106.881<br>
+				105.188<br>
+				2.4522<br>
+				196661<br></p>
+			</td>
+		</tr>
+		<tr>
+			<tr><td>モード：２</td></tr>
+			<td><img src="inputnoise1-0000-m2.roi.png" border="0" alt="inputnoise1-0000-m2.roi.png(2631 byte)" width="46" height="40"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br>
+				合計<br></p>
+			</td>
+			<td><p align="left">-65.1789<br>
+				323.14<br>
+				106.754<br>
+				121.757<br>
+				2.83848<br>
+				196428<br></p>
+			</td>
+		</tr>
+		<tr>
+			<tr><td>モード：３</td></tr>
+			<td><img src="inputnoise1-0000-m3.roi.png" border="0" alt="inputnoise1-0000-m3.roi.png(2673 byte)" width="46" height="40"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br>
+				合計<br></p>
+			</td>
+			<td><p align="left">-13045.1<br>
+				399922<br>
+				81934.6<br>
+				82047.6<br>
+				1912.75<br>
+				1.5076e+08<br></p>
+			</td>
+		</tr>
+	</table>
+	
+</body>
+</html>

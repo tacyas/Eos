@@ -1,0 +1,30 @@
+<HTML>
+<HEAD>
+<TITLE>mrcImage2pdb</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImage2pdb</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImage2pdb
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (5         ).as(Integer             ) ] :Optional  :Mode
+    [-hi[gh]             h                   (0         ).as(Real                ) ] :Optional  :Value of high threshold. Default is the MAX.
+    [-lo[w]              l                   (0         ).as(Real                ) ] :Optional  :Value of low threshold. Default is the MIN.
+    [-L[attice]                                                                    ] :Optional  :Atoms are on lattice points
+    [-Skip               Skip                (1         ).as(Integer             ) ] :Optional  :Skip atoms.
+    [-R[andom]           Random              (0         ).as(Real                ) ] :Optional  :Random
+    [-d[elta]            delta               (0.1       ).as(Real                ) ] :Optional  :Delta to select atoms to avoid too much concentration. Requiers 0-0.5 value. For mode2-4.
+----- Additional Usage -----
+mode0: One atom for one boxel.
+mode1: Eight atoms for one boxel.
+mode2: On the surface of high threshold. Atoms few.
+mode3: On the surface of high threshold. Atoms medium.
+mode4: On the surface of high threshold. Atoms many
+mode5 (Default) : On the surface of high threshold. Mesh mode.
+</PRE>
+</BODY>
+</HTML>

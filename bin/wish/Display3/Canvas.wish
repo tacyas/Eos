@@ -1,0 +1,24 @@
+#!/usr/local/bin/wish -f
+proc Canvas { c width height } {
+	frame $c
+	canvas $c.canvas -width $width -height $height
+	pack $c.canvas -side left -fill both -expand true
+	return $c.canvas
+}
+
+proc scrolledCanvas { c width height region } {
+	frame $c
+	canvas $c.canvas \
+	-width $width -height $height -scrollregion $region \
+	-xscrollcommand [ list $c.xscroll set ] \
+	-yscrollcommand [ list $c.yscroll set ]
+	scrollbar $c.xscroll -orient horizontal \
+	-command [ list $c.canvas xview ]
+	scrollbar $c.yscroll -orient vertical \
+	-command [ list $c.canvas yview ]
+
+	pack $c.xscroll -side bottom -fill x
+	pack $c.yscroll -side right  -fill y
+	pack $c.canvas  -side left   -fill both -expand true
+	return $c.canvas
+}

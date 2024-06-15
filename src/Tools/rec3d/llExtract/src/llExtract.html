@@ -1,0 +1,59 @@
+<HTML>
+<HEAD>
+<TITLE>llExtract</TITLE>
+</HEAD>
+<BODY>
+<H1>llExtract</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: llExtract
+Options:
+    [-t[itle]            Title               (NULL      ).as(String              ) ] :Optional  :Title[80]
+    [-s[tep]             xStep               (1.0       ).as(Real                ) 
+                         yStep               (1.0       ).as(Real                ) ] :Optional  :Step[A]
+    [-M[ax]              MaxX                (1.0       ).as(Real                ) 
+                         MaxY                (1.0       ).as(Real                ) ] :Optional  :Max[GridUnit]
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Optional  :InputDataFile[mrcImage]
+    [-1[output]          Nea                 (NULL      ).as(outFile             ) ] :Optional  :NearSide[llData]
+    [-2[output]          Far                 (NULL      ).as(outFile             ) ] :Optional  :FarSide [llData]
+    [-R[otationAngle]    RotationAngle       (0.0       ).as(Real                ) ] :Optional  :Ratation Angle [Degree]
+    [-O[mega]            Omega               (0.0       ).as(Real                ) ] :Optional  :Omega[Degree]
+    [-S[hear]            Shear               (0.0       ).as(Real                ) ] :Optional  :Shear[Degree]
+    [-I[every]           ievery              (0         ).as(Integer             ) ] :Optional  :ievery
+    [-axl                axl                 (0.0       ).as(Real                ) ] :Optional  :axl
+    [-ayl                ayl                 (0.0       ).as(Real                ) ] :Optional  :ayl
+    [-x[Shift]           xShift              (0.0       ).as(Real                ) ] :Optional  :[GridUnit]
+    [-l[lMax]            llMax               (0         ).as(Integer             ) ] :Optional  :
+    [-d[elRInv]          delRInv             (0.0       ).as(Real                ) ] :Optional  :[A]
+    [-f[lagOutputInfo]                                                             ] :Optional  :
+    [-L[ayerLineInfo]    n                   (0         ).as(Integer             ) 
+                         l                   (0         ).as(Integer             ) 
+                         Y                   (0.0       ).as(Real                ) 
+                         leftMin             (0.0       ).as(Real                ) 
+                         leftMax             (0.0       ).as(Real                ) 
+                         rightMin            (0.0       ).as(Real                ) 
+                         rightMax            (0.0       ).as(Real                ) 
+                         weight              (1.0       ).as(Real                ) ... ] :Variable  :
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+----- Control File -----
+Title[String:NULL]				#Title[80]
+xStep[Real:1.0]	yStep[Real:1.0]				#Step[A]
+MaxX[Real:1.0]	MaY[Real:1.0]				#Max[GridUnit]
+In[inFile:NULL]				#InputDataFile[mrcImage]
+Nea[outFile:NULL]				#NearSide[llData]
+Far[outFile:NULL]				#FarSide [llData]
+RotationAngle[Real:0.0]				#Ratation Angle [Degree]
+Omega[Real:0.0]				#Omega[Degree]
+Shear[Real:0.0]				#Shear[Degree]
+ievery[Integer:0]				#ievery
+axl[Real:0.0]				#axl
+ayl[Real:0.0]				#ayl
+xShift[Real:0.0]				#[GridUnit]
+llMax[Integer:0]				#
+delRInv[Real:0.0]				#[A]
+flagOutputInfo[0or1]			#
+n[Integer:0]	l[Integer:0]	Y[Real:0.0]	leftMin[Real:0.0]	leftMax[Real:0.0]	rightMin[Real:0.0]	rightMax[Real:0.0]	weight[Real:1.0]				#
+...............
+</PRE>
+</BODY>
+</HTML>

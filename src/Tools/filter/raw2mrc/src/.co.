@@ -1,0 +1,69 @@
+/*
+# raw2mrc : $Revision$  
+# $Date$ 
+# Created by $Author$
+# Usage : raw2mrc
+# Attention
+#   $Loccker$
+#  	$State$ 
+#
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>                  
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+
+#define DEBUG
+#include "genUtil.h"
+#include "mrcImage.h"
+
+typedef struct rawImage {
+	long offset;
+	int nx;
+	int ny;
+	int nz;
+    int mode;
+} lraw2mrcInfo;
+
+typedef enum lraw2mrcMode {
+	a=0,
+	b=1
+} lraw2mrcMode;
+
+int
+main(int argc, char* argv[]) 
+{
+    rawImage raw;
+    mrcImage mrc;
+	raw2mrcInfo info;
+	lraw2mrcInfo linfo;
+
+	init0(&info);
+    argCheck(&info, argc, argv);
+    init1(&info);
+
+	DEBUGPRINT("Program Start\n");
+    raw.offset = info.Offset;
+    raw.nx = info.Nx;
+    raw.ny = info.Ny;
+    raw.nz = info.Nz;
+    raw.mode = info.DataType;
+
+    rawImageRead(&raw, info.fptIn, 0);
+    lraw2mrc(&mrc, &raw, linfo, info.mode)
+    mrcFileWrite(&mrc, info.Out, 0); 
+	exit(EXIT_SUCCESS);
+}
+
+void
+additionalUsage()
+{
+	fprintf(stderr, "----- Additional Usage -----\n");
+}
+
+void
+rawImageRead(rawImage* raw, lraw2mrcInfo linfo, int mode)
+{
+}

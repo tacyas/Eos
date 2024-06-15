@@ -1,0 +1,232 @@
+# 
+# Widget for roiInformation
+#
+
+# Procedures:
+#     roiInformationWinCreate
+#
+#
+#
+#
+proc roiInformationWinCreate { } {
+	global Point
+	global Roi
+	global roiInfoWin
+	global fileNameIn
+
+	if { ! [ info exists Roi(InputFile) ] } {
+		set Roi(InputFile)  $fileNameIn
+		set Roi(OutputFile) {} 
+	}
+	if [ catch { toplevel $roiInfoWin(top) -bd 4 -class $roiInfoWin(class) } ] {
+		# Already this window has created
+		raise $roiInfoWin(top) 
+		return
+	} 
+	# Create
+	set w $roiInfoWin(top) 
+	label $w.title -text "ROI Information"
+	pack  $w.title -side top -fill x
+
+	set f [ frame $w.info ]
+	CommandEntryWithSelection $f.shape  Shape  left Roi(Shape)   $Roi(ShapeList)  echo 
+	CommandEntryWithSelection $f.action Action left Roi(Action)  $Roi(ActionList) echo 
+	CommandEntry              $f.shrink  Shrink 3  echo -textvar  Roi(Shrink)
+	CommandEntry              $f.orgfile OrignalFile 10  echo -textvar  Roi(ShrinkOriginalFile)
+	pack $f          -side top
+	pack $f.shape    -side left
+	pack $f.action   -side left
+	pack $f.shrink   -side left
+	pack $f.orgfile  -side left
+	
+	set f [ frame $w.mode ]
+	checkbutton $f.multi -text MultiShape -variable Roi(MultiShape) \
+		-onvalue On -offvalue Off \
+		-command { 
+			roiRelatedObjectRecreate
+			menuRoiSingleMultiTransform
+		}
+
+	checkbutton $f.sizeLock -text SizeLock -variable Roi(SizeLock) \
+		-onvalue On -offvalue Off \
+		-command roiRelatedObjectRecreate
+
+	checkbutton $f.angleLock -text AngleLock -variable Roi(AngleLock) \
+		-onvalue On -offvalue Off \
+		-command roiRelatedObjectRecreate
+
+	checkbutton $f.analysis -text Analysis -variable Roi(Analysis) \
+		-onvalue On -offvalue Off \
+		-command roiRelatedObjectRecreate
+
+	pack $f           -side top
+	pack $f.multi     -side left
+	pack $f.sizeLock  -side left
+	if { $Roi(SizeLock) == "On" } {  
+		pack $f.angleLock -side left
+	}
+	pack $f.analysis  -side left
+
+	switch $Roi(Shape) {
+		Rectangle {
+			roiRectangleInfoFrameCreate $w
+		}
+		TiltRectangle {
+			roiRectangleInfoFrameCreate $w
+		}
+		Line {
+			roiLineInfoFrameCreate $w
+		}
+		Spline {
+			roiSplineInfoFrameCreate $w 
+		}
+		default {
+		}
+	}
+	switch $Roi(MultiShape) {
+		On {
+			# FileName Information
+			set f [ frame $w.filename ]
+			CommandEntry $f.input   InputFileName   15 echo -textvar Roi(InputFile)
+			set ff [ frame $f.info ]
+			CommandEntry $ff.file    InfoFileName    15 echo -textvar Roi(InformationFile)
+			button $ff.save -text save -command roiMultiAreaInfoSave
+			button $ff.load -text load -command roiMultiAreaInfoLoad
+			pack $ff.file $ff.save $ff.load -side left
+			CommandEntry $f.montage MontageFileName 15 echo -textvar Roi(MontageFile)
+			CommandEntry $f.roi     ROIFileName(##) 15 echo -textvar Roi(ROIFile)
+			pack $f -side top 
+			pack $f.input   -side top 
+			pack $f.info    -side top 
+			pack $f.montage -side top 
+			pack $f.roi     -side top 
+
+			# Working rectangle information	
+			set f [ frame $w.multiInfo ]
+			CommandEntry $f.current Current 8 echo -textvar Roi(CurrentID)
+			CommandEntry $f.total   Total   8 echo -textvar Roi(TotalN)
+			checkbutton  $f.number  -text Num -variable Roi(MultiNumber) \
+				-onvalue On -offvalue Off -command roiAreaAllRedraw
+			pack $f         -side top
+			pack $f.current -side left 
+			pack $f.total   -side left 
+			pack $f.number  -side left 
+		}	
+		Off {
+			# FileName Information	
+			set f [ frame $w.filename ]
+			CommandEntry $f.input  InputFileName  15 echo -textvar Roi(InputFile) 
+			CommandEntry $f.output OutputFileName 15 echo -textvar Roi(OutputFile) 
+			pack $f -side top 
+			pack $f.input  -side left 
+			pack $f.output -side left 
+		}
+		default {
+		}
+	}
+
+	set f  [ frame $w.execute ]
+	CheckButtonsCreateWithPack $f.after AfterExtract top { "Roi(View)" "View"  }
+	RadioButtonsCreateWithPack $f.mode  ExtractMode  top Roi(Extract) foreground  background information    
+	button $f.extract -text Extract -command roiAreaFileSave
+	button $f.redraw  -text Redraw  -command roiAreaAllRedraw
+	pack $f -side top
+	pack $f.after  $f.mode $f.extract $f.redraw -side left
+
+	switch $Roi(Analysis) {
+		On { 
+			roiAnalysisFrameCreate $w.analysis
+			pack $w.analysis -side top
+		}
+	}
+
+	set Roi(Action) Create
+}	
+
+proc roiLineInfoFrameCreate { w } {
+	global linePoints
+	global Roi
+
+	set f [ frame $w.start ]
+	CommandEntry $f.x x0 2 echo -textvar linePoints(x0)
+	CommandEntry $f.y y0 2 echo -textvar linePoints(y0)
+	pack $f -side top
+	pack $f.x $f.y -side left
+	set f [ frame $w.end   ]
+	CommandEntry $f.x x1 2 echo -textvar linePoints(x1)
+	CommandEntry $f.y y1 2 echo -textvar linePoints(y1)
+	pack $f -side top
+	pack $f.x $f.y -side left
+
+	set f [ frame $w.calc ]
+	CommandEntry $f.length Length 7 echo -textvar linePoints(length)
+	CommandEntry $f.absLength  Angstrom 8 echo -textvar linePoints(absLength)
+	CommandEntry $f.absTicks   absTicks 8 echo -textvar Roi(absTicks)
+	checkbutton  $f.flagScale  -text Scale     -variable Roi(withScale) \
+		-onvalue On -offvalue Off -command roiAreaAllRedraw
+	pack $f -side top
+	pack $f.length $f.absLength $f.absTicks $f.flagScale -side left
+}
+
+proc roiSplineInfoFrameCreate { w } {
+	global splinePoints
+
+	set f [ frame $w.size ]
+	CommandEntry $f.width  width 6 echo -textvar splinePoints(Width)
+	pack $f       -side top
+	pack $f.width -side left 
+}
+
+proc roiRectangleInfoFrameCreate { w } { 
+	global rectanglePoint
+	set f [ frame $w.p0 ]
+	CommandEntry $f.x x0 2 echo -textvar rectanglePoints(x0)
+	CommandEntry $f.y y0 2 echo -textvar rectanglePoints(y0)
+	pack $f   -side top
+	pack $f.x -side left
+	pack $f.y -side left 
+	frame $w.p1
+	CommandEntry $w.p1.x x1 2 echo -textvar rectanglePoints(x1)
+	CommandEntry $w.p1.y y1 2 echo -textvar rectanglePoints(y1)
+	pack $w.p1 -side top
+	pack $w.p1.x -side left
+	pack $w.p1.y -side left 
+	frame $w.p2
+	CommandEntry $w.p2.x x2 2 echo -textvar rectanglePoints(x2)
+	CommandEntry $w.p2.y y2 2 echo -textvar rectanglePoints(y2)
+	pack $w.p2 -side top
+	pack $w.p2.x -side left
+	pack $w.p2.y -side left 
+	frame $w.p3
+	CommandEntry $w.p3.x x3 2 echo -textvar rectanglePoints(x3)
+	CommandEntry $w.p3.y y3 2 echo -textvar rectanglePoints(y3)
+	pack $w.p3 -side top
+	pack $w.p3.x -side left
+	pack $w.p3.y -side left 
+	set f [ frame $w.size ]
+	label $f.title -text "ROI-Size             " 
+	CommandEntry $f.width      width  6 echo -textvar rectanglePoints(width)
+	CommandEntry $f.height     height 6 echo -textvar rectanglePoints(height)
+	pack $f -side top
+	pack $f.title  -side left 
+	pack $f.width  -side left 
+	pack $f.height -side left 
+	set f [ frame $w.realsize ]
+	label $f.title -text "ROI-SizeToBeExtracted" 
+	CommandEntry $f.width  Width  6 echo -textvar rectanglePoints(realwidth)
+	CommandEntry $f.height Height 6 echo -textvar rectanglePoints(realheight)
+	pack $f -side top
+	pack $f.title  -side left
+	pack $f.width  -side left
+	pack $f.height -side left 
+	set f [ frame $w.angle ]
+	CommandEntry $f.angle Angle 5 echo -textvar rectanglePoints(angle)
+	pack $f -side top 
+	pack $f.angle -side left 
+}
+
+proc roiAnalysisFrameCreate { name } {
+	set f [ frame $name ]
+	button $f.fft -text FFT -command roiAreaFFT 
+	pack $f.fft -side left
+}

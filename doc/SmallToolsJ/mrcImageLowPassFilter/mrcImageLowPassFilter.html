@@ -1,0 +1,309 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageLowPassFilter</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageLowPassFilter<br></h2></b></font>
+	<h4>ローパスフィルタ</h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>オプション</th>
+				<th>必須項目/選択項目</th>
+				<th>説明</th>
+				<th>デフォルト</th>
+			</tr>
+			<tr>
+				<td>-i</td>
+				<td>必須</td>
+				<td>入力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-o</td>
+				<td>必須</td>
+				<td>出力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-m</td>
+				<td>選択</td>
+				<td>モードを設定</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-hvp</td>
+				<td>選択</td>
+				<td>空間周波数の減衰が最大値の半分になる値を設定</td>
+				<td>1.0</td>
+			</tr>
+			<tr>
+				<td>-w</td>
+				<td>選択</td>
+				<td>空間周波数のcos関数の幅を設定</td>
+				<td>1.0</td>
+			</tr>
+			<tr>
+				<td>-h</td>
+				<td>選択</td>
+				<td>ヘルプを表示</td>
+				<td>　</td>
+			</tr>
+		</table>
+			
+			
+<!-- モード説明 -->
+
+	<br>
+	<br>
+	<caption><b>モードの詳細</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>モード</th>
+				<th>説明</th>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>ステップフィルタ・・・-hvpを設定すること</td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td>cosフィルタ・・・-hvp,-wを設定すること</td>
+			</tr>
+			<tr>
+				<td>3</td>
+				<td>expフィルタ・・・-hvpを設定すること</td>
+			</tr>
+			<tr>
+				<td>4</td>
+				<td>ガウシアンフィルタ・・・-hvpを設定すること</td>
+			</tr>
+			<tr>
+				<td>5</td>
+				<td>ローレンツフィルタ・・・-hvpを設定すること</td>
+			</tr>
+		</table>
+	
+	<h4>******実行例******</h4>
+	
+<!-- 入力ファイル説明 -->
+
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="b120.center.png" border="0" alt="b120.center.png(6748 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-59.7839<br>
+				95.819<br>
+				5.83129<br>
+				20.2276<br>
+				0.252844<br></p>
+			</td>
+		</tr>
+	</table>
+	
+<!-- モード１～５での処理 -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------モード1～5での処理画像------</font></caption><br>
+	<table>
+		<tr><td>モード：１</td></tr>
+		<tr>
+			<td><img src="low.m1.center.png" border="0" alt="low.m1.center.png(6748 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-59.7839<br>
+				95.819<br>
+				5.83129<br>
+				20.2276<br>
+				0.252844<br></p>
+			</td>
+			<td>-hvpで値を0.01に変更<br>
+				　　－－－－－－＞</td>
+			<td><img src="low.m1h0.1.center.png" border="0" alt="low.m1h0.1.center.png(6456 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-14.8723<br>
+				70.6184<br>
+				5.83129<br>
+				13.3288<br>
+				0.16661<br></p>
+			</td>
+		</tr>
+		<tr><td>モード：２</td></tr>
+		<tr>
+			<td><img src="low.m2.center.png" border="0" alt="low.m2.center.png(6748 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-59.7839<br>
+				95.819<br>
+				5.83129<br>
+				20.2276<br>
+				0.252844<br></p>
+			</td>
+			<td>-hvpで値を0.01に変更<br>
+				　　－－－－－－＞</td>
+			<td><img src="low.m2h0.1.center.png" border="0" alt="low.m2h0.1.center.png(6645 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-18.964<br>
+				51.5446<br>
+				3.81663<br>
+				9.57594<br>
+				0.119699<br></p>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td>-hvpで値を0.01に、<br>
+			-wで値を0.01に変更<br>
+				　　－－－－－－＞</td>
+			<td><img src="low.m2h0.1w0.1.center.png" border="0" alt="low.m2h0.1w0.1.center.png(6401 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-15.26<br>
+				67.8494<br>
+				5.83129<br>
+				13.1106<br>
+				0.163882<br></p>
+			</td>
+		</tr>
+		<tr><td>モード：３</td></tr>
+		<tr>
+			<td><img src="low.m3.center.png" border="0" alt="low.m3.center.png(6752 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-51.0706<br>
+				89.3745<br>
+				5.83129<br>
+				18.4442<br>
+				0.230552<br></p>
+			</td>
+			<td>-hvpで値を0.01に変更<br>
+				　　－－－－－－＞</td>
+			<td><img src="low.m3h0.1.center.png" border="0" alt="low.m3h0.1.center.png(6540 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-17.2739<br>
+				65.8668<br>
+				5.83129<br>
+				12.3466<br>
+				0.154333<br></p>
+			</td>
+		</tr>
+		<tr><td>モード：４</td></tr>
+		<tr>
+			<td><img src="low.m4.center.png" border="0" alt="low.m4.center.png(6751 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-57.4594<br>
+				94.1998<br>
+				5.83129<br>
+				19.759<br>
+				0.246987<br></p>
+			</td>
+			<td>-hvpで値を0.01に変更<br>
+				　　－－－－－－＞</td>
+			<td><img src="low.m4h0.1.center.png" border="0" alt="low.m4h0.1.center.png(6449 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-14.1793<br>
+				66.4432<br>
+				5.83129<br>
+				12.853129<br>
+				0.160651<br></p>
+			</td>
+		</tr>
+		<tr><td>モード：５</td></tr>
+		<tr>
+			<td><img src="low.m5.center.png" border="0" alt="low.m5.center.png(6747 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-56.5914<br>
+				93.6005<br>
+				5.83129<br>
+				19.5859<br>
+				0.244824<br></p>
+			</td>
+			<td>-hvpで値を0.01に変更<br>
+				　　－－－－－－＞</td>
+			<td><img src="low.m5h0.1.center.png" border="0" alt="low.m5h0.1.center.png(6502 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-17.2053<br>
+				68.496<br>
+				5.83129<br>
+				12.9628<br>
+				0.162035<br></p>
+			</td>
+		</tr>
+	</table>
+	<br>
+	<div>※モードはデフォルト＝０になっているが、モードの選択肢に<br>
+	０は無いので、指定しなければエラーとなる。</div>
+		<br>
+	<div>※Lengthのx,y,zに０より大きい値が入っていなければ、正しく<br>
+	画像処理が行われない</div>
+</body>
+</html>

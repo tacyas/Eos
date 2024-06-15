@@ -1,0 +1,7 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: Single mrc","Optional","1","1","In","inFile","NULL"
+"-I","-I[nput]","Input: Multi mrc","Optional","1","1","In2","inFileList","NULL"
+"-C","-C[ontour]","Contour","Optional","1","1","Contour","Real","28.4"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+

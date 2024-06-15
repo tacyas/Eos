@@ -1,0 +1,50 @@
+<HTML>
+<HEAD>
+<TITLE>ctfDetermine</TITLE>
+</HEAD>
+<BODY>
+<H1>ctfDetermine</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: ctfDetermine
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :InputDataFile:  mrcImage
+    [-o[utput]           Out                 (NULL      ).as(appendFile          ) ] :Essential :OutputDataFile: Parameters
+    [-D[efocus]          Defocus             (0.0       ).as(Real                ) ] :Optional  :InitialDefocus[A]
+    [-Cs                 Cs                  (1.7       ).as(Real                ) ] :Optional  :InitialCs[mm]
+    [-Cc                 Cc                  (1.2       ).as(Real                ) ] :Optional  :InitialCs[mm]
+    [-dE                 dE                  (0.2       ).as(Real                ) ] :Optional  :InitialCs[mm]
+    [-Ac[cerratedVoltage]Ac                  (200       ).as(Real                ) ] :Optional  :Ac[kV]
+    [-CutLow             CutLow              (0.05      ).as(Real                ) ] :Optional  :CutOffLowFrequncy[/A]
+    [-CutHigh            CutHigh             (0.5       ).as(Real                ) ] :Optional  :CutOffHighFrequncy[/A]
+    [-I0                 I0                  (1.0       ).as(Real                ) ] :Optional  :I0
+    [-ratio              ratioOfAmpToPhase   (0.1       ).as(Real                ) ] :Optional  :ratioOfAmpToPhase
+    [-Ai                 Ai                  (0.03      ).as(Real                ) ] :Optional  :IlluminationAngle[mrad]
+    [-BofMTF             BofMTF              (15.0      ).as(Real                ) ] :Optional  :B of MTF [A]
+    [-BofV[ibration]     BofVibration        (3.0       ).as(Real                ) ] :Optional  :B of Vibration [A]
+    [-Mag[nification]    Magnification       (1.0       ).as(Real                ) ] :Optional  :Magnification
+    [-[White]Noise       WhiteNoise          (0.0       ).as(Real                ) ] :Optional  :Signal/Noise Ratio
+    [-[White]Noise2      WhiteNoise2         (0.0       ).as(Real                ) ] :Optional  :Signal/Noise Ratio
+    [-MolcEnv            MolcEnv             (0.0       ).as(Real                ) ] :Optional  :Gaussian: Molcular Envelop [A]
+    [-MolcEnv2           MolcEnvTable        (NULL      ).as(inFile              ) ] :Optional  :Table: Molcular Envelop
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+    [-min                min                 (-10       ).as(Real                ) ] :Optional  :min of coefficient area
+    [-max                max                 (10        ).as(Real                ) ] :Optional  :max of coefficient area
+    [-s[tep]             step                (0.01      ).as(Real                ) ] :Optional  :step of coefficient
+    [-d[egree]           degree              (6         ).as(Integer             ) ] :Optional  :agree of function
+    [-S[ection]          section             (4         ).as(Integer             ) ] :Optional  :section number of fft
+>>> Mode <<< 
+	  0 : MinMax Methods (Henderson-like CTF determination) 
+	  16: Fitting Methods 
+	  32: Differential Methods 
+	  64: Covariance Methods 
+	  96: Differential & covariance  Methods 
+	 128: MinSquare Methods 
+	 160: Differential+MinSquare Methods by Imamura 
+	 161: Differential+MinSquare Methods+NoiseRemoval(+1) 
+	 163: Differential+MinSquare Methods+NoiseRemoval(+1)+EnvelopeFromLocalMaxima(+2) 
+
+</PRE>
+</BODY>
+</HTML>

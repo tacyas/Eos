@@ -1,0 +1,8 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: MRC","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","Output: MRC[default: ToSigned]","Essential","1","1","Out","outFile","NULL"
+"-toU","-toU[nsigned]","Flag: To Unsigned","Optional","0"
+"-Offset","-Offset","Input: Offset","Optional","1","1","Offset","Integer","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

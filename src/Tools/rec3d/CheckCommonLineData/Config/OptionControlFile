@@ -1,0 +1,11 @@
+# OptionControlFile
+# FileFormat
+"-I","-I[nput]","InputDataFileList","Essential","1","1","In","inFileListNoOpen","NULL"
+"-oR","-o[utput]R[eal]","OutputDataFile","Essential","1","1","OutR","outFile","NULL"
+"-oI","-o[utput]I[m]","OutputDataFile","Essential","1","1","OutI","outFile","NULL"
+"-oL","-o[utput]L[ength]","OutputDataFile","Essential","1","1","OutL","outFile","NULL"
+"-oP","-o[utput]P[hase]","OutputDataFile","Essential","1","1","OutP","outFile","NULL"
+"-oLL","-o[utput]LL","OutputDataFile","Essential","1","1","OutLL","outFile","NULL"
+"-Log","-Log","LogFile","Essential","1","1","Log","outFile","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

@@ -1,0 +1,9 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-N","-N","[pixel]","Essential","3","1","Nx","Integer","1","1","Ny","Integer","1","3","Nz","Integer","1"
+"-offset","-offset","byte","Optional","1","1","Offset","Integer","0"
+"-dataType","-dataType","byte","Optional","1","1","DataType","Integer","1"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

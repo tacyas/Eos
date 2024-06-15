@@ -1,0 +1,90 @@
+#ifndef MRC_FFT_EXPRESSION_H
+#define MRC_FFT_EXPRESSION_H
+
+#include "mrcImage2.h"
+
+#define THIS_PROGRAM mrcFFTExpression
+#define THIS_ROUTINE lmrcFFTExpression
+
+
+#define OPTION_FLAG      '-'
+#define OPTION_FLAG_POS  (0)
+#define OPTION_POS       (1)
+#define FILENAME_LENGTH  (1024)
+#define DEFAULT_MODE     (1)
+#define MAX_LEVEL        (100)
+
+#define MAX(x,y)  (((x)>(y))?(x):(y))
+#define MIN(x,y)  (((x)<(y))?(x):(y))
+#define PI        (3.141592653589793238)
+
+typedef enum THIS_PROGRAM\
+Mode {
+    Amplitude = 1,
+    LogAmplitude,
+    Power,  
+    LogPower,
+    Phase
+} THIS_PROGRAM\
+Mode;
+
+typedef struct THIS_PROGRAM\
+ModeString {
+    THIS_PROGRAM\
+Mode      m;
+    char* s;
+} THIS_PROGRAM\
+ModeString;
+
+typedef struct THIS_PROGRAM\
+Info {
+    char inFileName[FILENAME_LENGTH];
+    FILE* fptIn;
+    long flagInFile;
+    char outFileName[FILENAME_LENGTH];
+    FILE* fptOut;
+    long flagOutFile;
+    long mode;
+} THIS_PROGRAM\
+Info;
+
+#define MODE_NUM (5)
+#ifdef GLOBAL_DECLARATION
+THIS_PROGRAM\
+ModeString ModeString[MODE_NUM] = {
+    {Amplitude,    "Amplitude"},
+    {LogAmplitude, "Log(Amplitude)"},
+    {Power,        "Power"},
+    {LogPower,     "Log(Power)"},
+    {Phase,        "Phase"}
+};
+#else
+extern THIS_PROGRAM\
+ModeString ModeString[MODE_NUM];
+#endif
+
+extern void THIS_ROUTINE/**/(mrcImage* img, mrcImage* fft0, THIS_PROGRAM\
+Info* info);
+
+extern void lmrcFFTAmplitude   (mrcImage* img, mrcImage* fft);
+extern void lmrcFFTLogAmplitude(mrcImage* img, mrcImage* fft);
+extern void lmrcFFTPower       (mrcImage* img, mrcImage* fft);
+extern void lmrcFFTLogPower    (mrcImage* img, mrcImage* fft);
+extern void lmrcFFTPhase       (mrcImage* img, mrcImage* fft);
+
+extern void argCheck(THIS_PROGRAM\
+Info* info, int argc, char* argv[]);
+                          
+extern void init0(THIS_PROGRAM\
+Info* info);
+
+extern void init1(THIS_PROGRAM\
+Info* info);
+                  
+extern void usage(char* thisProgram);
+
+extern void getStringData(char* s, char* message, FILE* fptIn, FILE* fptOut, long mode);
+extern FILE* fileOpen(char* filename, char* mode);
+extern long get2NNumber(long n);
+
+#endif /* MRC_FFT_EXPRESSION_H */

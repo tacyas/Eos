@@ -1,0 +1,326 @@
+#!
+proc seqFileTemplateChange { Template } {
+	set flag outFormat
+	set n [ string  length $Template ]
+	for { set i 0 } { $i < n } { incr i } {
+		set c [ string index $Template $i ] 
+		if { $c == "%" } {
+			set flag inFormat	
+		} else if { $flag==inFormat && [ string match 0 $c ] } {
+			set zeroFlag on
+			set flag     inInFormat
+		} else if { $flag==inFormat   && [ string match [1-9] $c ] 
+				 || $flag==inInFormat && [ string match [0]   $c ] } {
+		}
+	}
+	return $newTemplate	
+}
+
+proc seqFileSelect { command Template { default {} } { why "SeqFileSelect" } } {
+	global seqFileSelect
+
+	#puts $command
+	#puts $Template
+	set seqFileSelect(command)    $command
+	set seqFileSelect(template) [ seqFileTemplateChage $Template ]
+	set t [ toplevel .seqFileSelect -bd 4 -class FileSelect ]
+	fileSelectResources
+
+	# Title
+	message $t.msg -aspect 1000 -text $why
+	pack $t.msg -side top -fill x
+	
+	# directroy: ReadOnly
+	set seqFileSelect(dirEntry) [ entry $t.dir -width 15 -relief flat -state disabled ]
+	pack $t.dir -side top -fill x
+
+	# Template Name
+	frame $t.top1
+	pack $t.top1 -side top -fill x
+	label $t.top1.l -padx 0 -text "Template:"
+	pack $t.top1.l -side left
+	set e1 [ entry $t.top1.template -textvariable seqFileSelect(template) ]
+	pack $t.top1.template  -side right -fill x -expand true
+
+	# Current Pathname 
+	frame $t.top2
+	pack $t.top2 -side top -fill x
+	label $t.top2.l -padx 0 -text "File:"
+	pack $t.top2.l -side left
+	set e2 [ entry $t.top2.template 	-textvariable seqFileSelect(path) ]
+	pack $t.top2.template  -side right -fill x -expand true
+
+	# dirList Box
+	set lb [ listbox $t.list -yscrollcommand [ list $t.scroll set ] ]
+	scrollbar $t.scroll -command [ list $lb yview ]
+	
+	frame $t.buttons -bd 10
+
+	set prev   [ button $t.buttons.prev   -text prev -command seqFileSelectPrev ]
+	set next   [ button $t.buttons.next   -text next -command seqFileSelectNext ]
+	set cancel [ button $t.buttons.cancel -text cancel -command seqFileSelectCancel ] 
+
+	pack $t.list    -side left -fill both -expand true
+	pack $t.scroll  -side left -fill y
+	pack $t.buttons -side left -fill both
+
+	pack $t.buttons.prev $t.buttons.next $t.buttons.cancel -side top -padx 10 -pady 5
+
+	seqFileSelectBindings $t $e1 $e2 $lb $prev $next $cancel
+
+	# Initialize
+	if { 0 == [ string length $default ] } {
+		set seqFileSelect(path) {}
+		set dir [ pwd ]
+	} else {
+		set seqFileSelect(path) [ file tail $default ] 
+		set dir [ file dirname $default ]
+	}
+	set seqFileSelect(dir) {}	
+	set seqFileSelect(done) 0
+
+	# Main LOOP
+	tkwait visibility $lb
+	seqFileSelectList $dir
+
+	tkwait variable seqFileSelect(done)
+	destroy $t
+}
+
+proc seqFileSelectBindings { t template path lb prev next can } {
+    # t   - toplevel
+    # template   - name entry
+    # path  - name entry
+    # lb  - listbox
+    # prev - OK button
+    # next - OK button
+    # can - Cancel button
+
+    foreach w [ list $template $path $lb $prev $next $can ] {
+        bindtags $w [list $t [winfo class $w] $w]
+    }
+    bind $t <Control-c> seqFileSelectCancel
+
+    bind $template <Return> seqFileTemplateSelectOK
+    bind $template <space>  seqFileTemplateSelectComplete
+
+    bind $path <Return> seqFileSelectOK
+    bind $path <space>  seqFileSelectComplete
+
+    bind $lb <space>           "seqFileSelectTake %W;       focus $path"
+    bind $lb <Button-1>        "seqFileSelectClick %W %y ;  focus $path"
+    bind $lb <Return>          "seqFileSelectTake %W;       seqFileSelectOK"
+    bind $lb <Double-Button-1> "seqFileSelectClick %W %y;   seqFileSelectOK"
+
+    bind $template <Tab> "focus $path; $lb select set 0"
+    bind $path     <Tab> "focus $lb;   $lb select set 0"
+    bind $lb 	   <Tab> "focus $template"
+
+    #foreach but [list $prev $next $can ] {
+    #    set char [string tolower \
+	#		[ string index [$but cget -text] [$but cget -underline]]]
+    #    bind $t <Alt-$char> "focus $but; break"
+    #}
+
+    bind $prev <Tab>  "focus $next"
+    bind $next <Tab>  "focus $can"
+    bind $can  <Tab>  "focus $prev"
+
+    focus $template
+}
+
+proc seqFileSelectList { dir {files {}}} {
+    global seqFileSelect
+
+	# Update Dir Entry
+    set seqFileSelect(dir) $dir
+    set e                  $seqFileSelect(dirEntry)
+    $e config -state normal
+    $e delete 0 end
+    $e insert 0 $dir
+    $e config -state disabled
+    $e xview moveto 1
+
+	# Update List
+	set t .seqFileSelect
+	set l $t.list
+	# List Refresh 
+    $l delete 0 end
+    if ![file isdirectory $dir] {
+        $l insert 0 "Bad Directory"
+        return
+    }
+    $l insert 0 Listing...
+    update idletasks
+
+    $l delete 0
+    if {[string length $files] == 0} {
+        set seqFileSelect(list) \
+			[glob -nocomplain $seqFileSelect(dir)/$seqFileSelect(template) ]
+		set files \
+			[glob -nocomplain $seqFileSelect(dir)/* ]
+        $l insert end ../
+    }
+
+    set dirs {}
+    set others {}
+    foreach f [lsort $files] {
+        if [file isdirectory $f] {
+            lappend dirs [file tail $f]/
+        } else {
+            lappend others [file tail $f]
+        }
+    }
+    foreach f [ concat $dirs $seqFileSelect(list) ] {
+        $l insert end $f
+    }
+}
+
+proc seqFileTemplateSelectOK { } {
+
+}
+
+proc seqFileTemplateSelectComplete { } {
+
+}
+
+proc seqFileSelectOK { } {
+    global seqFileSelect
+
+	#puts "seqFileSelectOK start"
+    # Trim ../ (the parent) out of the pathname
+    if { [ regsub {^\.\.\/?} $seqFileSelect(path) {} newpath ] != 0 } {
+        set seqFileSelect(path) $newpath
+        set seqFileSelect(dir) [ file dirname $seqFileSelect(dir)]
+        seqFileSelectOK
+        return
+    }
+
+	# Remove last / 
+    set path [string trimright $seqFileSelect(dir)/$seqFileSelect(path) /]
+
+	# Directory
+    if [file isdirectory $path] {
+        set seqFileSelect(path) {}
+        seqFileSelectList $path
+        return
+    }
+
+	# File
+    if [file exists $path] {
+        set seqFileSelect(path) $path
+		puts "$seqFileSelect(command) $seqFileSelect(path)"
+		eval $seqFileSelect(command) $seqFileSelect(path)
+		#puts "seqFileSelectOK end"
+        return
+    }
+    # Neither a file or a directory.
+    # See if glob will find something
+    if [ catch {glob $path} files ] {
+        if [catch {glob $seqFileSelect(path)} path] {
+            seqFileSelectComplete
+            return
+        } else {
+            set seqFileSelect(dir) [file dirname $seqFileSelect(path)]
+            set seqFileSelect(path) [file tail $seqFileSelect(path)]
+            seqFileSelectOK
+            return
+        }
+    } else {
+        if {[llength [split $files]] == 1} {
+            set seqFileSelect(path) $files
+            seqFileSelectOK
+        } else {
+            set seqFileSelect(dir) [file dirname [lindex $files 0]]
+            seqFileSelectList $seqFileSelect(dir) $files
+        }
+    }
+}
+
+proc seqFileSelectComplete { } {
+    global seqFileSelect
+
+    set seqFileSelect(path) [ string trim $seqFileSelect(path) \t\ ]
+
+    if { [string match /* $seqFileSelect(path) ]} {
+        set dir [file dirname $seqFileSelect(path)]
+        set tail [file tail $seqFileSelect(path)]
+    } elseif [string match ~* %seqFileSelect(path)] {
+        if [ catch {file dirname $seqFileSelect(path)} dir ] {
+            return ; # Bad User
+        }
+        set tail [ file tail $seqFileSelect(path) ]
+    } else {
+        set path $seqFileSelect(dir)/$seqFileSelect(path)
+        set dir  [file dirname $path]
+        set tail [file tail $path]
+    }
+    set files [glob -nocomplain $dir/$tail*]
+    if { [llength [ split $files]] == 1} {
+        set seqFileSelect(dir) $dir
+        set seqFileSelect(path) [file tail $files]
+    } else {
+        if {[llength [split $files]] == 1} {
+            set l [expr [string length $tail]-1]
+            set miss 0
+            set file1 [file tail [lindex $files 0]]
+            while { $miss == 0 } {
+                incr l
+                if {$l == [string length $file1]} {
+                    break
+                }
+                set new [string range $file1 0 $l]
+                foreach f $files {
+                    if ![string match $new* [file tail $f]] {
+                        set miss 1
+                        incr l -1
+                        break
+                    }
+                }
+            }
+            set seqFileSelect(path) [string range $file1 0 $l]
+        }
+        seqFileSelectList $dir $files
+    }
+}
+
+proc seqFileSelectPrev { } {
+	global seqFileSelect
+	
+	set lb .seqFileSelect.list
+	set cur [ $lb curselection ] 
+	$lb selection clear $cur
+	$lb selection set   [ expr $cur - 1 ]	
+	set seqFileSelect(path) [ $lb get [ $lb curselection ] ]
+	seqFileSelectOK
+}
+
+proc seqFileSelectNext { } {
+	global seqFileSelect
+		
+	set lb .seqFileSelect.list
+	set cur [ $lb curselection ] 
+	$lb selection clear $cur
+	$lb selection set [ expr $cur + 1 ]	
+	set seqFileSelect(path) [ $lb get [ $lb curselection ] ]
+	seqFileSelectOK
+}
+
+proc seqFileSelectCancel { } {
+	global seqFileSelect
+
+	set seqFileSelect(path) {}
+	set seqFileSelect(done) 1
+}
+
+proc seqFileSelectClick { lb y } {
+	global seqFileSelect 
+	set seqFileSelect(path) [$lb get [ $lb nearest $y ] ]
+}
+
+proc seqFileSelectTake { lb }  {
+	global seqFileSelect
+	set  seqFileSelect(path) [ $lb get [ $lb curSelection ] ]
+}
+
+

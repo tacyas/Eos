@@ -1,0 +1,200 @@
+/*
+# mrcImageInit.c  1.7
+# The latest update : 01/23/97 at 10:34:30
+#
+#@(#) mrcImageInit ver 1.7
+#@(#) Created by 
+#@(#)
+#@(#) Usage : mrcImageInit 
+#@(#) Attention
+#@(#)
+*/
+static char __sccs_id[] = "@(#)mrcImageInit ver1.7; Date:97/01/23 @(#)";
+
+#undef DEBUG
+#include "genUtil.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include "../inc/mrcImage.h"
+
+/* Intrinsic Function */
+extern void __mrcAllocate(mrcImage* mrc, char* message);
+
+#define RTN_NAME "mrcInit"
+
+/*
+* mrcInit
+*    Initialize mrcImage
+*
+*/
+mrcStatusType
+mrcInit(mrcImage* mrc, char* filename)
+{
+	DEBUGPRINT("in mrcInit\n");
+    /* Unless filename == NULL, File Header Read */
+    if(NULL!=filename) {
+        mrcHeaderRead(mrc, filename, "in mrcInit", 0);
+    }
+
+    /* Label Number Check */
+    if(mrc->HeaderLabelN>MRC_MAX_LABEL_N) {
+        mrc->HeaderLabelN = 0L;
+    }
+   	mrcHiddenDataSet(mrc, 0); 
+
+    __mrcAllocate(mrc, filename);
+
+    mrc->Status = 0;
+    return 0;
+}
+#undef RTN_NAME
+
+void
+__mrcAllocate(mrcImage* mrc, char* message)
+{
+    size_t bufsize;
+    char s[20];
+	size_t i;
+
+    bufsize = (size_t)(mrc->BytePerBand*mrc->BandPerPixel*mrc->PixelPerImage);
+	mrc->BytePerImage = bufsize;
+	DEBUGPRINT1("bufsize: %d\n", bufsize);
+    if(NULL==(mrc->Image=(char*)malloc(bufsize))) {
+        sprintf(s, "%16d", bufsize);
+    	mrcError(message, "__mrcAllocate", s,
+    	mrcStatusMask_ExitFailure|MRC_MemoryNotAllocate);
+    }
+	for(i=0; i<bufsize; i++) {
+		mrc->Image[i] = (char)0;
+	}
+    (char*)(mrc->ImageCharImage) = (char*)(mrc->ImageShortImage) = (char*)(mrc->ImageLongImage)
+        = (char*)(mrc->ImageFloatImage) = (char*)(mrc->ImageDoubleImage) = mrc->Image;
+}
+
+void
+mrcImageFree(mrcImage* mrc, char* message) 
+{
+	if(NULL!=mrc->Image) {
+		free(mrc->Image);
+	}
+}
+
+#define RTN_NAME "mrcHiddenDataSet"
+
+mrcStatusType
+mrcHiddenDataSet(mrcImage* mrc, long mode)
+{
+	char s[20];
+
+	/* Set Byte/Band */
+    switch(mrc->HeaderMode) {
+        case mrcCharImage: {
+    	    mrc->BytePerBand = 1L;
+            break;
+        }
+        case mrcShortImage: 
+        case mrcComplexShortFT: 
+        case mrcComplexShortFFT: {
+    	    mrc->BytePerBand = 2L;
+            break;
+        }
+        case mrcFloatImage: 
+        case mrcLongImage: 
+        case mrcComplexFloatFT: 
+        case mrcComplexLongFT: 
+        case mrcComplexFloatFFT: 
+        case mrcComplexLongFFT: {
+    	    mrc->BytePerBand = 4L;
+            break;
+        }
+        case mrcDoubleImage: 
+        case mrcComplexDoubleFT: 
+        case mrcComplexDoubleFFT: {
+    	    mrc->BytePerBand = 8L;
+            break;
+    	}
+        default: {
+            sprintf(s, "ImageMode %ld", mrc->HeaderMode);
+            return mrcError("", RTN_NAME, s,
+        			  mrcStatusMask_ExitFailure|MRC_ModeNotSupported);
+        }
+    }
+    /* Set Band/Pixel */
+    switch(mrc->HeaderMode) {
+        case mrcCharImage:
+        case mrcShortImage:
+        case mrcFloatImage: 
+        case mrcLongImage: 
+        case mrcDoubleImage: {
+    	    mrc->BandPerPixel = 1L;
+    	    break;
+    	}
+        case mrcComplexShortFT: 
+        case mrcComplexFloatFT: 
+        case mrcComplexLongFT: 
+        case mrcComplexDoubleFT: 
+        case mrcComplexShortFFT: 
+        case mrcComplexFloatFFT: 
+        case mrcComplexLongFFT: 
+        case mrcComplexDoubleFFT: {
+    	    mrc->BandPerPixel = 2L;
+    	    break;
+    	}
+        default: {
+            sprintf(s, "ImageMode %ld", mrc->HeaderMode);
+            return mrcError("", RTN_NAME, s,
+        			  mrcStatusMask_ExitFailure|MRC_ModeNotSupported);
+        }
+    }
+
+	/* Pixel/Image */
+    if(0==mrc->HeaderN.z) {
+        mrc->HeaderN.z = (mrcImageParaTypeInteger)1;
+    	mrcError("", RTN_NAME, "z element",
+        		 MRC_SizeOfZero);
+    }
+    if(0==mrc->HeaderN.y) {
+	mrc->HeaderN.y = (mrcImageParaTypeInteger)1;
+	mrcError("", RTN_NAME, "y element",
+		 MRC_SizeOfZero);
+    }
+    if(0==mrc->HeaderN.x) {
+	mrc->HeaderN.x = (mrcImageParaTypeInteger)1;
+	mrcError("", RTN_NAME, "x element",
+		 MRC_SizeOfZero);
+    }
+
+    switch(mrc->HeaderMode) {
+        case mrcCharImage:
+        case mrcShortImage:
+        case mrcFloatImage: 
+        case mrcLongImage: 
+        case mrcDoubleImage: {
+    		mrc->PixelPerImage = mrc->HeaderN.x*mrc->HeaderN.y*mrc->HeaderN.z;
+    	    break;
+    	}
+        case mrcComplexShortFT: 
+        case mrcComplexFloatFT: 
+        case mrcComplexLongFT: 
+        case mrcComplexDoubleFT: 
+        case mrcComplexShortFFT: 
+        case mrcComplexFloatFFT: 
+        case mrcComplexLongFFT: 
+        case mrcComplexDoubleFFT: {
+    		mrc->PixelPerImage = (mrc->HeaderN.x/2+1)*mrc->HeaderN.y*mrc->HeaderN.z;
+    	    break;
+    	}
+        default: {
+            sprintf(s, "ImageMode %ld", mrc->HeaderMode);
+            return mrcError("", RTN_NAME, s,
+        			  mrcStatusMask_ExitFailure|MRC_ModeNotSupported);
+        }
+    }
+
+	/* Byte/Image */
+	mrc->BytePerImage = mrc->BytePerBand
+						*mrc->BandPerPixel
+						*mrc->PixelPerImage;
+	DEBUGPRINT4("b/i: %d, b/B: %d, B/p: %d, p/i:%d in mrcHiddenDataSet\n", mrc->BytePerImage, mrc->BytePerBand, mrc->BandPerPixel, mrc->PixelPerImage);	
+	return 1;
+}

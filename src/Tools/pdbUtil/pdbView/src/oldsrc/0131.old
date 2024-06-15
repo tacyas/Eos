@@ -1,0 +1,799 @@
+/*
+  # pdbView : $Revision$  
+  # $Date$ 
+  # Created by $Author$
+  # Usage : pdbView
+  # Attention
+  #   $Loccker$
+  #  	$State$ 
+  #
+*/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <stream.h>
+#include "vtk.h"
+
+#include <pgsql/libpq-fe.h>
+
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+
+#include "./ShapeMaker.hh"
+#include "ShapeMaker.cc"
+
+#define DEBUG
+#include "genUtil.h"
+#include "pdbFile.h"
+#include "Memory.h"
+
+#include "./DataStore.hh"
+#include "DataStore.cc"
+
+#include "./ActorMaker.hh"
+#include "ActorMaker.cc"
+
+
+#include "vtkTextMapper.h"
+#include "vtkPicker.h"
+
+enum CG{
+  All,
+  CAonly
+};
+
+enum TextMode{
+  ResidueSequenceNumber,
+  AtomName,
+  ResidueName,
+  ChainIdentifier,
+  AllSet
+};
+
+class FigureFactory
+{
+private:
+  pdbFile* pdb;
+  vtkPolyDataMapper* mapper;
+  vtkActor* actor;
+  DataStore* dataStore;
+  SphereMaker* sphereMaker;
+  ActorMaker* actorMaker;
+  vtkRenderer* ren;
+  vtkAssembly* AllMolecule;
+  vtkAssembly* CaOnly;
+
+public:
+  FigureFactory();
+  void SetData(void* data, void* p, void* render);
+  void MAKE();
+};
+
+
+FigureFactory::FigureFactory()
+{
+  sphereMaker = new SphereMaker();
+}
+
+void FigureFactory::SetData(void* data, void* p, void* render)
+{
+    dataStore = (DataStore*)data;
+    pdb = (pdbFile*)p;
+    ren = (vtkRenderer *)render;
+}
+
+void FigureFactory::MAKE()
+{
+  float x;
+  float y;
+  float z;
+  int i=1;
+
+      cout << form("PdbFile///// = %d\n",pdb->nAtom);
+      dataStore->SetArea(pdb->nAtom);
+
+  AllMolecule = vtkAssembly::New();
+  CaOnly = vtkAssembly::New();
+  
+  pdbFileTop(pdb);
+  while(1){
+    if(pdbFileIsAtom(pdb)){
+      pdbFileCoordGet(pdb, &x, &y, &z);
+      
+      sphereMaker->SetPosition(x, y, z);
+      sphereMaker->SetResolution(4 , 4);
+      sphereMaker->MAKE();
+      actorMaker = new ActorMaker();
+      actorMaker->SetMapper(sphereMaker->GetMapper());
+      //actorMaker->SetPosition(0, 0, 0);
+      //actorMaker->SetPosition(x, y, z);
+      actorMaker->SetColor(0.5, 0.8, 0.9);
+      
+      AllMolecule->AddPart(actorMaker->GetActor());
+      if(pdbFileIsCA(pdb))
+	{
+	  CaOnly->AddPart(actorMaker->GetActor());
+	}
+
+      //ren->AddActor(actorMaker->GetActor());
+      
+      //      ren->AddActor(actorMaker->GetActor());
+      
+      // cout << form("End of sequense number2 = %d ---i = %d\n",pdb->PDB->AtomSerialNumber,i); 
+       dataStore->SET(pdb->PDB,actorMaker->GetActor(),sphereMaker->GetMapper(),i);
+      
+      i=i+1;
+    }
+    if(pdbFileEnd(pdb)){
+      break;
+    } else {
+      pdbFileNext(pdb);
+    }
+  }
+  
+  //moleData->SetScale(2.0);
+  ren->AddActor(CaOnly);
+  //  ren->AddActor(moleData);
+}
+
+
+
+class DataSearcher{
+private:
+  DataStore* dataStore;
+  pdbRecord* pdb;
+  TextMode Mode;
+
+public:
+  DataSearcher();
+  void DataSearcher::SetData(void* data);
+  pdbRecord* DataSearcher::GetData(vtkAbstractMapper3D* mapper);
+  char* DataSearcher::GetData(vtkAbstractMapper3D* mapper, CG CAonly);
+  void ModeSet(TextMode m);
+  char* ReturnText(pdbRecord* pdb);
+};
+
+DataSearcher::DataSearcher()
+{
+  Mode = AllSet;
+}
+
+void DataSearcher::SetData(void* data)
+{
+ 
+  dataStore = (DataStore*)data;
+}
+
+void DataSearcher::ModeSet(TextMode m)
+{
+  Mode = m;
+}
+
+char* DataSearcher::GetData(vtkAbstractMapper3D* mapper, CG CAonly)
+{
+  vtkAbstractMapper3D* map;
+  int i=0;
+  
+  dataStore->ResetCaList();
+  
+  while(i!=-1){
+    i = dataStore->GetCaListSerial();
+    map = dataStore->GetMapper(i);
+    if(mapper == map){
+     return ReturnText(dataStore->GetPdb(i));
+      //return dataStore->GetPdb(i);
+    }else if(map == NULL){
+      return NULL;
+    }
+  }
+  return NULL;
+  
+}
+
+//pdbRecord* DataSearcher::GetData(vtkAbstractMapper3D* mapper)
+
+pdbRecord* DataSearcher::GetData(vtkAbstractMapper3D* mapper)
+{
+  int i;
+  vtkAbstractMapper3D* map;
+  
+  for(i=0; i<1000 ; i++){
+    map = dataStore->GetMapper(i);
+    if(mapper == map){
+      return dataStore->GetPdb(i);
+    }else if(map == NULL){
+      return NULL;
+    }
+  }
+  return NULL;
+}
+
+char* DataSearcher::ReturnText(pdbRecord* pdb)
+{
+
+  char* text;
+
+  text = (char*)memoryAllocate(sizeof(char)*100, "in ReturnText");
+
+  switch(Mode){
+  case ResidueSequenceNumber:
+      sprintf(text, "%ld",pdb->ResidueSequenceNumber);
+      break;
+  case AtomName:
+      sprintf(text, "%s",pdb->AtomName);
+      break;
+  case ResidueName:
+      sprintf(text, "%s",pdb->ResidueName);
+      break;
+  case ChainIdentifier:
+      sprintf(text, "%c",pdb->ChainIdentifier);
+      break;
+  case AllSet:
+      sprintf(text, "%c:%s %ld:%s",pdb->ChainIdentifier,pdb->ResidueName,pdb->ResidueSequenceNumber,pdb->AtomName);
+      break;
+  }
+  return text;
+}
+
+
+
+class DataBase{
+protected:
+  PGconn *con;
+  PGresult *res;
+  char* host;
+  char* port;
+  char* dbName;
+public:
+
+  DataBase();
+  void ConnectToDataBase();
+  void SetDataBaseInfo(char* hostN, char* portN, char* dbN);
+
+  void DropTable(char* TableName);
+  void DeleteTable(char* TableName);
+  void CloseDataBase();
+};
+
+
+DataBase::DataBase()
+{
+
+}
+
+
+void DataBase::ConnectToDataBase()
+{
+
+  con = PQsetdb(host, port, NULL, NULL, dbName);
+  printf("DataBaseName = %s", PQdb(con));
+    
+  if (PQstatus(con) == CONNECTION_BAD) {
+    fprintf(stderr, "Connection to database '%s' on %s failed.\n", dbName, host)
+      ;
+    fprintf(stderr, "%s", PQerrorMessage(con));
+    exit(1);
+  }else{
+    printf("Connect to DataBase!!\n");
+  }
+
+}
+
+
+void DataBase::SetDataBaseInfo(char* hostN, char* portN, char* dbN)
+{
+
+  host = strdup(hostN);
+  port = strdup(portN);
+  dbName = strdup(dbN);
+
+  ConnectToDataBase();
+
+}
+
+void DataBase::DropTable(char* TableName)
+{
+  char dropMemo[100];
+  sprintf(dropMemo, "DROP TABLE %s", TableName);
+  res = PQexec(con, dropMemo);
+  PQclear(res);
+}
+
+void DataBase::DeleteTable(char* TableName)
+{
+  char deleteMemo[100];
+  sprintf(deleteMemo, "DELETE FROM %s", TableName);
+  res = PQexec(con, deleteMemo);
+  PQclear(res);
+}
+
+void DataBase::CloseDataBase()
+{
+  PQclear(res);
+  PQfinish(con);
+}
+
+
+
+class DataBaseMaker : public DataBase{
+private:
+  char TabFileName[20];
+
+public:
+  DataBaseMaker(FILE* TabFile, pdbFile* pdb);
+  DataBaseMaker(FILE* TabFile);
+  void InputToDataBase(FILE* TabFile);
+};
+
+DataBaseMaker::DataBaseMaker(FILE* TabFile, pdbFile* pdb )
+{
+  strcpy(TabFileName,"pdbText.dat");
+  TabFile = fopen(TabFileName,"w");
+  pdbFileTableWrite(TabFile,pdb);
+  fclose(TabFile);
+  InputToDataBase(TabFile);
+}
+
+DataBaseMaker::DataBaseMaker(FILE* TabFile)
+{
+  /*
+  strcpy(host,"pc17");
+  strcpy(port,"7777");
+  strcpy(dbName,"test");
+  */
+  InputToDataBase(TabFile);
+}
+
+
+void DataBaseMaker::InputToDataBase(FILE* TabFile)
+{
+
+  char* tmp0 = strdup("pc17");
+  char* tmp1 = strdup("7777");
+  char* tmp2 = strdup("test");
+
+  DataBase::SetDataBaseInfo(tmp0,tmp1,tmp2);
+
+   char sql[256]; 
+
+
+  char TableName[20] = "TempPDB";
+  strcpy(TabFileName,"pdbText.dat");
+
+  char createTable[500];
+
+
+  sprintf(createTable, "CREATE TABLE %s ( Atom TEXT,AtomSerialNumber INTEGER,AtomName TEXT,LocationIndicator TEXT,ResidueName TEXT,ChainIdentifier TEXT,ResidueSequenceNumber INTEGER,InsertionCode TEXT,X FLOAT,Y FLOAT,Z FLOAT,Occupancy TEXT,TemperatureFactor TEXT,FootnoteNumber INTEGER,Footnote TEXT) " , TableName);
+
+  res = PQexec(con,createTable);
+
+  /*
+
+    res = PQexec(con, "CREATE TABLE testpdb(
+                       Atom TEXT,
+                       AtomSerialNumber INTEGER,
+                       AtomName TEXT,
+                       LocationIndicator TEXT,
+                       ResidueName TEXT,
+                       ChainIdentifier TEXT,
+                       ResidueSequenceNumber INTEGER,
+                       InsertionCode TEXT,
+                       X FLOAT,
+                       Y FLOAT,
+                       Z FLOAT,
+                       Occupancy TEXT,
+                       TemperatureFactor TEXT,
+                       FootnoteNumber INTEGER,
+                       Footnote TEXT) ");
+
+  */
+
+    //TESTPDB->MOJIRETU NI HENKAN SURUKOTO!!!
+
+  char tmp[100];
+  sprintf(tmp, "copy %s from stdin", TableName);
+  res = PQexec(con, tmp);
+
+  //res = PQexec(con, "copy testpdb from stdin");
+  if (PQresultStatus(res) != PGRES_COPY_IN){
+    fprintf(stderr, "%s", PQerrorMessage(con));
+    exit(1);
+  }
+
+  //PQclear(res);
+
+  if((TabFile = fopen (TabFileName,"r")) == NULL){
+    fprintf(stderr,"Can't open the file!\n");
+    exit(1);
+  }
+
+  while ( (fgets(sql,256,TabFile) ) != NULL){
+    printf("%s\n",sql);
+      if ( PQputline(con,sql) ){
+        fprintf(stderr, "PQputline failed\n");
+        exit(1);
+      }
+    }
+
+  if (PQputline(con,"\\.\n")){
+    fprintf(stderr,"very Last PQputline failed");
+    exit(1);
+  }
+
+
+  if (PQendcopy(con)){
+    fprintf(stderr, "PQendcopy failed\n");
+    exit(1);
+  }
+  fclose(TabFile);
+
+  res = PQexec(con, "SELECT * FROM testpdb WHERE atomserialnumber < 15");
+
+  for(int i = 0; i < PQntuples(res) ; i++){
+    for(int j = 0; j < PQnfields(res) ; j++){
+      printf("%s\t", PQgetvalue(res, i, j));
+    }
+    printf("\n");
+  }
+
+
+  PQclear(res);
+
+  //DataBase::DeleteTable(TableName);
+
+  //DataBase::DropTable(TableName);
+  //DataBase::CloseDataBase();
+
+  //res = PQexec (SELECT )
+
+
+}
+
+
+/*
+
+class HomologyStore::DataBase{
+private:
+
+public:
+
+};
+
+*/
+/*
+
+HomologyStore::HomologyStore()
+{
+
+
+
+  char* tmp0 = strdup("pc17");
+  char* tmp1 = strdup("7777");
+  char* tmp2 = strdup("test");
+  DataBase::SetDataBaseInfo(tmp0, tmp1, tmp2);
+
+*/
+
+
+
+class eosDataPicker{
+private:
+
+  vtkActor* pickActor;
+  vtkAbstractMapper3D* pickMapper;
+
+  vtkFollower* textActor;
+  vtkPolyDataMapper* textMapper;
+  vtkVectorText* text;
+
+  vtkRenderer* ren;
+  vtkCellPicker* picker;
+
+  pdbRecord* pdbData;
+ 
+  DataStore* dataStore;
+  DataSearcher* dataSearcher;
+
+public:
+  eosDataPicker();
+
+  vtkCellPicker* eosDataPicker::GetPicker();
+  void SetData(void* renderer, void* data);
+  static void annotatePick(void* arg);
+  void annotatePick0();
+  vtkAbstractMapper3D* GetPickMapper();
+
+};
+
+eosDataPicker::eosDataPicker()
+{
+  picker = vtkCellPicker::New();  
+  textActor = vtkFollower::New();
+  textMapper = vtkPolyDataMapper::New();
+  text = vtkVectorText::New();
+  dataSearcher = new DataSearcher;
+
+  cout << form("eosDataPicker::eosDataPicker!!\n");
+
+  picker->SetEndPickMethod(&annotatePick, this);
+}
+
+void eosDataPicker::SetData(void* renderer, void* data)
+{
+  ren = (vtkRenderer*)renderer;
+  dataStore = (DataStore*)data;
+  dataSearcher->SetData(dataStore);
+
+  cout << form("eosDataPicker::GetData!!\n");
+}
+
+void eosDataPicker::annotatePick(void* picker)
+{
+  //vtkRenderer* ren = (vtkRenderer*)arg;
+
+  cout << form("eosDataPicker::annotatePick!!\n");
+
+  ((eosDataPicker*)picker)->annotatePick0();
+}
+
+vtkCellPicker* eosDataPicker::GetPicker()
+{
+  return picker;
+}
+
+vtkAbstractMapper3D* eosDataPicker::GetPickMapper()
+{
+  return pickMapper;
+}
+
+void eosDataPicker::annotatePick0()
+{
+
+  float xp;
+  float yp;
+  float zp;
+  float* pickPos;
+  char* temp;
+
+  //-p1=nothings was picked
+  if((picker->GetCellId()) < 0)
+    {
+      textActor->VisibilityOff();
+    }else{
+      textActor->VisibilityOn();      
+      pickPos = picker->GetPickPosition();
+      
+      xp = pickPos[0];
+      yp = pickPos[1];
+      zp = pickPos[2];
+     
+/*
+ 
+      if(NULL==(pickActor = picker->GetActor())) {
+	vtkAssembly* tmp;
+	if(NULL!=(tmp=picker->GetAssembly())) {
+	  vtkProp3D* p;
+	  pickActor = (vtkActor*)tmp->GetParts()->GetItemAsObject(picker->GetSubId());
+	  for(p=pickActor; p!=tmp->GetParts()->GetLastProp3D() && p!=NULL; p=tmp->GetParts()->GetNextProp3D()) {
+	    cout << form("assembly+++A=%x\n",p);
+	  }
+	}
+      }
+
+*/
+
+ 
+      pickMapper = picker->GetMapper();
+      pickActor = picker->GetActor();  
+      cout << form("address+++A=%d,M=%d\n",pickActor , pickMapper);
+
+
+      dataSearcher->ModeSet(AllSet);
+      temp = dataSearcher->GetData(pickMapper,CAonly);
+      printf("TEXT-YOTEI===========%s\n",temp);
+      //pdbData = dataSearcher->GetData(pickMapper,CAonly);
+      
+      //pdbData = dataSearcher->GetData(pickMapper);
+      
+      if(pdbData!=NULL){
+
+	text->SetText(temp);  
+
+	//	text->SetText(form("%s",pdbData->));  
+      }else{
+	text->SetText("Not Identified");
+      }
+      
+      //3D TEXT VERSION
+      
+      //text->SetText(form("%f,%f,%f",xp,yp,zp));
+      textMapper->SetInput(text->GetOutput());
+      textActor->SetMapper(textMapper);
+      textActor->SetScale(0.3,0.3,0.3);
+      textActor->SetPosition(xp,yp,zp);
+      textActor->SetCamera(ren->GetActiveCamera()); 
+      ren->AddActor(textActor);
+
+    }
+     
+}
+
+/*
+  Example:
+  typedef struct lpdbViewInfo {
+  float a;
+  int   b;
+  } lpdbViewInfo;
+  
+  typedef enum lpdbViewMode {
+  a=0,
+  b=1
+  } lpdbViewMode;
+*/
+
+
+int
+main(int argc, char* argv[]) 
+{
+
+  pdbViewInfo info;
+  pdbFile pdb;
+  pdbFile* ppdb;
+
+  ppdb = &pdb;
+  
+  init0(&info);
+  argCheck(&info, argc, argv);
+  init1(&info);
+  
+  DEBUGPRINT("Program Start\n");
+  cout << "start C++\n";
+  pdbFileRead(info.fptIn, &pdb);
+ 
+
+  FILE* TabFile;
+
+  DataBaseMaker dataBaseMaker(TabFile, ppdb);
+
+  /*
+  pdbTextFile = fopen("pdbText.dat","w");
+  pdbFileTableWrite(pdbTextFile,ppdb);
+  fclose(pdbTextFile);
+  */
+ 
+  vtkRenderer *ren = vtkRenderer::New();
+  vtkRenderWindow *renWindow = vtkRenderWindow::New();
+  renWindow->AddRenderer(ren);
+  vtkRenderWindowInteractor *iren = vtkRenderWindowInteractor::New();
+  iren->SetRenderWindow(renWindow);
+
+  DataStore dataStore(ppdb);
+  FigureFactory figureFactory;
+
+  figureFactory.SetData(&dataStore, ppdb ,ren);
+  figureFactory.MAKE();
+
+
+  //eosPdbSource pdbSource;
+
+  //pdbSource.SetDataStore(&dataStore);
+  //pdbSource.SetPdb(ppdb);
+  //pdbSource.SetRenderer(ren);
+
+
+ 
+  eosDataPicker dataPicker;
+  dataPicker.SetData(ren,&dataStore);
+  iren->SetPicker(dataPicker.GetPicker());
+
+
+  //eosPickerCheck pickerCheck;
+
+  //pickerCheck.SetData(ren,&dataStore);
+  //pickerCheck.SetPicker(dataPicker.GetPicker());
+  //pickerCheck.SetPickMapper(dataPicker.GetPickMapper());
+
+  //dataPicker.SetData(ren,&pdbSource,&dataStore);
+
+
+
+
+  //iren->SetPicker(dataPicker.GetPicker());
+
+
+
+  //cout << form("DataPicker=%d \n",&(dataPicker.annotatePick));
+
+  //  cout << dataPicker.annotatePick "\n";
+
+  //  dataPicker.picker->SetEndPickMetchod(*(dataPicker.annotatePick),ren);
+  //dataPicker.picker->SetEndPickMetchod(&(annotatePick),&dataPicker);
+  //iren->SetPicker(dataPicker.picker);
+
+  //picker->SetEndPickMethod(&annotatePick,ren);
+  //iren->SetPicker(picker);
+
+
+
+  //SET TEXT 2D VERSION
+  vtkTextMapper* tMapper = vtkTextMapper::New();
+  tMapper->SetInput("pdbView");
+  tMapper->ShadowOn();
+
+  vtkActor2D* tActor = vtkActor2D::New();
+  tActor->SetMapper(tMapper);
+  tActor->SetPosition(0,0);
+
+  ren->AddActor2D(tActor);
+
+
+  //Axes
+  vtkAxes* axes = vtkAxes::New();
+  axes->SetOrigin(0,0,0);
+  vtkPolyDataMapper* axesMapper = vtkPolyDataMapper::New();
+  axesMapper->SetInput(axes->GetOutput());
+  vtkActor* axesActor = vtkActor::New();
+  axesActor->SetMapper(axesMapper);
+  ren->AddActor(axesActor);
+
+
+  //Cube
+  vtkCubeSource *cube = vtkCubeSource::New();
+  cube->SetCenter(0,0,0);
+  cube->SetXLength(5);
+  cube->SetYLength(5);
+  cube->SetZLength(5);
+  //cube->SetBounds(0.0,0.5,0.0,0.3,0.0,0.2);
+  vtkPolyDataMapper *cubeMapper = vtkPolyDataMapper::New();
+  cubeMapper->SetInput(cube->GetOutput());
+  vtkActor *cubeActor = vtkActor::New();
+  cubeActor->SetMapper(cubeMapper);
+  cubeActor->GetProperty()->SetOpacity(0.5);
+  cubeActor->GetProperty()->SetColor(0.4,0.4,0.7);
+  
+    //Cube
+  vtkCubeSource *cube2 = vtkCubeSource::New();
+  cube2->SetCenter(5,5,5);
+  cube2->SetXLength(3);
+  cube2->SetYLength(3);
+  cube2->SetZLength(3);
+  //cube->SetBounds(0.0,0.5,0.0,0.3,0.0,0.2);
+  vtkPolyDataMapper *cubeMapper2 = vtkPolyDataMapper::New();
+  cubeMapper2->SetInput(cube2->GetOutput());
+  vtkActor *cubeActor2 = vtkActor::New();
+  cubeActor2->SetMapper(cubeMapper2);
+  cubeActor2->GetProperty()->SetOpacity(0.5);
+  cubeActor2->GetProperty()->SetColor(0.8,0.4,0.7);
+  
+  //assign our actor to the renderer
+  
+  //ren->AddActor(cubeActor);
+  //ren->AddActor(cubeActor2);
+  ren->SetBackground(0,0,0);
+  
+  ren->ResetCamera();
+  
+  renWindow->PolygonSmoothingOff();
+  renWindow->PointSmoothingOff();
+  renWindow->LineSmoothingOff();
+  
+  renWindow->SetSize(400,400);
+  
+  //draw the resulting scene
+  renWindow->Render();
+  
+  //Begin mouse interaction
+  iren->Start();
+  
+  //picker->Pick( 200, 200, 0, ren);
+  
+  exit(EXIT_SUCCESS);
+}
+
+void
+additionalUsage()
+{
+  fprintf(stderr, "----- Additional Usage -----\n");
+}

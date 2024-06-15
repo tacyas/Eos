@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcInfoSet</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcInfoSet<br></h2></b></font>
+	<h4>mrcファイルの設定を変更する</h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+	<table border="1">
+		<div align="left">
+		<tr>
+			<th>オプション</th>
+			<th>必須項目/選択項目</th>
+			<th>説明</th>
+			<th>デフォルト</th>
+		</tr>
+		<tr>
+			<td>-i</td>
+			<td>必須</td>
+			<td>入力ファイル設定</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-Length</td>
+			<td>選択</td>
+			<td>１ピクセルの幅を設定</td>
+			<td>2.5 2.5 2.5</td>
+		</tr>
+		<tr>
+			<td>-h</td>
+			<td>選択</td>
+			<td>ヘルプを表示</td>
+			<td>　</td>
+		</tr>
+	</table>
+	
+	<h4>******実行例******</h4>
+
+	<caption><font color="blue">------オプション必須項目のみの場合------</font></caption><br>
+	<div>実行前のファイルデータ<br>
+	<img src="input.info.png" border="0" alt="input.info.png(8834 byte)" width="650" height="238"><br>
+	<br>
+	以下のように各項目ごとに変更するか聞かれるので、変更する箇所だけ入力する<br>
+	<img src="img1.png" border="0" alt="img1.png(17768 byte)" width="499" height="355"></div>
+	<br>
+	実行後のファイルデータ<br>
+	<img src="output.info.png" border="0" alt="output.info.png(9269 byte)" width="652" height="238"><br>
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-Length------</font></caption><br>
+	<div>
+	１ピクセルの幅だけを変更する<br>
+	実行前の１ピクセルの幅<br>
+	<img src="input-info.png" border="0" alt="input-info.png(589 byte)" width="311" height="18"><br>
+	<br>
+	実行後の１ピクセルの幅<br>
+	<img src="output-info.png" border="0" alt="output-info.png(580 byte)" width="314" height="17">
+	</div>
+	
+</body>
+</html>

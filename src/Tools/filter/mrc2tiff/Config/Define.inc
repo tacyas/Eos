@@ -1,0 +1,2 @@
+OBJECTNAME = mrc2tiff
+EXTRA_LIB  = $(LIBTIFF) 

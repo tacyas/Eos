@@ -1,0 +1,19 @@
+#define DoNotAutoRecreate NO
+
+#include EOS_INCLUDE
+
+OBJECT_TYPE = script
+
+TOOLBOX_NAME = eos
+
+OBJECT_NAME = mrcImageTransepose
+
+BINARY_NAME = mrcImageTransepose
+
+INSTPGMFLAGS =
+
+SCRIPTS = \
+	mrcImageTransepose.ksh
+
+#define KKSH_DEF
+#include <Script.template>

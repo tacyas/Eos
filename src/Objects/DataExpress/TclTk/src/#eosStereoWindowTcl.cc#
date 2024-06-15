@@ -1,0 +1,190 @@
+// tcl wrapper for eosStereoWindow object
+//
+#include "vtkSystemIncludes.h"
+#include "vtkRenderWindow.h"
+
+#include "vtkTclUtil.h"
+
+ClientData eosStereoWindowSetNewCommand()
+{
+  vtkRenderWindow *temp = vtkRenderWindow::New();
+  return ((ClientData)temp);
+}
+
+int eosWindowCppCommand(vtkWindow *op, Tcl_Interp *interp,
+             int argc, char *argv[]);
+int VTKTCL_EXPORT eosStereoWindowCppCommand(vtkRenderWindow *op, Tcl_Interp *interp,
+             int argc, char *argv[]);
+
+int VTKTCL_EXPORT eosStereoWindowCommand(ClientData cd, Tcl_Interp *interp,
+             int argc, char *argv[])
+{
+  if ((argc == 2)&&(!strcmp("Delete",argv[1]))&& !vtkTclInDelete(interp))
+    {
+    Tcl_DeleteCommand(interp,argv[0]);
+    return TCL_OK;
+    }
+   return eosStereoWindowCppCommand((vtkRenderWindow *)(((vtkTclCommandArgStruct *)cd)->Pointer),interp, argc, argv);
+}
+
+int VTKTCL_EXPORT vtkRenderWindowCppCommand(vtkRenderWindow *op, Tcl_Interp *interp,
+             int argc, char *argv[])
+{
+  int    tempi;
+  double tempd;
+  static char temps[80];
+  int    error;
+
+  error = 0; error = error;
+  tempi = 0; tempi = tempi;
+  tempd = 0; tempd = tempd;
+  temps[0] = 0; temps[0] = temps[0];
+
+  if (argc < 2)
+    {
+    Tcl_SetResult(interp, (char *) "Could not find requested method.", TCL_VOLATILE);
+    return TCL_ERROR;
+    }
+  if (!interp)
+    {
+    if (!strcmp("DoTypecasting",argv[0]))
+      {
+      if (!strcmp("vtkRenderWindow",argv[1]))
+        {
+        argv[2] = (char *)((void *)op);
+        return TCL_OK;
+        }
+      if (vtkWindowCppCommand((vtkWindow *)op,interp,argc,argv) == TCL_OK)
+        {
+        return TCL_OK;
+        }
+      }
+    return TCL_ERROR;
+    }
+
+  if (!strcmp("GetSuperClassName",argv[1]))
+    {
+    Tcl_SetResult(interp,(char *) "vtkWindow", TCL_VOLATILE);
+    return TCL_OK;
+    }
+
+  if ((!strcmp("GetClassName",argv[1]))&&(argc == 2))
+    {
+    const char    *temp20;
+    error = 0;
+
+    if (!error)
+      {
+      temp20 = (op)->GetClassName();
+      if (temp20)
+        {
+        Tcl_SetResult(interp, (char*)temp20, TCL_VOLATILE);
+        }
+      else
+        {
+        Tcl_ResetResult(interp);
+        }
+      return TCL_OK;
+      }
+    }
+  if ((!strcmp("IsA",argv[1]))&&(argc == 3))
+    {
+    char    *temp0;
+    int      temp20;
+    error = 0;
+
+    temp0 = argv[2];
+    if (!error)
+      {
+      temp20 = (op)->IsA(temp0);
+      char tempResult[1024];
+      sprintf(tempResult,"%i",temp20);
+      Tcl_SetResult(interp, tempResult, TCL_VOLATILE);
+      return TCL_OK;
+      }
+    }
+  if ((!strcmp("New",argv[1]))&&(argc == 2))
+    {
+    vtkRenderWindow  *temp20;
+    int vtkRenderWindowCommand(ClientData, Tcl_Interp *, int, char *[]);
+    error = 0;
+
+    if (!error)
+      {
+      temp20 = (op)->New();
+      vtkTclGetObjectFromPointer(interp,(void *)temp20,vtkRenderWindowCommand);
+      return TCL_OK;
+      }
+    }
+  if ((!strcmp("AddRenderer",argv[1]))&&(argc == 3))
+    {
+    vtkRenderer  *temp0;
+    error = 0;
+
+    temp0 = (vtkRenderer *)(vtkTclGetPointerFromObject(argv[2],(char *) "vtkRenderer",interp,error));
+    if (!error)
+      {
+      op->AddRenderer(temp0);
+      Tcl_ResetResult(interp);
+      return TCL_OK;
+      }
+    }
+  if ((!strcmp("RemoveRenderer",argv[1]))&&(argc == 3))
+    {
+    vtkRenderer  *temp0;
+    error = 0;
+
+    temp0 = (vtkRenderer *)(vtkTclGetPointerFromObject(argv[2],(char *) "vtkRenderer",interp,error));
+    if (!error)
+      {
+      op->RemoveRenderer(temp0);
+      Tcl_ResetResult(interp);
+      return TCL_OK;
+      }
+    }
+  if ((!strcmp("GetRenderLibrary",argv[1]))&&(argc == 2))
+    {
+    const char    *temp20;
+    error = 0;
+
+    if (!error)
+      {
+      temp20 = (op)->GetRenderLibrary();
+      if (temp20)
+        {
+        Tcl_SetResult(interp, (char*)temp20, TCL_VOLATILE);
+        }
+      else
+        {
+        Tcl_ResetResult(interp);
+        }
+      return TCL_OK;
+      }
+    }
+  if ((!strcmp("GetRenderers",argv[1]))&&(argc == 2))
+    {
+    vtkRendererCollection  *temp20;
+    int vtkRendererCollectionCommand(ClientData, Tcl_Interp *, int, char *[]);
+    error = 0;
+
+    if (!error)
+      {
+      temp20 = (op)->GetRenderers();
+      vtkTclGetObjectFromPointer(interp,(void *)temp20,vtkRendererCollectionCommand);
+      return TCL_OK;
+      }
+    }
+
+  if (vtkWindowCppCommand((vtkWindow *)op,interp,argc,argv) == TCL_OK)
+    {
+    return TCL_OK;
+    }
+
+  if ((argc >= 2)&&(!strstr(interp->result,"Object named:")))
+    {
+    char temps2[256];
+    sprintf(temps2,"Object named: %s, could not find requested method: %s\nor the method was called with incorrect arguments.\n",argv[0],argv[1]);
+    Tcl_AppendResult(interp,temps2,NULL);
+    }
+  return TCL_ERROR;
+}

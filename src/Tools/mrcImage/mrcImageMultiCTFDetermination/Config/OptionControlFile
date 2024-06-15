@@ -1,0 +1,11 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFileList","NULL"
+"-o","-o[utput]","Output Optimum","Optional","1","1","Out","outFile","stdout"
+"-oP","-oP[utput]","Output Distribution","Optional","1","1","Out2","outFile","NULL"
+"-kV","-kV","AccVol[kV]","Optional","1","1","kV","Real","200"
+"-Cs","-Cs","Cs[mm]","Optional","1","1","Cs","Real","1.7"
+"-AoverP","-AoverP","AoverP[A]","Optional","3","1","minAoverP","Real","0.0","2","maxAoverP","Real","1.0","3","delAoverP","Real","0.01"
+"-Rmax","-Rmax","Rmax[/A]","Optional","1","1","Rmax","Real","0.1"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

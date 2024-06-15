@@ -1,0 +1,16 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile(AutoRotationCorrelationResult)","Essential","1","1","In","inFile","NULL"
+"-I","-I[nput]","InputDataFile(test Data)","Optional","1","1","InData","inFile","NULL"
+"-r","-r[ef]","ReferenceFile","Essential","1","1","Ref","inFile","NULL"
+"-pdb","-pdb","ReferenceFile","Optional","1","1","PDB","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Optional","1","1","Out","outFile","stdout"
+"-max","-max","OutputDataFile[MaxImage]","Optional","1","1","Max","outFile","NULL"
+"-maxRot","-maxRot","OutputDataFile[MaxImageWithRotationAnShift]","Optional","1","1","MaxRot","outFile","NULL"
+"-maxpdb","-maxpdb","OutputDataFile[MaxImage]","Optional","1","1","MaxPDB","outFile","NULL"
+"-maxpdbForRasmol","-maxpdbForRasmol","OutputDataFile[MaxImage]","Optional","1","1","MaxPDBForRasmol","outFile","NULL"
+"-S","-S[tartRot]","StartRot[DEGREE]","Optional","3","1","Sx","Real","0.0","2","Sy","Real","0.0","3","Sz","Real","0.0"
+"-top","-top","TopEntry","Optional","1","1","Top","Integer","1"
+"-wish","-wish","Display3D","Optional","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

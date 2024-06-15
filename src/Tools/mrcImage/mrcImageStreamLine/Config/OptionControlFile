@@ -1,0 +1,11 @@
+# OptionControlFile
+# FileFormat
+"-i2","-i[nput]2","Input","Optional","2","1","In2x","inFile::mrcImage","NULL","2","In2y","inFile::mrcImage","NULL"
+"-i3","-i[nput]3","Input","Optional","3","1","In3x","inFile::mrcImage","NULL","2","In3y","inFile::mrcImage","NULL","3","In3z","inFile::mrcImage","NULL"
+"-o","-o[utput]","Output:[A]","Optional","1","1","Out","outFile::ASCII","NULL"
+"-oP","-o[utput]P","Output[pix]","Optional","1","1","OutPixel","outFile::ASCII","NULL"
+"-oBILD","-o[utput]BILD","Output[bild]","Optional","1","1","OutBILD","outFile::ASCII","NULL"
+"-f","-f[rame]","Mode","Optional","1","1","NumFrame","Integer","25"
+"-dt","-dt","Mode","Optional","1","1","dt","Real","1.0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

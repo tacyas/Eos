@@ -1,0 +1,235 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageExpression</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageCenterDensityChange<br></h2></b></font>
+	<h4></h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+		<table border="1">
+			<div align="left">
+				<tr>
+					<th>オプション</th>
+					<th>必須項目/選択項目</th>
+					<th>NULL</th>
+					<th>デフォルト</th>
+				</tr>
+				<tr>
+					<td>-i</td>
+					<td>必須</td>
+					<td>入力ファイル設定</td>
+					<td>NULL</td>
+				</tr>
+				<tr>
+					<td>-o</td>
+					<td>必須</td>
+					<td>出力ファイル設定</td>
+					<td>NULL</td>
+				</tr>
+				<tr>
+					<td>-T</td>
+					<td>選択</td>
+					<td>閾値設定（モード１，３のときに活用）</td>
+					<td>1e-16</td>
+				</tr>
+				<tr>
+					<td>-m</td>
+					<td>選択</td>
+					<td>モード</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>-h</td>
+					<td>選択</td>
+					<td>ヘルプを表示</td>
+					<td>　</td>
+				</tr>
+			</div>
+		</table>
+
+<!-- モード詳細 -->
+
+	<br>
+	<br>
+	<caption><b>モードの詳細</b></caption>
+	<table border="1">
+		<div align="left">
+			<tr>
+				<th>モード</th>
+				<th>説明</th>
+			</tr>
+			<tr>
+				<td>0</td>
+				<td>絶対値</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>logの絶対値</td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td>平方根の絶対値</td>
+			</tr>
+			<tr>
+				<td>3</td>
+				<td>二乗の絶対値</td>
+			</tr>
+		</div>
+	</table>
+
+	<h4>******実行例******</h4>
+
+<!-- 入力ファイル説明 -->
+	
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="b120-2.png" border="0" alt="b120-2.png(6742 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-65.0178<br>
+				94.4699<br>
+				4.85274<br>
+				20.4635<br>
+				0.255794<br></p>
+			</td>
+		</tr>
+	</table>
+
+<!-- 出力結果 -->
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-m------</font></caption><br>
+	<div>モード：０</div>
+	<table>
+		<tr>
+			<td><img src="outdata.png" border="0" alt="outdata.png(6554 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0.00273783<br>
+				94.4699<br>
+				16.074<br>
+				13.5621<br>
+				0.169527<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<br>
+	<div>モード：１</div>
+	<table>
+		<tr>
+			<td><img src="outdata-m1.png" border="0" alt="outdata-m1.png(6428 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-2.56259<br>
+				1.97529<br>
+				1.00948<br>
+				0.499943<br>
+				0.00624929<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<div>オプション　-Tを指定し実行</div>
+	<div>-T=0.5で実行</div>
+	<table>
+		<tr>
+			<td><img src="outdata-T0.5m1.png" border="0" alt="outdata-T0.5m1.png(7053 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-0.30103<br>
+				1.97529<br>
+				1.01913<br>
+				0.46509<br>
+				0.00581362<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>-T=3で実行</div>
+	<table>
+		<tr>
+			<td><img src="outdata-T3m1.png" border="0" alt="outdata-T3m1.png(6939 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0.477121<br>
+				1.97529<br>
+				1.06648<br>
+				0.36897<br>
+				0.00461212<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<br>
+	<div>モード：２</div>
+	<table>
+		<tr>
+			<td><img src="outdata-m2.png" border="0" alt="outdata-m2.png(7053 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0.0523243<br>
+				9.71956<br>
+				3.65086<br>
+				1.65688<br>
+				0.020711<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<br>
+	<div>モード：３</div>
+	<table>
+		<tr>
+			<td><img src="outdata-m3.png" border="0" alt="outdata-m3.png(5310 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">7.49574e-06<br>
+				8924.56<br>
+				442.306<br>
+				770.507<br>
+				9.63133<br></p>
+			</td>
+		</tr>
+	</table>
+
+
+
+</body>
+</html>

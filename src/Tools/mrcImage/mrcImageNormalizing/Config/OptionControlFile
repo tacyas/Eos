@@ -1,0 +1,14 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-A","-A","A","Optional","1","1","A","Real","1.0"
+"-B","-B","B","Optional","1","1","B","Real","0.0"
+"-ContourMin","-ContourMin","ContourMin: density value","Optional","1","1","ContourMin","Real","0.0"
+"-ContourMax","-ContourMax","ContourMax: density value","Optional","1","1","ContourMax","Real","10.0"
+"-ContourSolvent","-ContourSolvent","ContourSolvent","Optional","1","1","ContourSolvent","Real","0.0"
+"-Low","-Low[ValueArea]","LowValueArea: rate","Optional","1","1","thresOfLowValueArea","Real","0.1"
+"-High","-High[ValueArea]","HighValueArea: rate","Optional","1","1","thresOfHighValueArea","Real","0.9"
+"-paramo","-param[eter]o[utput]","ConfigurationFile","Optional","1","1","ParamOut","outFile","stdout"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

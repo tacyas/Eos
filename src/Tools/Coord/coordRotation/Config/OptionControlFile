@@ -1,0 +1,7 @@
+# OptionControlFile
+# FileFormat
+"-p","-p","Point:","Essential","3","1","x","Real","0","2","y","Real","0","3","z","Real","0"
+"-mat","-mat[rix]","Input: matrix","Essential","1","1","Mat","inFile","stdin"
+"-o","-o[utput]","OutputDataFile","Optional","1","1","Out","outFile","stdout"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

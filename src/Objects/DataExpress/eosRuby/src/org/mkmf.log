@@ -1,0 +1,37 @@
+have_header: checking for bar.h... -------------------- yes
+
+"gcc -E -I. -I/usr/lib/ruby/1.8/x86_64-linux -I. -I/home/people/risachan/Eos/include    -fno-strict-aliasing -g -g -O2  -fPIC    conftest.c -o conftest.i"
+/usr/lib/ruby/1.8/mkmf.rb:266: warning: Insecure world writable dir /home/people/risachan/Eos/util/X86LINUX64 in PATH, mode 040777
+checked program was:
+/* begin */
+1: #include <bar.h>
+/* end */
+
+--------------------
+
+have_library: checking for baz() in -lbar... -------------------- no
+
+"gcc -o conftest -I. -I/usr/lib/ruby/1.8/x86_64-linux -I. -I/home/people/risachan/Eos/include    -fno-strict-aliasing -g -g -O2  -fPIC   conftest.c  -L. -L/usr/lib -L/home/people/risachan/Eos/lib/X86LINUX64 -L. -Wl,-Bsymbolic-functions -rdynamic -Wl,-export-dynamic     -lruby1.8-static -lbar  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+conftest.c: In function ‘t’:
+conftest.c:3: error: ‘baz’ undeclared (first use in this function)
+conftest.c:3: error: (Each undeclared identifier is reported only once
+conftest.c:3: error: for each function it appears in.)
+checked program was:
+/* begin */
+1: /*top*/
+2: int main() { return 0; }
+3: int t() { void ((*volatile p)()); p = (void ((*)()))baz; return 0; }
+/* end */
+
+"gcc -o conftest -I. -I/usr/lib/ruby/1.8/x86_64-linux -I. -I/home/people/risachan/Eos/include    -fno-strict-aliasing -g -g -O2  -fPIC   conftest.c  -L. -L/usr/lib -L/home/people/risachan/Eos/lib/X86LINUX64 -L. -Wl,-Bsymbolic-functions -rdynamic -Wl,-export-dynamic     -lruby1.8-static -lbar  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+/usr/bin/ld: cannot find -lbar
+collect2: ld returned 1 exit status
+checked program was:
+/* begin */
+1: /*top*/
+2: int main() { return 0; }
+3: int t() { baz(); return 0; }
+/* end */
+
+--------------------
+

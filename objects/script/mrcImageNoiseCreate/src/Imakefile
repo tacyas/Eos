@@ -1,0 +1,19 @@
+#define DoNotAutoRecreate NO
+
+#include EOS_INCLUDE
+
+OBJECT_TYPE = script
+
+TOOLBOX_NAME = eos
+
+OBJECT_NAME = mrcImageNoiseCreate
+
+BINARY_NAME = mrcImageNoiseCreate
+
+INSTPGMFLAGS =
+
+SCRIPTS = \
+	mrcImageNoiseCreate.ksh
+
+#define KKSH_DEF
+#include <Script.template>

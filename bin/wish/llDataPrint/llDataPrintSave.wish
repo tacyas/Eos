@@ -1,0 +1,50 @@
+proc llDataPrintSavePS { } {
+	llDataPrintSavePS0
+}
+
+proc llDataPrintSavePS0 { } {
+	global inFileName
+	global outFileName
+	global fileSave
+	global .graph
+	global nFrame
+	global llMax
+
+	if { "" == $outFileName } {
+		set outFileName [ fileSave ]
+	}
+	#set fontmap [ .graph(0) postscript cget fontmap ]
+	#puts $fontmap
+
+	exec touch  /tmp/all.llDataPrint
+	exec rm     /tmp/all.llDataPrint
+
+	#set nowFrame $nFrame(current) 
+
+    for {set i 0} { $i < $llMax } {incr i 1} {
+		set nF      [expr  $i/($nFrame(column)*$nFrame(row))]
+		set nRow    [expr  $i%$nFrame(row)]
+		set nColumn [expr ($i%($nFrame(column)*$nFrame(row)))/$nFrame(row)]
+
+		set nFrame(old)     $nFrame(current)
+		set nFrame(current) $nF
+
+		#llDataPrintDesktopSet 1
+
+		#focus -force .graphFrames($nF)
+		#puts "$nF $nRow $nColumn"
+		.graph($i) postscript output /tmp/$i.llDataPrint  \
+				-center false \
+				-height 200  \
+				-width  350  \
+				-padx [expr 50 + $nColumn*350] \
+				-pady [expr $nRow*250 ]
+
+		exec echo "%%Page:" >> /tmp/all.llDataPrint
+		exec cat /tmp/$i.llDataPrint >> /tmp/all.llDataPrint
+	}	
+	exec psFilePageMerge -i /tmp/all.llDataPrint -o $outFileName -p 8
+
+	#set nFrame(current)  $nowFrame
+	#llDataPrintDesktopSet 1
+}

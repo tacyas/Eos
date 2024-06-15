@@ -1,0 +1,16 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-i2","-i[nput]2","InputDataFile","Essential","1","1","In2","inFile","NULL"
+"-i3","-i[nput]3","InputDataFile","Essential","1","1","In3","inFile","NULL"
+"-i4","-i[nput]4","InputDataFile","Essential","1","1","In4","inFileListNoOpen","NULL"
+"-n","-n[um]","Integer","Essential","2","1","numDistribution","Integer","3","2","numLikelihood","Integer","3"
+"-rmax","-rmax","rmax[1/A]","Optional","1","1","rmax","Real","250"
+"-rintermediate","-rintermediate","rintermediate[1/A]","Optional","1","1","rintermediate","Real","250"
+"-rfirstpeak","-rfiestpeak","rfirstpeak[1/A]","Optional","1","1","rfirstpeak","Real","0.001"
+"-rmin","-rmin","rmin[1/A]","Optional","1","1","rmin","Real","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"
+"-MTFmode","-MTFmode","MTFmode","Optional","1","1","MTFmode","Integer","0"
+"-Ainmode","-Ainmode","Ainmode","Optional","1","1","Ainmode","Integer","0"
+"-Intensitymode","-Intensitymode","Intensitymode","Optional","1","1","Intensitymode","Integer","0"

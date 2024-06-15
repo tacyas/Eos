@@ -1,0 +1,8 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input:Density","Essential","1","1","In","inFile::mrcImage","NULL"
+"-coord","-coord[inate]","Input:Coordinate ","Essential","1","1","InCoord","inFile::pdbFile","NULL"
+"-coordType","-coord[inate]","0:PDB","Optional","1","1","Type","Integer","0"
+"-o","-o[utput]","Output:Density","Essential","1","1","Out","outFile::mrcImage","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

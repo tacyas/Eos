@@ -1,0 +1,108 @@
+#ifndef MRC_IMAGE_ROI_H
+#define MRC_IMAGE_ROI_H
+/* 
+* mrcImageROI.h
+*/
+
+#include <stdio.h>
+#include "mrcImage2.h"
+
+#define THIS_PROGRAM mrcImageROI
+#define THIS_ROUTINE lmrcImageROI
+
+#define OPTION_FLAG      '-'
+#define OPTION_FLAG_POS  (0)
+#define OPTION_POS       (1)
+#define FILENAME_LENGTH  (1024)
+#define DEFAULT_MODE     (1)
+#define MAX_LEVEL        (100)
+#define MAX_POINTS       (256)
+
+typedef enum THIS_PROTGRAM\
+Mode {
+    mrcImageROIModeNearestNeighbor = 0,
+    mrcImageROIModeBilenear,
+    mrcImageROIModeCubicConvolution,
+    mrcImageROIModePolynominal,
+    mrcImageROIModeLast
+} THIS_PROGRAM\
+Mode;
+
+#ifdef GLOBAL_DECLARATION
+char* THIS_PROGRAM\
+ModeMessage[] = {
+    NULL
+};
+#else
+extern char* THIS_PROGRAM\
+ModeMessage[];
+#endif
+
+typedef struct THIS_PROGRAM\
+Coord {
+    mrcImageParaTypeReal x;
+    mrcImageParaTypeReal y;
+} THIS_PROGRAM\
+Coord;
+
+typedef THIS_PROGRAM\
+Coord THIS_PROGRAM\
+Vector;
+
+typedef struct THIS_PROGRAM\
+Info{
+    char  inFileName[FILENAME_LENGTH];
+    FILE* fptIn;
+	long flagInFile;
+    char  outFileName[FILENAME_LENGTH];
+    FILE* fptOut;
+	long flagOutFile;
+    THIS_PROGRAM\
+Coord Points[MAX_POINTS];
+    long nPoints;
+	long flagROI;
+    THIS_PROGRAM\
+Mode mode;
+	long dummy2;
+} THIS_PROGRAM\
+Info;
+
+/* in ../src/mrcImageROI.c */
+extern void lmrcImageROI(mrcImage* out, mrcImage* in, THIS_PROGRAM\
+Info* info);
+/* util.c */
+extern void getStringData(char* s, char* message, FILE* fptIn, FILE* fptOut, long mode);
+extern FILE* fileOpen(char* filename, char* mode);
+/* in init.c */
+extern void init0(THIS_PROGRAM\
+Info* info);
+extern void init1(THIS_PROGRAM\
+Info* info);
+/* in argCheck.c */
+extern void argCheck(THIS_PROGRAM\
+Info* info, int argc, char* argv[]);
+/* in usage.c */
+extern void usage(char* thisProgram);
+
+
+/* Interpolation Function in ../src/mrcImageROI.c */
+extern double nearestNeighborInterpolation(double* image, 
+                               unsigned long nx, unsigned long ny,
+                               double x, double y);
+
+extern double bilinearInterpolation(double* image,
+                       unsigned long nx, unsigned long ny,
+                       double x, double y);
+
+extern double cubicConvolutionInterpolation(double* image, 
+                                unsigned long nx, unsigned long ny, 
+                                double x, double y);
+
+extern double polyNominalInterpolation(double* image, 
+                                unsigned long nx, unsigned long ny, 
+                                double x, double y);
+extern void polyInitMatrix(double matrix[6][6], int m, int n);
+extern void polyInitVector(double vec[6], int m, int n, double* image, int nx, int ny);
+extern int polySolveMatrix(double matrix[6][6], double vec[6], double coefficient[6]);
+
+#endif /* MRC_IMAGE_ROI_H */

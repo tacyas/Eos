@@ -1,0 +1,2 @@
+CLASSNAME=ltlgData
+CLASSNAME = ltlgData

@@ -1,0 +1,25 @@
+#include "eosCuda.h"
+#include "./lmrcImageAddValue.h"
+
+void 
+lmrcImageAddValueCuda(mrcImage* out, mrcImage* in, float value, long mode)
+{
+	mrcImageParaTypeReal x, y, z;
+	double data;
+
+	if(IsImage(in, "in lmrcImageAddValue", 0)) {
+	  out->Header = in->Header;
+	  mrcInit(out, NULL);
+	  for(x=0; x<in->HeaderN.x; x++) {
+	    for(y=0; y<in->HeaderN.y; y++) {
+	      for(z=0; z<in->HeaderN.z; z++) {
+		    mrcPixelDataGet(in,  x, y, z, &data, mrcPixelRePart,mrcPixelHowNearest);
+		    mrcPixelDataSet(out, x, y, z, data+value, mrcPixelRePart);
+	      }
+	    }
+	  }
+	  mrcStatDataSet(out, 0);
+	} else {
+	}
+}
+

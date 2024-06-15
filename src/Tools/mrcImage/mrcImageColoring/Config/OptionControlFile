@@ -1,0 +1,14 @@
+# OptionControlFile
+# FileFormat
+"-r","-r[ed]","Red:InputDataFile","Optional","1","1","rIn","inFile","NULL"
+"-g","-g[reen]","Green:InputDataFile","Optional","1","1","gIn","inFile","NULL"
+"-b","-b[lue]","Blue:InputDataFile","Optional","1","1","bIn","inFile","NULL"
+"-rH","-rH[ight]","Red:HighThres","Optional","1","1","rHigh","Real","1"
+"-rL","-rL[ow]","Red:LowThres","Optional","1","1","rLow","Real","0"
+"-gH","-gH[ight]","Green:HighThres","Optional","1","1","gHigh","Real","1"
+"-gL","-gL[ow]","Green:LowThres","Optional","1","1","gLow","Real","0"
+"-bH","-bH[ibht]","Blue:HibhThres","Optional","1","1","bHigh","Real","1"
+"-bL","-bL[ow]","BLue:LowThres","Optional","1","1","bLow","Real","0"
+"-o","-o[utput]","gif:OutputDataFile","Optional","1","1","Out","outFile","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

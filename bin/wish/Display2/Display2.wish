@@ -1,0 +1,127 @@
+#!../Display2
+## Environment Set 
+#
+set cmd [file join [info library] init.tcl ] 
+if [ file exists $cmd ] {
+	source $cmd
+}
+set cmd [file join [info library] auto.tcl ] 
+if [ file exists $cmd ] {
+	source $cmd
+}
+
+
+set CurrentDir [ pwd ]
+set tcl_precision 17
+
+global debugMode
+set debugMode 0 
+
+#puts "CurrentDir: $CurrentDir"	
+
+# Tcl/Tk library Directory
+
+#for debug
+if [ file exists Display2.wish ] {
+	#puts "in Display2.wish"
+	lappend auto_path [ pwd ]
+	#puts "lappend"
+	auto_mkindex [ pwd ] *.wish
+	#puts "mkindex"
+}
+
+if [ info exists env(EOS_HOME)] {
+	set path $env(EOS_HOME)/bin/wish/Display2
+} else {
+	set path [ pwd ]
+	puts "CurrentDir: $path"	
+}
+#puts $path
+
+
+# for library
+if { [ info exists env(EOS_HOME) ] && [ info exists env(EOS_HOSTDIR) ] } {
+	#puts "hostdepend/lib"
+	if { [ file isdirectory $env(EOS_HOME)/lib/$env(EOS_HOSTDIR)/.. ] } {
+		set libpath $env(EOS_HOME)/lib/$env(EOS_HOSTDIR)/..
+		lappend auto_path $libpath
+		#set tmpCurrentDir [ pwd ]
+		#puts "CurrentDir before pkg_mkIndex: $tmpCurrentDir"	
+		#puts $libpath
+		pkg_mkIndex $libpath *.wish
+		#set tmpCurrentDir [ pwd ]
+		#puts "CurrentDir after pkg_mkIndex: $tmpCurrentDir"	
+	}
+} else {
+	set libpath {}
+}
+
+# for library
+if [ info exists env(EOS_HOME)] {
+	#puts "lib"
+	if { [ file isdirectory $env(EOS_HOME)/lib ] } { 
+		set libpath $env(EOS_HOME)/lib
+		lappend auto_path $libpath
+		#set tmpCurrentDir [ pwd ]
+		#puts "CurrentDir before pkg_mkIndex: $tmpCurrentDir"	
+		#puts $libpath
+		pkg_mkIndex $libpath *.wish
+		#set tmpCurrentDir [ pwd ]
+		#puts "CurrentDir after pkg_mkIndex: $tmpCurrentDir"	
+	}
+} else {
+	set libpath {}
+}
+
+# Unless the shells are found,  
+if { ![file exists $path/Display2.wish] } {
+	tk_dialog .d "Error:" "Wrong Directory!" error 0 OK
+	exit 0
+}
+
+if { [ file isdirectory $path ] } {
+	#puts $path
+	lappend auto_path $path
+	#set tmpCurrentDir [ pwd ]
+	#puts "CurrentDir before auto_mkindex: $tmpCurrentDir"	
+	auto_mkindex $path    *.wish
+	#auto_mkindex $libpath *.wish
+	#set tmpCurrentDir [ pwd ]
+	#puts "CurrentDir after auto_mkindex: $tmpCurrentDir"	
+}
+
+# BLT Command Add
+if { $tcl_version >= 8.0 } {
+	package require BLT
+	catch { namespace import blt::* }
+	catch { namespace import -force blt::tile::* }
+} else {
+	catch { import add blt }
+}
+
+if { [ info commands "namespace" ] == "namespace" } {
+	if { $tcl_version >= 8.0 } {
+		catch { namespace import -force blt::tile::* }
+	} else {
+		catch { import add blt::tile }
+	}	
+} else {
+    foreach cmd { button checkbutton radiobutton frame label scrollbar toplevel menubutton listbox } {
+		if { [info command tile${cmd}] == "tile${cmd}" } {
+			rename ${cmd} ""
+			rename tile${cmd} ${cmd}
+		}
+	}	
+}
+
+bind all <Control-KeyPress-c> { exit 0 }
+bind all <KeyPress-q> { exit 0 }
+focus .
+
+## Main Program
+#set tmpCurrentDir [ pwd ]
+#puts "CurrentDir before display2Init: $tmpCurrentDir"	
+cd $CurrentDir
+#puts "display2Init start"
+display2Init
+

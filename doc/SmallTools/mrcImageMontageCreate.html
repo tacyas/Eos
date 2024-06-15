@@ -1,0 +1,39 @@
+<HTML>
+<HEAD>
+<TITLE>mrcImageMontageCreate</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageMontageCreate</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageMontageCreate
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFileListNoOpen    ) ] :Essential :InputDataFile
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-nx                 Nx                  (10        ).as(Integer             ) ] :Optional  :Nx: If this option does not set, the default value will be set
+    [-ny                 Ny                  (10        ).as(Integer             ) ] :Optional  :Ny: If this option does not set, the value will be set automatically
+    [-W[idth]            Width               (10        ).as(Integer             ) ] :Optional  :Width: If this option does not set, the value will be set automatically
+    [-H[eight]           Height              (10        ).as(Integer             ) ] :Optional  :Height: If this option does not set, the value will be set automatically
+    [-AW[indow]          AvgWnd              (2000      ).as(Real                ) ] :Optional  :AverageWindow for Pad
+    [-V[alue]            Value               (0.0       ).as(Real                ) ] :Optional  :
+    [-P[ad]M[ode]        PadMode             (3         ).as(Integer             ) ] :Optional  :
+    [-EdgeAverage                                                                  ] :Optional  :
+    [-EdgeAverageWindow  EdgeAverageWindow   (4         ).as(Integer             ) ] :Optional  :Definition of Edge
+    [-NoAverage                                                                    ] :Optional  :
+    [-Max                Max                 (16383     ).as(Real                ) ] :Optional  :MaximumValue: If the pixel value is more than this max, the pixel value is assigned to the Value indicated by -V or -VMax.
+    [-VMax               VMax                (16383     ).as(Real                ) ] :Optional  :Attention: related to -Max 
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+>>> -i inputfile <<<: InputFile Format
+hf0000.roi
+hf0001.roi
+..........
+hf000n.roi
+>>> output file sequence <<<
+from bottom left 
+>>> Pad Mode <<<
+see mrcImagePad 
+</PRE>
+</BODY>
+</HTML>

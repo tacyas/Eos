@@ -1,0 +1,351 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>pdb2mrc2d</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>pdb2mrc2d<br></h2></b></font>
+	<h4>pdbファイルをmrcファイルに変換する</h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+	<table border="1">
+		<div align="left">
+		<tr>
+			<th>オプション</th>
+			<th>必須項目/選択項目</th>
+			<th>説明</th>
+			<th>デフォルト</th>
+		</tr>
+		<tr>
+			<td>-i</td>
+			<td>必須</td>
+			<td>入力ファイル設定</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-o</td>
+			<td>選択</td>
+			<td>出力ファイル設定(2D)</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-O</td>
+			<td>選択</td>
+			<td>出力ファイル設定(3D)</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-d</td>
+			<td>必須</td>
+			<td>1ピクセルの幅を指定</td>
+			<td>5.0 5.0</td>
+		</tr>
+		<tr>
+			<td>-s</td>
+			<td>選択</td>
+			<td>画像の位置を指定</td>
+			<td>0.0 0.0</td>
+		</tr>
+		<tr>
+			<td>-n</td>
+			<td>必須</td>
+			<td>画像のサイズを指定</td>
+			<td>0 0</td>
+		</tr>
+		<tr>
+			<td>-Rot</td>
+			<td>選択</td>
+			<td>回転（ｘ軸、ｙ軸のみ）</td>
+			<td>1 1</td>
+		</tr>
+		<tr>
+			<td>-S</td>
+			<td>選択</td>
+			<td>Z軸→X軸→Y軸の順で回転</td>
+			<td>0.0 0.0 0.0</td>
+		</tr>
+		<tr>
+			<td>-startEA</td>
+			<td>選択</td>
+			<td>オイラー角を設定</td>
+			<td>YOYS 0.0 0.0 0.0</td>
+		</tr>
+		<tr>
+			<td>-EAMode</td>
+			<td>選択</td>
+			<td>RotationModeを指定</td>
+			<td>YOYS</td>
+		</tr>
+		<tr>
+			<td>-EARot1</td>
+			<td>選択</td>
+			<td>主となる回転</td>
+			<td>5.0 0.0 180.0</td>
+		</tr>
+		<tr>
+			<td>-EARot2</td>
+			<td>選択</td>
+			<td>-EARot1とは別の回転</td>
+			<td>5.0 0.0 180.0</td>
+		</tr>
+		<tr>
+			<td>-w</td>
+			<td>選択</td>
+			<td>重量を設定</td>
+			<td>1.0</td>
+		</tr>
+		<tr>
+			<td>-sig</td>
+			<td>選択</td>
+			<td>原子の半径を指定</td>
+			<td>0.0</td>
+		</tr>
+		<tr>
+			<td>-m</td>
+			<td>選択</td>
+			<td>モード設定</td>
+			<td>0</td>
+		</tr>
+		<tr>
+			<td>-h</td>
+			<td>選択</td>
+			<td>ヘルプを表示</td>
+			<td>　</td>
+		</tr>
+	</table>
+	
+	<br>
+	<br>
+	<caption><b>モードの詳細</b></caption>
+	<table border="1">
+		<div align="left">
+		<tr>
+			<th>モード</th>
+			<th>説明</th>
+		</tr>
+		<tr>
+			<td>0</td>
+			<td>メルカトール図法・等角</td>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>モルワイデ図法・等角</td>
+		</tr>
+		<tr>
+			<td>2</td>
+			<td>メルカトール図法・等積</td>
+		</tr>
+		<tr>
+			<td>3</td>
+			<td>モルワイデ図法・等積</td>
+		</tr>
+	</table>
+	<br>
+	<br>
+	<div>※オプション-Sと-startEAの両方が宣言されていた場合、-Sを実行した後に-startEAが実行される<br>
+	※軸を中心にもってきたい場合は、pdbInfoで軸を調べ、pdbMoveで軸の＋とーを逆にして実行する</div>
+
+<!-- RotModeの設定の仕方 -->
+	
+	<br>
+	<br>
+	<caption><b>RotModeの設定の詳細</b></caption>
+	<table>
+		<tr>
+			<td>一桁目：</td>
+			<td>どの軸から回転を始めるか設定</td>
+		</tr>
+		<tr>
+			<td>二桁目：</td>
+			<td>回転軸の順番を設定１</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>O…Z→Y→Xの順に回転軸を変更する<br>
+			E…Z→X→Yの順に回転軸を変更する</td>
+		</tr>
+		<tr>
+			<td>三桁目：</td>
+			<td>回転軸の順番の設定２</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>Y…順番を維持する<br>
+			N…順番を逆順にする</td>
+		</tr>
+		<tr>
+			<td>四桁目：</td>
+			<td>回転方法を設定</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>Y…物体そのものをまわす<br>
+			D…座標を移動させる</td>
+		</tr>
+	</table>
+	
+	<h4>******実行例******</h4>
+	
+<!-- 入力ファイル詳細 -->
+
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<div><img src="121p-move.png" border="0" alt="121p-move.png(14170 byte)" width="167" height="152"><br>
+	pdbInfoでみた入力ファイルの詳細<br>
+	<img src="121p-move-info.png" border="0" alt="121p-move-info.png(2349 byte)" width="450" height="43"><br></div>
+	
+<!-- 出力ファイル -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------出力ファイルの画像------</font></caption><br>
+	<div>オプションを使用し、画像に物体が写るよう調整する<br>
+	今回の入力ファイルでは下記のようにオプションを設定すると、物体がほぼ中心に写る<br></div>
+	
+		<table border="1">
+		<tr>
+			<td>-d</td>
+			<td>0.8 0.8</td>
+		</tr>
+		<tr>
+			<td>-s</td>
+			<td>-40 -40</td>
+		</tr>
+		<tr>
+			<td>-n</td>
+			<td>100 100</td>
+		</tr>
+	</table>
+	
+	<br>
+	
+	<div>出力ファイル→2D<br>
+	<img src="121p.2d.png" border="0" alt="121p.2d.png(1779 byte)" width="100" height="100"><br>
+	<br>
+	出力ファイル→3D<br>
+	<img src="121p.3d.png" border="0" alt="121p.3d.png(1779 byte)" width="100" height="100"><br>
+	このオプションを使用した場合、二つの画像に相違点はない</div>
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-Rot------</font></caption><br>
+	<div>-Rot 6 6に設定<br>
+	出力ファイル→2D<br>
+	<img src="121p.2d-Rot.png" border="0" alt="121p.2d-Rot.png(26681 byte)" width="280" height="235"><br>
+	<br>
+	出力ファイル→3D（2Dの結果を繋ぎ、3Dで出力している）<br>
+	
+	<table>
+		<tr>
+			<td>ｘｙ平面の図</td>
+			<td>ｙｚ平面の図</td>
+		</tr>
+		<tr>
+			<td><img src="121p.3d-EAMode1.png" border="0" alt="121p.3d-EAMode1.png(13592 byte)" width="140" height="144"></td>
+			<td><img src="121p.3d-EAMode2.png" border="0" alt="121p.3d-EAMode2.png(10440 byte)" width="95" height="137"></td>
+		</tr>
+	</table>
+	</div>
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-S------</font></caption><br>
+	<div>
+	-Rot 6 6、-S 30 30 30に設定<br>
+	出力ファイル→2D<br>
+	<img src="121p.2d-S30.png" border="0" alt="121p.2d-S30.png(26730 byte)" width="285" height="239"><br>
+	</div>
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-startEA------</font></caption><br>
+	<div>
+	-Rot 6 6、-startEA XOYS 30 30 30に設定<br>
+	出力ファイル→2D<br>
+	<img src="121p.2d-startEA30.png" border="0" alt="121p.2d-startEA30.png(26837 byte)" width="289" height="243"><br>
+	</div>
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-EAMode------</font></caption><br>
+	<div>-Rot 6 6、-EAMode XOYSに設定<br>
+	出力ファイル→2D<br>
+	<img src="121p.2d-EAMove.png" border="0" alt="121p.2d-EAMove.png(26602 byte)" width="276" height="228"><br>
+	</div>
+
+	<br>
+	<br>
+	<div>-Rot 6 6、-EAMode YOYSに設定<br>
+	出力ファイル→2D<br>
+	<img src="121p.2d-EAModeY.png" border="0" alt="121p.2d-EAModeY.png(26609 byte)" width="282" height="238"><br>
+	</div>
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-EARot1,-EARot2------</font></caption><br>
+	<div>-EARot1 10 20 70,-EARot2 20 50 100に設定<br>
+	出力ファイル→2D<br>
+	<img src="121p.2d-EARot12.png" border="0" alt="121p.2d-EARot12.png(28365 byte)" width="270" height="255"><br>
+	</div>
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-sig------</font></caption><br>
+	<div>
+	-sig 1に設定、出力ファイルは-oとする<br>
+	<img src="121p.2d-sig.png" border="0" alt="121p.2d-sig.png(3670 byte)" width="100" height="100">
+	</div>
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-w------</font></caption><br>
+	<div>
+	-w 10に設定、出力ファイルは-oとする<br>
+	<br>
+	-wを指定しなかった場合の画像データ<br>
+	<img src="121p.2d-w1.png" border="0" alt="121p.2d-w1.png(1303 byte)" width="198" height="69"><br>
+	-w 10を指定した場合の画像データ<br>
+	<img src="121p.2d-w2.png" border="0" alt="121p.2d-w2.png(1288 byte)" width="204" height="69">
+	</div>
+	
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-m------</font></caption><br>
+	<table>
+		<tr>
+			<td>モード：０</td>
+		</tr>
+		<tr>
+			<td><img src="121p.2d.png" border="0" alt="121p.2d.png(1779 byte)" width="100" height="100"></td>
+			<td><img src="m0.png" border="0" alt="m0.png(8805 byte)" width="650" height="237"></td>
+		</tr>
+		<tr>
+			<td>モード：１</td>
+		</tr>
+		<tr>
+			<td><img src="121p.2d-m1.png" border="0" alt="121p.2d-m1.png(1779 byte)" width="100" height="100"></td>
+			<td><img src="m1.png" border="0" alt="m1.png(8799 byte)" width="650" height="238"></td>
+		</tr>
+		<tr>
+			<td>モード：２</td>
+		</tr>
+		<tr>
+			<td><img src="121p.2d-m2.png" border="0" alt="121p.2d-m2.png(1779 byte)" width="100" height="100"></td>
+			<td><img src="m2.png" border="0" alt="m2.png(8801 byte)" width="650" height="237"></td>
+		</tr>
+		<tr>
+			<td>モード：３</td>
+		</tr>
+		<tr>
+			<td><img src="121p.2d-m3.png" border="0" alt="121p.2d-m3.png(1779 byte)" width="100" height="100"></td>
+			<td><img src="m3.png" border="0" alt="m3.png(8902 byte)" width="651" height="237"></td>
+		</tr>
+	
+	</table>
+	<div>今回の画像では変化がわかりづらいが、画像データの詳細を見ると、変化があることが分かる</div>
+</body>
+</html>

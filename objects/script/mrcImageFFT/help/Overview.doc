@@ -1,0 +1,8 @@
+.onlineHelp EOS mrcImageFFT "Introduction to mrcImageFFT"
+.
+.section 1 "Introduction to mrcImageFFT"
+.
+.\" This is the help page associated with the Help button on
+.\" the toplevel window of mrcImageFFT
+If you are reading this text,
+you should report it as a bug :-)

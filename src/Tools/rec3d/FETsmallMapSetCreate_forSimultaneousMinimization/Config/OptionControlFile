@@ -1,0 +1,8 @@
+# OptionControlFile
+# FileFormat
+"-iML","-i[nput]M[ap]L[ist]","InputMapList","Essential","1","1","InML","inFile","NULL"
+"-o","-o[utputMapSet]","OutputMapSet","Essential","1","1","OutMS","outFile","NULL"
+"-ss","-s[tep]s[ize]","StepSize","Optional","1","1","InSS","Integer","5"
+"-sr","-s[earch]r[adius]","searchRadius-degree","Optional","1","1","InSR","Integer","15"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

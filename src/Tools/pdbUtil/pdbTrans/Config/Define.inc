@@ -1,0 +1,4 @@
+OBJECTNAME = pdbTrans
+EXTRA_LIB  = ${LIBCUDA}
+EXTRA_CCOPTS = -I${CUDA_ROOT}/include
+EXTRA_INC =

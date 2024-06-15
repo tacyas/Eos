@@ -1,0 +1,10 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-p","-p[dbfile]","InputPdbFile","Essential","1","1","Pdb","inFile","NULL"
+"-v","-v[alue]","value to multiply density","Optional","1","1","Value","Real","1"
+"-H","-H[ighThreshold]","High Threshold","Optional","1","1","H","Real","0.0"
+"-L","-L[owThreshold]","Low Threshold","Optional","1","1","L","Real","1.0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

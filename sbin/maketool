@@ -1,0 +1,110 @@
+#!/bin/sh
+#
+# maketool  1.7
+#
+# The latest update : 09/27/96 at 10:59:23
+#
+#@(#) maketool 
+#@(#)
+#
+#@(#) Usage : maketool  
+#
+#@(#) Attention
+#@(#)
+#@(#) Parameter: 
+#@(#)     Essential:
+#@(#)         SourceFileName
+#@(#) Optional:
+#@(#)
+
+# Store Flags
+FlagsCharacter="-"
+
+#
+# Usage
+#
+usage()
+{
+	echo "Usage: maketool [ClassName] [ToolName] [update|new] [Y|N]"
+	echo "    maketool ClassName ToolName new"
+	echo "    maketool ClassName ToolName update"
+	echo "    maketool ClassName ToolName newCC"
+	echo "    maketool ClassName ToolName updateCC"
+	echo "    maketool ClassName ToolName newShell"
+	echo "    maketool ClassName ToolName updateShell"
+	echo "    maketool ClassName ToolName"
+	echo "    maketool ClassName"
+	echo "    maketool -h : show usage"
+	exit
+}
+
+NameRead()
+{
+	ans="N"
+	while [ $ans != "Y" -a $ans != "y" ]
+	do 
+		echo $1 
+		read Name
+		echo "$Name is good ?"
+		read ans
+	done
+}
+#
+# Option Check
+#
+case $# in 
+	0)
+		;;
+	*)
+		case $1 in 
+			"-h") 
+				usage
+				;;
+			*)
+				;;
+		esac
+esac
+
+#
+# Argument Check
+#
+case $# in
+	0) # No filename 
+		makegeneral Tools Tools
+		;;
+	1) # $1 Class
+		makegeneral Tools Tools $1
+		;;
+	2) # $1 Class, $2 ToolName
+		makegeneral Tools Tools $1 $2
+		;;
+	3) # $1 Class, $2 ToolName
+		case $3 in 
+			new)
+				makegeneral All Tools $1 $2
+				;;
+			update)
+				makegeneral AllFollowingControlFile Tools $1 $2
+				;;
+			*)
+				usage
+				;;
+		esac
+		;;
+	4) # $1 Class, $2 ToolName
+		case $3 in 
+			new)
+				makegeneral All Tools $1 $2 $4
+				;;
+			update)
+				makegeneral AllFollowingControlFile Tools $1 $2 $4
+				;;
+			*)
+				usage
+				;;
+		esac
+		;;
+	*) #
+		usage
+		;;
+esac

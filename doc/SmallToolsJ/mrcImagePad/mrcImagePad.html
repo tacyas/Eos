@@ -1,0 +1,811 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImagePad</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImagePad<br></h2></b></font>
+	<h4>パディング</h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+	<table border="1">
+		<div align="left">
+		<tr>
+			<th>オプション</th>
+			<th>必須項目/選択項目</th>
+			<th>説明</th>
+			<th>デフォルト</th>
+		</tr>
+		<tr>
+			<td>-i</td>
+			<td>必須</td>
+			<td>入力ファイル設定</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-o</td>
+			<td>必須</td>
+			<td>出力ファイル設定</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-W</td>
+			<td>選択</td>
+			<td>幅のピクセル数を設定</td>
+			<td>0</td>
+		</tr>
+		<tr>
+			<td>-H</td>
+			<td>選択</td>
+			<td>高さのピクセル数を設定</td>
+			<td>0</td>
+		</tr>
+		<tr>
+			<td>-V</td>
+			<td>選択</td>
+			<td>パディング値</td>
+			<td>0.0</td>
+		</tr>
+		<tr>
+			<td>-EV</td>
+			<td>選択</td>
+			<td>背景のための値</td>
+			<td>0.0</td>
+		</tr>
+		<tr>
+			<td>-AW</td>
+			<td>選択</td>
+			<td>Image画像の平均幅を指定する</td>
+			<td>2000.0</td>
+		</tr>
+		<tr>
+			<td>-AWMin</td>
+			<td>選択</td>
+			<td>ウィンドウサイズの最小値を設定</td>
+			<td>20</td>
+		</tr>
+		<tr>
+			<td>-AWMax</td>
+			<td>選択</td>
+			<td>ウィンドウサイズの最大値を設定</td>
+			<td>22</td>
+		</tr>
+		<tr>
+			<td>-Tilt</td>
+			<td>選択</td>
+			<td>アングルの傾きの設定</td>
+			<td>0,0</td>
+		</tr>
+		<tr>
+			<td>-m</td>
+			<td>選択</td>
+			<td>モード</td>
+			<td>0</td>
+		</tr>
+			<tr>
+			<td>-h</td>
+			<td>選択</td>
+			<td>ヘルプを表示</td>
+			<td>0</td>
+		</tr>
+	</table>
+	
+<!-- モード説明 -->
+
+	<br>
+	<caption><b>モードの詳細</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>モード</th>
+				<th>説明</th>
+			</tr>
+			<tr>
+				<td>0</td>
+				<td>Imageの画像の平均値をパディングする</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>Imageの画像のX=0,X=Maxの平均値をパディングする</td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td>Imageの画像の指定された平均幅の、X=0,X=Maxの平均値をパディングする</td>
+			</tr>
+			<tr>
+				<td>3</td>
+				<td>Imageの画像のX=0,Max、y=0,Maxの平均値をパディングする</td>
+			</tr>
+				<tr>
+				<td>4</td>
+				<td>Imageの画像の平均値をパディングする<br>
+				また、Imageの画像を左下に寄せる</td>
+			</tr>
+			<tr>
+				<td>5</td>
+				<td>value値によってパディングの色が変わる</td>
+			</tr>
+			<tr>
+				<td>6</td>
+				<td>value値によってパディングの色が変わる<br>
+				また、Imageの画像を左下に寄せる</td>
+			</tr>
+			<tr>
+				<td>7</td>
+				<td>円より外側のパディング値を設定する</td>
+			</tr>
+			<tr>
+				<td>8</td>
+				<td>AWMinからAWMaxの平均値を円の外側のパディング値とする</td>
+			</tr>
+			<tr>
+				<td>9</td>
+				<td>パディング値を画像のvalue値とする</td>
+			</tr>
+			<tr>
+				<td>10</td>
+				<td>期待値を使ってマスク処理をする</td>
+			</tr>
+			<tr>
+				<td>11</td>
+				<td>(I(x,y)-avg(bg))/avg(bg))をパディング値とする</td>
+			</tr>
+			<tr>
+				<td>12</td>
+				<td>(I(x,y)-avg(I))/sqrt(var(I)))をパディング値とする</td>
+			</tr>
+			<tr>
+				<td>13</td>
+				<td>(I(x,y)-avg(bg))/sqrt(var(bg)))をパディング値とする</td>
+			</tr>
+			<tr>
+				<td>14</td>
+				<td>(I(x,y)-avg(bg))/(avg(I)-avg(bg))をパディング値とする</td>
+			</tr>
+			<tr>
+				<td>15</td>
+				<td>円のパディングを傾斜させる</td>
+			</tr>
+			</div>
+		</table>
+		
+	<h4>******実行例******</h4>	
+	
+<!-- モード0～15での処理 -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------モード0～15での処理画像------</font></caption><br>
+	<table>
+		<tr><td>モード：0</td></tr>
+		<tr><td>入力ファイル</td></tr>
+		<tr>
+			<td><img src="firament.png" border="0" alt="firament.png(3308 byte)" width="25" height="104"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0.164437<br>
+				0.856332<br>
+				0.331084<br>
+				0.0903754<br>
+				0.00177241<br></p>
+			</td>
+			<td>出力結果<br>
+			オプション-W 80,-H 80で出力<br>
+				　　－－－－－－＞</td>
+			<td><img src="pad.w80h80.png" border="0" alt="pad.w80h80.png(2897 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-0.166647<br>
+				0.525248<br>
+				4.04907e-05<br>
+				0.0504441<br>
+				0.000630551<br></p>
+			</td>
+		</tr>
+		<tr><td>モード：1</td></tr>
+		<tr>
+		<tr><td>入力ファイル</td></tr>
+			<td><img src="firament.png" border="0" alt="firament.png(3308 byte)" width="25" height="104"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0.164437<br>
+				0.856332<br>
+				0.331084<br>
+				0.0903754<br>
+				0.00177241<br></p>
+			</td>
+			<td>出力結果<br>
+			オプション-W 80,-H 80で出力<br>
+				　　－－－－－－＞</td>
+			<td><img src="pad.m1w80h80.png" border="0" alt="pad.m1w80h80.png(2901 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-0.142948<br>
+				0.548947<br>
+				0.00744655<br>
+				0.0516391<br>
+				0.000645489<br></p>
+			</td>
+		</tr>
+		<tr><td>入力ファイル</td></tr>
+		<tr><td>モード：2</td></tr>
+		<tr>
+			<td><img src="firament.png" border="0" alt="firament.png(3308 byte)" width="25" height="104"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0.164437<br>
+				0.856332<br>
+				0.331084<br>
+				0.0903754<br>
+				0.00177241<br></p>
+			</td>
+			<td>出力結果<br>
+			オプション-W 80,-H 80で出力<br>
+				　　－－－－－－＞</td>
+			<td><img src="pad.m2w80h80.png" border="0" alt="pad.m2w80h80.png(2886 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-0.137842<br>
+				0.550977<br>
+				0.0074793<br>
+				0.0513355<br>
+				0.000641694<br></p>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td>
+			オプション-AW 100で出力<br>
+				　　－－－－－－＞</td>
+			<td><img src="pad.m2w80h80aw100.png" border="0" alt="pad.m2w80h80aw100.png(2888 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-0.177415<br>
+				0.563255<br>
+				0.00805666<br>
+				0.0522009<br>
+				0.000652512<br></p>
+			</td>
+		</tr>
+		<tr><td>入力ファイル</td></tr>
+		<tr><td>モード：3</td></tr>
+		<tr>
+			<td><img src="firament.png" border="0" alt="firament.png(3308 byte)" width="25" height="104"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0.164437<br>
+				0.856332<br>
+				0.331084<br>
+				0.0903754<br>
+				0.00177241<br></p>
+			</td>
+			<td>出力結果<br>
+			オプション-W 80,-H 80で出力<br>
+				　　－－－－－－＞</td>
+			<td><img src="pad.m3w80h80.png" border="0" alt="pad.m3w80h80.png(2894 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-0.151435<br>
+				0.54046<br>
+				0.00479425<br>
+				0.0509428<br>
+				0.000636785<br></p>
+			</td>
+		</tr>
+		<tr><td>モード：4</td></tr>
+		<tr>
+			<td><img src="b120.pad.png" border="0" alt="b120.pad.png(6742 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-65.0178<br>
+				94.4699<br>
+				4.85274<br>
+				20.4635<br>
+				0.255794<br></p>
+			</td>
+			<td>出力結果<br>
+			オプション-W 100,-H 100で出力<br>
+				　　－－－－－－＞</td>
+			<td><img src="b120.m4w100h100.png" border="0" alt="b120.m4w100h100.png(6895 byte)" width="100" height="100"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-69.8706<br>
+				89.6171<br>
+				-5.28336e-08<br>
+				16.3708<br>
+				0.163708<br></p>
+			</td>
+		</tr>
+		<tr><td>モード：5</td></tr>
+		<tr>
+			<td><img src="firament.png" border="0" alt="firament.png(3308 byte)" width="25" height="104"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-0.151435<br>
+				0.54046<br>
+				0.00479425<br>
+				0.0509428<br>
+				0.000636785<br></p>
+			</td>
+			<td>出力結果<br>
+			オプション-W 80,-H 80で出力<br>
+				　　－－－－－－＞</td>
+			<td><img src="pad.m5w80h80.png" border="0" alt="pad.m5w80h80.png(2811 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				0.856332<br>
+				0.103504<br>
+				0.161597<br>
+				0.00201996<br></p>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td>
+			オプション-V 1で出力<br>
+				　　－－－－－－＞</td>
+			<td><img src="pad.m5w80h80v1.png" border="1" alt="pad.m5w80h80v1.png(2815 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0.164437<br>
+				1<br>
+				0.791004<br>
+				0.314068<br>
+				0.00392585<br></p>
+			</td>
+		</tr>
+		<tr><td>モード：6</td></tr>
+		<tr>
+			<td><img src="firament.png" border="0" alt="firament.png(3308 byte)" width="25" height="104"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-0.151435<br>
+				0.54046<br>
+				0.00479425<br>
+				0.0509428<br>
+				0.000636785<br></p>
+			</td>
+			<td>出力結果<br>
+			オプション-W 80,-H 80で出力<br>
+				　　－－－－－－＞</td>
+			<td><img src="pad.m6w80h80v0.png" border="0" alt="pad.m6w80h80v0.png(2796 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				0.856332<br>
+				0.101998<br>
+				0.159322<br>
+				0.00199153<br></p>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td>
+			オプション-V 1で出力<br>
+				　　－－－－－－＞</td>
+			<td><img src="pad.m6w80h80v1.png" border="1" alt="pad.m6w80h80v1.png(2807 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0.164437<br>
+				1<br>
+				0.789498<br>
+				0.316196<br>
+				0.00395246<br></p>
+			</td>
+		</tr>
+		<tr><td>モード：7</td></tr>
+		<tr>
+			<td><img src="test.noise.png" border="0" alt="test.noise.png(6705 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-53.0655<br>
+				101.855<br>
+				5.45203<br>
+				19.5821<br>
+				0.244776<br></p>
+			</td>
+			<td>出力結果<br>
+				　　－－－－－－＞</td>
+			<td><img src="pad.m7.noise.png" border="0" alt="pad.m7.noise.png(5772 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-52.9982<br>
+				101.923<br>
+				5.5193<br>
+				18.1424<br>
+				0.22678<br></p>
+			</td>
+		</tr>
+		<tr><td>モード：8</td></tr>
+		<tr>
+			<td><img src="test.noise.png" border="0" alt="test.noise.png(6705 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-53.0655<br>
+				101.855<br>
+				5.45203<br>
+				19.5821<br>
+				0.244776<br></p>
+			</td>
+			<td>出力結果<br>
+			オプション-W 100,-H 100<br>
+			-AWMin 20,-AWMax 30で出力<br>
+				　　－－－－－－＞</td>
+			<td><img src="pad.m8w100h100mi20ma30.png" border="0" alt="pad.m8w100h100mi20ma30.png(2421 byte)" width="100" height="100"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-45.1007<br>
+				99.7399<br>
+				2.77838<br>
+				10.7886<br>
+				0.107886<br></p>
+			</td>
+		</tr>
+		<tr><td>モード：9</td></tr>
+		<tr>
+			<td><img src="test.noise.png" border="0" alt="test.noise.png(6705 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-53.0655<br>
+				101.855<br>
+				5.45203<br>
+				19.5821<br>
+				0.244776<br></p>
+			</td>
+			<td>出力結果<br>
+			オプション-W 100,-H 100で出力<br>
+				　　－－－－－－＞</td>
+			<td><img src="pad.m9w100h100.noise.png" border="0" alt="pad.m9w100h100.noise.png(6871 byte)" width="100" height="100"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-53.0655<br>
+				101.855<br>
+				3.4893<br>
+				15.8828<br>
+				0.158828<br></p>
+			</td>
+		</tr>
+		<tr><td>モード：10</td></tr>
+		<tr>
+			<td><img src="test.noise.png" border="0" alt="test.noise.png(6705 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-53.0655<br>
+				101.855<br>
+				5.45203<br>
+				19.5821<br>
+				0.244776<br></p>
+			</td>
+			<td>出力結果<br>
+			オプション-W 100,-H 100で出力<br>
+				　　－－－－－－＞</td>
+			<td><img src="pad.m10w100h100.b120.png" border="0" alt="pad.m10w100h100.b120.png(1544 byte)" width="100" height="100"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-1.31576<br>
+				35.2476<br>
+				0.439553<br>
+				2.76567<br>
+				0.0276567<br></p>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td>
+			オプション-V 1で出力<br>
+				　　－－－－－－＞</td>
+			<td><img src="pad.m10w100h100ev1.b120.png" border="1" alt="pad.m10w100h100ev1.b120.png(1394 byte)" width="100" height="100"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				64.5929<br>
+				1.43143<br>
+				7.79087<br>
+				0.0779087<br></p>
+			</td>
+		</tr>
+		<tr><td>モード：11</td></tr>
+		<tr>
+			<td><img src="test.noise.png" border="0" alt="test.noise.png(6705 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-53.0655<br>
+				101.855<br>
+				5.45203<br>
+				19.5821<br>
+				0.244776<br></p>
+			</td>
+			<td>出力結果<br>
+			オプション-W 100,-H 100で出力<br>
+				　　－－－－－－＞</td>
+			<td><img src="pad.m11w100h100.noise.png" border="0" alt="pad.m11w100h100.noise.png(6871 byte)" width="100" height="100"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-62.2413<br>
+				116.548<br>
+				3.3869<br>
+				18.2569<br>
+				0.182569<br></p>
+			</td>
+		</tr>
+		<tr><td>モード：12</td></tr>
+		<tr>
+			<td><img src="test.noise.png" border="0" alt="test.noise.png(6705 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-53.0655<br>
+				101.855<br>
+				5.45203<br>
+				19.5821<br>
+				0.244776<br></p>
+			</td>
+			<td>出力結果<br>
+			オプション-W 100,-H 100で出力<br>
+				　　－－－－－－＞</td>
+			<td><img src="pad.m12w100h100.noise.png" border="0" alt="pad.m12w100h100.noise.png(6883 byte)" width="100" height="100"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-2.98831<br>
+				4.92302<br>
+				-2.51009e-10<br>
+				0.8<br>
+				0.008<br></p>
+			</td>
+		</tr>
+		<tr><td>モード：13</td></tr>
+		<tr>
+			<td><img src="test.noise.png" border="0" alt="test.noise.png(6705 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-53.0655<br>
+				101.855<br>
+				5.45203<br>
+				19.5821<br>
+				0.244776<br></p>
+			</td>
+			<td>出力結果<br>
+			オプション-W 100,-H 100で出力<br>
+				　　－－－－－－＞</td>
+			<td><img src="pad.m13w100h100.noise.png" border="0" alt="pad.m13w100h100.noise.png(6871 byte)" width="100" height="100"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-3.46173<br>
+				6.48217<br>
+				0.188372<br>
+				1.01541<br>
+				0.0101541<br></p>
+			</td>
+		</tr>
+		<tr><td>モード：14</td></tr>
+		<tr>
+			<td><img src="test.noise.png" border="0" alt="test.noise.png(6705 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-53.0655<br>
+				101.855<br>
+				5.45203<br>
+				19.5821<br>
+				0.244776<br></p>
+			</td>
+			<td>出力結果<br>
+			オプション-W 100,-H 100で出力<br>
+				　　－－－－－－＞</td>
+			<td><img src="pad.m14w100h100.noise.png" border="0" alt="pad.m14w100h100.noise.png(6871 byte)" width="100" height="100"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-55.6403<br>
+				104.188<br>
+				3.0277<br>
+				16.3206<br>
+				0.163206<br></p>
+			</td>
+		</tr>
+		<tr><td>モード：15</td></tr>
+		<tr>
+			<td><img src="test.noise.png" border="0" alt="test.noise.png(6705 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-53.0655<br>
+				101.855<br>
+				5.45203<br>
+				19.5821<br>
+				0.244776<br></p>
+			</td>
+			<td>出力結果<br>
+			オプション-W 100,-H 100<br>
+			-Tilt 30,30で出力<br>
+				　　－－－－－－＞</td>
+			<td><img src="pad.m15W100H100t3030.png" border="0" alt="pad.m15W100H100t3030.png(5324 byte)" width="100" height="100"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-48.0036<br>
+				101.882<br>
+				3.51487<br>
+				14.2277<br>
+				0.142277<br></p>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td>
+			オプション-W 100,-H 100<br>
+			-Tilt 120,120で出力<br>
+				　　－－－－－－＞</td>
+			<td><img src="pad.m15W100H100t120120.png" border="0" alt="pad.m15W100H100t120120.png(3685 byte)" width="100" height="100"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-47.3067<br>
+				101.973<br>
+				3.4676<br>
+				12.6731<br>
+				0.126731<br></p>
+			</td>
+		</tr>
+	</table>
+	
+</body>
+</html>

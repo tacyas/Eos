@@ -1,0 +1,8 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: Image File List","Essential","1","1","In","inFileList","NULL"
+"-w","-w[eight]","Input: Weight File List","Optional","1","1","InWeight","inFileList","NULL"
+"-o","-o[utput]","Output: Average","Essential","1","1","Out","outFile","NULL"
+"-oW","-o[utput]W[eight]","Output: Weight","Optional","1","1","OutWeight","outFile","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

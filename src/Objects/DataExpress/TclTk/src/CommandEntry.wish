@@ -1,0 +1,96 @@
+#
+# CommandEntry
+#
+#
+
+#
+# CommandEntry
+#
+proc CommandEntry { name label width command args } {
+
+	set f [ frame $name ]
+	#label $name.label -text $label -anchor w 
+	label $name.label -text $label -width [ expr $width * 7 ] -anchor w 
+	#label $name.label -text $label -width 20 -anchor w
+	#labelframe $name -text $label -labelanchor w
+
+	label $name.space -text " "
+	set cmd  { entry $name.entry -relief sunken }
+	eval $cmd $args 
+
+	pack $name.label -side left -expand yes -fill x 
+	#pack $name.space -side left -expand yes -fill x
+	#pack $name
+	pack $name.entry -side left -anchor e
+	bind $name.entry <Return> $command 
+	return $name.entry
+}
+
+#
+#
+#
+proc CommandEntryWithSelection { name label pack var list command args } {
+	#puts "CommandEntryWithSelection"
+	#puts $var
+	set f [ frame $name ]
+	menubutton $f.label -text $label -menu $f.label.menu
+	set m [ menu $f.label.menu ]
+	foreach item $list {
+		$m add com -label $item -command "CommandEntryWithSelectionEntrySet $f $item"
+	}
+	eval { entry $f.entry -relief sunken -textvar $var } $args
+	pack $name.label $name.entry -side $pack
+	bind $f.entry <Return> $command
+
+	return $name.entry
+}
+
+proc CommandEntryWithSelectionEntrySet { name var } {
+	$name.entry delete 0 end
+	$name.entry insert 0 $var 
+}
+
+#
+#
+#
+proc CommandEntryWithUpDown { name label width command var delta args } {
+	frame $name
+	#label $name.label -text $label -width $width -anchor w
+	label $name.label -text $label -width [ expr $width * 6 ] -anchor w
+	#label $name.label -text $label -anchor w
+	label $name.space -text " "
+	eval { entry $name.entry -relief sunken -textvar $var } $args 
+
+	button $name.down -text < -command "CommandEntryWithUpDownDown $name $delta; $command " 
+	button $name.up   -text > -command "CommandEntryWithUpDownUp   $name $delta; $command "
+
+	eval { entry $name.delta -relief sunken -textvar $delta } $args 
+
+	pack $name.label -side left -expand yes -fill x -anchor w
+	pack $name.space -side left -expand yes -fill x
+	pack $name.down $name.up $name.entry $name.delta -side left -fill x -expand true 
+
+	bind $name.entry <Return> $command
+
+	return $name.entry
+}
+
+
+proc CommandEntryWithUpDownUp { name delta } {
+		set current [ $name.entry get ]
+		set d       [ $name.delta get ]
+		#puts $current	
+		set var [ expr $current + $d ]
+		$name.entry delete 0 end
+		$name.entry insert 0 $var
+}
+
+proc CommandEntryWithUpDownDown { name delta } {
+		set current [ $name.entry get ]
+		set d       [ $name.delta get ]
+		#puts $current	
+		set var [ expr $current - $d ]
+		$name.entry delete 0 end
+		$name.entry insert 0 $var
+}
+

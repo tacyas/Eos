@@ -1,0 +1,4 @@
+OBJECTNAME = mrcImageSNEstimate
+EXTRA_LIB  =
+EXTRA_CCOPTS =
+EXTRA_INC =

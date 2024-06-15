@@ -1,0 +1,341 @@
+/*
+# %M% %Y% %I%
+# The latest update : %G% at %U%
+#
+#%Z% mrcImageROI ver %I%
+#%Z% Created by 
+#%Z%
+#%Z% Usage : mrcImageROI
+#%Z% Attention
+#%Z%
+*/
+static char __sccs_id[] = "%Z%mrcImageROI ver%I%; Date:%D% %Z%";
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>                  
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+#undef DEBUG
+#include "genUtil.h"
+#include "mrcImage.h"
+
+extern double bilinearInterpolation(double* image,
+                       unsigned long nx, unsigned long ny,
+                       double x, double y);
+
+extern double cubicConvolutionInterpolation(double* image, 
+                                unsigned long nx, unsigned long ny, 
+                                double x, double y);
+extern double polyNominalInterpolation(double* image, 
+                                unsigned long nx, unsigned long ny, 
+                                double x, double y);
+extern void polyInitMatrix(double matrix[6][6], int m, int n);
+extern void polyInitVector(double vec[6], int m, int n, double* image, int nx, int ny);
+extern int polySolveMatrix(double matrix[6][6], double vec[6], double coefficient[6]);
+
+extern void lmrcImageROI(mrcImage* out, mrcImage* in, mrcImageROIInfo* info);
+
+int
+main(int argc, char* argv[]) 
+{
+	mrcImageROIInfo info;
+	mrcImage in;
+	mrcImage out;
+
+	init0(&info);
+    argCheck(&info, argc, argv);
+    init1(&info);
+    mrcFileRead(&in, info.In, "main routine", 0);
+    lmrcImageROI(&out, &in, &info);
+	DEBUGPRINT("mrcFileWrite\n");
+    mrcFileWrite(&out, info.Out, "main routine", 0);
+	exit(EXIT_SUCCESS);
+}
+
+void
+additionalUsage()
+{
+	fprintf(stderr, "---- mode ----\n");
+	fprintf(stderr, "\t0: Nearest Neighbor Method\n");
+	fprintf(stderr, "\t1: Bilinear method\n");
+	fprintf(stderr, "\t2: Cubic Convolution method\n");
+	fprintf(stderr, "\t3: Polynominal method\n");
+	fprintf(stderr, "---- Note  (Magnification change for normalize)----\n");
+	fprintf(stderr, "-truePitch, -dY and -Ly options make \n");
+	fprintf(stderr, "H[pixel] = truePitch[A] / Ly[A/pixel] x dY \n");
+}
+                           
+void
+lmrcImageROI(mrcImage* out, mrcImage* in, mrcImageROIInfo* info)
+{
+    double* tmpImage;
+    int ix, iy;
+    double xdx, xdy;
+    double ydx, ydy;
+    double x, y;
+	double cx, cy;    				/* Centre of source image */
+	double dwdx, dwdy, dhdx, dhdy;  /* Differentiation of source image */
+	double tdwdx, tdwdy, tdhdx, tdhdy;  /* Temporaty differentiation of source image */
+	double angle;
+    double width, height; 			/* Size of source image */ 
+    double max, min, mean;
+	double data;
+	double dangle;
+
+    switch(info->flagblx && info->flagbly && info->flagbrx && info->flagbry && info->flagtlx && info->flagtly && info->flagtrx && info->flagtry ) {
+		case 0:
+			info->blx = 0.0;
+			info->bly = 0.0;
+			info->brx = in->HeaderN.x - 1.0;
+			info->bry = 0.0;
+			info->tlx = 0.0;
+			info->tly = in->HeaderN.y - 1.0;
+			info->trx = in->HeaderN.x - 1.0;
+			info->try = in->HeaderN.y - 1.0;
+			break;
+		case 1:
+			info->blx = info->blx;
+			info->bly = info->bly;
+			info->brx = info->brx;
+			info->bry = info->bry;
+			info->tlx = info->tlx;
+			info->tly = info->tly;
+			info->trx = info->trx;
+			info->try = info->try;
+			break;
+	}
+	if(info->flagShrink) {
+		info->blx *= info->Shrink;	
+		info->bly *= info->Shrink;	
+		info->brx *= info->Shrink;	
+		info->bry *= info->Shrink;	
+		info->tlx *= info->Shrink;	
+		info->tly *= info->Shrink;	
+		info->trx *= info->Shrink;	
+		info->try *= info->Shrink;	
+	}
+
+	/* Size */ 
+	width  = sqrt(SQR(info->brx - info->blx) + SQR(info->bry - info->bly));
+	height = sqrt(SQR(info->tlx - info->blx) + SQR(info->tly - info->bly));
+	if(width<0.5 || height<0.5) {
+		fprintf(stderr, "ROI Area is zero(%f, %f)\n", width, height);
+		exit(EXIT_FAILURE);
+	}
+
+	cx   = (info->blx + info->trx)/2.0; /* Centre */ 
+	cy   = (info->bly + info->try)/2.0; 
+	dwdx = (info->brx - info->blx)/width;  /* Width */ 
+	dwdy = (info->bry - info->bly)/width;
+	dhdx = (info->tlx - info->blx)/height; /* Height */
+	dhdy = (info->tly - info->bly)/height;
+	dangle = acos((dwdx*dhdx+dwdy*dhdy)/width/height);			
+	dangle = dangle - M_PI/2; 
+	fprintf(stdout, "PerpendicularityOfROIArea (ZeroIsGood) [Degree]: %g\n", dangle*DEGREE);
+	tdhdx = cos(-dangle)*dhdx - sin(-dangle)*dhdy; 	
+	tdhdy = sin(-dangle)*dhdx + cos(-dangle)*dhdy; 	
+	dhdx = tdhdx;  	
+	dhdy = tdhdy;  	
+
+	if(info->flagAngle) {
+		angle = info->Angle*RADIAN;
+		tdwdx = cos(angle)*dwdx - sin(angle)*dwdy;
+		tdwdy = sin(angle)*dwdx + cos(angle)*dwdy;
+		dwdx = tdwdx;
+		dwdy = tdwdy;
+		tdhdx = cos(angle)*dhdx - sin(angle)*dhdy;
+		tdhdy = sin(angle)*dhdx + cos(angle)*dhdy;
+		dhdx = tdhdx;
+		dhdy = tdhdy;
+	}
+
+	if(info->flagWidthBeforeExpansion || info->flagHeightBeforeExpansion) {
+		if(info->flagWidthBeforeExpansion) {
+			width = info->WidthBeforeExpansion;
+		} 
+		if(info->flagHeightBeforeExpansion) {
+			height = info->HeightBeforeExpansion;
+		} 
+	}
+
+	/* The new ROI Area */
+	info->blx = cx - dwdx*width/2.0 - dhdx*height/2.0;
+	info->bly = cy - dwdy*width/2.0 - dhdy*height/2.0;
+	info->brx = cx + dwdx*width/2.0 - dhdx*height/2.0;
+	info->bry = cy + dwdy*width/2.0 - dhdy*height/2.0;
+	info->trx = cx + dwdx*width/2.0 + dhdx*height/2.0;
+	info->try = cy + dwdy*width/2.0 + dhdy*height/2.0;
+	info->tlx = cx - dwdx*width/2.0 + dhdx*height/2.0;
+	info->tly = cy - dwdy*width/2.0 + dhdy*height/2.0;
+
+    /* Definition of Expansion Rate */
+    switch(info->flagHeightAfterExpansion) {
+		case 0:
+			switch(info->flagWidthAfterExpansion) {
+				case 0:
+					info->HeightAfterExpansion = floor(height+1.0);
+                    info->WidthAfterExpansion  = floor(width +1.0);
+					break;
+				case 1:
+					info->HeightAfterExpansion = floor((height+1.0)*info->WidthAfterExpansion/(width+1.0));
+					info->WidthAfterExpansion  = info->WidthAfterExpansion;
+					break;
+				default:
+					fprintf(stderr, "Not Supported flag: flagWidthAfterExpansion\n");
+					exit(EXIT_FAILURE);
+					break;
+			}
+			break;
+		case 1:	
+			switch(info->flagWidthAfterExpansion) {
+				case 0:
+					info->HeightAfterExpansion = info->HeightAfterExpansion;
+					info->WidthAfterExpansion  = floor((width+1.0)*info->HeightAfterExpansion/(height+1.0));
+					break;
+				case 1:
+					info->HeightAfterExpansion = info->HeightAfterExpansion;
+					info->WidthAfterExpansion  = info->WidthAfterExpansion;
+					break;
+				default:
+					fprintf(stderr, "Not Supported flag: flagWidthAfterExpansion\n");
+					exit(EXIT_FAILURE);
+					break;
+			}
+			break;
+		default:
+			fprintf(stderr, "Not Supported flag: flagHeightAfterExpansion\n");
+			exit(EXIT_FAILURE);
+			break;
+	}
+
+    /* Definition of Expansion Rate of Hight by truePitch[A] / HeaderLength.y[A/pixel] x dY */
+	if (!(info->flagHeightAfterExpansion) && info->flagtruePitch && info->flagdY && info->flagLy) {
+		info->HeightAfterExpansion = (info->truePitch / info->Ly)*info->dY; 
+		DEBUGPRINT1("%f %f\n", info->HeightAfterExpansion);
+	}	
+
+	out->Header = in->Header;
+    out->HeaderN.x = info->WidthAfterExpansion;
+    out->HeaderN.y = info->HeightAfterExpansion;
+    out->HeaderN.z = 1;
+    out->HeaderMode = mrcFloatImage;
+    out->HeaderLength.x = in->HeaderLength.x*(width+1.0)/info->WidthAfterExpansion;
+    out->HeaderLength.y = in->HeaderLength.y*(height+1.0)/info->HeightAfterExpansion;
+    mrcInit(out, NULL);
+
+    xdx = (info->brx - info->blx)/(info->WidthAfterExpansion -1.0);
+    xdy = (info->bry - info->bly)/(info->WidthAfterExpansion -1.0);
+    ydx = (info->tlx - info->blx)/(info->HeightAfterExpansion-1.0);
+    ydy = (info->tly - info->bly)/(info->HeightAfterExpansion-1.0);
+
+	switch(info->mode) {
+		case 0: {
+			break;
+		}
+		default: {
+    		if(NULL==(tmpImage = (double*)malloc(sizeof(double)*in->HeaderN.x*in->HeaderN.y*in->HeaderN.z))) {
+		        fprintf(stderr, "Not Allocate Memory in lmrcImageROI\n");
+				exit(EXIT_FAILURE);
+    		}
+		    for(ix=0; ix<in->HeaderN.x; ix++) {
+       			for(iy=0; iy<in->HeaderN.y; iy++) {
+       			    mrcPixelDataGet(in,
+						   (mrcImageParaTypeReal)ix, 
+						   (mrcImageParaTypeReal)iy, 
+						   0.0, 
+						   &(tmpImage[ix+iy*in->HeaderN.x]), 
+						   mrcPixelRePart, mrcPixelHowNearest);
+        		}
+    		}
+			break;
+		}
+	}
+	DEBUGPRINT2("%ld %ld\n", in->HeaderN.x, in->HeaderN.y);
+	DEBUGPRINT2("%f %f\n", info->HeightAfterExpansion, info->HeightBeforeExpansion);
+	DEBUGPRINT2("%f %f\n", width, height);
+	DEBUGPRINT1("Mode: %d\n", info->mode);
+	DEBUGPRINT1("out->HeaderMode: %d\n", out->HeaderMode);
+    switch(info->mode) {
+        case 0: {
+            for(ix=0; ix<out->HeaderN.x; ix++) {
+                for(iy=0; iy<out->HeaderN.y; iy++) {
+                    x = ix*xdx + iy*ydx + info->blx;
+                    y = ix*xdy + iy*ydy + info->bly;
+					mrcPixelDataGet(in, 
+									(mrcImageParaTypeReal)x, 
+									(mrcImageParaTypeReal)y, 
+									0.0, &data, mrcPixelRePart, mrcPixelHowNearest);
+					mrcPixelDataSet(out, 
+									(mrcImageParaTypeReal)ix,
+									(mrcImageParaTypeReal)iy,
+									0.0,
+									data,
+									mrcPixelRePart);
+                }
+            }
+            break;
+        }
+        case 1: {
+			DEBUGPRINT("LinearInterpolation\n");
+            for(ix=0; ix<out->HeaderN.x; ix++) {
+                for(iy=0; iy<out->HeaderN.y; iy++) {
+                    x = ix*xdx + iy*ydx + info->blx;
+                    y = ix*xdy + iy*ydy + info->bly;
+					mrcPixelDataSet(out, 
+									(mrcImageParaTypeReal)ix,
+									(mrcImageParaTypeReal)iy,
+									0.0,
+                        			bilinearInterpolation(tmpImage,
+                                		in->HeaderN.x, in->HeaderN.y,
+										x, y),
+									mrcPixelRePart);
+                }
+            }
+            break;
+        }
+        case 2: {
+            for(ix=0; ix<out->HeaderN.x; ix++) {
+                for(iy=0; iy<out->HeaderN.y; iy++) {
+                    x = ix*xdx + iy*ydx + info->blx;
+                    y = ix*xdy + iy*ydy + info->bly;
+					DEBUGPRINT2("%d %d\n", ix, iy);
+					DEBUGPRINT2("%f %f\n", x, y);
+					mrcPixelDataSet(out, 
+									(mrcImageParaTypeReal)ix,
+									(mrcImageParaTypeReal)iy,
+									0.0,
+                        			cubicConvolutionInterpolation(tmpImage,
+                                		in->HeaderN.x, in->HeaderN.y,
+                                		x, y),
+									mrcPixelRePart);
+                }
+            }
+            break;
+        }
+        case 3: {
+            for(ix=0; ix<out->HeaderN.x; ix++) {
+                for(iy=0; iy<out->HeaderN.y; iy++) {
+                    x = ix*xdx + iy*ydx + info->blx;
+                    y = ix*xdy + iy*ydy + info->bly;
+					mrcPixelDataSet(out, 
+									(mrcImageParaTypeReal)ix,
+									(mrcImageParaTypeReal)iy,
+									0.0,
+                        			polyNominalInterpolation(tmpImage, 
+                                		in->HeaderN.x, in->HeaderN.y,
+                                		x, y),
+									mrcPixelRePart);
+                }
+            }
+            break;                              
+        }
+        default: {
+            fprintf(stderr, "Not Supported Mode : %ld\n", info->mode);
+            break;
+        }
+    }
+	DEBUGPRINT("End lmrcImageROI\n");
+	mrcStatDataSet(out, 0);
+}
+

@@ -1,0 +1,8 @@
+require 'mkmf'
+
+
+dir_config('Eos');
+if have_library('EosObjects') 
+	create_makefile("molvieRuby")
+end
+

@@ -1,0 +1,19 @@
+#define DoNotAutoRecreate NO
+
+#include EOS_INCLUDE
+
+OBJECT_TYPE = script
+
+TOOLBOX_NAME = eos
+
+OBJECT_NAME = mrcImage1dShiftAverageByAnnealing
+
+BINARY_NAME = mrcImage1dShiftAverageByAnnealing
+
+INSTPGMFLAGS =
+
+SCRIPTS = \
+	mrcImage1dShiftAverageByAnnealing.ksh
+
+#define KKSH_DEF
+#include <Script.template>

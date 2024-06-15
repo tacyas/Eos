@@ -1,0 +1,4 @@
+OBJECTNAME = mrcImageMergebyside
+EXTRA_LIB  =
+EXTRA_CCOPTS =
+EXTRA_INC =

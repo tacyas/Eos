@@ -1,0 +1,8 @@
+.onlineHelp EOS mrcImageModelCreate "Introduction to mrcImageModelCreate"
+.
+.section 1 "Introduction to mrcImageModelCreate"
+.
+.\" This is the help page associated with the Help button on
+.\" the toplevel window of mrcImageModelCreate
+If you are reading this text,
+you should report it as a bug :-)

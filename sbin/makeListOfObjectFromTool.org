@@ -1,0 +1,30 @@
+sourceFile=$1
+rm -f .dependency
+rm -f .dependency2
+FILES=`ls -1` 
+for name in $FILES; do
+	nm $name | awk -v Name=$name '$2=="T" {printf("%s \t%s\n", $3, Name)}' >> .dependency ;
+done
+echo "<HTML>" > dependency.html
+echo "<BODY>" >> dependency.html
+
+echo "<TABLE>" >> dependency.html
+sort .dependency | awk -v sourceFile=$sourceFile '\
+BEGIN {NAME=""} \
+{ \
+	print NAME; \
+	cmd=sprintf("grep %s %s",NAME,sourceFile); \
+	print cmd ; \
+	system(cmd) | getline p; \
+	if(p!="") { \
+		if(NAME==$1) {\
+			printf("<TR>\n<TH></TH>\t<TD>%s</TD>",$2);\
+		} else { \
+			printf("<TR>\n<TH>%s</TH>\t<TD>%s</TD>",$1,$2); \
+			NAME=$1; \
+		} \
+	} \
+}' >> dependency.html
+echo "</TABLE>" >> dependency.html
+echo "</BODY>" >> dependency.html
+echo "</HTML>" >> dependency.html

@@ -1,0 +1,11 @@
+#!../Display3.HP 
+proc display3DesktopSet {} {
+
+	pack .menu.file  .menu.camera .menu.object  \
+		 .menu.info .menu.help  \
+		 -fill y -side top -expand true -ipadx 3 -ipady 3 
+	pack .menu_title .menu \
+		 -side top -fill both  -expand true
+
+	tk_menuBar .menu .menu.file .menu.camera .menu.object .menu.info .menu.help
+}

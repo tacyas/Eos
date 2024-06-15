@@ -1,0 +1,251 @@
+include ../Config/Define.inc
+include ../../Config/Define.inc
+include ../../../Config/Define.inc
+include ../../../../Config/Define.inc
+
+DSTDIR=../../../../../bin
+DSTDOC=../../../../../doc
+DSTTAR=../../../../../tar
+
+INCFILES   = 
+
+LIBFILES   = \
+			$(LIBPREFIX)EosObjects$(LIBSUFFIX) 
+
+SRCC  = \
+			$(OBJECTNAME).c \
+			init.c \
+			argCheck.c \
+			usage.c  \
+			util.c \
+
+SRCCXX  = \
+			$(OBJECTNAME).cc \
+			init.cc \
+			argCheck.cc \
+			usage.cc  \
+			util.cc \
+
+MODULES    = \
+			$(OBJECTNAME).o \
+			init.o \
+			argCheck.o \
+			usage.o  \
+			util.o \
+
+REALMODULES    = \
+			$(OSTYPE)/$(OBJECTNAME).o \
+			$(OSTYPE)/init.o \
+			$(OSTYPE)/argCheck.o \
+			$(OSTYPE)/usage.o \
+			$(OSTYPE)/util.o 
+
+
+
+all: $(OSTYPE)/$(OBJECTNAME)
+
+$(OSTYPE)/$(OBJECTNAME)::
+	@cd $(OSTYPE); \
+	ln -sf ../../../../../Config/Template/$(WORLDNAME)Template.Dir/src/ARCH/Makefile Makefile ; \
+	$(MAKE) $(OBJECTNAME)
+
+
+edit:
+	@if [ -r $(OBJECTNAME).c ]; \
+	then \
+		sccsEdit $(OBJECTNAME).c; \
+	else \
+		echo "Source files are already editable"; \
+	fi
+	@if [ -r wish/$(OBJECTNAME).wish ]; \
+	then \
+		cd wish; sccsEdit $(OBJECTNAME).wish; \
+	else \
+		echo "Source files (wish) are already editable."; \
+	fi
+	@if [ -r ../Config/OptionControlFile ]; \
+	then \
+		cd ../Config; sccsEdit OptionControlFile; \
+	else \
+		echo "OptionControlFile are already editable."; \
+	fi
+	
+unedit:
+	@if [ -w $(OBJECTNAME).c ]; \
+	then \
+		sccsUnedit $(OBJECTNAME).c; \
+	else \
+		echo "Source files are not editable"; \
+	fi
+	@if [ -w wish/$(OBJECTNAME).wish ]; \
+	then \
+		cd wish; sccsUnedit $(OBJECTNAME).wish; \
+	else \
+		echo "Source files (wish) are not editable."; \
+	fi
+	@if [ -w ../Config/OptionControlFile ]; \
+	then \
+		cd ../Config; sccsUnedit OptionControlFile; \
+	else \
+		echo "OptionControlFile are not editable."; \
+	fi
+	
+report:
+	@if [ -r $(OBJECTNAME).c ]; \
+	then \
+		sccsReport $(OBJECTNAME).c; \
+	else \
+		echo "Source files are already editable"; \
+	fi
+	@if [ -r wish/$(OBJECTNAME).wish ]; \
+	then \
+		cd wish; sccsReport $(OBJECTNAME).wish; \
+	else \
+		echo "Source files (wish) are already editable."; \
+	fi
+	@if [ -r ../Config/OptionControlFile ]; \
+	then \
+		cd ../Config; sccsReport OptionControlFile; \
+	else \
+		echo "OptionControlFile are already editable."; \
+	fi
+
+clean : 
+	rm -f *.o $(OSTYPE)/*.o $(OSTYPE)/$(OBJECTNAME) $(OSTYPE)/*.$(OSTYPE) *.bak *.$(OSTYPE) core
+
+install: install-bin install-doc install-wish 
+	@if [ -x $(KHOROS_KGENOBJ) ] ;  \
+	then \
+		make install-khoros ; \
+	fi
+
+install-bin:$(DSTDIR)/$(OSTYPE)/$(OBJECTNAME) 
+
+$(DSTDIR)/$(OSTYPE)/$(OBJECTNAME):$(OSTYPE)/$(OBJECTNAME) $(DSTDIR)/$(OBJECTNAME) 
+	@echo Installing to bin
+	@if [ ! -d $(DSTDIR)/$(OSTYPE) ]; \
+	then \
+		mkdir $(DSTDIR)/$(OSTYPE); \
+	fi
+	@if [ -x $(DSTDIR)/$(OSTYPE)/$(OBJECTNAME) ]; \
+	then \
+		$(RM) -f $(DSTDIR)/$(OSTYPE)/$(OBJECTNAME); \
+	fi
+	@$(CD) $(OSTYPE); $(INSTALL) -m 555 $(OBJECTNAME) ../$(DSTDIR)/$(OSTYPE)
+	@$(CHMOD) 555 $(DSTDIR)/$(OSTYPE)/$(OBJECTNAME)
+	@$(CHGRP) Eos $(DSTDIR)/$(OSTYPE)/$(OBJECTNAME)
+
+install-wish:
+	@if [ ! -d $(DSTDIR)/wish/$(OBJECTNAME) ]; \
+	then \
+		mkdir $(DSTDIR)/wish/$(OBJECTNAME) ; \
+	fi
+	@if [ -d wish ]; \
+	then \
+		echo "Tcl/Tk file Install";\
+		$(CP) -f wish/*.wish $(DSTDIR)/wish/$(OBJECTNAME); \
+		$(CHMOD) 555 $(DSTDIR)/wish/$(OBJECTNAME)/*.wish  ;\
+		touch $(DSTDIR)/wish/$(OBJECTNAME)/tclIndex;\
+		$(CHMOD) 666 $(DSTDIR)/wish/$(OBJECTNAME)/tclIndex;\
+		$(CHGRP) Eos $(DSTDIR)/wish/$(OBJECTNAME)/*;\
+	fi
+
+install-khoros:
+	@echo Installing to khoros
+	@if [ ! -d ../../../../../objects/script/$(OBJECTNAME) -a -f $(KHOROS_KGENOBJ) ]; \
+	then \
+		echo kgenobj;\
+		$(KHOROS_KGENOBJ) -tb Eos -oname $(OBJECTNAME) -type script -pane -cantata true -cat Eos -subcat $(CLASSNAME) -description $(OBJECTNAME) -bname $(OBJECTNAME) -form  -lang ksh ; \
+	fi
+	@if [ ! -d ../../../../../objects/script/$(OBJECTNAME) -a -f $(KHOROS_KSET) ]; \
+	then \
+		$(KHOROS_KSET) -tb Eos -oname $(OBJECTNAME) -icon $(OBJECTNAME) ; \
+	fi
+	@if [ -d ../../../../../objects/script/$(OBJECTNAME) -a -f $(KHOROS_KSET) ]; \
+	then \
+		$(CHMOD) -R 775 ../../../../../objects/script/$(OBJECTNAME); \
+		$(CD) ../../../../../objects/script/$(OBJECTNAME)/uis/ ; \
+		$(RM) -f $(OBJECTNAME).pane ; \
+		$(LN) -s ../../../../src/Tools/$(CLASSNAME)/$(OBJECTNAME)/src/$(OBJECTNAME).pane $(OBJECTNAME).pane; \
+		$(CD) ../../ ; \
+		$(CHGRP) -R Eos $(OBJECTNAME); \
+		$(CHMOD) -R 555 $(OBJECTNAME); \
+	fi
+
+install-doc: html 
+	@if [ ! -d $(DSTDOC)/SmallTools ]; \
+	then \
+		mkdir $(DSTDOC)/SmallTools ;\
+	fi
+	@if [ -f $(DSTDOC)/SmallTools/$(OBJECTNAME).html ]; \
+	then \
+		$(RM) -f $(DSTDOC)/SmallTools/$(OBJECTNAME).html ;\
+	fi
+	@$(CP) $(OBJECTNAME).html  $(DSTDOC)/SmallTools/$(OBJECTNAME).html
+	@$(CHMOD) 444 $(DSTDOC)/SmallTools/$(OBJECTNAME).html
+	@if [ -f ../doc/*.html ]; \
+	then \
+		$(CP) ../doc/*.html  $(DSTDOC)/SmallTools/ ;\
+	fi
+	@$(CHMOD) 444 $(DSTDOC)/SmallTools/$(OBJECTNAME).html
+	@if [ -f $(DSTDOC)/SmallTools/Makefile ]; \
+	then \
+		cd $(DSTDOC)/SmallTools; $(MAKE); \
+	fi
+
+html: $(OBJECTNAME).html
+
+configFileRead:
+	@ctrl2configFileRead $(CLASSNAME) $(OBJECTNAME) ../Config/OptionControlFile
+
+$(OBJECTNAME).html: $(OSTYPE)/$(OBJECTNAME)
+	@echo creating html
+	@$(OSTYPE)/$(OBJECTNAME) -html 2> $(OBJECTNAME).html.tmp
+	@sed -e s/$(OSTYPE)\\/// $(OBJECTNAME).html.tmp > $(OBJECTNAME).html
+	@$(RM) $(OBJECTNAME).html.tmp
+
+$(DSTDIR)/$(OBJECTNAME): $(OSTYPE)/$(OBJECTNAME)
+	@ln -s -f ../sbin/MachineIndependent $@
+
+depend::
+	@echo dependency checking now 
+	@if [ ! -d $(OSTYPE) ] ; \
+	then \
+		mkdir $(OSTYPE); \
+	fi
+	$(DEPENDCOMMAND) $(INCLUDEDIR) $(EXTRA_DEFINE) *.c *.cc > $(OSTYPE)/.Depend
+
+update:../Config/OptionControlFile
+	maketool $(CLASSNAME) $(OBJECTNAME) update
+
+changeName::
+
+Test:$(OSTYPE)/$(OBJECTNAME) TestDir
+	@if [ -f test/Makefile ] ; \
+	then \
+		cd test; make ; \
+	else \
+		echo "No test Makefile"; \
+	fi
+
+TestDir::
+	@if [ ! -d test ] ; \
+	then \
+		echo "Creating test dir"; \
+		mkdir  test; \
+	fi
+	@if [ ! -f test/Makefile ] ; \
+	then \
+		echo "Creating Makefile"; \
+		cd test; \
+		protoTestMakefileCreate; \
+	fi 
+
+tar::
+	cd $(DSTTAR); tar cvf Tools.$(CLASSNAME).$(OBJECTNAME).tar ../bin/$(OBJECTNAME) \
+	                                                     ../bin/*/$(OBJECTNAME).* \
+	                                                     ../src/Tools/$(CLASSNAME)/$(OBJECTNAME) \
+				; gzip Tools.$(CLASSNAME).$(OBJECTNAME).tar
+
+include $(OSTYPE)/.Depend
+include ../Config/Target.inc

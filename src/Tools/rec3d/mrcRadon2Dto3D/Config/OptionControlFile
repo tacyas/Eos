@@ -1,0 +1,14 @@
+# OptionControlFile
+# FileFormat
+"-I","-I[nput]","InputDataFileList","Essential","1","1","In2","inFileList","NULL"
+"-Ib","-I[nput]b[efore]","InputDataFileListBefore","Optional","1","1","InBefore","inFileList","NULL"
+"-ib","-i[nput]b[efore]","InputDataFileBeforeData: mrcImageRadon3D","Optional","1","1","inbefore","inFile","NULL"
+"-iwb","-i[nput]w[eight]b[efore]","InputWeightDataFileBeforeData: mrcImageRadon3D","Optional","1","1","inWbefore","inFile","NULL"
+"-o","-o[utput]","OutputDataFile: radon3D","Essential","1","1","Out","outFile","NULL"
+"-ow","-o[utput]w[eight]","OutputDataFile: weight","Essential","1","1","OutW","outFile","NULL"
+"-dp","-dp","Input: deltaP","Essential","1","1","dp","Real","2.0"
+"-dtheta","-dtheta","Input: deltaTheta","Essential","1","1","dtheta","Real","1"
+"-dphi","-dphi","Input: deltaPhi","Essential","1","1","dphi","Real","1"
+"-T","-T[hreshold]","Threshold","Optional","1","1","T","Real","1.0"
+"-InterpolationMode","-InterpolationMode","InterpolationMode","Optional","1","1","InterpolationMode","Integer","0"
+"-m","-m[ode]","Radon2Dto3D Intepolation Mode","Optional","1","1","mode","Integer","0"

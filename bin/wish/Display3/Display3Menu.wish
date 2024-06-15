@@ -1,0 +1,56 @@
+#!../Display3.HP 
+proc display3MenuSet { } {
+	global Point
+	global fileNameIn
+	global fileNameAsPPM
+	global fileNameAsTIFF
+
+	message .menu_title -relief raised -justify center -text "Welcome to Display3!!" \
+		-width 150
+
+	frame .menu -relief raised -bd 2
+	menubutton .menu.file      -text "File"        -underline 0 -menu .menu.file.m
+	menubutton .menu.camera    -text "camera info" -underline 0 -menu .menu.camera.m
+	menubutton .menu.object    -text "object info" -underline 0 -menu .menu.object.m
+	menubutton .menu.info      -text "Information" -underline 0 -menu .menu.info.m
+	menubutton .menu.help      -text "Help"        -underline 0 -menu .menu.help.m
+	
+	#
+	#
+	#
+	set m [menu .menu.file.m]
+	$m add com -label "Open File" -command {
+		global fileNameIn
+		set fileNameIn [ fileSelect ]
+		fileOpen 
+	}
+	$m add com -label "New File"                       -command {
+		set name [ fileSelect ]
+		exec Display3 -i $name &
+	}
+	$m add separator
+	$m add com -label "Save The Current Window(PPM-Format)"  -command {
+	fileSaveAsPPM
+	}
+#	$m add com -label "Save The Current Window(TIFF-Format)"  -command {
+#	fileSaveAsTIFF
+#	}
+	$m add separator
+	$m add com -label "Exit DisPlay3"		-command {exit 0}
+	
+	set m [menu .menu.camera.m]
+	$m add com -label "Information about Camera"   -command {
+	display3CameraInformationWinCreate 
+	}
+
+	set m [menu .menu.object.m]
+	$m add com -label "Information about Objects"  -command {
+	display3ObjectInformationWinCreate
+	}
+
+	set m [menu .menu.info.m]
+	$m add com -label "Information about mrcImage"
+
+	set m [menu .menu.help.m]
+	$m add com -label "Help"
+}

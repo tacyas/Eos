@@ -1,0 +1,18 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input","Essential","1","1","In","inFile::mrcImage","NULL"
+"-o","-o[utput]","Output","Essential","1","1","Out","outFile::mrcImage","NULL"
+"-r","-r[oi]","Rectangle ROI ","Optional","8","1","blx","Real","0.0","2","bly","Real","0.0","3","brx","Real","0.0","4","bry","Real","0.0","5","trx","Real","0.0","6","try","Real","0.0","7","tlx","Real","0.0","8","tly","Real","0.0"
+"-x","-x","Width  before expansion: /* Default is set by -r */","Optional","1","1","WidthBeforeExpansion","Real","1.0"
+"-y","-y","Height before expansion: /* Default is set by -r */","Optional","1","1","HeightBeforeExpansion","Real","1.0"
+"-a","-a[ngle]","This value [degree] is added to angle of current source image.","Optional","1","1","Angle","Real","0.0"
+"-W","-W","Width  after expansion[Pixel]","Optional","1","1","WidthAfterExpansion","Real","1.0"
+"-H","-H","Height after expansion[Pixel]: \n\t\tROI Size is (10,20):\n\t\t\tIf -W 30 -H 40, out (30,40)\n\t\t\tIf -W 30, out (30, 20*30/10)\n\t\t\tIf -H 40, out (10*40/20,40)\n\t\t\t\tIf omitted, out (10,20)","Optional","1","1","HeightAfterExpansion","Real","1.0"
+"-Shift","-Shift","ROI ARea Shift [Pixel]","Optional","2","1","ShiftX","Real","0.0","1","ShiftY","Real","0.0"
+"-truePitch","-turePitch","truePitch [A]","Optional","1","1","truePitch","Real","430.0"
+"-dY","-dY","Number of turePitch","Optional","1","1","dY","Real","0.0"
+"-Ly","-Ly","Header Length y [A/Pixel]","Optional","1","1","Ly","Real","5.0"
+"-S","-S[hrink]","When inputfile is shrinked","Optional","1","1","Shrink","Integer","1"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-M","-M[ode]","RoiShapeMode","Optional","1","1","ROIShapeMode","Integer","0"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

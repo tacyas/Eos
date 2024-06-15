@@ -1,0 +1,13 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputFETDataFileList","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputEulerAngleDataFileList","Essential","1","1","Out","outFile","NULL"
+"-iRef","-i[nput]Ref","InputReferenceFETDataFileList","Essential","1","1","InR","inFile","NULL"
+"-iEuler","-i[nput]Euler","InputEulerAngleDataFile","Essential","1","1","InE","inFile","NULL"
+"-nm","-n[ormalize]m[ode]","normalizeMode","Optional","1","1","NM","Integer","0"
+"-om","-o[utputList]m[ode]","outputListMode","Optional","1","1","OM","Integer","2"
+"-tn","-t[op]n[um]","top number","Optional","1","1","TN","Integer","10"
+"-refR","-refR[ange]","reference select Range","Optional","1","1","RR","Integer","15"
+"-w","-w[eight]","CorrelationCalcWeight","Optional","1","1","WEIGHT","inFile","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

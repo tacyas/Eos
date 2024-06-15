@@ -1,0 +1,9 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-I","-I[nput]","InputCTFInformation","Optional","1","1","In1","inFile","NULL"
+"-I2","-I2[nput]","InputCTFInformation2","Optional","1","1","In2","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-t","-t[ruePitch]","truePitch[A]","Essential","1","1","truePitch","Real","430.0"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"

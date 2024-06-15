@@ -1,0 +1,53 @@
+#!/bin/bash
+
+target=$EOS_HOME/hostdepend
+target_indirect=../../../../../hostdepend
+for dd in ALPHA ALPHALINUX ALPHALINUX5 ALPHAOSF1 CELLLINUX64 HP I386LINUX I686LINUX SGI SPARC X86LINUX64 X86LINUX64 X86MAC64 ; do
+	echo $dd
+	currentDir1=`pwd | awk -F 'Eos/' '{print $1}'`; echo $currentDir1
+	currentDir2=`pwd | awk -F 'Eos/' '{print $2}'`; echo $currentDir2 
+
+	# Move Directory
+	if [ -d $dd ] ; then 
+		echo "Hostdependentp Directroy $dd exists in this directory."
+		if [ ! -d $target/$dd ] ; then
+			cmd="mkdir $target/$dd" 
+			echo $cmd
+			eval $cmd
+		fi
+
+		if [ ! -d $target/$dd/$currentDir2 ] ; then
+			cmd="mkdir -p $target/$dd/$currentDir2"
+			echo $cmd
+			eval $cmd
+		fi
+
+		if [ -d $target/$dd/$currentDir2 -a ! -L $dd ] ; then
+			cmd="mv $dd $target/$dd/$currentDir2"
+			echo $cmd
+			eval $cmd
+		fi
+	fi
+
+	# If Link
+	if [  -L $target/$dd/$currentDir2/$dd ] ; then
+		cmd="rm $target/$dd/$currentDir2/$dd"
+		echo $cmd
+		eval $cmd
+	fi
+
+	# If no Dir	
+	if [ ! -d $target/$dd/$currentDir2/$dd ] ; then
+		cmd="mkdir -p $target/$dd/$currentDir2/$dd"
+		echo $cmd
+		eval $cmd
+	fi
+
+	# Link Directry
+	if [ -d $target_indirect/$dd/$currentDir2/$dd ] ; then 
+		cmd="ln -sf $target_indirect/$dd/$currentDir2/$dd . "
+		echo $cmd
+		eval $cmd
+	fi
+done
+

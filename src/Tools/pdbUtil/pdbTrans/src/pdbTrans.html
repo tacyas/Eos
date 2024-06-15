@@ -1,0 +1,32 @@
+<HTML>
+<HEAD>
+<TITLE>pdbTrans</TITLE>
+</HEAD>
+<BODY>
+<H1>pdbTrans</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: pdbTrans
+Options:
+    [-i[nput]            inFile              (NULL      ).as(inFile              ) ] :Essential :Input: DataFile
+    [-o[utput]           outFile             (NULL      ).as(outFile             ) ] :Essential :Output: DataFile
+    [-M[atrix]           matFile             (NULL      ).as(inFile              ) ] :Optional  :Input: MatrixFile[4][4]
+    [-E[uler]A[ngle]     RotMode             (YOYS      ).as(String              ) 
+                         Rot1                (0.0       ).as(Real                ) 
+                         Rot2                (0.0       ).as(Real                ) 
+                         Rot3                (0.0       ).as(Real                ) ] :Optional  :Input: 
+    [-cuda               cudaDeviceID        (0         ).as(Integer             ) ] :Optional  :cuda
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+>>> Matrix3D File Format y = Ax + b<<<
+a11 a21 a31 : Rotation Array : y=Ax
+a12 a22 a32 
+a13 a23 a33 
+b1  b2  b3  : Translation Array : y = x + b
+--- Attention ---
+If both options of -M and -EA are set, 
+    first, translation and rotation by -M will be performed 
+    then,  rotation by -EA will be done.
+</PRE>
+</BODY>
+</HTML>

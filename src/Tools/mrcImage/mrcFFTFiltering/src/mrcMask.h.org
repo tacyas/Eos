@@ -1,0 +1,60 @@
+#ifndef MRC_MASK_H
+#define MRC_MASK_H
+
+#include "mrcImage2.h"
+
+#define OPTION_FLAG      '-'
+#define OPTION_FLAG_POS  (0)
+#define OPTION_POS       (1)
+#define FILENAME_LENGTH  (1024)
+#define DEFAULT_MODE     (1)
+#define MAX_LEVEL        (100)
+
+
+typedef struct Coord {
+    double x;
+    double y;
+} Coord;
+
+typedef struct mrcMaskInfo {
+    char inFileName[FILENAME_LENGTH];
+    FILE* fptIn;
+    long flagInFile;
+    char outFileName[FILENAME_LENGTH];
+    FILE* fptOut;
+    long flagOutFile;
+    char peakInFileName[FILENAME_LENGTH];
+    FILE* fptPeakIn;
+    long flagPeakInFile;
+    char peakOutFileName[FILENAME_LENGTH];
+    FILE* fptPeakOut;
+    long flagPeakOutFile;
+    long mode;
+    /* Mask Information */
+    Coord v1;
+    Coord v2;
+    long flagVector;
+    double angle;
+    long flagAngle;
+    Coord size;
+    long flagSize;
+    Coord radius;
+    long flagRadius;
+    long dummy;
+} mrcMaskInfo;
+
+
+#ifdef GLOBAL_DECLARATION
+#else
+#endif
+
+extern void lmrcMask(mrcImage* fft1, mrcImage* fft0, mrcMaskInfo* info);
+
+extern void argCheck(mrcMaskInfo* info, int argc, char* argv[]);
+                          
+extern void init0(mrcMaskInfo* info);
+extern void init1(mrcMaskInfo* info);
+                  
+extern void usage(char* thisProgram);
+
+#endif /* MRC_SYNMETRY_H */

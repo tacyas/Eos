@@ -1,0 +1,15 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","mrcImage(FT):InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o1","-o1[utput]","llData(Near):OutputDataFile","Essential","1","1","SepNea","outFile","NULL"
+"-o2","-o2[utput]","llData(Far ):OutputDataFile","Essential","1","1","SepFar","outFile","NULL"
+"-O1","-O1[utput]","llData(Mix Near):OutputDataFile","Optional","1","1","MixNea","outFile","NULL"
+"-O2","-O2[utput]","llData(Mix Far ):OutputDataFile","Optional","1","1","MixFar","outFile","NULL"
+"-delRInv","-delRInv","delRInv: [A]: Get default value from mrcImage","Optional","1","1","delRInv","Real","0.0"
+"-truePitch","-truePitch","truePitch: [A]: Get default value from mrcImage","Optional","1","1","truePitch","Real","0.0"
+"-rMax","-rMax","rMax: [ A]","Essential","1","1","rMax","Real","50.0"
+"-RMax","-RMax","RMax: [/A]","Optional","1","1","RMax","Real","0.2"
+"-xShift","-xShift","xShift: [pixel]: Get default value(Centre) from mrcImage","Optional","1","1","xShift","Real","0.0"
+"-L","-L[og]","LogFile","Optional","1","1","Log","outFile","stdout"
+"-c","-c[onfig]","ConfigurationFile","Essential","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

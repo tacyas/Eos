@@ -1,0 +1,11 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput] information file","OutputDataFile","Optional","1","1","Out","outFile","NULL"
+"-oCor","-o[utput] Cor[relation]","OutputDataFile","Optional","1","1","OutCor","outFile","NULL"
+"-ref","-ref[erence array of file]","InputDataFiles","Essential","1","1","ref","inFileListNoOpen","stdin"
+"-corfilename","-cor[relation] file name","InputDataFiles","Optional","1","1","corfilename","inFileListNoOpen","stdin"
+"-cormode","-cormode","Mode","Optional","1","1","cormode","Integer","0"
+"-ctfinfo","-ctfinfo","InputDataFile","Optional","1","1","ctfinfo","inFile","NULL"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

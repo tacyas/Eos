@@ -1,0 +1,4 @@
+OBJECTNAME = mrc2Dto3DforVariation
+EXTRA_LIB  =
+EXTRA_CCOPTS =
+EXTRA_INC =

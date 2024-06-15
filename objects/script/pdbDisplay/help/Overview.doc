@@ -1,0 +1,8 @@
+.onlineHelp EOS pdbDisplay "Introduction to pdbDisplay"
+.
+.section 1 "Introduction to pdbDisplay"
+.
+.\" This is the help page associated with the Help button on
+.\" the toplevel window of pdbDisplay
+If you are reading this text,
+you should report it as a bug :-)

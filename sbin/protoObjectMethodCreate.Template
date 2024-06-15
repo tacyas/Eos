@@ -1,0 +1,14 @@
+/*
+# %M% %Y% %I%
+# The latest update : %G% at %U%
+#
+#%Z% ${Name} ver %I%
+#%Z% Created by 
+#%Z%
+#%Z% Usage : ${Name} 
+#%Z% Attention
+#%Z%
+*/
+static char __sccs_id[] = "%Z%${Name} ver%I%; Date:%D% %Z%";
+
+

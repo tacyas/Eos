@@ -1,0 +1,27 @@
+<HTML>
+<BODY>
+<H1>llDataParamToFit</H1><BR>
+<H3>in lllDataFit.h</H3><BR>
+<PRE>
+typedef struct <A HREF="llDataParamToFit.html">llDataParamToFit </A>{ <BR>
+    <A HREF="llDataParaTypeRegion.html">llDataParaTypeRegion </A>Omega; <BR>
+    <A HREF="llDataParaTypeRegion.html">llDataParaTypeRegion </A>x;    <BR>
+    <A HREF="llDataParaTypeRegion.html">llDataParaTypeRegion </A> z; <BR>
+    <A HREF="llDataParaTypeRegion.html">llDataParaTypeRegion </A> r; <BR>
+    <A HREF="llDataParaTypeRegion.html">llDataParaTypeRegion </A> phi; <BR>
+    <A HREF="llDataPole.html">llDataPole </A>           Pole; <BR>
+    <A HREF="llDataParaTypeReal.html">llDataParaTypeReal </A>  R; <BR>
+    <A HREF="llDataParaTypeInteger.html">llDataParaTypeInteger </A>flagResolution; <BR>
+    <A HREF="llDataParaTypeReal.html">llDataParaTypeReal </A>   Resolution; <BR>
+	int 			   flagCTF; <BR>
+	int                ctfCompensationMode; <BR>
+	ctfInfo            CTF; <BR>
+	llDataParaTypeReal ctfCutOff; <BR>
+	int                flagllCTF; <BR>
+	llData             llCTF; <BR>
+	int flagLLTable; <BR>
+	llDataParaTypeInteger* llTable;  <BR>
+} llDataParamToFit; <BR>
+ 
+</PRE></HTML>
+</BODY>

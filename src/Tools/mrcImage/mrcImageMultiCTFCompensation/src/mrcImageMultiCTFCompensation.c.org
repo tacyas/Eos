@@ -1,0 +1,85 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>                  
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+#undef DEBUG
+#include "genUtil.h"
+#include "String.h"
+#include "Memory.h"
+#include "mrcImage.h"
+#include "ctfInfo.h"
+
+void
+main(int argc, char* argv[]) 
+{
+	long status;
+	mrcImageMultiCTFCompensationInfo info;
+	mrcImage* src;
+	mrcImage  dst;
+	mrcImage* fft;
+	mrcImage  dstfft;
+	ctfInfo*  ctf;
+	char      s[1024];
+	long i;
+
+	init0(&info);
+    argCheck(&info, argc, argv);
+    init1(&info);
+
+	src = (mrcImage*)memoryAllocate(sizeof(mrcImage)*info.flagIn, "in main");
+	fft = (mrcImage*)memoryAllocate(sizeof(mrcImage)*info.flagIn, "in main");
+	ctf = (ctfInfo*)memoryAllocate(sizeof(ctfInfo)*info.flagIn, "in main");
+
+	/* Initial Data Set */
+	for(i=0; i<info.flagIn; i++) {
+		mrcFileRead(&(src[i]), info.In[i], "in main file", 0);
+		if(IsImage(&(src[i]), "in main", 0)) {
+			lfft2d(&(fft[i]), &(src[i]));
+		} else {
+			fft[i] = src[i];
+		}
+		mrcImageFree(&(src[i]), "in main");
+		if(i==0) {
+			fseek(info.fptInList, 0L, SEEK_SET);
+		}
+		stringGetFromFile(s, "", info.fptInList, stdout, 1);
+		ctf[i].defocus = stringGetNthRealData(s, 2, " \t,"); 
+		ctf[i].Cs      = stringGetNthRealData(s, 3, " \t,");
+		ctf[i].kV      = stringGetNthRealData(s, 4, " \t,");
+		ctf[i].ratioOfAmpToPhase = stringGetNthRealData(s, 5, " \t,");
+		ctf[i].mode    = 1;
+		if(info.flagWhiteNoise) {
+			ctf[i].flagWhiteNoise = 1;
+			ctf[i].WhiteNoise = info.WhiteNoise;
+		} else {
+			ctf[i].flagWhiteNoise = 0;
+		}
+		if(info.flagSinWinRmin && info.flagSinWinRmax) {
+			ctf[i].flagWin = 1;
+			ctf[i].CutLow  = info.SinWinRmin;
+			ctf[i].CutHigh = info.SinWinRmax;
+		} else {
+			ctf[i].flagWin = 0;
+		}
+		DEBUGPRINT4("%f %f %f %d\n", ctf[i].defocus, ctf[i].Cs, ctf[i].kV, ctf[i].mode);
+	}
+	lmrcImageMultiCTFCompensation(&dstfft, fft, ctf, info.flagIn, info.mode); 
+	if(info.flagfftOut) {
+		mrcFileWrite(&dstfft, info.fftOut, "in main file", 0);
+	}
+	lfft2d(&dst, &dstfft);
+	mrcStatDataSet(&dst, 0);
+	mrcFileWrite(&dst, info.Out, "in main file", 0); 
+}
+
+void
+additionalUsage()
+{
+	fprintf(stderr, "----- InputFileFormat -----\n");
+	fprintf(stderr, "filename deltaF[A] Cs[mm] kV[kV] ratioOfAmpToPhase\n");
+
+	fprintf(stderr, "----- Mode -----\n");
+	fprintf(stderr, "\t0: CTFi/Sigma(SQR(CTFi))\n");
+}

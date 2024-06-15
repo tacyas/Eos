@@ -1,0 +1,37 @@
+#
+#
+#
+proc unitCellRecreate { } {
+	global mainImage
+	global UnitCell
+	global Roi
+
+	set c $mainImage(canvas) 
+	set cx [ expr $mainImage(width) / 2.0 ]
+	set cy [ expr $mainImage(height) / 2.0 ]
+	set cz [ expr $mainImage(z) / 2.0 ]
+
+	for { set i 0 } { $i < $UnitCell(n) } { incr i } {
+		$c delete $UnitCell([subst $i])
+	}
+	set UnitCell(n) 0
+	for {set i1 [expr -1*$UnitCell(axis1,n)] } { $i1 <= $UnitCell(axis1,n)} { set i1 [expr $i1 + 1] } {
+	for {set i2 [expr -1*$UnitCell(axis2,n)] } { $i2 <= $UnitCell(axis2,n)} { set i2 [expr $i2 + 1] } {
+	for {set i3 [expr -1*$UnitCell(axis3,n)] } { $i3 <= $UnitCell(axis3,n)} { set i3 [expr $i3 + 1] } {
+		set x [ expr $i1*$UnitCell(axis1,x) + $i2*$UnitCell(axis2,x) + $i3*$UnitCell(axis3,x) ]
+		set y [ expr $i1*$UnitCell(axis1,y) + $i2*$UnitCell(axis2,y) + $i3*$UnitCell(axis3,y) ]
+		set z [ expr $i1*$UnitCell(axis1,z) + $i2*$UnitCell(axis2,z) + $i3*$UnitCell(axis3,z) ]
+	
+		set UnitCell([subst $UnitCell(n)]) [ $c create line \
+			[ coordGetInMainImageToCanvas $c x [ expr $x - $UnitCell(box,x)/2 ] ] [ coordGetInMainImageToCanvas $c y [ expr $y - $UnitCell(box,y)/2 ] ]  \
+			[ coordGetInMainImageToCanvas $c x [ expr $x + $UnitCell(box,x)/2 ] ] [ coordGetInMainImageToCanvas $c y [ expr $y - $UnitCell(box,y)/2 ] ]  \
+			[ coordGetInMainImageToCanvas $c x [ expr $x + $UnitCell(box,x)/2 ] ] [ coordGetInMainImageToCanvas $c y [ expr $y + $UnitCell(box,y)/2 ] ]  \
+			[ coordGetInMainImageToCanvas $c x [ expr $x - $UnitCell(box,x)/2 ] ] [ coordGetInMainImageToCanvas $c y [ expr $y + $UnitCell(box,y)/2 ] ]  \
+			[ coordGetInMainImageToCanvas $c x [ expr $x - $UnitCell(box,x)/2 ] ] [ coordGetInMainImageToCanvas $c y [ expr $y - $UnitCell(box,y)/2 ] ]  \
+			-fill $Roi(CurrentColor) ]
+		incr UnitCell(n)		
+	}
+	}
+	}
+}
+

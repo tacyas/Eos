@@ -1,0 +1,18 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input:mrcImage","Essential","1","1","In","inFile::mrcImage","NULL"
+"-o","-o[utput]","Output:distribution","Optional","1","1","Out","outFile::ASCII","stdout"
+"-Owall","-O[utput]w[hite]all","Output: white+whiteEdge","Optional","1","1","OutWhiteAll","outFile::mrcImage","NULL"
+"-Ow","-O[utput]w[hite]","Output: white","Optional","1","1","OutWhite","outFile::mrcImage","NULL"
+"-Oball","-O[utput]b[lack]all","Output: black+blackEdge","Optional","1","1","OutBlackAll","outFile::mrcImage","NULL"
+"-Ob","-O[utput]b[lack]","Output: black","Optional","1","1","OutBlack","outFile::mrcImage","NULL"
+"-Owe","-O[utput]w[hite]e[dge]","Output: whiteEdge","Optional","1","1","OutWhiteEdge","outFile::mrcImage","NULL"
+"-Obe","-O[utput]b[lack]e[dge]","Output: blackEdge","Optional","1","1","OutBlackEdge","outFile::mrcImage","NULL"
+"-Odir","-O[utput]dir[ection]","Output: basename.[0|1|2] vector for any","Optional","1","1","Direction","String","direction"
+"-lt","-l[ine]t[hickness]","[pixel]","Optional","2","1","LineThicknessX","Real","1","2","LineThicknessY","Real","1"
+"-lm","-l[ine]m[ode]","LineMode","Optional","1","1","LineMode","Integer","0"
+"-ls","-l[ine]s[hape]","LineShape","Optional","1","1","LineShape","Integer","0"
+"-deltaPhi","-deltaPhi","deltaPhi","Optional","1","1","deltaPhi","Real","30"
+"-deltaTheta","-deltaTheta","deltaTheta","Optional","1","1","deltaTheta","Real","30"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

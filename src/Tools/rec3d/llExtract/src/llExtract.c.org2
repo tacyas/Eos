@@ -1,0 +1,366 @@
+	long status;
+    THIS_PROGRAM_INFO info;
+
+	init0(&info);
+    argCheck(&info, argc, argv);
+    init1(&info);
+    mrcFileRead(&in, info.inFileName, "main routine", 0);
+    THIS_ROUTINE/**/(&near, &far, &in, &info);
+    llDataFileWrite(info.fptOut1, &near, &status);
+    llDataFileWrite(info.fptOut2, &far, &status);
+}
+                           
+
+/*
+# %M% %Y% %I%
+# The latest update : %G% at %U%
+#
+#%Z% llExtract ver %I%
+#%Z% Created by 
+#%Z%
+#%Z% Usage : llExtract
+#%Z% Attention
+#%Z%
+*/
+static char __sccs_id[] = "%Z%llExtract ver%I%; Date:%D% %Z%";
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>                  
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+#include "mrcImage.h"
+#include "llData.h"
+
+extern void configFileRead(FILE* fpt, llExtractInfo* info);
+extern void configFileUsage(FILE* fpt);
+extern void lllExtract(llData* nea, llData* far, mrcImage* in, llExtractInfo* info);
+
+void
+main(int argc, char* argv[]) 
+{
+	long status;
+	llExtractInfo info;
+
+    mrcImage in;
+    llData   near;
+	llData	 far;
+
+	init0(&info);
+    argCheck(&info, argc, argv);
+    init1(&info);
+
+	if(info.flagconfigFile) {
+		configFileRead(info.fptconfigFile, &info);
+	}
+    mrcFileRead(&in, info.inFileName, "main routine", 0);
+
+    lllExtract(&near, &far, &in, &info);
+
+    llDataFileWrite(info.fptOut1, &near, &status);
+    llDataFileWrite(info.fptOut2, &far, &status);
+
+	exit(EXIT_SUCCESS);
+}
+
+void
+additionalUsage()
+{
+	configFileUsage(stderr);
+}
+
+#include <stdio.h>
+#include "String.h"
+#include "Memory.h"
+#include "File.h"
+void
+configFileRead(FILE* fpt, llExtractInfo* info)
+{
+    char s[1024];
+    long i, j, k;
+    fseek(fpt, 0L, SEEK_SET);
+    stringGetFromFile(s, "", fpt, stdout, 3);
+    if(!info->flagTitle) {
+        info->Title = stringGetNthWord(s, 1, " \t,");
+        info->flagTitle++;
+    }
+    
+    stringGetFromFile(s, "", fpt, stdout, 3);
+    if(!info->flagxStep) {
+        info->xStep = stringGetNthRealData(s, 1, " \t,");
+        info->flagxStep++;
+    }
+    
+    if(!info->flagyStep) {
+        info->yStep = stringGetNthRealData(s, 2, " \t,");
+        info->flagyStep++;
+    }
+    
+    stringGetFromFile(s, "", fpt, stdout, 3);
+    if(!info->flagMaxX) {
+        info->MaxX = stringGetNthRealData(s, 1, " \t,");
+        info->flagMaxX++;
+    }
+    
+    if(!info->flagMaY) {
+        info->MaY = stringGetNthRealData(s, 2, " \t,");
+        info->flagMaY++;
+    }
+    
+    stringGetFromFile(s, "", fpt, stdout, 3);
+    if(!info->flagIn) {
+        info->In = stringGetNthWord(s, 1, " \t,");
+        info->fptIn = fileOpen(info->In, "r");
+        info->flagIn++;
+    }
+    
+    stringGetFromFile(s, "", fpt, stdout, 3);
+    if(!info->flagNea) {
+        info->Nea = stringGetNthWord(s, 1, " \t,");
+        info->fptNea = fileOpen(info->Nea, "w");
+        info->flagNea++;
+    }
+    
+    stringGetFromFile(s, "", fpt, stdout, 3);
+    if(!info->flagFar) {
+        info->Far = stringGetNthWord(s, 1, " \t,");
+        info->fptFar = fileOpen(info->Far, "w");
+        info->flagFar++;
+    }
+    
+    stringGetFromFile(s, "", fpt, stdout, 3);
+    if(!info->flagRotationAngle) {
+        info->RotationAngle = stringGetNthRealData(s, 1, " \t,");
+        info->flagRotationAngle++;
+    }
+    
+    stringGetFromFile(s, "", fpt, stdout, 3);
+    if(!info->flagOmega) {
+        info->Omega = stringGetNthRealData(s, 1, " \t,");
+        info->flagOmega++;
+    }
+    
+    stringGetFromFile(s, "", fpt, stdout, 3);
+    if(!info->flagShear) {
+        info->Shear = stringGetNthRealData(s, 1, " \t,");
+        info->flagShear++;
+    }
+    
+    stringGetFromFile(s, "", fpt, stdout, 3);
+    if(!info->flagievery) {
+        info->ievery = stringGetNthIntegerData(s, 1, " \t,");
+        info->flagievery++;
+    }
+    
+    stringGetFromFile(s, "", fpt, stdout, 3);
+    if(!info->flagaxl) {
+        info->axl = stringGetNthRealData(s, 1, " \t,");
+        info->flagaxl++;
+    }
+    
+    stringGetFromFile(s, "", fpt, stdout, 3);
+    if(!info->flagayl) {
+        info->ayl = stringGetNthRealData(s, 1, " \t,");
+        info->flagayl++;
+    }
+    
+    stringGetFromFile(s, "", fpt, stdout, 3);
+    if(!info->flagxShift) {
+        info->xShift = stringGetNthRealData(s, 1, " \t,");
+        info->flagxShift++;
+    }
+    
+    stringGetFromFile(s, "", fpt, stdout, 3);
+    if(!info->flagllMax) {
+        info->llMax = stringGetNthIntegerData(s, 1, " \t,");
+        info->flagllMax++;
+    }
+    
+    stringGetFromFile(s, "", fpt, stdout, 3);
+    if(!info->flagdelRInv) {
+        info->delRInv = stringGetNthRealData(s, 1, " \t,");
+        info->flagdelRInv++;
+    }
+    
+    stringGetFromFile(s, "", fpt, stdout, 3);
+    if(!info->flagOutputInfo) {
+        info->flagOutputInfo = stringGetNthIntegerData(s, 1, " \t,");
+    }
+    
+    if(!info->flagn) {
+        j = ftell(fpt);
+        k = 0; 
+        while(NULL!=stringGetFromFile(s, "", fpt, stdout, 3)) {
+            k++;
+        }
+        fseek(fpt, j, SEEK_SET);
+        j = 0;
+        while(NULL!=stringGetFromFile(s, "", fpt, stdout, 3)) {
+            if(0==j) {
+                info->n = (long*)memoryAllocate(sizeof(long)*k,"configFileRead");
+            }
+            info->n[j] = stringGetNthIntegerData(s, 1, " \t,");
+            info->flagn++;
+    
+            if(0==j) {
+                info->l = (long*)memoryAllocate(sizeof(long)*k,"configFileRead");
+            }
+            info->l[j] = stringGetNthIntegerData(s, 2, " \t,");
+            info->flagl++;
+    
+            if(0==j) {
+                info->Y = (float*)memoryAllocate(sizeof(long)*k,"configFileRead");
+            }
+            info->Y[j] = stringGetNthRealData(s, 3, " \t,");
+            info->flagY++;
+    
+            if(0==j) {
+                info->leftMin = (float*)memoryAllocate(sizeof(long)*k,"configFileRead");
+            }
+            info->leftMin[j] = stringGetNthRealData(s, 4, " \t,");
+            info->flagleftMin++;
+    
+            if(0==j) {
+                info->leftMax = (float*)memoryAllocate(sizeof(long)*k,"configFileRead");
+            }
+            info->leftMax[j] = stringGetNthRealData(s, 5, " \t,");
+            info->flagleftMax++;
+    
+            if(0==j) {
+                info->rightMin = (float*)memoryAllocate(sizeof(long)*k,"configFileRead");
+            }
+            info->rightMin[j] = stringGetNthRealData(s, 6, " \t,");
+            info->flagrightMin++;
+    
+            if(0==j) {
+                info->rightMax = (float*)memoryAllocate(sizeof(long)*k,"configFileRead");
+            }
+            info->rightMax[j] = stringGetNthRealData(s, 7, " \t,");
+            info->flagrightMax++;
+    
+            if(0==j) {
+                info->weight = (float*)memoryAllocate(sizeof(long)*k,"configFileRead");
+            }
+            info->weight[j] = stringGetNthRealData(s, 8, " \t,");
+            info->flagweight++;
+        }
+        j++;
+    }
+    
+}
+#include <stdio.h>
+#include "String.h"
+#include "File.h"
+void
+configFileUsage(FILE* fpt)
+{
+    fprintf(fpt, "----- Control File -----\n");
+    fprintf(fpt, "Title[String:NULL]\t\t\t\t#Title[80]\n");
+    fprintf(fpt, "xStep[Real:1.0]\tyStep[Real:1.0]\t\t\t\t#Step[A]\n");
+    fprintf(fpt, "MaxX[Real:1.0]\tMaY[Real:1.0]\t\t\t\t#Max[GridUnit]\n");
+    fprintf(fpt, "In[inFile:NULL]\t\t\t\t#InputDataFile[mrcImage]\n");
+    fprintf(fpt, "Nea[outFile:NULL]\t\t\t\t#NearSide[llData]\n");
+    fprintf(fpt, "Far[outFile:NULL]\t\t\t\t#FarSide [llData]\n");
+    fprintf(fpt, "RotationAngle[Real:0.0]\t\t\t\t#Ratation Angle [Degree]\n");
+    fprintf(fpt, "Omega[Real:0.0]\t\t\t\t#Omega[Degree]\n");
+    fprintf(fpt, "Shear[Real:0.0]\t\t\t\t#Shear[Degree]\n");
+    fprintf(fpt, "ievery[Integer:0]\t\t\t\t#ievery\n");
+    fprintf(fpt, "axl[Real:0.0]\t\t\t\t#axl\n");
+    fprintf(fpt, "ayl[Real:0.0]\t\t\t\t#ayl\n");
+    fprintf(fpt, "xShift[Real:0.0]\t\t\t\t#[GridUnit]\n");
+    fprintf(fpt, "llMax[Integer:0]\t\t\t\t#\n");
+    fprintf(fpt, "delRInv[Real:0.0]\t\t\t\t#[A]\n");
+    fprintf(fpt, "flagOutputInfo[0or1]");
+    fprintf(fpt, "\t\t\t#\n");
+    fprintf(fpt, "n[Integer:0]\tl[Integer:0]\tY[Real:0.0]\tleftMin[Real:0.0]\tleftMax[Real:0.0]\trightMin[Real:0.0]\trightMax[Real:0.0]\tweight[Real:1.0]\t\t\t\t#\n");
+    fprintf(fpt, "...............\n");
+}
+
+void
+lllExtract(llData* out1, llData* out2, mrcImage* in, THIS_PROGRAM_INFO* info)
+{
+	long l;
+	long count, i;
+	double R, delR, delZ;
+	llComplex* tmpllComplex;
+
+	/* data check */
+	if(info->xStep!=in->HeaderLength.x) {
+		fprintf(stderr, "xStep(%g) in CtrlFile is different from Length.x(%g) in mrcImage\n", info->xStep, in->HeaderLength.x);
+	}
+	if(info->yStep!=in->HeaderLength.y) {
+		fprintf(stderr, "yStep(%g) in CtrlFile is different from Length.y(%g) in mrcImage\n", info->yStep, in->HeaderLength.y);
+	}
+
+	delR = 1.0/(info->xStep*in->HeaderN.x);
+	delZ = 1.0/(info->yStep*in->HeaderN.y);
+    
+    if(delR!=info->delRInv) {
+        fprintf(stderr, "delRInv(%g) in CtrlFile is differnt from Length.x*N.x(%g) in mrcImage\n", info->delRInv, 1.0/delR);
+        fprintf(stderr, "Use delRInv\n");
+        delR = 1.0/info->delRInv;
+    }
+	out1->llMax = out2->llMax = info->llMax;
+	out1->nRMax = out2->nRMax = info->RMax;
+
+	llDataInit(out1);
+	llDataInit(out2);
+	count = 0;
+	for(l=0; l<info->llMax; l++) {
+		/* Near Side */
+		tmpllComplex = out1->LL[l].data;
+		out1->LL[l] = info->llDataInfo[l];
+		out1->LL[l].data = tmpllComplex;
+		out1->LL[l].Side = NearSide;
+		if(out1->LL[l].leftMax>info->RMax || out1->LL[l].rightMax>info->RMax) {
+			fprintf(stderr, "leftMax(%g) or rightMax(%g) in Layer Line (%d, (n,l)=(%d, %d)) is greater than RMax(%g) in CtrlFile\n",
+					out1->LL[l].leftMax, out1->LL[l].rightMax, l, out1->LL[l].nn, out1->LL[l].nl, info->RMax);
+			exit(EXIT_FAILURE);
+		}
+		if(out1->LL[l].nn>=0) {
+			for(R=out1->LL[l].leftMin, i=0; R<out1->LL[l].leftMax; R++, i++) {
+				out1->LL[l].data[i].RR = R*delR;	
+				mrcPixelDataGet(in, -R, out1->LL[l].Z, 0.0, &(out1->LL[l].data[i].F),   mrcPixelMag,    mrcPixelHowNearest);
+				mrcPixelDataGet(in, -R, out1->LL[l].Z, 0.0, &(out1->LL[l].data[i].PHI), mrcPixelPhase,  mrcPixelHowNearest);
+				out1->LL[l].data[i].PHI += 2*PI*out1->LL[l].data[i].RR*info->xShift; 
+			}
+		} else {
+			for(R=out1->LL[l].rightMin, i=0; R<out1->LL[l].rightMax; R++, i++) {
+				out1->LL[l].data[i].RR = R*delR;
+				mrcPixelDataGet(in, R, out1->LL[l].Z, 0.0, &(out1->LL[l].data[i].F),   mrcPixelMag,    mrcPixelHowNearest);
+				mrcPixelDataGet(in, R, out1->LL[l].Z, 0.0, &(out1->LL[l].data[i].PHI), mrcPixelPhase,  mrcPixelHowNearest);
+				out1->LL[l].data[i].PHI -= 2*PI*out1->LL[l].data[i].RR*info->xShift; 
+			}
+		}
+		out1->LL[l].nR = i;
+		/* Far Side */
+		tmpllComplex = out2->LL[l].data;
+		out2->LL[l] = info->llDataInfo[l];
+		out2->LL[l].data = tmpllComplex;
+        out2->LL[l].Side = FarSide;
+		if(out2->LL[l].leftMax>info->RMax || out2->LL[l].rightMax>info->RMax) {
+			fprintf(stderr, "leftMax(%g) or rightMax(%g) in Layer Line (%d, (n,l)=(%d, %d)) is greater than RMax(%g) in CtrlFile\n",
+					out2->LL[l].leftMax, out2->LL[l].rightMax, l, out2->LL[l].nn, out2->LL[l].nl, info->RMax);
+			exit(EXIT_FAILURE);
+		}
+		if(out2->LL[l].nn>=0) {
+			for(R=out2->LL[l].rightMin, i=0; R<out2->LL[l].rightMax; R++, i++) {
+				out2->LL[l].data[i].RR = R*delR;	
+				mrcPixelDataGet(in, R, out2->LL[l].Z, 0.0, &(out2->LL[l].data[i].F),   mrcPixelMag,    mrcPixelHowNearest);
+				mrcPixelDataGet(in, R, out2->LL[l].Z, 0.0, &(out2->LL[l].data[i].PHI), mrcPixelPhase,  mrcPixelHowNearest);
+				out2->LL[l].data[i].PHI -= 2*PI*out2->LL[l].data[i].RR*info->xShift; 
+			}
+		} else {
+			for(R=out2->LL[l].leftMin, i=0; R<out2->LL[l].leftMax; R++, i++) {
+				out2->LL[l].data[i].RR = R*delR;	
+				mrcPixelDataGet(in, -R, out2->LL[l].Z, 0.0, &(out2->LL[l].data[i].F),   mrcPixelMag,    mrcPixelHowNearest);
+				mrcPixelDataGet(in, -R, out2->LL[l].Z, 0.0, &(out2->LL[l].data[i].PHI), mrcPixelPhase,  mrcPixelHowNearest);
+				out2->LL[l].data[i].PHI += 2*PI*out2->LL[l].data[i].RR*info->xShift; 
+			}
+		}
+		out2->LL[l].nR = i;
+		count++;
+	}
+	out1->llMax = count; 
+	out2->llMax = count; 
+}

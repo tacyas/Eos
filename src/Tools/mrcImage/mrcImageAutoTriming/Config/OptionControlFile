@@ -1,0 +1,12 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input:mrcImage","Essential","1","1","In","inFile::mrcImage","NULL"
+"-o","-o[utput]","Output:mrcImage","Essential","1","1","Out","outFile::mrcImage","NULL"
+"-O","-O[utput]","OutputParams:YAML","Optional","1","1","OutParam","outFile::YAML","stdout"
+"-EAMode","-E[uler]A[ngle]Mode","EulerAngle","Optional","1","1","EAMode","String","ZONS"
+"-Rot1","-Rot[ation]1","Rot1","Optional","3","1","Rot1Min","Real","-5","1","Rot1Max","Real","5","3","Rot1Delta","Real","1"
+"-Rot2","-Rot[ation]2","Rot2","Optional","3","1","Rot2Min","Real","-5","1","Rot2Max","Real","5","3","Rot2Delta","Real","1"
+"-Rot3","-Rot[ation]3","Rot3","Optional","3","1","Rot3Min","Real","-5","1","Rot3Max","Real","5","3","Rot3Delta","Real","1"
+"-M","-M[ode]","Iterpolation Mode","Optional","1","1","InterpolationMode","Integer","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

@@ -1,0 +1,8 @@
+.onlineHelp EOS mrcImageCVE "Introduction to mrcImageCVE"
+.
+.section 1 "Introduction to mrcImageCVE"
+.
+.\" This is the help page associated with the Help button on
+.\" the toplevel window of mrcImageCVE
+If you are reading this text,
+you should report it as a bug :-)

@@ -1,0 +1,824 @@
+%!PS-Adobe-2.0
+%%Title: 
+%%Creator: tacyas
+%%CreationDate: Thu Feb 12 14:02:29 2015
+%%For: tacyas
+%%BoundingBox: atend
+%%Pages: atend
+%%DocumentsFonts: atend
+%%EndDocuments
+%%EndProlog
+%%EndComments
+/mt  {moveto} def
+/rmt {rmoveto} def
+/lt  {lineto} def
+/rlt {rlineto} def
+/str {stroke} def
+%%Page:  1
+gsave
+28.346457 28.346457 translate
+/Helvetica findfont 8 scalefont setfont
+/Courier findfont 10.000000 scalefont setfont
+newpath
+-1.000000 400.000000 moveto
+0.000000 400.000000 lineto
+stroke
+newpath
+0.000000 290.000000 moveto
+0.000000 490.000000 lineto
+stroke
+newpath
+0.000000 290.000000 moveto
+20.592810 290.000000 lineto
+stroke
+newpath
+0.000000 490.000000 moveto
+31.279070 490.000000 lineto
+stroke
+-15.000000 401.000000 mt 
+(     5) show
+newpath
+19.592810 290.000000 moveto
+20.592810 290.000000 lineto
+stroke
+newpath
+20.592810 255.000000 moveto
+20.592810 345.000000 lineto
+stroke
+newpath
+20.592810 255.000000 moveto
+38.149666 255.000000 lineto
+stroke
+newpath
+20.592810 345.000000 moveto
+61.276344 345.000000 lineto
+stroke
+5.592810 291.000000 mt 
+(     6) show
+newpath
+37.149666 255.000000 moveto
+38.149666 255.000000 lineto
+stroke
+newpath
+38.149666 225.000000 moveto
+38.149666 280.000000 lineto
+stroke
+newpath
+38.149666 225.000000 moveto
+68.052155 225.000000 lineto
+stroke
+newpath
+38.149666 280.000000 moveto
+61.200729 280.000000 lineto
+stroke
+23.149666 256.000000 mt 
+(    10) show
+newpath
+67.052155 225.000000 moveto
+68.052155 225.000000 lineto
+stroke
+newpath
+68.052155 205.000000 moveto
+68.052155 230.000000 lineto
+stroke
+newpath
+68.052155 205.000000 moveto
+174.997498 205.000000 lineto
+stroke
+newpath
+68.052155 230.000000 moveto
+78.504913 230.000000 lineto
+stroke
+53.052155 226.000000 mt 
+(    11) show
+175.997498 200.000000 mt 
+(    39     11 121p-shift-rot045.mrc-rot030.pad) show
+newpath
+77.504913 230.000000 moveto
+78.504913 230.000000 lineto
+stroke
+newpath
+78.504913 215.000000 moveto
+78.504913 235.000000 lineto
+stroke
+newpath
+78.504913 215.000000 moveto
+174.997498 215.000000 lineto
+stroke
+newpath
+78.504913 235.000000 moveto
+80.506660 235.000000 lineto
+stroke
+63.504913 231.000000 mt 
+(    18) show
+175.997498 210.000000 mt 
+(    38     18 121p-shift-rot045.mrc-rot240.pad) show
+newpath
+79.506660 235.000000 moveto
+80.506660 235.000000 lineto
+stroke
+newpath
+80.506660 225.000000 moveto
+80.506660 240.000000 lineto
+stroke
+newpath
+80.506660 225.000000 moveto
+174.997498 225.000000 lineto
+stroke
+newpath
+80.506660 240.000000 moveto
+80.898560 240.000000 lineto
+stroke
+65.506660 236.000000 mt 
+(    12) show
+175.997498 220.000000 mt 
+(    37     12 121p-shift-rot045.mrc-rot060.pad) show
+newpath
+79.898560 240.000000 moveto
+80.898560 240.000000 lineto
+stroke
+newpath
+80.898560 235.000000 moveto
+80.898560 245.000000 lineto
+stroke
+newpath
+80.898560 235.000000 moveto
+174.997498 235.000000 lineto
+stroke
+newpath
+80.898560 245.000000 moveto
+174.997498 245.000000 lineto
+stroke
+65.898560 241.000000 mt 
+(    19) show
+175.997498 230.000000 mt 
+(    36     19 121p-shift-rot045.mrc-rot270.pad) show
+175.997498 240.000000 mt 
+(    35     10 121p-shift-rot045.mrc-rot000.pad) show
+newpath
+60.200729 280.000000 moveto
+61.200729 280.000000 lineto
+stroke
+newpath
+61.200729 270.000000 moveto
+61.200729 300.000000 lineto
+stroke
+newpath
+61.200729 270.000000 moveto
+64.840668 270.000000 lineto
+stroke
+newpath
+61.200729 300.000000 moveto
+70.830215 300.000000 lineto
+stroke
+46.200729 281.000000 mt 
+(    13) show
+newpath
+63.840668 270.000000 moveto
+64.840668 270.000000 lineto
+stroke
+newpath
+64.840668 260.000000 moveto
+64.840668 280.000000 lineto
+stroke
+newpath
+64.840668 260.000000 moveto
+80.388306 260.000000 lineto
+stroke
+newpath
+64.840668 280.000000 moveto
+75.233315 280.000000 lineto
+stroke
+49.840668 271.000000 mt 
+(    14) show
+newpath
+79.388306 260.000000 moveto
+80.388306 260.000000 lineto
+stroke
+newpath
+80.388306 255.000000 moveto
+80.388306 265.000000 lineto
+stroke
+newpath
+80.388306 255.000000 moveto
+174.997498 255.000000 lineto
+stroke
+newpath
+80.388306 265.000000 moveto
+174.997498 265.000000 lineto
+stroke
+65.388306 261.000000 mt 
+(    15) show
+175.997498 250.000000 mt 
+(    34     15 121p-shift-rot045.mrc-rot150.pad) show
+175.997498 260.000000 mt 
+(    33     14 121p-shift-rot045.mrc-rot120.pad) show
+newpath
+74.233315 280.000000 moveto
+75.233315 280.000000 lineto
+stroke
+newpath
+75.233315 275.000000 moveto
+75.233315 285.000000 lineto
+stroke
+newpath
+75.233315 275.000000 moveto
+174.997498 275.000000 lineto
+stroke
+newpath
+75.233315 285.000000 moveto
+174.997498 285.000000 lineto
+stroke
+60.233315 281.000000 mt 
+(    17) show
+175.997498 270.000000 mt 
+(    32     17 121p-shift-rot045.mrc-rot210.pad) show
+175.997498 280.000000 mt 
+(    31     13 121p-shift-rot045.mrc-rot090.pad) show
+newpath
+69.830215 300.000000 moveto
+70.830215 300.000000 lineto
+stroke
+newpath
+70.830215 295.000000 moveto
+70.830215 305.000000 lineto
+stroke
+newpath
+70.830215 295.000000 moveto
+174.997513 295.000000 lineto
+stroke
+newpath
+70.830215 305.000000 moveto
+174.997513 305.000000 lineto
+stroke
+55.830215 301.000000 mt 
+(    16) show
+175.997513 290.000000 mt 
+(    30     16 121p-shift-rot045.mrc-rot180.pad) show
+175.997513 300.000000 mt 
+(    29      6 121p-shift-rot000.mrc-rot180.pad) show
+newpath
+60.276344 345.000000 moveto
+61.276344 345.000000 lineto
+stroke
+newpath
+61.276344 320.000000 moveto
+61.276344 355.000000 lineto
+stroke
+newpath
+61.276344 320.000000 moveto
+77.152611 320.000000 lineto
+stroke
+newpath
+61.276344 355.000000 moveto
+57.611019 355.000000 lineto
+stroke
+46.276344 346.000000 mt 
+(    22) show
+newpath
+76.152611 320.000000 moveto
+77.152611 320.000000 lineto
+stroke
+newpath
+77.152611 315.000000 moveto
+77.152611 325.000000 lineto
+stroke
+newpath
+77.152611 315.000000 moveto
+174.997498 315.000000 lineto
+stroke
+newpath
+77.152611 325.000000 moveto
+174.997498 325.000000 lineto
+stroke
+62.152611 321.000000 mt 
+(    24) show
+175.997498 310.000000 mt 
+(    28     24 121p-shift-rot090.mrc-rot120.pad) show
+175.997498 320.000000 mt 
+(    27     22 121p-shift-rot090.mrc-rot060.pad) show
+newpath
+56.611019 355.000000 moveto
+57.611019 355.000000 lineto
+stroke
+newpath
+57.611019 340.000000 moveto
+57.611019 365.000000 lineto
+stroke
+newpath
+57.611019 340.000000 moveto
+85.459396 340.000000 lineto
+stroke
+newpath
+57.611019 365.000000 moveto
+68.147385 365.000000 lineto
+stroke
+42.611019 356.000000 mt 
+(     7) show
+newpath
+84.459396 340.000000 moveto
+85.459396 340.000000 lineto
+stroke
+newpath
+85.459396 335.000000 moveto
+85.459396 345.000000 lineto
+stroke
+newpath
+85.459396 335.000000 moveto
+174.997498 335.000000 lineto
+stroke
+newpath
+85.459396 345.000000 moveto
+174.997498 345.000000 lineto
+stroke
+70.459396 341.000000 mt 
+(     9) show
+175.997498 330.000000 mt 
+(    26      9 121p-shift-rot000.mrc-rot270.pad) show
+175.997498 340.000000 mt 
+(    25      7 121p-shift-rot000.mrc-rot210.pad) show
+newpath
+67.147385 365.000000 moveto
+68.147385 365.000000 lineto
+stroke
+newpath
+68.147385 360.000000 moveto
+68.147385 375.000000 lineto
+stroke
+newpath
+68.147385 360.000000 moveto
+81.671570 360.000000 lineto
+stroke
+newpath
+68.147385 375.000000 moveto
+174.997498 375.000000 lineto
+stroke
+53.147385 366.000000 mt 
+(    21) show
+newpath
+80.671570 360.000000 moveto
+81.671570 360.000000 lineto
+stroke
+newpath
+81.671570 355.000000 moveto
+81.671570 365.000000 lineto
+stroke
+newpath
+81.671570 355.000000 moveto
+174.997513 355.000000 lineto
+stroke
+newpath
+81.671570 365.000000 moveto
+174.997513 365.000000 lineto
+stroke
+66.671570 361.000000 mt 
+(    27) show
+175.997513 350.000000 mt 
+(    24     27 121p-shift-rot090.mrc-rot210.pad) show
+175.997513 360.000000 mt 
+(    23     21 121p-shift-rot090.mrc-rot030.pad) show
+175.997498 370.000000 mt 
+(    22      5 121p-shift-rot000.mrc-rot150.pad) show
+newpath
+30.279070 490.000000 moveto
+31.279070 490.000000 lineto
+stroke
+newpath
+31.279070 410.000000 moveto
+31.279070 520.000000 lineto
+stroke
+newpath
+31.279070 410.000000 moveto
+75.440697 410.000000 lineto
+stroke
+newpath
+31.279070 520.000000 moveto
+38.302750 520.000000 lineto
+stroke
+16.279070 491.000000 mt 
+(    20) show
+newpath
+74.440697 410.000000 moveto
+75.440697 410.000000 lineto
+stroke
+newpath
+75.440697 390.000000 moveto
+75.440697 420.000000 lineto
+stroke
+newpath
+75.440697 390.000000 moveto
+79.170464 390.000000 lineto
+stroke
+newpath
+75.440697 420.000000 moveto
+79.163101 420.000000 lineto
+stroke
+60.440697 411.000000 mt 
+(    26) show
+newpath
+78.170464 390.000000 moveto
+79.170464 390.000000 lineto
+stroke
+newpath
+79.170464 385.000000 moveto
+79.170464 395.000000 lineto
+stroke
+newpath
+79.170464 385.000000 moveto
+174.997498 385.000000 lineto
+stroke
+newpath
+79.170464 395.000000 moveto
+174.997498 395.000000 lineto
+stroke
+64.170464 391.000000 mt 
+(    28) show
+175.997498 380.000000 mt 
+(    21     28 121p-shift-rot090.mrc-rot240.pad) show
+175.997498 390.000000 mt 
+(    20     26 121p-shift-rot090.mrc-rot180.pad) show
+newpath
+78.163101 420.000000 moveto
+79.163101 420.000000 lineto
+stroke
+newpath
+79.163101 410.000000 moveto
+79.163101 430.000000 lineto
+stroke
+newpath
+79.163101 410.000000 moveto
+85.709167 410.000000 lineto
+stroke
+newpath
+79.163101 430.000000 moveto
+88.436066 430.000000 lineto
+stroke
+64.163101 421.000000 mt 
+(    23) show
+newpath
+84.709167 410.000000 moveto
+85.709167 410.000000 lineto
+stroke
+newpath
+85.709167 405.000000 moveto
+85.709167 415.000000 lineto
+stroke
+newpath
+85.709167 405.000000 moveto
+174.997513 405.000000 lineto
+stroke
+newpath
+85.709167 415.000000 moveto
+174.997513 415.000000 lineto
+stroke
+70.709167 411.000000 mt 
+(    25) show
+175.997513 400.000000 mt 
+(    19     25 121p-shift-rot090.mrc-rot150.pad) show
+175.997513 410.000000 mt 
+(    18     23 121p-shift-rot090.mrc-rot090.pad) show
+newpath
+87.436066 430.000000 moveto
+88.436066 430.000000 lineto
+stroke
+newpath
+88.436066 425.000000 moveto
+88.436066 435.000000 lineto
+stroke
+newpath
+88.436066 425.000000 moveto
+174.997498 425.000000 lineto
+stroke
+newpath
+88.436066 435.000000 moveto
+174.997498 435.000000 lineto
+stroke
+73.436066 431.000000 mt 
+(    29) show
+175.997498 420.000000 mt 
+(    17     29 121p-shift-rot090.mrc-rot270.pad) show
+175.997498 430.000000 mt 
+(    16     20 121p-shift-rot090.mrc-rot000.pad) show
+newpath
+37.302750 520.000000 moveto
+38.302750 520.000000 lineto
+stroke
+newpath
+38.302750 490.000000 moveto
+38.302750 570.000000 lineto
+stroke
+newpath
+38.302750 490.000000 moveto
+60.692902 490.000000 lineto
+stroke
+newpath
+38.302750 570.000000 moveto
+65.091972 570.000000 lineto
+stroke
+23.302750 521.000000 mt 
+(    30) show
+newpath
+59.692902 490.000000 moveto
+60.692902 490.000000 lineto
+stroke
+newpath
+60.692902 450.000000 moveto
+60.692902 500.000000 lineto
+stroke
+newpath
+60.692902 450.000000 moveto
+79.701660 450.000000 lineto
+stroke
+newpath
+60.692902 500.000000 moveto
+62.136581 500.000000 lineto
+stroke
+45.692902 491.000000 mt 
+(    32) show
+newpath
+78.701660 450.000000 moveto
+79.701660 450.000000 lineto
+stroke
+newpath
+79.701660 445.000000 moveto
+79.701660 455.000000 lineto
+stroke
+newpath
+79.701660 445.000000 moveto
+174.997498 445.000000 lineto
+stroke
+newpath
+79.701660 455.000000 moveto
+174.997498 455.000000 lineto
+stroke
+64.701660 451.000000 mt 
+(    35) show
+175.997498 440.000000 mt 
+(    15     35 121p-shift-rot135.mrc-rot150.pad) show
+175.997498 450.000000 mt 
+(    14     32 121p-shift-rot135.mrc-rot060.pad) show
+newpath
+61.136581 500.000000 moveto
+62.136581 500.000000 lineto
+stroke
+newpath
+62.136581 465.000000 moveto
+62.136581 505.000000 lineto
+stroke
+newpath
+62.136581 465.000000 moveto
+174.997513 465.000000 lineto
+stroke
+newpath
+62.136581 505.000000 moveto
+63.934158 505.000000 lineto
+stroke
+47.136581 501.000000 mt 
+(    37) show
+175.997513 460.000000 mt 
+(    13     37 121p-shift-rot135.mrc-rot210.pad) show
+newpath
+62.934158 505.000000 moveto
+63.934158 505.000000 lineto
+stroke
+newpath
+63.934158 490.000000 moveto
+63.934158 525.000000 lineto
+stroke
+newpath
+63.934158 490.000000 moveto
+73.213654 490.000000 lineto
+stroke
+newpath
+63.934158 525.000000 moveto
+82.299454 525.000000 lineto
+stroke
+48.934158 506.000000 mt 
+(    31) show
+newpath
+72.213654 490.000000 moveto
+73.213654 490.000000 lineto
+stroke
+newpath
+73.213654 480.000000 moveto
+73.213654 500.000000 lineto
+stroke
+newpath
+73.213654 480.000000 moveto
+76.809944 480.000000 lineto
+stroke
+newpath
+73.213654 500.000000 moveto
+83.143570 500.000000 lineto
+stroke
+58.213654 491.000000 mt 
+(    34) show
+newpath
+75.809944 480.000000 moveto
+76.809944 480.000000 lineto
+stroke
+newpath
+76.809944 475.000000 moveto
+76.809944 485.000000 lineto
+stroke
+newpath
+76.809944 475.000000 moveto
+174.997513 475.000000 lineto
+stroke
+newpath
+76.809944 485.000000 moveto
+174.997513 485.000000 lineto
+stroke
+61.809944 481.000000 mt 
+(    38) show
+175.997513 470.000000 mt 
+(    12     38 121p-shift-rot135.mrc-rot240.pad) show
+175.997513 480.000000 mt 
+(    11     34 121p-shift-rot135.mrc-rot120.pad) show
+newpath
+82.143570 500.000000 moveto
+83.143570 500.000000 lineto
+stroke
+newpath
+83.143570 495.000000 moveto
+83.143570 505.000000 lineto
+stroke
+newpath
+83.143570 495.000000 moveto
+174.997498 495.000000 lineto
+stroke
+newpath
+83.143570 505.000000 moveto
+174.997498 505.000000 lineto
+stroke
+68.143570 501.000000 mt 
+(    39) show
+175.997498 490.000000 mt 
+(    10     39 121p-shift-rot135.mrc-rot270.pad) show
+175.997498 500.000000 mt 
+(     9     31 121p-shift-rot135.mrc-rot030.pad) show
+newpath
+81.299454 525.000000 moveto
+82.299454 525.000000 lineto
+stroke
+newpath
+82.299454 520.000000 moveto
+82.299454 535.000000 lineto
+stroke
+newpath
+82.299454 520.000000 moveto
+84.879753 520.000000 lineto
+stroke
+newpath
+82.299454 535.000000 moveto
+174.997513 535.000000 lineto
+stroke
+67.299454 526.000000 mt 
+(    33) show
+newpath
+83.879753 520.000000 moveto
+84.879753 520.000000 lineto
+stroke
+newpath
+84.879753 515.000000 moveto
+84.879753 525.000000 lineto
+stroke
+newpath
+84.879753 515.000000 moveto
+174.997513 515.000000 lineto
+stroke
+newpath
+84.879753 525.000000 moveto
+174.997513 525.000000 lineto
+stroke
+69.879753 521.000000 mt 
+(    36) show
+175.997513 510.000000 mt 
+(     8     36 121p-shift-rot135.mrc-rot180.pad) show
+175.997513 520.000000 mt 
+(     7     33 121p-shift-rot135.mrc-rot090.pad) show
+175.997513 530.000000 mt 
+(     6     30 121p-shift-rot135.mrc-rot000.pad) show
+newpath
+64.091972 570.000000 moveto
+65.091972 570.000000 lineto
+stroke
+newpath
+65.091972 550.000000 moveto
+65.091972 580.000000 lineto
+stroke
+newpath
+65.091972 550.000000 moveto
+79.850204 550.000000 lineto
+stroke
+newpath
+65.091972 580.000000 moveto
+68.735550 580.000000 lineto
+stroke
+50.091972 571.000000 mt 
+(     4) show
+newpath
+78.850204 550.000000 moveto
+79.850204 550.000000 lineto
+stroke
+newpath
+79.850204 545.000000 moveto
+79.850204 555.000000 lineto
+stroke
+newpath
+79.850204 545.000000 moveto
+174.997513 545.000000 lineto
+stroke
+newpath
+79.850204 555.000000 moveto
+174.997513 555.000000 lineto
+stroke
+64.850204 551.000000 mt 
+(     8) show
+175.997513 540.000000 mt 
+(     5      8 121p-shift-rot000.mrc-rot240.pad) show
+175.997513 550.000000 mt 
+(     4      4 121p-shift-rot000.mrc-rot120.pad) show
+newpath
+67.735550 580.000000 moveto
+68.735550 580.000000 lineto
+stroke
+newpath
+68.735550 570.000000 moveto
+68.735550 590.000000 lineto
+stroke
+newpath
+68.735550 570.000000 moveto
+87.326599 570.000000 lineto
+stroke
+newpath
+68.735550 590.000000 moveto
+83.277847 590.000000 lineto
+stroke
+53.735550 581.000000 mt 
+(     1) show
+newpath
+86.326599 570.000000 moveto
+87.326599 570.000000 lineto
+stroke
+newpath
+87.326599 565.000000 moveto
+87.326599 575.000000 lineto
+stroke
+newpath
+87.326599 565.000000 moveto
+174.997498 565.000000 lineto
+stroke
+newpath
+87.326599 575.000000 moveto
+174.997498 575.000000 lineto
+stroke
+72.326599 571.000000 mt 
+(     2) show
+175.997498 560.000000 mt 
+(     3      2 121p-shift-rot000.mrc-rot060.pad) show
+175.997498 570.000000 mt 
+(     2      1 121p-shift-rot000.mrc-rot030.pad) show
+newpath
+82.277847 590.000000 moveto
+83.277847 590.000000 lineto
+stroke
+newpath
+83.277847 585.000000 moveto
+83.277847 595.000000 lineto
+stroke
+newpath
+83.277847 585.000000 moveto
+174.997498 585.000000 lineto
+stroke
+newpath
+83.277847 595.000000 moveto
+174.997498 595.000000 lineto
+stroke
+68.277847 591.000000 mt 
+(     3) show
+175.997498 580.000000 mt 
+(     1      3 121p-shift-rot000.mrc-rot090.pad) show
+175.997498 590.000000 mt 
+(     0      0 121p-shift-rot000.mrc-rot000.pad) show
+newpath
+174.997498 0.000000 moveto
+74.997498 0.000000 lineto
+stroke
+newpath
+174.997498 -5.000000 moveto
+174.997498 5.000000 lineto
+stroke
+173.997498 10.000000 mt 
+( +1.0) show
+newpath
+74.997498 -5.000000 moveto
+74.997498 5.000000 lineto
+stroke
+73.997498 10.000000 mt 
+( +2.0) show
+0.000000 -20.000000 mt 
+(/Users/tacyas/Eos/bin/X86MAC64/clusterShow -i all.log -PS all.logps -Last 1 -S 10 100 -P 0 400 -Log -Scaling -Offset 1e1 -I all.padlst -OL all.padsortlst -AL all.avgsortlst 0 avg -OT all.treeinfo ) show
+grestore
+showpage
+%%EndPage:  1

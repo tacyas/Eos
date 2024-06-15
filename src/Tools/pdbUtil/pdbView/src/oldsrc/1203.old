@@ -1,0 +1,708 @@
+/*
+  # pdbView : $Revision$  
+  # $Date$ 
+  # Created by $Author$
+  # Usage : pdbView
+  # Attention
+  #   $Loccker$
+  #  	$State$ 
+  #
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <stream.h>
+#include "vtk.h"
+
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+
+#define DEBUG
+#include "genUtil.h"
+#include "pdbFile.h"
+
+#include "vtkTextMapper.h"
+#include "vtkPicker.h"
+
+#define ON 1
+#define OFF 0
+
+
+class DataStore{
+  
+private:
+  pdbRecord* pickPdb[1000];
+  vtkActor* pickActor[1000];
+  vtkPolyDataMapper* pickMapper[1000];
+  
+  DataStore* NEXT;
+
+public:
+  
+  DataStore::DataStore();
+  void DataStore::SET(pdbRecord* pdb, void* actor, void* mapper, int i);
+  vtkPolyDataMapper* DataStore::GetMapper(int i);
+  pdbRecord* DataStore::GetPdb(int i);
+};
+
+DataStore::DataStore()
+{
+  int i;
+  for(i=0;i<1000;i++)
+    {
+  pickPdb[i] = NULL;
+  pickActor[i] = NULL;
+  pickMapper[i] = NULL;
+    }
+  // else{
+  //cout << form("Error!! i>1000!!\n");
+  // }
+}
+
+void DataStore::SET(pdbRecord* pdb, void* actor, void* mapper, int i)
+{
+  if(i<1000)
+    {
+  pickPdb[i] = (pdbRecord*)pdb;
+  pickActor[i] = (vtkActor*)actor;
+  pickMapper[i] = (vtkPolyDataMapper*)mapper;
+  cout << form("DataStpre::SET pickMapper = %d : pdb = %d\n",pickMapper[i],pickPdb[i]);
+    }
+  else{
+ cout << form("Error!! i>1000!!\n");
+  }
+}
+
+
+vtkPolyDataMapper* DataStore::GetMapper(int i)
+{
+  cout << form("DataStore::GetMapper:%d\n",pickMapper[i]);
+  return pickMapper[i];
+}
+
+pdbRecord* DataStore::GetPdb(int i)
+{
+  cout << form("DataStore::GetPdb:%d:i=%d:%s\n",pickPdb[i],i,pickPdb[i]->ResidueName);
+  return pickPdb[i];
+}
+
+
+
+
+class ProteinFactory
+{
+private:
+  pdbFile* pdb;
+
+
+public:
+  proteinFactory();
+
+
+};
+
+ProteinFactory::ProteinFactory()
+{
+
+}
+
+ProteinFactory::()
+{
+
+  float x;
+  float y;
+  float z;
+  int i=0;
+
+  moleData = vtkAssembly::New();
+
+  pdbFileTop(pdb);
+  while(1){
+    if(pdbFileIsCA(pdb)){
+      pdbFileCoordGet(pdb, &x, &y, &z);
+
+      if(flagSphere == ON){
+      }else if(flagCross == ON){
+
+      }else{
+
+      }
+
+
+
+
+
+      /*      
+      molecule = vtkSphereSource::New();
+      molecule->SetRadius(moleculeRadius);
+      molecule->SetThetaResolution(resolution);
+      molecule->SetPhiResolution(resolution);
+      molecule->SetCenter(0,0,0);
+      moleculeMapper = vtkPolyDataMapper::New();
+      moleculeMapper->SetInput(molecule->GetOutput());
+      moleculeActor= vtkActor::New();
+      moleculeActor->SetMapper(moleculeMapper);
+      moleculeActor->SetPosition(x,y,z);
+      moleculeActor->GetProperty()->SetColor(moleculeColor);
+
+  moleculeActor->GetProperty()->SetOpacity(0.5);
+
+      moleData->AddPart(moleculeActor);
+      
+      dataStore->SET(pdb->PDB,moleculeActor,moleculeMapper,i);
+
+      //cout << form("AddRess---A=%d,M=%d\n",moleculeActor , moleculeMapper);
+      
+      i=i+1;
+    }     
+    if(pdbFileEnd(pdb)){
+      break;
+    } else {
+      pdbFileNext(pdb);
+    }
+  }
+  
+  ren->AddActor(moleData);
+
+}
+
+
+ProteinFactory::
+
+
+eosPdbFactory::SetMoleculeStyle()
+{
+
+      molecule = vtkSphereSource::New();
+      molecule->SetRadius(moleculeRadius);
+      molecule->SetThetaResolution(resolution);
+      molecule->SetPhiResolution(resolution);
+      molecule->SetCenter(0,0,0);
+
+
+
+
+      molecule->SetCenter(0,0,0);
+
+}
+
+eosPdbFactory::CreateActors()
+{
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+class eosPdbSource{
+
+private:
+  pdbFile* pdb;
+  double moleculeRadius;
+  //float x;
+  //float y;
+  //float z;
+  //int i;
+  int resolution;
+  float moleculeColor[3];
+
+  //eosPickData* pickData;
+
+  vtkAssembly* moleData;
+  vtkSphereSource* molecule;
+  vtkPolyDataMapper* moleculeMapper;
+  vtkActor* moleculeActor;
+
+  vtkRenderer* ren;
+
+  DataStore* dataStore;
+ 
+
+private:
+  void reset();
+
+  public:
+  eosPdbSource();
+  void Draw();
+  void SetColor(double c1,double c2,double c3);
+  void SetPdb(void* p);
+  void SetDataStore(void* data);
+  void SetRenderer(void* renderer);
+
+};
+
+eosPdbSource::eosPdbSource()
+{
+  moleculeRadius = 1.6;
+  resolution = 5;
+  moleculeColor[0] = 0.5;
+  moleculeColor[1] = 0.5;
+  moleculeColor[2] = 0.5;
+  reset();
+}
+
+void eosPdbSource::reset()
+{
+
+}
+
+
+void eosPdbSource::SetColor(double c1,double c2,double c3)
+{
+
+  if(c1 < 1.0)
+    moleculeColor[0] = c1;
+  if (c2 < 1.0)
+    moleculeColor[1] = c2;
+  if (c3 < 1.0)
+  moleculeColor[2] = c3;
+
+}
+
+void eosPdbSource::SetDataStore(void* data)
+{
+    dataStore = (DataStore*)data;
+}
+
+
+void eosPdbSource::SetPdb(void* p)
+{
+  pdb = (pdbFile*)p;
+}
+
+void eosPdbSource::SetRenderer(void* renderer)
+{
+  ren = (vtkRenderer*)renderer;
+  Draw();
+}
+
+
+void eosPdbSource::Draw()
+{
+  float x;
+  float y;
+  float z;
+  int i=0;
+
+  moleData = vtkAssembly::New();
+  pdbFileTop(pdb);
+  while(1){
+    if(pdbFileIsCA(pdb)){
+      pdbFileCoordGet(pdb, &x, &y, &z);
+      
+      //pickData = new eosPickData(j);
+      
+      molecule = vtkSphereSource::New();
+      molecule->SetRadius(moleculeRadius);
+      molecule->SetThetaResolution(resolution);
+      molecule->SetPhiResolution(resolution);
+      molecule->SetCenter(0,0,0);
+      moleculeMapper = vtkPolyDataMapper::New();
+      moleculeMapper->SetInput(molecule->GetOutput());
+      moleculeActor= vtkActor::New();
+      moleculeActor->SetMapper(moleculeMapper);
+      moleculeActor->SetPosition(x,y,z);
+      moleculeActor->GetProperty()->SetColor(moleculeColor);
+
+  moleculeActor->GetProperty()->SetOpacity(0.5);
+
+      moleData->AddPart(moleculeActor);
+      
+      dataStore->SET(pdb->PDB,moleculeActor,moleculeMapper,i);
+
+      //cout << form("AddRess---A=%d,M=%d\n",moleculeActor , moleculeMapper);
+      
+      i=i+1;
+    }     
+    if(pdbFileEnd(pdb)){
+      break;
+    } else {
+      pdbFileNext(pdb);
+    }
+  }
+  
+  ren->AddActor(moleData);
+}
+
+
+class DataSearcher{
+private:
+  DataStore* dataStore;
+  pdbFile* pdb;
+public:
+  DataSearcher();
+  void DataSearcher::SetData(void* data);
+  pdbRecord* DataSearcher::GetData(vtkAbstractMapper3D* mapper);
+  
+};
+
+DataSearcher::DataSearcher()
+{
+  
+}
+
+void DataSearcher::SetData(void* data)
+{
+ 
+  dataStore = (DataStore*)data;
+}
+
+pdbRecord* DataSearcher::GetData(vtkAbstractMapper3D* mapper)
+{
+  int i;
+  vtkAbstractMapper3D* map;
+  
+  for(i=0; i<1000 ; i++){
+    map = dataStore->GetMapper(i);
+    if(mapper == map){
+      return dataStore->GetPdb(i);
+    }else if(map == NULL){
+      return NULL;
+    }
+  }
+  return NULL;
+}
+
+
+
+class eosDataPicker{
+private:
+
+  vtkActor* pickActor;
+  vtkAbstractMapper3D* pickMapper;
+
+  vtkFollower* textActor;
+  vtkPolyDataMapper* textMapper;
+  vtkVectorText* text;
+
+  vtkRenderer* ren;
+  vtkCellPicker* picker;
+
+  pdbRecord* pdbData;
+ 
+  DataStore* dataStore;
+  DataSearcher* dataSearcher;
+
+public:
+  eosDataPicker();
+
+  vtkCellPicker* eosDataPicker::GetPicker();
+  void SetData(void* renderer, void* ppdb, void* data);
+  static void annotatePick(void* arg);
+  void annotatePick0();
+  vtkAbstractMapper3D* GetPickMapper();
+
+};
+
+eosDataPicker::eosDataPicker()
+{
+  picker = vtkCellPicker::New();  
+  textActor = vtkFollower::New();
+  textMapper = vtkPolyDataMapper::New();
+  text = vtkVectorText::New();
+  dataSearcher = new DataSearcher;
+
+  cout << form("eosDataPicker::eosDataPicker!!\n");
+
+  picker->SetEndPickMethod(&annotatePick, this);
+}
+
+void eosDataPicker::SetData(void* renderer, void* ppdb, void* data)
+{
+  ren = (vtkRenderer*)renderer;
+  dataStore = (DataStore*)data;
+  dataSearcher->SetData(dataStore);
+
+  cout << form("eosDataPicker::GetData!!\n");
+}
+
+void eosDataPicker::annotatePick(void* picker)
+{
+  //vtkRenderer* ren = (vtkRenderer*)arg;
+
+  cout << form("eosDataPicker::annotatePick!!\n");
+
+  ((eosDataPicker*)picker)->annotatePick0();
+}
+
+vtkCellPicker* eosDataPicker::GetPicker()
+{
+  return picker;
+}
+
+vtkAbstractMapper3D* eosDataPicker::GetPickMapper()
+{
+  return pickMapper;
+}
+
+void eosDataPicker::annotatePick0()
+{
+
+  float xp;
+  float yp;
+  float zp;
+  float* pickPos;
+
+  //-p1=nothings was picked
+  if((picker->GetCellId()) < 0)
+    {
+      textActor->VisibilityOff();
+    }else{
+      
+      pickPos = picker->GetPickPosition();
+      
+      xp = pickPos[0];
+      yp = pickPos[1];
+      zp = pickPos[2];
+      
+      pickActor = picker->GetActor();
+      pickMapper = picker->GetMapper();
+      
+      cout << form("address+++A=%d,M=%d\n",pickActor , pickMapper);
+      
+      pdbData = dataSearcher->GetData(pickMapper);
+
+      if(pdbData!=NULL){
+	text->SetText(form("%s",pdbData->ResidueName));  
+      }else{
+	text->SetText("Not Identified");
+      }
+            
+      //3D TEXT VERSION
+      
+      //text->SetText(form("%f,%f,%f",xp,yp,zp));
+      textMapper->SetInput(text->GetOutput());
+      textActor->SetMapper(textMapper);
+      textActor->SetScale(0.3,0.3,0.3);
+      textActor->SetPosition(xp,yp,zp);
+      textActor->SetCamera(ren->GetActiveCamera()); 
+      ren->AddActor(textActor);
+
+    }
+     
+}
+
+class PickedMapperList
+{
+private:
+  vtkAbstractMapper3D* pickMapper;
+  PickedMapperList* NEXT;
+  PickedMapperList* PREV;
+
+public:
+
+};
+
+PickedMapperList::PickedMapperList()
+{
+
+}
+
+PickedMapperList::ADD()
+{
+
+}
+
+PickedMapperList::DELETE()
+{
+
+}
+
+
+
+class PickerProp
+{
+private:
+  vtkAbstractMapper3D* pickMapper;
+
+public:
+
+
+
+};
+
+PickerProp::PickerProp()
+{
+
+}
+
+PickerProp::PickedMapperList()
+{
+  vtkAbstructMapper3D* PickedMapper;
+  PickedMapperList* NEXT;
+  PickedMapperList* PREV;
+}
+
+PickerProp::SetPickMapper(void* pickM)
+{
+  pickMapper = (vtkAbstractMapper3D*)pickM;
+}
+
+PickerProp::NEWorOLD()
+{
+
+
+
+
+}
+
+
+
+/*
+  Example:
+  typedef struct lpdbViewInfo {
+  float a;
+  int   b;
+  } lpdbViewInfo;
+  
+  typedef enum lpdbViewMode {
+  a=0,
+  b=1
+  } lpdbViewMode;
+*/
+
+
+int
+main(int argc, char* argv[]) 
+{
+
+  pdbViewInfo info;
+  pdbFile pdb;
+  pdbFile* ppdb;
+
+  ppdb = &pdb;
+  
+  init0(&info);
+  argCheck(&info, argc, argv);
+  init1(&info);
+  
+  DEBUGPRINT("Program Start\n");
+  cout << "start C++\n";
+  pdbFileRead(info.fptIn, &pdb);
+  
+  vtkRenderer *ren = vtkRenderer::New();
+  vtkRenderWindow *renWindow = vtkRenderWindow::New();
+  renWindow->AddRenderer(ren);
+  vtkRenderWindowInteractor *iren = vtkRenderWindowInteractor::New();
+  iren->SetRenderWindow(renWindow);
+
+  DataStore dataStore;
+  eosPdbSource pdbSource;
+
+  pdbSource.SetDataStore(&dataStore);
+  pdbSource.SetPdb(ppdb);
+  pdbSource.SetRenderer(ren);
+
+ 
+  eosDataPicker dataPicker;
+  dataPicker.SetData(ren,&pdbSource,&dataStore);
+iren->SetPicker(dataPicker.GetPicker());
+
+  //eosPickerCheck pickerCheck;
+
+  //pickerCheck.SetData(ren,&dataStore);
+  //pickerCheck.SetPicker(dataPicker.GetPicker());
+  //pickerCheck.SetPickMapper(dataPicker.GetPickMapper());
+
+  //dataPicker.SetData(ren,&pdbSource,&dataStore);
+
+
+
+
+  //iren->SetPicker(dataPicker.GetPicker());
+
+
+
+  //cout << form("DataPicker=%d \n",&(dataPicker.annotatePick));
+
+  //  cout << dataPicker.annotatePick "\n";
+
+  //  dataPicker.picker->SetEndPickMetchod(*(dataPicker.annotatePick),ren);
+  //dataPicker.picker->SetEndPickMetchod(&(annotatePick),&dataPicker);
+  //iren->SetPicker(dataPicker.picker);
+
+  //picker->SetEndPickMethod(&annotatePick,ren);
+  //iren->SetPicker(picker);
+
+
+
+  //SET TEXT 2D VERSION
+  vtkTextMapper* tMapper = vtkTextMapper::New();
+  tMapper->SetInput("testShow");
+  tMapper->ShadowOn();
+
+  vtkActor2D* tActor = vtkActor2D::New();
+  tActor->SetMapper(tMapper);
+  tActor->SetPosition(0,0);
+
+  ren->AddActor2D(tActor);
+
+
+  //Axes
+  vtkAxes* axes = vtkAxes::New();
+  axes->SetOrigin(0,0,0);
+  vtkPolyDataMapper* axesMapper = vtkPolyDataMapper::New();
+  axesMapper->SetInput(axes->GetOutput());
+  vtkActor* axesActor = vtkActor::New();
+  axesActor->SetMapper(axesMapper);
+  ren->AddActor(axesActor);
+
+
+  //Cube
+  vtkCubeSource *cube = vtkCubeSource::New();
+  cube->SetCenter(0,0,0);
+  cube->SetXLength(5);
+  cube->SetYLength(5);
+  cube->SetZLength(5);
+  //cube->SetBounds(0.0,0.5,0.0,0.3,0.0,0.2);
+  vtkPolyDataMapper *cubeMapper = vtkPolyDataMapper::New();
+  cubeMapper->SetInput(cube->GetOutput());
+  vtkActor *cubeActor = vtkActor::New();
+  cubeActor->SetMapper(cubeMapper);
+  cubeActor->GetProperty()->SetOpacity(0.5);
+  cubeActor->GetProperty()->SetColor(0.4,0.4,0.7);
+  
+  
+  
+  //assign our actor to the renderer
+  
+  ren->AddActor(cubeActor);
+  ren->SetBackground(0,0,0);
+  
+  ren->ResetCamera();
+  
+  renWindow->PolygonSmoothingOff();
+  renWindow->PointSmoothingOff();
+  renWindow->LineSmoothingOff();
+  
+  renWindow->SetSize(400,400);
+  
+  //draw the resulting scene
+  renWindow->Render();
+  
+  //Begin mouse interaction
+  iren->Start();
+  
+  //picker->Pick( 200, 200, 0, ren);
+  
+  exit(EXIT_SUCCESS);
+}
+
+void
+additionalUsage()
+{
+  fprintf(stderr, "----- Additional Usage -----\n");
+}

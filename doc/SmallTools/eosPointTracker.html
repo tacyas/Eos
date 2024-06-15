@@ -1,0 +1,38 @@
+<HTML>
+<HEAD>
+<TITLE>eosPointTracker</TITLE>
+</HEAD>
+<BODY>
+<H1>eosPointTracker</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: eosPointTracker
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFileList::ASCII::eosPoint) ] :Essential :Input: Tracker2D[eosPoint]
+    [-i[nput]P[arameter] InParam             (NULL      ).as(inFileList::ASCII   ) ] :Essential :Input: InitialParams
+    [-o[utput]           Out                 (NULL      ).as(outFile::ASCII::eosPoint) ] :Essential :Output: Tracker3D[eosPoint]
+    [-o[utput]2D         Out2D               (NULL      ).as(outFileList::ASCII::eosPoint) ] :Essential :Output: Tracker3D[eosPoint]
+    [-o[utput]P[arameter]OutParam            (NULL      ).as(outFileList::ASCII  ) ] :Essential :Output: Params
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+----- input; -i  -----
+-i pointListPerEachImage
+point2d.000
+point2d.001
+.....
+EachFile::eosPoint(type3)
+x0 y0 0 weight0 sigx0 sigy0 0
+x1 y1 0 weight1 sigx1 sigy1 0
+.....
+----- input; -iP  -----
+matInit.000
+matInit.001
+.....
+EachFile:: ex.tiltSeries  tiltInfo Y->X->Z
+image000 YOYS tiltAngle0 tiltAxisBeta0 tiltAxisAlpha0 axisShiftX0 axisShiftY0
+image001 YOYS tiltAngle1 tiltAxisBeta1 tiltAxisAlpha1 axisShiftX1 axisShiftY1
+.....
+</PRE>
+</BODY>
+</HTML>

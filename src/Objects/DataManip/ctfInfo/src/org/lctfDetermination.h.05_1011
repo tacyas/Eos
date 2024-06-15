@@ -1,0 +1,31 @@
+/*
+# %M% %Y% %I%
+# The latest update : %G% at %U%
+#
+#%Z% lctfDetermination ver %I%
+#%Z% Created by 
+#%Z%
+#%Z% Usage : lctfDetermination 
+#%Z% Attention
+#%Z%
+*/
+#ifndef LCTF_DETERMINATION_H
+#define LCTF_DETERMINATION_H
+
+#include "mrcImage.h"
+#include "ctfInfo.h"
+#include "./powerspectraTangentLine.h"
+
+/* prototype begin */
+
+extern void lctfDeterminationbyMinMaxMethods(ctfInfo* res, mrcImage* mrc, ctfInfo* ini, long mode);
+extern void lctfDeterminationbyFittingMethods(ctfInfo* res, ctfInfo* var, mrcImage* mrc, ctfInfo* ini, long mode);
+extern void angularDistributionFunctionOfSignalAndNoise(float x, float p[], float* y, float dyda[], int na);
+extern void lctfDeterminationbyDifferentialMethods(ctfInfo* res, mrcImage* mrc, ctfInfo* ini,long* ThonRing, long mode);
+extern void lctfDeterminationbyCovarianceMethods(ctfInfo* res, mrcImage* mrc, ctfInfo* ini,long* ThonRing, long mode);
+extern void lctfDeterminationbyMixMethods(ctfInfo* res, mrcImage* mrc, ctfInfo* ini, long* ThonRing,long mode);
+extern void lctfDeterminationbyMinSquareMethods(ctfInfo* res, mrcImage* mrc, ctfInfo* ini,long* ThonRing,lctfDetermineInfo* linfo,floatVector* defocus,floatVector* Eres ,long mode);
+extern void lctfDeterminationByTangent(ctfInfo* res, mrcImage* mrc, ctfInfo* ini,lctfDetermineInfo* linfo,floatVector* defocus,floatVector* Eres, long mode);
+/* prototype end */
+
+#endif /* LCTF_DETERMINATION_H */

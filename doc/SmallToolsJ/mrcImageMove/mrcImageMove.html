@@ -1,0 +1,156 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageMove</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageMove<br></h2></b></font>
+	<h4>mrcImage画像を動かす</h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>オプション</th>
+				<th>必須項目/選択項目</th>
+				<th>説明</th>
+				<th>デフォルト</th>
+			</tr>
+			<tr>
+				<td>-i</td>
+				<td>必須</td>
+				<td>入力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-o</td>
+				<td>必須</td>
+				<td>出力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-x</td>
+				<td>選択</td>
+				<td>x軸の値設定</td>
+				<td>0.0</td>
+			</tr>
+			<tr>
+				<td>-y</td>
+				<td>選択</td>
+				<td>y軸の値設定</td>
+				<td>0.0</td>
+			</tr>
+			<tr>
+				<td>-z</td>
+				<td>選択</td>
+				<td>z軸の値設定</td>
+				<td>0.0</td>
+			</tr>
+			<tr>
+				<td>-h</td>
+				<td>選択</td>
+				<td>ヘルプを表示</td>
+				<td>　</td>
+			</tr>
+			</div>
+		</table>
+
+	<h4>******実行例******</h4>	
+		
+<!-- 入力ファイル説明 -->
+
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="b120.png" border="0" alt="b120.png(6753 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-64.5759<br>
+				93.0617<br>
+				5.50826<br>
+				20.7262<br>
+				0.259078<br></p>
+			</td>
+		</tr>
+	</table>
+	
+<!-- 必須項目のみで出力 -->
+	<br>
+	<br>
+	<caption><font color="blue">------オプション必須項目のみの場合------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="b120.out.png" border="0" alt="b120.out.png(6753 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-64.5759<br>
+				93.0617<br>
+				5.50826<br>
+				20.7262<br>
+				0.259078<br></p>
+			</td>
+		</tr>
+	</table>
+	<div>※画像処理前と後に違いは現れない</div>
+	
+<!-- オプション　-xなど -->
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-x,-y,-z------</font></caption><br>
+	<div>-xを10に設定</div>
+	<table>
+		<tr>
+			<td><img src="b120.out-x10.png" border="0" alt="b120.out-x10.png(6751 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-64.5759<br>
+				93.0617<br>
+				5.50826<br>
+				20.7262<br>
+				0.259078<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<div>-x,-yを20に設定</div>
+	<table>
+		<tr>
+			<td><img src="b120.out-xy20.png" border="0" alt="b120.out-xy20.png(6752 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-64.5759<br>
+				93.0617<br>
+				5.50826<br>
+				20.7262<br>
+				0.259078<br></p>
+			</td>
+		</tr>
+	</table>
+	
+	<br>
+	<div>※今回の入力画像は以下のように、ｚ軸のピクセル幅が0になっているため-zを指定しても結果が変わらない<br>
+	<img src="input.png" border="0" alt="input.png(8545 byte)" width="555" height="238"></div>
+	
+</body>
+</html>

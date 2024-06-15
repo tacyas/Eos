@@ -1,0 +1,12 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-shiftx","-shiftx","shiftx[A]","Optional","1","1","shiftx","Real","0.0"
+"-shifty","-shifty","shifty[A]","Optional","1","1","shifty","Real","0.0"
+"-shiftz","-shiftz","shiftz[A]","Optional","1","1","shiftz","Real","0.0"
+"-I","-I","Inverse","Optional","0"
+"-RC","-R[adius]C[ylindrical]","Radius: Cylindrical","Optional","0"
+"-M","-M[ag]","density x mag","Optional","1","1","Mag","Real","1.0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

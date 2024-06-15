@@ -1,0 +1,158 @@
+
+
+ THREE-D RECONSTRUCTION FROM SERIES OF PROJECTIONS  ABOUT A COMMON TILT AXIS
+ ----------------------------------------------------------------------------
+
+
+
+ Name of input file:  Name of output file: 
+ RO image file on unit   1 : BBb.ali     Size=        62466
+
+ Number of columns, rows, sections .........    512    512     61
+ Map mode ..................................    1
+ Start cols, rows, sects, grid x,y,z .......    0    0    0     512   512    61
+ Pixel spacing (Angstroms)..................  20.20      20.20      20.20    
+ Cell angles ...............................   90.000   90.000   90.000
+ Fast, medium, slow axes ...................    X    Y    Z
+ Origin on x,y,z ...........................  0.000      0.000      0.000    
+ Minimum density ...........................   811.84    
+ Maximum density ...........................   5871.1    
+ Mean density ..............................   3927.4    
+ tilt angles (original,current) ............  0.0   0.0   0.0   0.0   0.0   0.0
+ Space group,# extra bytes,idtype,lens .....       0     122       0       0
+
+     6 Titles :
+SerialEM: Digitized by Gatan Camera on TF30             30-Sep-03  13:39:31    
+          Tilt axis rotation angle = -12.5                                     
+REDUCEMONT: recut and reduced by factor of  2            3-Nov-03  15:45:19    
+clip: resized image.                                     3-Nov-03  15:47:36    
+NEWSTACK: Images copied, transformed                    20-Oct-06  16:37:31    
+mrctaper: Image tapered down to fill value at edges     20-Oct-06  16:37:35    
+
+
+ DATA LINE ------- : IMAGEBINNED 1                                                                   
+
+ DATA LINE ------- : FULLIMAGE 512 512                                                               
+
+ DATA LINE ------- : LOG 0.0                                                                         
+
+ Taking logarithm of input data plus     0.000
+
+ DATA LINE ------- : MODE 1                                                                          
+
+ Data mode of output file is  1
+
+ DATA LINE ------- : PERPENDICULAR                                                                   
+
+ Output map is sectioned perpendicular to the tilt axis
+
+ DATA LINE ------- : RADIAL 0.35 0.05                                                                
+
+ Radial weighting function parameters IRMAX = 179  IWIDE =  25
+
+ DATA LINE ------- : SCALE 1.39 500.0                                                                
+
+ Output map densities incremented by    1.39 and then multiplied by  500.00
+
+ DATA LINE ------- : SUBSETSTART 0 0                                                                 
+
+ DATA LINE ------- : THICKNESS 96                                                                    
+
+ DATA LINE ------- : TILTFILE BBb.tlt                                                                
+
+ FORMATTED  ro  file opened: BBb.tlt
+
+ DATA LINE ------- : XAXISTILT 0.06                                                                  
+
+ Global alpha tilt of   0.1 will be applied
+
+ DATA LINE ------- : ZFACTORFILE BBb.zfac                                                            
+
+ FORMATTED  ro  file opened: BBb.zfac
+
+ Z-dependent shifts to be applied with factors from file
+
+ DATA LINE ------- : DONE                                                                            
+
+
+ ------------------------------------------------------------------------------
+
+ Thickness of reconstructed slice is  96 divisions.
+
+ Full aligned stack will be assumed to be   512 by   512 pixels
+
+ Aligned stack will be assumed to be a subset starting at     0     0
+  Tilt angles were entered from a tilt file
+
+ NEW image file on unit   2 : BBb.rec
+
+ Projection angles:
+
+   -56.28   -54.29   -52.29   -50.27   -48.31   -46.33   -44.34   -42.36
+   -40.40   -38.43   -36.48   -34.51   -32.56   -30.59   -28.63   -26.67
+   -24.70   -22.73   -20.72   -18.72   -16.71   -14.71   -12.70   -10.70
+    -8.78    -6.86    -4.94    -3.02    -1.11     0.90     2.91     4.93
+     6.94     8.95    10.96    12.92    14.87    16.82    18.78    20.73
+    22.69    24.70    26.71    28.71    30.72    32.73    34.67    36.62
+    38.56    40.50    42.44    44.46    46.49    48.51    50.54    52.51
+    54.48    56.45    58.42    60.45    62.49
+
+
+ ------------------------------------------------------------------------------
+
+ No fast back projection: No license to use USFFT libraries
+ available or specified
+
+
+
+ STACK LOADING
+ -------------
+
+ Total stack size             120000000
+
+ Radial weighting                 34892
+   function       
+
+ Output slice                     49152
+
+  512 Transposed projections   35839488
+
+ Stretching buffer                69999
+
+
+
+ Header on reconstructed map file
+ --------------------------------
+
+
+
+ Number of columns, rows, sections .........    512     96    512
+ Map mode ..................................    1
+ Start cols, rows, sects, grid x,y,z .......    0    0    0     512    96   512
+ Pixel spacing (Angstroms)..................  20.20      20.20      20.20    
+ Cell angles ...............................   90.000   90.000   90.000
+ Fast, medium, slow axes ...................    X    Y    Z
+ Origin on x,y,z ...........................  5171.      969.6      0.000    
+ Minimum density ...........................  -3198.8    
+ Maximum density ...........................   2183.0    
+ Mean density ..............................   692.15    
+ tilt angles (original,current) ............  0.0   0.0   0.0  90.0   0.0   0.0
+ Space group,# extra bytes,idtype,lens .....       0       0       0       0
+
+     7 Titles :
+SerialEM: Digitized by Gatan Camera on TF30             30-Sep-03  13:39:31    
+          Tilt axis rotation angle = -12.5                                     
+REDUCEMONT: recut and reduced by factor of  2            3-Nov-03  15:45:19    
+clip: resized image.                                     3-Nov-03  15:47:36    
+NEWSTACK: Images copied, transformed                    20-Oct-06  16:37:31    
+mrctaper: Image tapered down to fill value at edges     20-Oct-06  16:37:35    
+TILT: Tomographic reconstruction                        20-Oct-06  16:37:39    
+
+
+
+ To scale output to bytes (10-245), use SCALE       8.227    22.76211
+
+
+ Reconstruction of  512 slices complete.
+
+ ------------------------------------------------------------------------------

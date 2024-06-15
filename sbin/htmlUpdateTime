@@ -1,0 +1,65 @@
+#!/bin/sh
+#
+# htmlUpdateTime  1.2
+#
+# The latest update : 12/22/95 at 17:31:49
+#
+#@(#) htmlUpdateTime Function
+#@(#)
+#
+#@(#) Usage : htmlUpdateTime 
+#
+#@(#) Attention
+#@(#)
+#@(#) Parameter: 
+#@(#)     Essential:
+#@(#)     Optional:
+#@(#)
+
+usage()
+{
+	echo "Usage: htmlUpdateTime"
+}
+
+NameRead()
+{
+	ans="N"
+	while [ $ans != "Y" -a $ans != "y" ]
+	do
+		echo $1
+		read Name
+		echo "$Name is good ?"
+		read ans
+	done
+}
+# Store Flags
+FlagsCharacter="-"
+
+case $# in 
+	0)
+		;;
+	*)
+		while [ `echo $1 | cut -c1` = ${FlagsCharacter} ]
+		do
+			if [ `echo $1 | cut -c2` = "h" ] 
+			then
+				usage
+			else
+				parms="${parms} $1"
+				shift 
+			fi
+		done
+		;;
+esac
+
+case $# in
+	0) # No filename 
+		;;
+	*) #
+		usage
+		;;
+esac
+#
+currentDir=`pwd`
+currentTime=`date +%D---%T`
+echo "<H4> Update Time $currentTime </H4>"

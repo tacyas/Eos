@@ -1,0 +1,11 @@
+SOURCE=\
+dcdAtomChangeDistanceFromAtom \
+dcdAtomDistanceDistribution \
+dcdCompareCA \
+dcdDistanceAtomBetweenAtom \
+dcdFilePrint \
+dcdInfo \
+dcdSelectAtoms \
+dcdSerectAtom \
+dcdTimeSeriesBehavior \
+#LastSource

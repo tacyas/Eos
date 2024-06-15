@@ -1,0 +1,12 @@
+ctfWeight.c:			DEBUGPRINT1("WhiteNoise: %15.6f\n", CTFInfo->WhiteNoise);
+ctfWeight.c:			weight = ctf/(SQR(ctf) + SQR(CTFInfo->WhiteNoise));
+ctfWeight.c:			DEBUGPRINT1("WhiteNoise: %15.6f\n", CTFInfo->WhiteNoise);
+ctfWeight.c:			weight = fabs(ctf)/(SQR(ctf) + SQR(CTFInfo->WhiteNoise));
+ctfWeight.c:			W = CTFInfo->WhiteNoise*exp(CTFInfo->WhiteNoiseRaising * R);
+ctfWeight.c:			DEBUGPRINT3("WhiteNoise: %15.6f %15.6f %15.6f\n", CTFInfo->WhiteNoise, CTFInfo->WhiteNoiseRaising, W);
+ctfWeight.c:			W = CTFInfo->WhiteNoise*exp(CTFInfo->WhiteNoiseRaising*R);
+ctfWeight.c:			DEBUGPRINT3("WhiteNoise: %15.6f %15.6f %15.6f\n", CTFInfo->WhiteNoise, CTFInfo->WhiteNoiseRaising, W);
+ctfWeight.c:			DEBUGPRINT1("WhiteNoise: %15.6f\n", CTFInfo->WhiteNoise);
+ctfWeight.c:			weight = ctf/(SQR(ctf) + SQR(CTFInfo->WhiteNoise));
+ctfWeight.c:			DEBUGPRINT1("WhiteNoise: %15.6f\n", CTFInfo->WhiteNoise);
+ctfWeight.c:			weight = fabs(ctf)/(SQR(ctf) + SQR(CTFInfo->WhiteNoise));

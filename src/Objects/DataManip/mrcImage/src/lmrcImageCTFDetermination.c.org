@@ -1,0 +1,111 @@
+/*
+# %M% %Y% %I%
+# The latest update : %G% at %U%
+#
+#%Z% lmrcImageCTFDetemination ver %I%
+#%Z% Created by 
+#%Z%
+#%Z% Usage : lmrcImageCTFDetemination 
+#%Z% Attention
+#%Z%
+*/
+static char __sccs_id[] = "%Z%mrcImageCTFDetermination ver%I%; Date:%D% %Z%";
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>                  
+
+#define DEBUG
+#include "genUtil.h"
+#include "mrcImage.h"
+#include "lmrcImageCTFDetermination.h"
+#include "ctfInfo.h"
+
+void 
+lmrcImageCTFDetemination(lmrcImageCTFDeterminationInfo *linfo,
+					      mrcImage* in, mrcImage* ref,
+						 lmrcImageCTFDeterminationInfoMode *Mode)
+{
+	mrcImage inFFT;
+	mrcImage refFFT;
+	ctfInfo  tmp;
+	mrcImageParaTypeReal X, Y, delX, delY;
+	mrcImageParaTypeReal def, ratio;
+	double CTF, R, inPhase, refPhase; 
+	double Phase, tmpPhase;
+	int n;
+
+	if(in->HeaderN.x!=ref->HeaderN.x
+	 ||in->HeaderN.y!=ref->HeaderN.y
+	 ||in->HeaderN.z!=ref->HeaderN.z) {
+	 	fprintf(stderr, "Different Size (%d %d %d) != (%d %d %d)\n",
+			(int)in->HeaderN.x, (int)in->HeaderN.y, (int)in->HeaderN.z,
+			(int)ref->HeaderN.x, (int)ref->HeaderN.y, (int)ref->HeaderN.z);
+			
+		exit(EXIT_FAILURE);
+	}
+	if(1!=in->HeaderN.z) {
+		fprintf(stderr, "2D Only Supported\n");
+		exit(EXIT_FAILURE);
+	}
+	if(IsImage(in, "", 0)) {
+		lmrcImageFFT(&inFFT, in, 0);
+	} else if(IsFT(in, "", 0)) {
+		inFFT = *in;
+	} else {
+		fprintf(stderr, "Not supported mode: %d\n", (int)in->HeaderMode);
+		exit(EXIT_FAILURE);
+	}
+	if(IsImage(ref, "", 0)) {
+		lmrcImageFFT(&refFFT, ref, 0);
+	}else if(IsFT(ref, "", 0)) {
+		refFFT = *ref;
+	} else {
+		fprintf(stderr, "Not supported mode: %d\n", (int)ref->HeaderMode);
+		exit(EXIT_FAILURE);
+	}
+
+	tmp = linfo->val;
+	delX = 1.0/(in->HeaderLength.x*in->HeaderN.x);
+	delY = 1.0/(in->HeaderLength.y*in->HeaderN.y);
+
+	linfo->Dif = *in;
+	linfo->Dif.HeaderN.x = (linfo->max.defocus - linfo->min.defocus)/linfo->del.defocus + 1;
+	linfo->Dif.HeaderN.y = (linfo->max.ratioOfAmpToPhase - linfo->min.ratioOfAmpToPhase)/linfo->del.ratioOfAmpToPhase + 1;
+	linfo->Dif.HeaderMode = mrcFloatImage;
+	mrcInit(&(linfo->Dif), NULL);	
+
+	linfo->minPhase = M_PI;
+	for(tmp.defocus=linfo->min.defocus, def=0; tmp.defocus<=linfo->max.defocus; tmp.defocus += linfo->del.defocus, def++) {
+		for(tmp.ratioOfAmpToPhase=linfo->min.ratioOfAmpToPhase, ratio=0; tmp.ratioOfAmpToPhase<=linfo->max.ratioOfAmpToPhase; tmp.ratioOfAmpToPhase += linfo->del.ratioOfAmpToPhase, ratio++) {
+			Phase = 0;
+			n = 0;
+			for(X=0; X<=in->HeaderN.x/2.0; X++) {
+				for(Y=-in->HeaderN.y/2.0; Y<in->HeaderN.y/2.0; Y++) {
+					R = sqrt(SQR(X*delX) + SQR(Y*delY));
+					if(R<linfo->Rmax) {
+						CTF = ctfWeightForCorrection(&tmp, R, Mode->FilterType); 
+						/* CTF = ctfFunction(&tmp, R, 0); */
+						mrcPixelDataGet(&inFFT,  X, Y, 0.0, &inPhase,  mrcPixelPhase, mrcPixelHowNearest);
+						mrcPixelDataGet(&refFFT, X, Y, 0.0, &refPhase, mrcPixelPhase, mrcPixelHowNearest);
+						if(CTF<0) {
+							tmpPhase = NORMAL_PHASE(inPhase - refPhase + M_PI);
+						} else {
+							tmpPhase = NORMAL_PHASE(inPhase - refPhase);
+						}
+						Phase = Phase + MIN(tmpPhase, 2*M_PI-tmpPhase);
+						n++;
+					}
+				}
+			}
+			Phase /= n;
+			if(Phase<linfo->minPhase) {
+				linfo->minPhase = Phase;
+				linfo->minDef   = tmp.defocus;
+				linfo->minRatio = tmp.ratioOfAmpToPhase;
+			}
+			DEBUGPRINT3("%15.6e: (%15.6e, %15.6e)\n", Phase, tmp.defocus, tmp.ratioOfAmpToPhase);
+			mrcPixelDataSet(&(linfo->Dif), def, ratio, 0, Phase, mrcPixelRePart);
+		}
+	}
+}

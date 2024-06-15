@@ -1,0 +1,25 @@
+<HTML>
+<HEAD>
+<TITLE>mrcRefCorrelation</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcRefCorrelation</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcRefCorrelation
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-r[eference]        In2                 (NULL      ).as(inFile              ) ] :Optional  :For Mode1=1 only:ReferenceDataFile
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :
+ Mode1 	 0:AutoCorrelation 
+	 1:CrossCorrelation
+    [-M[ode]             mode2               (0         ).as(Integer             ) ] :Optional  :
+ Mode2 	 0:All is to be calculated.
+	 1:Pick up at random 
+	 2:Calculate only Omega=0,Alpha=0 
+    [-n[umber]           number              (NULL      ).as(Integer             ) ] :Optional  :For mode 1 only. Number of points to pick up at random. Defalt:Data size along z axis of inputfile / 10 
+</PRE>
+</BODY>
+</HTML>

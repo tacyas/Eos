@@ -1,0 +1,24 @@
+<HR>
+<A NAME="Information">
+<H2>Information from source codes</H2>
+</A>
+<PRE>
+</PRE>
+<HR>
+<A NAME="include">
+<H2>eosOpenGL.h</H2>
+</A>
+<PRE>
+#ifndef EOS_OPENGL
+#define EOS_OPENGL
+
+#ifdef X86MAC64
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
+
+extern void __openGLAA(void);
+extern void openGLKeyDefault(char c, int x, int y );
+#endif /* EOS_OPENGL */
+</PRE>

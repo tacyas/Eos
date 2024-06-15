@@ -1,0 +1,49 @@
+ActorMaker.cc(77): error: pointer to incomplete class type is not allowed
+    actor->GetProperty()->SetColor(color);
+    ^
+
+ActorMaker.cc(105): error: pointer to incomplete class type is not allowed
+      actor->GetProperty()->SetColor(0.5, 0.5, 0.5);
+      ^
+
+ActorMaker.cc(129): error: pointer to incomplete class type is not allowed
+        actor->GetProperty()->SetColor(0.5, 0.5, 0.5);
+        ^
+
+ActorMaker.cc(145): error: pointer to incomplete class type is not allowed
+      actor->GetProperty()->SetColor((float*)CarbonColor);
+      ^
+
+ActorMaker.cc(149): error: pointer to incomplete class type is not allowed
+      actor->GetProperty()->SetColor((float*)HydrogenColor);
+      ^
+
+ActorMaker.cc(153): error: pointer to incomplete class type is not allowed
+      actor->GetProperty()->SetColor((float*)OxygenColor);
+      ^
+
+ActorMaker.cc(157): error: pointer to incomplete class type is not allowed
+      actor->GetProperty()->SetColor((float*)SulphurColor);
+      ^
+
+ActorMaker.cc(161): error: pointer to incomplete class type is not allowed
+      actor->GetProperty()->SetColor((float*)NitrogenColor);
+      ^
+
+ActorMaker.cc(165): error: pointer to incomplete class type is not allowed
+      actor->GetProperty()->SetColor((float*)DefaultColor);
+      ^
+
+ActorMaker.cc(272): error: pointer to incomplete class type is not allowed
+    actor->GetProperty()->SetColor(color); 
+    ^
+
+ActorMaker.cc(296): error: pointer to incomplete class type is not allowed
+    actor->GetProperty()->SetColor(color); 
+    ^
+
+ActorMaker.cc(325): error: pointer to incomplete class type is not allowed
+    actor->GetProperty()->SetColor(color);
+    ^
+
+compilation aborted for ActorMaker.cc (code 2)

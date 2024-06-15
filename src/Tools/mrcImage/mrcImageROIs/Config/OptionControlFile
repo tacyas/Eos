@@ -1,0 +1,13 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-I","-I[nformation]","Information","Essential","1","1","Info","inFile","NULL"
+"-o","-o[utput]","MontageFile","Optional","1","1","Out","outFile","NULL"
+"-S","-S[hrink]","When inputimage was shrunk","Optional","1","1","Shrink","Integer","NULL"
+"-width","-width","Width","Optional","1","1","Width","Real","0.0"
+"-height","-height","Height","Optional","1","1","Height","Real","0.0"
+"-NonPeriodic","-NonPeriodic","Zero Outof Range","Optional","0"
+"-PadMode","-PadMode","PadMode(refer to mrcImagePad)","Optional","1","1","PadMode","Integer","0"
+"-M","-M[ode]","ImageType:0 byte 1 short 2 float","Optional","1","1","Mode","Integer","2"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

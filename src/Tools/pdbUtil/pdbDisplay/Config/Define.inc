@@ -1,0 +1,4 @@
+OBJECTNAME = pdbDisplay
+EXTRA_LIB  =
+EXTRA_CCOPTS =
+EXTRA_INC =

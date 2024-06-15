@@ -1,0 +1,28 @@
+<HTML>
+<HEAD>
+<TITLE>mrcImageBandPassFilter</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageBandPassFilter</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageBandPassFilter
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+    [-h[alf]v[aluepoint]l[ow]hvl                 (1.0       ).as(Real                ) ] :Optional  :HalfValuePointLow
+    [-h[alf]v[aluepoint]h[igh]hvh                 (1.0       ).as(Real                ) ] :Optional  :HalfValuePointHigh
+    [-w[idth]l[ow]       wl                  (1.0       ).as(Real                ) ] :Optional  :WidthOfDumpingLow
+    [-w[idth]h[igh]      wh                  (1.0       ).as(Real                ) ] :Optional  :WidthOfDumpingHigh
+    [-lowweight          lowWeight           (0.0       ).as(Real                ) ] :Optional  :Weight of Low Freq.
+>>> Mode <<<< 
+    1: Step filter : required argumnent: -hvl -hvh
+    2: Cos filter  : required argumnent: -hvl -hvh -wl -wh
+    3: Exp filter  : required argumnent: -hvl -hvh -wl -wh
+>>> -lowweight <<<< 
+Weight of Low Freq.  
+</PRE>
+</BODY>
+</HTML>

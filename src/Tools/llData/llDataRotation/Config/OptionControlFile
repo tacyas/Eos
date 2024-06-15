@@ -1,0 +1,10 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input:  llData","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","Output: llData","Essential","1","1","Out","outFile","NULL"
+"-p","-p[hi]","Phi[degree]","Optional","1","1","phi","Real","0.0"
+"-z","-z","z[A]","Optional","1","1","z","Real","0.0"
+"-P","-P[ole]","Pole: 0:Normal; 1:Anti ","Optional","1","1","Pole","Integer","0"
+"-t","-t[ruePitch]","truePitch[A]","Essential","1","1","truePitch","Real","760.0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

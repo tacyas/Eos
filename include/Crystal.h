@@ -1,0 +1,116 @@
+#ifndef CRYSTAL_H
+#define CRYSTAL_H
+
+#include <stdio.h>
+
+/* struct begin */
+
+typedef enum CrystalSpaceGroup {
+	CrystalSpaceGroupP1=0,
+	CrystalSpaceGroupHelical=1
+} CrystalSpaceGroup;
+
+#ifdef __CRYSTALINIT__ 
+char* CrystalSpaceGroupString[] = {
+	"P1",
+	"HelicalSymmmetry",
+	NULL	
+};
+#else
+extern char* CrystalSpaceGroupString[];
+#endif
+
+typedef float CrystalParaTypeReal;
+typedef int   CrystalParaTypeInteger;
+
+typedef struct CrystalParaTypeRealCoord {
+	CrystalParaTypeReal x;
+	CrystalParaTypeReal y;
+	CrystalParaTypeReal z;
+} CrystalParaTypeRealCoord;
+
+typedef struct CrystalParaTypeIntegerCoord {
+	CrystalParaTypeInteger x;
+	CrystalParaTypeInteger y;
+	CrystalParaTypeInteger z;
+} CrystalParaTypeIntegerCoord;
+
+typedef struct CrystalParaTypeRealAxis {
+	CrystalParaTypeReal a;
+	CrystalParaTypeReal b;
+	CrystalParaTypeReal c;
+} CrystalParaTypeRealAxis;
+
+typedef struct CrystalParaTypeIntegerAxis {
+	CrystalParaTypeInteger a;
+	CrystalParaTypeInteger b;
+	CrystalParaTypeInteger c;
+} CrystalParaTypeIntegerAxis;
+
+typedef struct HelicalSymmetryInfo {
+	CrystalParaTypeInteger t;         /* Turn */
+	CrystalParaTypeInteger u;         /* Unit */ 
+	CrystalParaTypeInteger n;         /* n-strands */
+
+	/* 
+		Don't change the below variables directly,
+		bacause the variables can be calculated by the upper's.
+	*/
+	CrystalParaTypeReal    dz;     /* dz     = TruePitch/unit */
+	CrystalParaTypeReal    dphi;   /* dphi   = 2*PI*turn/unit */
+} HelicalSymmetryInfo;
+
+typedef struct CrystalInfo {
+	CrystalParaTypeRealCoord    aAxis;    /* Unit Cell Vector : a-axis : Length = 1 */
+	CrystalParaTypeRealCoord    bAxis;    /* Unit Cell Vector : b-axis : Length = 1 */
+	CrystalParaTypeRealCoord    cAxis;    /* Unit Cell Vector : c-axis : Length = 1 */
+	CrystalParaTypeRealAxis     CellLength;    /* Unit Cell Size   a, b, c-axis [A] */
+	CrystalParaTypeRealCoord    Origin;        /* Unit Cell Origin [A] */
+	CrystalParaTypeIntegerAxis  N;             /* Number of Unit Cells a, b, c-axis */
+	CrystalParaTypeIntegerAxis  StartN;        /* Start  of Unit Cells a, b, c-axis */
+	CrystalSpaceGroup           SpaceGroup;
+
+    /* Reciprocal Space */
+	CrystalParaTypeRealCoord    aReciprocalAxis;
+	CrystalParaTypeRealCoord    bReciprocalAxis;
+	CrystalParaTypeRealCoord    cReciprocalAxis;
+
+	/* Information for Special Symmetry */
+	HelicalSymmetryInfo HelixInfo;
+		/* For HelicalSymmetry : 
+			The filament axis (z-axis) is treated as the c-axis. 
+			The azimuthal axis (phi-axis) is treated as the b-axis. 
+			The radius axis (r-axis) is treated as the a-axis.
+		*/
+} CrystalInfo;
+
+/* struct end */
+
+/* prototype begin */
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+extern void crystalInit(CrystalInfo* crystal);
+
+extern void crystalSpaceGroupPrint(FILE* fpt, int mode);
+
+extern void crystalInfoRead(FILE* fpt, CrystalInfo* linfo, int mode);
+extern void crystalInfoWrite(FILE* fpt, CrystalInfo* linfo, int mode);
+extern void crystalInfoFileFormat(FILE* fpt, int mode);
+
+extern void crystalCellLengthSet(CrystalInfo* C, char axis, CrystalParaTypeReal length, int mode);
+extern void crystalAxisSet(CrystalInfo* C, char axis, CrystalParaTypeReal x, CrystalParaTypeReal y, CrystalParaTypeReal z, int mode);
+extern void crystalCellLengthSetUsingAxis(CrystalInfo* C, char axis, int mode);
+extern void crystalAxisSetUsingCellLength(CrystalInfo* C, char axis, int mode);
+
+extern double crystalInfoGetLatticeVolume(CrystalInfo* linfo, int mode);
+extern void crystalInfoGetReciprocalLattice(CrystalInfo* linfo, int mode);
+
+#ifdef __cplusplus
+	};	
+#endif
+
+/* prototype end */
+
+#endif /* CRYSTAL_H */

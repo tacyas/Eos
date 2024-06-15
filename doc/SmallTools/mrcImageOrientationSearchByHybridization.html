@@ -1,0 +1,40 @@
+<HTML>
+<HEAD>
+<TITLE>mrcImageOrientationSearchByHybridization</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageOrientationSearchByHybridization</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageOrientationSearchByHybridization
+Options:
+    [-I[nputFileLiest]   In                  (NULL      ).as(inFileListNoOpen    ) ] :Essential :InputDataFileList
+    [-o[utput]           Out                 (NULL      ).as(String              ) ] :Essential :OutputDataFileHeader
+    [-e[xtension]        extension           (NULL      ).as(String              ) ] :Essential :OutputDataFileExtension
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+    [-i[ncrease]r[ate]   ir                  (1         ).as(Integer             ) ] :Optional  :IncreaseRate
+    [-h[ybridization]p[oint]n[umber]hpn                 (1         ).as(Integer             ) ] :Optional  :HybridizationPointNumber
+    [-m[ode]s[election]  ms                  (0         ).as(Integer             ) ] :Optional  :ModeOfSelection
+    [-i[nitial]r[andom]d[ata]ird                 (0         ).as(Integer             ) ] :Optional  :InitialRandomData
+
+>> This algrithm use results of mrcImageOrientationSearchBySimultaneousMinimization
+
+----- IncreaseRate -----
+-ir : 1 >> Increase number is 45 (filenum = 10)
+      2 >> Increase number is 90 (filenum = 10)
+
+----- HybridizationPointNumber -----
+-hpn : The number of hybridization points 
+
+----- Mode of selection -----
+-ms : 0 : random
+      1 : myself (-ird)
+
+----- Mode -----
+-m : 0 : create children angle file
+     1 : do not create children angle file , create match angle file
+
+</PRE>
+</BODY>
+</HTML>

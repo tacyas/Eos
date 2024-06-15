@@ -1,0 +1,4 @@
+OBJECTNAME = clusterLog2ToLog
+EXTRA_LIB  =
+EXTRA_CCOPTS =
+EXTRA_INC =

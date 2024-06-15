@@ -1,0 +1,18 @@
+This program is a tool of cutting a long mrcImage into
+some parts and putting them side by side.
+  Using this program, your original mrcImage length and width was transformed 
+  from 80 x 924 x 1 
+  into 800 x 92 x 1
+Then Here are some examples of cutting your mrcImage.
+ Supposed : blank = 0
+ n=5 : x=400, y=184, z=1
+ n=6 : x=480, y=154, z=1
+ n=7 : x=560, y=132, z=1
+ n=8 : x=640, y=115, z=1
+ n=9 : x=720, y=102, z=1
+ n=10 : x=800, y=92, z=1
+ n=11 : x=880, y=84, z=1
+ n=12 : x=960, y=77, z=1
+ n=13 : x=1040, y=71, z=1
+ n=14 : x=1120, y=66, z=1
+ n=15 : x=1200, y=61, z=1

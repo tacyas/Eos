@@ -1,0 +1,214 @@
+#!${EOS_HOME}/bin/Eos
+#
+# %M% %Y% %I%
+#
+# The latest update : %G% at %U%
+#
+#%Z% makeOptionControl.wish Function
+#%Z%
+#
+#%Z% Usage : makeOptionControl.wish SourceFileName
+#
+#%Z% Attention
+#%Z%
+#%Z% Parameter: 
+#%Z%     Essential:
+#%Z%         SourceFileName
+#%Z%     Optional:
+#%Z%
+
+set CLASSNAME pdbUtil
+set TOOLNAME  pdbHelix
+if [ info exists env(EOS_HOME) ] {
+	set EOS_HOME $env(EOS_HOME)
+} else {
+	set EOS_HOME  ~/Eos
+}
+set path $EOS_HOME/sbin
+
+if ![ file exists $path/makeOptionControl.wish ] {
+	tk_dialog .d "Error:" "Wrong directory" error 0 OK
+	exit 0
+}
+lappend auto_path $path
+
+wm title . OptionControl
+
+proc optionPropertySet { index } {
+	global Options
+
+	set t [ toplevel .menu ]
+
+	set mb $t.entries($index).optionPropeties
+	$mb configure -text $Options(OptionProperties,$index) 
+}
+
+proc argTypeSet { index i } {
+	global Options
+
+	set t [ toplevel .menu ]
+
+	set mb $t.entries($index).var.frame($i).type
+	$mb configure -text $Options(ArgumentType,$index,$i) 
+}
+
+proc commandMenu { } {
+	set entryWidth 8
+
+	set t [ frame .commandMenu ]
+	set mb $t.menu
+	menubutton $mb -width $entryWidth -height 1 -menu $mb.m -text option
+		menu $mb.m
+		$mb.m add command -label "Open" -command { }
+		$mb.m add command -label "Save" -command { }
+		$mb.m add command -label "SaveAs" -command { }
+	pack $mb -side left  -fill x
+}
+proc makeOptionMenu { } {
+	global Options
+
+	set entryWidth 8
+
+	set t [ toplevel .menu ]
+	frame $t.labels  
+
+	set mb $t.labels.lb_option
+	menubutton $mb -width $entryWidth -height 1 -menu $mb.m -text option
+		menu $mb.m
+		$mb.m add command -label "New Option" -command { }
+		$mb.m add command -label "Delete Option" -command { }
+	pack $mb -side left  -fill x
+
+	set lab $t.labels
+		label $lab.lb_fullOption -width $entryWidth -height 1  -text full
+		pack $lab.lb_fullOption  -side left
+		label $lab.lb_optionName -width [expr $entryWidth*2] -height 1  -text Comment 
+		pack $lab.lb_optionName -side left
+		label $lab.lb_optionProperties -width $entryWidth -height 1  -text Prop
+		pack $lab.lb_optionProperties -side left
+		label $lab.lb_optionNumber -width [ expr $entryWidth/4] -height 1  -text "N" 
+		pack $lab.lb_optionNumber -side left
+		label $lab.lb_argNum -width [ expr $entryWidth/4 ] -height 1  -text "ID" 
+		pack $lab.lb_argNum -side left
+		label $lab.lb_argName -width $entryWidth -height 1  -text "Name" 
+		pack $lab.lb_argName -side left
+		label $lab.lb_argType -width $entryWidth -height 1  -text "Type" 
+		pack $lab.lb_argType -side left
+		label $lab.lb_InitVal -width $entryWidth -height 1  -text "InitVal" 
+		pack $lab.lb_InitVal -side left
+	pack $lab -side top 
+
+	for {set index 0} { $index < $Options(N)} {incr index} {
+		set ent [ frame $t.entries($index) ]
+
+		set en $ent.option
+				entry $en -relief sunken -bd 2 -textvariable Options(Option,$index) -width $entryWidth
+		pack $en -side left
+
+		set en $ent.fullOption
+				entry $en -relief sunken -bd 2 -textvariable Options(fullOption,$index) -width $entryWidth
+		pack $en -side left
+
+		set en $ent.optionName
+				entry $en -relief sunken -bd 2 -textvariable Options(OptionName,$index) -width [expr 2*$entryWidth]
+		pack $en -side left
+
+		set mb $ent.optionPropeties
+				menubutton $mb -text $Options(OptionProperties,$index) -menu $mb.m -width $entryWidth -relief sunken -bd 2
+				menu $mb.m
+				$mb.m add radiobutton -label "Essential" -variable Options(OptionProperties,$index) -command [ list optionPropertySet  $index ]
+				$mb.m add radiobutton -label "Optional" -variable Options(OptionProperties,$index) -command [ list optionPropertySet $index ]
+				$mb.m add radiobutton -label "Variable" -variable Options(OptionProperties,$index) -command [ list optionPropertySet $index ]
+		pack $mb -side left
+
+		set en $ent.optionNumber
+				entry $en -relief sunken -bd 2 -textvariable Options(OptionNumber,$index) -width [expr $entryWidth/2 ]
+				bind $en <Return> { 
+					destroy .menu
+					makeOptionMenu 
+				}
+		pack $en -side left
+	
+		frame $ent.var
+		for {set i 0} { $i < $Options(OptionNumber,$index) } { incr i } {
+			frame $ent.var.frame($i)
+			set en $ent.var.frame($i).index
+				label $en -width [expr $entryWidth/4] -text "  $Options(ArgumentIndex,$index,$i):"
+			pack $en -side left
+			set en $ent.var.frame($i).name
+				entry $en -relief sunken -bd 2 -width $entryWidth -textvariable Option(ArgumentName,$index,$i)
+			pack $en -side left
+			set mb $ent.var.frame($i).type
+				menubutton $mb -text $Options(ArgumentType,$index,$i) -menu $mb.m -width $entryWidth -relief sunken -bd 2
+				menu $mb.m
+				$mb.m add radiobutton -label "Integer" -variable Options(ArgumentType,$index,$i) \
+						-command [ list argTypeSet $index $i ]
+				$mb.m add radiobutton -label "Real" -variable Options(ArgumentType,$index,$i) \
+						-command [ list argTypeSet $index $i ]
+				$mb.m add radiobutton -label "inFile" -variable Options(ArgumentType,$index,$i) \
+						-command [ list argTypeSet $index $i ]
+				$mb.m add radiobutton -label "outFile" -variable Options(ArgumentType,$index,$i) \
+						-command [ list argTypeSet $index $i ]
+				$mb.m add radiobutton -label "inFileList" -variable Options(ArgumentType,$index,$i) \
+						-command [ list argTypeSet $index $i ]
+				$mb.m add radiobutton -label "outFileList" -variable Options(ArgumentType,$index,$i) \
+						-command [ list argTypeSet $index $i ]
+				$mb.m add radiobutton -label "Character" -variable Options(ArgumentType,$index,$i) \
+						-command [ list argTypeSet $index $i ]
+				$mb.m add radiobutton -label "String" -variable Options(ArgumentType,$index,$i) \
+						-command [ list argTypeSet $index $i ]
+			pack $mb -side left
+			set en $ent.var.frame($i).initial
+				entry $en -relief sunken -bd 2 -width $entryWidth -textvariable Option(ArgumentInitial,$index,$i)
+			pack $en -side left
+			pack $ent.var.frame($i) -side top
+		}
+		pack $ent.var -side left
+		pack $ent -side top
+	}
+
+	return
+}
+
+set fileID [ open ${EOS_HOME}/src/Tools/${CLASSNAME}/${TOOLNAME}/Config/OptionControlFile r ]
+
+set line [ gets $fileID ]
+set index 0
+while { ! [ eof $fileID ] } {
+	set firstChar [ string index $line 0 ]
+	if { $firstChar == "#" } {
+	} else {
+		set lline [ split $line  \", ]
+		set Options(Option,$index)      [ lindex  $lline   1 ]
+		set Options(fullOption,$index)  [ lindex  $lline   4 ]
+		set Options(OptionName,$index)  [ lindex  $lline   7 ]
+		set Options(OptionProperties,$index) [ lindex  $lline  10 ]
+		set Options(OptionNumber,$index) [ lindex  $lline  13 ]
+		#puts $Options(Option,$index)
+		#puts $Options(fullOption,$index)
+		#puts $Options(OptionName,$index)
+		#puts $Options(OptionProperties,$index)
+		#puts $Options(OptionNumber,$index)
+		set step 12
+		for {set i 0} { $i < $Options(OptionNumber,$index) } { incr i } {
+			#set Options(ArgumentIndex,$index,$i)  [lindex $lline [expr 15 +  1 + $i*$step]]
+			set Options(ArgumentIndex,$index,$i)   [ expr 1 + $i]
+			set Options(ArgumentName,$index,$i)    [lindex $lline [expr 15 +  4 + $i*$step]]
+			set Options(ArgumentType,$index,$i)    [lindex $lline [expr 15 +  7 + $i*$step]]
+			set Options(ArgumentInitial,$index,$i) [lindex $lline [expr 15 + 10 + $i*$step]]
+			#puts $Options(ArgumentIndex,$index,$i)
+			#puts $Options(ArgumentName,$index,$i)
+			#puts $Options(ArgumentType,$index,$i)
+			#puts $Options(ArgumentInitial,$index,$i)
+		}
+		#puts $line
+		incr index
+	}
+	set line [gets $fileID]
+}
+
+set Options(N) $index
+commandMenu
+makeOptionMenu 
+
+close $fileID

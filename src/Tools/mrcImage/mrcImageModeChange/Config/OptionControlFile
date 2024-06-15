@@ -1,0 +1,10 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-Min","-Min","Min","Optional","1","1","Min","Real","0.0"
+"-Max","-Max","Max","Optional","1","1","Max","Real","1.0"
+"-flagStat","-flagStat","StatCheck before mode change ","Optional","0"
+"-flagSigned","-flagSigned","in: signed char","Optional","0"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

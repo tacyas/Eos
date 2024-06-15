@@ -1,0 +1,189 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageMergebyside</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageMergebyside<br></h2></b></font>
+	<h4>２つの画像をつなげる</h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+		<table border="1">
+			<div align="left">
+			<tr>
+				<th>オプション</th>
+				<th>必須項目/選択項目</th>
+				<th>説明</th>
+				<th>デフォルト</th>
+			</tr>
+			<tr>
+				<td>-i1</td>
+				<td>必須</td>
+				<td>入力ファイル1設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-i2</td>
+				<td>必須</td>
+				<td>入力ファイル2設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-o</td>
+				<td>必須</td>
+				<td>出力ファイル設定</td>
+				<td>NULL</td>
+			</tr>
+			<tr>
+				<td>-v</td>
+				<td>選択</td>
+				<td>モード１のときに設定。分離ラインの値を設定する</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-m</td>
+				<td>選択</td>
+				<td>モード</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>-h</td>
+				<td>選択</td>
+				<td>ヘルプを表示</td>
+				<td>　</td>
+			</tr>
+			</div>
+		</table>
+		
+	<br>	
+	<h4>******実行例******</h4>
+
+<!-- モード説明 -->
+
+	<br>
+	<caption><b>モードの詳細</b></caption>
+	<table border="1">
+		<div align="left">
+			<tr>
+				<th>モード</th>
+				<th>説明</th>
+			</tr>
+			<tr>
+				<td>0</td>
+				<td>分離ラインなし</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>分離ラインあり</td>
+			</tr>
+		</div>
+	</table>
+
+<!-- 入力ファイル説明 -->
+
+	<caption><font color="blue">------入力ファイル１の画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="1vom.png" border="0" alt="1vom.png(2236 byte)" width="64" height="64"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				71.339<br>
+				6.29872<br>
+				13.6724<br>
+				0.213631<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<caption><font color="blue">------入力ファイル２の画像------</font></caption><br>
+	<table>
+		<tr>
+			<td><img src="1vom-rot1.png" border="0" alt="1vom-rot1.png(2155 byte)" width="64" height="64"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				77.0909<br>
+				6.29894<br>
+				14.3204<br>
+				0.223756<br></p>
+			</td>
+		</tr>
+	</table>
+
+<!-- 実行結果 -->
+
+	<caption><font color="blue">------オプション　-m------</font></caption><br>
+	<div>モード：０</div>
+	<table>
+		<tr>
+			<td><img src="outdata.png" border="0" alt="outdata.png(3396 byte)" width="128" height="64"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				77.0909<br>
+				6.29883<br>
+				14.0001<br>
+				0.154681<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<div>モード：１<br>
+	-v=30で実行</div>
+	<table>
+		<tr>
+			<td><img src="outdata-m1v30.png" border="0" alt="outdata-m1v30.png(3523 byte)" width="129" height="64"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				77.0909<br>
+				6.48256<br>
+				14.0998<br>
+				0.155177<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<div>-v=100で実行</div>
+	<table>
+		<tr>
+			<td><img src="outdata-m1v100.png" border="0" alt="outdata-m1v100.png(3361 byte)" width="129" height="64"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">0<br>
+				100<br>
+				7.02519<br>
+				16.187<br>
+				0.178148<br></p>
+			</td>
+		</tr>
+	</table>
+
+</body>
+</html>

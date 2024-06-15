@@ -1,0 +1,244 @@
+/*
+# StereoDisplay : $Revision$  
+# $Date$ 
+# Created by $Author$
+# Usage : StereoDisplay
+# Attention
+#   $Loccker$
+#  	$State$ 
+#
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <GL/glut.h>
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+
+#define DEBUG
+#include "genUtil.h"
+#include "tgaFile.h"
+
+#define ImageWidth 632 
+#define ImageHeight 528
+#define ProteinNumberMax 4
+
+typedef struct lStereoDisplayInfo {
+	int DoubleBuffer;
+
+	int ImageNum;
+	int curImageNum;
+
+	int offsetx;
+	int offsety;
+} lStereoDisplayInfo;
+
+static lStereoDisplayInfo disp;
+
+int DoubleBuffer=1,ProteinNumber=0,offsetx=0,offsety=0;
+
+char Proteinl[ProteinNumberMax][20]={"prel.tga","factinl.tga","factin-twistl.tga","dnasel.tga"};
+char Proteinr[ProteinNumberMax][20]={"prer.tga","factinr.tga","factin-twistr.tga","dnaser.tga"};
+
+
+GLubyte ImageLeft[ProteinNumberMax][ImageHeight][ImageWidth][3];
+GLubyte ImageRight[ProteinNumberMax][ImageHeight][ImageWidth][3];
+
+//#include "Integration.h"
+
+/*
+Example:
+typedef struct lStereoDisplayInfo {
+	float a;
+	int   b;
+} lStereoDisplayInfo;
+
+typedef enum lStereoDisplayMode {
+	a=0,
+	b=1
+} lStereoDisplayMode;
+*/
+
+void
+ImageRead(char* inl,char* inr)
+{
+	FILE *fp;
+	int i,j;
+	
+	for(ProteinNumber=0;ProteinNumber<ProteinNumberMax;ProteinNumber++){
+		
+		if((fp=fopen(Proteinl[ProteinNumber],"rb"))==NULL){
+			fprintf(stderr,"leftfile cannot open\n");
+			return;
+		}
+		for(i=0;i<ImageHeight;i++){
+			for(j=0;j<ImageWidth;j++){
+				ImageLeft[ProteinNumber][ImageHeight-i][j][2]=fgetc(fp);
+				ImageLeft[ProteinNumber][ImageHeight-i][j][1]=fgetc(fp);
+				ImageLeft[ProteinNumber][ImageHeight-i][j][0]=fgetc(fp);
+			}
+		}
+		fclose(fp);
+
+		if((fp=fopen(Proteinr[ProteinNumber],"rb"))==NULL){
+			fprintf(stderr,"rightfile cannot open\n");
+			return;
+		}
+		for(i=0;i<ImageHeight;i++){
+			for(j=0;j<ImageWidth;j++){
+				ImageRight[ProteinNumber][ImageHeight-i][j][2]=fgetc(fp);
+				ImageRight[ProteinNumber][ImageHeight-i][j][1]=fgetc(fp);
+				ImageRight[ProteinNumber][ImageHeight-i][j][0]=fgetc(fp);
+			}	
+		}
+		fclose(fp);
+	}
+	ProteinNumber=0;
+}
+
+void
+init(char* inl,char* inr)
+{
+	glClearColor(0.0,0.0,0.0,0.0);
+	ImageRead(inl,inr);
+	glPixelStorei(GL_UNPACK_ALIGNMENT,1);
+}
+
+
+void
+display(void)
+{
+	if(!DoubleBuffer){
+		glClear(GL_COLOR_BUFFER_BIT);
+		glRasterPos2f(-1,-1);
+		//glDrawPixels(ImageWidth,ImageHeight, GL_RGB,GL_UNSIGNED_BYTE,ImageLeft[ProteinNumber]);
+		glDrawPixels(ImageWidth,ImageHeight, GL_RGB,GL_UNSIGNED_BYTE,ImageLeft[disp.curImageNum]);
+		glRasterPos2f(0,-1);
+		//glDrawPixels(ImageWidth,ImageHeight, GL_RGB,GL_UNSIGNED_BYTE,ImageRight[ProteinNumber]);
+		glDrawPixels(ImageWidth,ImageHeight, GL_RGB,GL_UNSIGNED_BYTE,ImageRight[disp.curImageNum]);
+		glFlush();
+	}
+	else{
+		glDrawBuffer(GL_BACK);
+		glClear(GL_COLOR_BUFFER_BIT);
+		glDrawBuffer(GL_BACK_LEFT);
+		//glDrawPixels(ImageWidth,ImageHeight, GL_RGB,GL_UNSIGNED_BYTE,ImageLeft[ProteinNumber]);
+		glDrawPixels(ImageWidth,ImageHeight, GL_RGB,GL_UNSIGNED_BYTE,ImageLeft[disp.curImageNum]);
+		glutSwapBuffers();
+		glDrawBuffer(GL_BACK_RIGHT);
+		//glDrawPixels(ImageWidth,ImageHeight, GL_RGB,GL_UNSIGNED_BYTE,ImageRight[ProteinNumber]);
+		glDrawPixels(ImageWidth,ImageHeight, GL_RGB,GL_UNSIGNED_BYTE,ImageRight[disp.curImageNum]);
+		glutSwapBuffers();
+	}	
+}
+
+void
+DisplaySetting(int WindowX,int WindowY)
+{
+	if(!DoubleBuffer){
+		glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+		glutInitWindowSize(1200,600);
+		glutInitWindowPosition(WindowX-offsetx,WindowY-offsety);
+		glutCreateWindow("StereoDisplay v1.03  NakedEyeMode");
+	}
+	else {
+		glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_STEREO);
+		glutInitWindowSize(800,600);
+		glutInitWindowPosition(WindowX-offsetx,WindowY-offsety);
+		glutCreateWindow("StereoDisplay v1.03  CrystalEyeMode");
+	}	
+
+}
+
+void
+DisplayRecreate(lStereoDisplayInfo* disp) 
+{
+		WindowX=glutGet(GLUT_WINDOW_X);
+		WindowY=glutGet(GLUT_WINDOW_Y);
+		glutDestroyWindow(glutGetWindow());
+		DisplaySetting(WindowX,WindowY);
+		glutDisplayFunc(display);
+		glutKeyboardFunc(keyboard);
+}
+
+void
+keyboard(unsigned char key,int x,int y)
+{
+	int WindowY=0,WindowX=0;
+	switch(key){
+	case 'q':
+	case 'Q':
+		exit(EXIT_FAILURE);
+		break;
+	case 'd':
+		DoubleBuffer=1;
+		DisplayRecreate(&disp);
+		break;
+		
+	case 's':
+		DoubleBuffer=0;
+		DisplayRecreate(&disp);
+		break;
+
+	case 'j':
+	case 'l':
+		curImageNum--;
+		if(curImageNum<0) {
+			curImageNum += ImageNum; 
+		}
+		DisplayRecreate(&disp);
+		break;
+	case 'h':
+	case 'k':
+		curImageNum++;
+		if(ImageNum<=curImageNum) {
+			curImageNum = 0;
+		}
+		DisplayRecreate(&disp);
+		break;
+		
+	default:
+		break;
+	}
+	glutPostRedisplay();
+}	
+	
+int
+main(int argc, char* argv[]) 
+{
+	StereoDisplayInfo info;
+
+	init0(&info);
+    argCheck(&info, argc, argv);
+    init1(&info);
+
+	DEBUGPRINT("Program Start\n");
+	glutInit(&argc,argv);
+	DisplaySetting(0,0);
+
+
+	offsetx=glutGet(GLUT_WINDOW_X);
+	offsety=glutGet(GLUT_WINDOW_Y);
+
+	init(info.Inl,info.Inr);
+
+	glutDisplayFunc(display);
+	glutKeyboardFunc(keyboard);
+
+	glutMainLoop();
+	
+	return EXIT_SUCCESS;
+}
+
+void
+additionalUsage()
+{
+	fprintf(stderr, "----- Additional Usage -----\n");
+	fprintf(stderr, "InFileList\n");
+	fprintf(stderr, "Left1 Right1 \n");
+	fprintf(stderr, "Left2 Right2 \n");
+}
+

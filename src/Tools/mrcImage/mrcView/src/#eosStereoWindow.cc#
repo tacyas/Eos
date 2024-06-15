@@ -1,0 +1,208 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h> 
+#include <vtk.h>  
+#include <pdbFile.h>        
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+#include "vtkXRenderWindow.h"
+#include "vtkXRenderWindowInteractor.h"
+
+#define DEBUG
+#include "genUtil.h"
+#include "mrcImage.h"
+//#include "vtkGraphicsFactory.h"
+
+#include "eosInteractorMyStyle.cc"
+
+class eosStereoWindow{
+
+  public:
+         static eosStereoWindow* New();
+         void eosStereoWindowSet(vtkActor*,int);
+	 eosInteractorMyStyle *myi,*myi2;
+
+private:
+         int i;
+         eosStereoWindow();
+         void init();
+         vtkRenderer* GetRenderer(void);
+         vtkRenderer* GetRendererLeft(void);
+         vtkRenderer* GetRendererRight(void);
+         vtkRenderWindow* GetRenderWindow1(void);
+         vtkRenderWindow* GetRenderWindow2(void);
+         void run(int);
+
+         vtkRenderer     *ren,*renLeft,*renRight;
+         vtkCamera       *cam,*camLeft,*camRight;
+         vtkLight        *light;
+         vtkRenderWindow *renWin1,*renWin2;
+         vtkRenderWindowInteractor *iren1,*iren2;
+
+
+};
+
+eosStereoWindow::eosStereoWindow(){
+         init();
+}
+
+void eosStereoWindow::init(){
+
+         cam=vtkCamera::New();
+	 cam->SetFocalPoint(0,0,0);
+	 cam->SetPosition(0,0,10);
+	 cam->SetEyeAngle(10.0);
+	 camLeft=vtkCamera::New();
+	 camLeft->SetFocalPoint(0,0,0);
+	 camLeft->SetPosition(0,0,10);
+	 camLeft->SetEyeAngle(10.0);
+	 camRight=vtkCamera::New();
+	 camRight->SetFocalPoint(0,0,0);
+	 camRight->SetPosition(0,0,10);
+	 camRight->SetEyeAngle(10.0);
+
+	 light=vtkLight::New();
+	 light->SetFocalPoint(0.21406,1.5,0);
+	 light->SetPosition(8.3761,4.94858,4.1250);
+
+}
+
+
+void eosStereoWindow::eosStereoWindowSet(vtkActor* eosActor,int StereoState){
+
+         ren=vtkRenderer::New();
+	 ren->SetActiveCamera(cam);
+	 ren->AddLight(light);
+	 ren->AddActor(eosActor);
+
+	 if(StereoState==1){
+	   renLeft=vtkRenderer::New();
+	   renRight=vtkRenderer::New();
+
+	   renLeft->SetViewport(0,0,0.5,1.0);
+	   renLeft->SetActiveCamera(camLeft);
+	   renLeft->AddLight(light);
+	   renLeft->AddActor(eosActor);
+
+	   renRight->SetViewport(0.5,0,1.0,1.0);
+	   renRight->SetActiveCamera(camRight);
+	   renRight->AddLight(light);
+	   renRight->AddActor(eosActor);
+	 }
+
+	 renWin1=vtkRenderWindow::New();
+	 renWin1->AddRenderer(ren);
+	 renWin1->SetWindowName("eosStereoWindow");
+	 renWin1->SetSize(300,300);
+	 
+	if(StereoState==1){
+	   renWin2=vtkRenderWindow::New();
+	   renWin2->AddRenderer(renLeft);
+	   renWin2->AddRenderer(renRight);
+	   renWin2->SetStereoType(5);
+	   renWin2->SetWindowName("eosStereoWindow2");
+	   renWin2->SetSize(600,300);
+	 }
+
+	 myi=eosInteractorMyStyle::New();
+	 myi2=eosInteractorMyStyle::New();
+
+	 iren1=vtkRenderWindowInteractor::New();
+	 iren1->SetRenderWindow(renWin1);
+	 iren1->SetInteractorStyle(myi);
+	 
+
+	 if(StereoState==1){
+
+	   iren2=vtkRenderWindowInteractor::New();
+	   iren2->SetRenderWindow(renWin2);
+	   iren2->SetInteractorStyle(myi2);
+
+	   myi->SetRenderWindows(ren,renLeft,renRight,iren1,iren2);
+	   myi2->SetRenderWindows(ren,renLeft,renRight,iren1,iren2);
+
+	 }
+
+
+}
+
+void eosStereoWindow::run(int StereoState){
+
+  	 renWin1->Render();
+	 if(StereoState==1){
+	   renWin2->Render();
+	 }
+
+	 iren1->Start();
+	 if(StereoState==1){
+	   iren2->Start();
+	 }
+  
+}
+
+vtkRenderer* eosStereoWindow::GetRenderer(void)
+{
+  return(ren);
+}
+
+vtkRenderer* eosStereoWindow::GetRendererLeft(void)
+{
+  if(StereoState!=1){
+    printf("No Data about RendererLeft\n");
+    exit(1);
+  }
+  return(renLeft);
+}
+
+vtkRenderer* eosStereoWindow::GetRendererRight(void)
+{
+  if(StereoState!=1){
+    printf("No Data about RendererRight\n");
+    exit(1);
+  }
+  return(renRight);
+}
+
+vtkRenderWindow* eosStereoWindow::GetRenderWindow1(void)
+{
+  return(renWin1);
+}
+
+vtkRenderWindow* eosStereoWindow::GetRenderWindow2(void)
+{
+  if(StereoState!=1){
+    printf("No Data about RenderWindow2\n");
+    exit(1);
+  }
+  return(renWin2);
+}
+
+
+int main(int argc, char* argv[])
+{
+	mrcViewInfo info;
+	pdbFile pdb;
+	int StereoState;
+
+	init0(&info);
+    	argCheck(&info, argc, argv);
+    	init1(&info);
+
+	DEBUGPRINT("Program Start\n");   
+
+	StereoState=1;
+
+	eosStereoWindow stereoWin;
+	stereoWin.eosStereoWindowSet(coneActor,StereoState);
+	stereoWin.run(StereoState);
+                                                  
+	exit(EXIT_SUCCESS);
+}
+
+
+void
+additionalUsage()
+{
+	fprintf(stderr, "----- Additional Usage -----\n");
+}

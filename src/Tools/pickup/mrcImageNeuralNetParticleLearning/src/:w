@@ -1,0 +1,186 @@
+/*
+# mrcImageNeuralNetParticleLearning : $Revision$  
+# $Date$ 
+# Created by $Author$
+# Usage : mrcImageNeuralNetParticleLearning
+# Attention
+#   $Loccker$
+#  	$State$ 
+#
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>                  
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+
+#define DEBUG
+#include "genUtil.h"
+#include "mrcImage.h"
+#include "Memory.h"
+
+/*
+#include "pickup.h"
+*/
+
+typedef struct lmrcImageNeuralNetParticleLearningInfo {
+	int  numOfLayer;
+	int* numOfCellOfLayer; 	
+	int  numOfPositive;
+	int  numOfNegative;
+	int* bias
+} lmrcImageNeuralNetParticleLearningInfo;
+
+typedef enum lmrcImageNeuralNetParticleLearningMode {
+	a=0,
+	b=1
+} lmrcImageNeuralNetParticleLearningMode;
+
+extern void lmrcImageNeuralNetParticleLearning(mrcImage* weight, mrcImage* positive, mrcImage* negative, lmrcImageNeuralNetParticleLearningInfo* linfo, int mode);
+
+int
+main(int argc, char* argv[]) 
+{
+	mrcImageNeuralNetParticleLearningInfo info;
+	lmrcImageNeuralNetParticleLearningInfo linfo;
+	mrcImage* positive;
+	mrcImage* negative;
+	mrcImage* weight;
+	int i, n;
+
+	init0(&info);
+    argCheck(&info, argc, argv);
+    init1(&info);
+
+	DEBUGPRINT("Program Start\n");
+
+  	// Information Set 		 	:$
+	linfo.numOfLayer = info.flagOut + 1;		
+	linfo.numOfCellOfLayer = (int*)memoryAllocate(sizeof(int)*linfo.numOfLayer);
+	fseek(info.fptOutList, 0L, SEEK_SET);
+	for(i=1; i<linfo.numOfLayer; i++) {
+		char s[1024];			
+		fgets(s, 1023, info.fptOutList);
+		linfo.numOfCellOfLayer[i] = stringGetNthIntegerData(s, 2, " ,\t");
+		linfo.bias[i]             = stringGetNthIntegerData(s, 3, " ,\t");
+	}
+	linfo.numOfCellOfLayer[0] = 0;
+	linfo.bias[0]             = info.Bias;
+
+	positive = (mrcImage*)memoryAllocate(sizeof(mrcImage)*info.flagInPositive, "in main for positive");
+	for(i=0; i<info.flagInPositive; i++) {
+		mrcFileRead(&positive[i], info.InPositive[i], "in main for positive", 0);
+		if(0==linfo.numOfCellOfLayer[0]) {
+			linfo.numOfCellOfLayer[0] = positive[i].PixelPerImage;
+		} else if(linfo.numOfCellOfLayer[0] != positive[i].PixelPerImage){
+			fprintf(stderr, "The size of image %d is different from image 0\n", i);  			
+			exit(EXIT_FAILURE);
+		}
+	}
+	negative = (mrcImage*)memoryAllocate(sizeof(mrcImage)*info.flagInNegative, "in main for negative");
+	for(i=0; i<info.flagInNegative; i++) {
+		mrcFileRead(&negative[i], info.InNegative[i], "in main for negative", 0);
+		if(linfo.numOfCellOfLayer[0] != negative[i].PixelPerImage){
+			fprintf(stderr, "The size of image %d is different from image 0\n", i);  			
+			exit(EXIT_FAILURE);
+		}
+	}
+	linfo.numOfPositive = info.flagInPositive;
+	linfo.numOfNegative = info.flagInNegative;
+
+	weight = (mrcImage*)memoryAllocate(sizeof(mrcImage)*info.flagOut, "in main for weight");
+
+	// Calculation 
+	lmrcImageNeuralNetParticleLearning(weight, positive, negative, &linfo, info.mode);
+
+	for(i=0; i<info.flagOut; i++) {
+		mrcFileWrite(&weight[i], info.Out[i], "in main for weight", 0);
+	}
+
+	return 0;
+}
+
+void
+additionalUsage()
+{
+	fprintf(stderr, "----- Additional Usage -----\n");
+}
+
+
+
+void 
+lmrcImageNeuralNetParticleLearning(
+		mrcImage* weight, 
+		mrcImage* positive, 
+		mrcImage* negative, 
+		lmrcImageNeuralNetParticleLearningInfo* linfo, 
+		int mode)
+{
+	int i, j;
+	double**  cell;
+	double*** weight;
+
+
+	cell = (double**)memollyAllocate(sizeof(double*)*sizeof(linfo->numOfLayer), "in  lmrcImageNeuralNetParticleLearning");
+	for(i=0; i<linfo->numOfLayer; i++) {	
+		cell[i] = (double*)memollyAllocate(sizeof(double)*sizeof(linfo->numOfCellOfLayer[i]+2), "in  lmrcImageNeuralNetParticleLearning");
+	}
+	/*
+		cell[l][n] : the value of the n'th cell in the l'th layer 	
+			
+			l		..... n .......
+						  |
+						cell[l][n]
+	*/
+	weight = (double***)memollyAllocate(sizeof(double**)*sizeof(linfo->numOfLayer-1), "in  lmrcImageNeuralNetParticleLearning");
+	for(i=0; i<linfo->numOfLayer-1; i++) {
+		weight[i] = (double**)memoryAllocate(sizeof(double*)*sizeof(linfo->numOfCellOfLayer[i]+2), "in  lmrcImageNeuralNetParticleLearning");	
+		for(j=0; j<linfo->numOfCellOfLayer[i]; j++) {
+			weight[i][j]=(double*)memoryAllocate(sizeof(double)*sizeof(linfo->numOfCellOfLayer[i+1]+2), "lmrcImageNeuralNetParticleLearning");
+		}
+	}
+	/*
+		weight[l][m][n] : the weight between the m'th cell in the l'th layer and the n'th cell in the l+1'th layer   
+
+			l+1      ..... n ..... 
+                          /
+                         / weight[l][m][n]
+                        / 
+			l        . m .........
+ 
+
+
+			0        .............     : input-layer
+
+	*/
+
+	while() {
+		for(i=0; i<linfo->numOfPositive; i++) {
+			OuputLayerCalculation(cell, weight, &positive[i], linfo, mode); 	
+		}
+		for(i=0; i<linfo->numOfNegative; i++) {
+
+		}
+	}
+
+}
+
+void
+OutputLayerCalculation(double** cell, double*** weight, mrcImage* in,  lmrcImageNeuralNetParticleLearningInfo* linfo, int mode)
+{
+	float x, y, z;	
+	
+	n = 0;
+	for(x=0; x<in->HeaderN.x; x++) {
+	for(y=0; y<in->HeaderN.y; y++) {
+	for(z=0; z<in->HeaderN.z; z++) {
+		mrcPixelDataGet(in, x, y, z, &cell[0][n], mrcPixelRePart, mrcPixelHowNearest);
+		cell[0][n] = sigmoidalFunction(cell[0][n] - in->HeaderAMean);
+	}
+	}
+	}
+	cell[0][linfo->numOfCellOfLayer[0]] = in->HeaderAMean;
+	cell[0][linfo->numOfCellOfLayer[0]+1] = linfo->bias[0];
+}
+

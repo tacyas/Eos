@@ -1,0 +1,7 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Essential","1","1","Out","outFile","NULL"
+"-dtheta","-dtheta","Input: detaTheta","Optional","1","1","dtheta","Real","1.0"
+"-dphi","-dphi","Input: detaPhi","Optional","1","1","dphi","Real","1.0"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

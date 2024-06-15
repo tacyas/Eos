@@ -1,0 +1,61 @@
+#!/usr/local/bin/wish -f
+#
+#  Zooming for mainImage and Roi 
+#
+
+#
+# Zoom In
+#
+proc roiAreaZoomIn {c} {
+	global Roi
+
+	if { $Roi(Zoom)<1.0 } {	
+		set Roi(Zoom) [ expr 1.0/(1.0/$Roi(Zoom) - 1.0) ]
+	} else {
+		set Roi(Zoom) [ expr $Roi(Zoom) + 1.0 ]
+	}
+	roiAreaZoom $c 
+}
+
+#
+# Zoom Out
+#
+proc roiAreaZoomOut {c } {
+	global Roi
+
+	if { $Roi(Zoom)<=1.0 } {
+		set Roi(Zoom) [ expr 1.0/ (1.0/$Roi(Zoom) + 1.0) ]
+	} else {
+		set Roi(Zoom) [ expr $Roi(Zoom) - 1.0 ]
+	}
+	if { $Roi(Zoom)==0 } {
+		puts "Something wrong : Zoom is zero !!"
+	}
+	roiAreaZoom $c 
+}
+
+#
+# Zooming procedure
+#
+proc roiAreaZoom { c } {
+	global Roi
+	global mainImage
+
+
+	set width     [ expr int($mainImage(width) *$Roi(Zoom)) ]	
+	set height    [ expr int($mainImage(height)*$Roi(Zoom)) ]	
+
+	set backimage [ image create photo -palette 8 ]
+	if { $Roi(Zoom)<1 } {
+		$backimage copy $mainImage(backimage) -from 0 0 $mainImage(width) $mainImage(height) -to  0 0 $width $height -subsample [expr int(1.0/$Roi(Zoom))]
+	} else {
+		$backimage copy $mainImage(backimage) -from 0 0 $mainImage(width) $mainImage(height) -to  0 0 $width $height -zoom [ expr int($Roi(Zoom)) ]
+	}
+	image delete $mainImage(image)
+	set mainImage(image) $backimage
+
+	set mainImage(region) [list 0 0 $width $height ]
+	$c configure -scrollregion $mainImage(region)
+	$c create image 0 0 -image $mainImage(image) -anchor nw  
+}
+

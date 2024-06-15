@@ -1,0 +1,10 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","InputDataFile","Essential","1","1","In","inFile","NULL"
+"-o","-o[utput]","OutputDataFile","Optional","1","1","Out","outFile","NULL"
+"-Mag","-Mag[nification]","Magnification[xk]:","Optional","1","1","Mag","Real","150"
+"-Mag2","-Mag2[nification]","Magnification[CCD/Film]","Optional","1","1","Mag2","Real","1.64"
+"-ADUperE","-ADUperE","[ADU/electron]","Optional","1","1","ADUperE","Real","20"
+"-info","-info","OutputDataFile","Optional","1","1","Info","Integer","1"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode: 0:char(mean+-3sd) 1:short(direct) 2:float(e-)","Optional","1","1","mode","Integer","1"

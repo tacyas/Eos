@@ -1,0 +1,6 @@
+# OptionControlFile
+# FileFormat
+"-i","-i[nput]","Input: Suffixes for viewing","Optional","1","1","In","String",".roi"
+"-o","-o[utput]","Output: FileViewCondition","Optional","1","1","Out","String",".imagesView"
+"-c","-c[onfig]","ConfigurationFile","Optional","1","1","configFile","inFile","NULL"
+"-m","-m[ode]","Mode","Optional","1","1","mode","Integer","0"

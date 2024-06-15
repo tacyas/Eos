@@ -1,0 +1,87 @@
+/*
+# mrcImageMultiplying.c  1.1
+# The latest update : 06/12/96 at 13:03:03
+#
+#@(#) mrcImageMultiplying ver 1.1
+#@(#) Created by 
+#@(#)
+#@(#) Usage : mrcImageMultiplying
+#@(#) Attention
+#@(#)
+*/
+static char __sccs_id[] = "@(#)mrcImageMultiplying ver1.1; Date:96/06/12 @(#)";
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>                  
+#define GLOBAL_DECLARATION
+#include "../inc/config.h"
+#include "mrcImage.h"
+
+extern void lmrcImageMultiplying(mrcImage* out, mrcImage* in, float value, long mode);
+void
+main(int argc, char* argv[]) 
+{
+	long status;
+	mrcImageMultiplyingInfo info;
+	mrcImage in;
+	mrcImage out;
+	
+	init0(&info);
+    argCheck(&info, argc, argv);
+    init1(&info);
+
+	mrcFileRead(&in,   info.In,  "in main", 0); 
+	lmrcImageMultiplying(&out, &in, info.Value, in.HeaderMode);		
+	mrcFileWrite(&out, info.Out, "in main", 0); 
+
+	exit(EXIT_SUCCESS);
+}
+
+void
+additionalUsage()
+{
+	fprintf(stderr, "---- Additional Usage ----\n");
+}
+
+void 
+lmrcImageMultiplying(mrcImage* out, mrcImage* in, float value, long mode)
+{
+	mrcImageParaTypeReal x, y, z;
+	double data;
+	if (mode==mrcComplexFloatFT){
+	  out->Header = in->Header;
+	  mrcInit(out, NULL);
+	  for(x=0; x<=in->HeaderN.x/2; x++) {
+	    for(y= - in->HeaderN.y / 2 ; y<in->HeaderN.y/2; y++) {
+	      if (in->HeaderN.z==1){
+		mrcPixelDataGet(in,  x, y, 0, &data, mrcPixelRePart,mrcPixelHowNearest);
+		mrcPixelDataSet(out, x, y, 0, data*value, mrcPixelRePart);
+		mrcPixelDataGet(in,  x, y, 0, &data, mrcPixelImPart,mrcPixelHowNearest);
+		mrcPixelDataSet(out, x, y, 0, data*value, mrcPixelImPart);
+	      }else{
+		for(z= -in->HeaderN.z / 2  ; z<in->HeaderN.z/2; z++) {
+		  mrcPixelDataGet(in,  x, y, z, &data, mrcPixelRePart,mrcPixelHowNearest);
+		  mrcPixelDataSet(out, x, y, z, data*value, mrcPixelRePart);
+		  fprintf(stdout,"%f ",data);
+		  mrcPixelDataGet(in,  x, y, z, &data, mrcPixelImPart,mrcPixelHowNearest);
+		  mrcPixelDataSet(out, x, y, z, data*value, mrcPixelImPart);
+		}
+	      }
+	    }
+	  }
+	}else if (mode==mrcFloatImage) {
+	  out->Header = in->Header;
+	  mrcInit(out, NULL);
+	  for(x=0; x<in->HeaderN.x; x++) {
+	    for(y=0; y<in->HeaderN.y; y++) {
+	      for(z=0; z<in->HeaderN.z; z++) {
+		mrcPixelDataGet(in,  x, y, z, &data, mrcPixelRePart,mrcPixelHowNearest);
+		mrcPixelDataSet(out, x, y, z, data*value, mrcPixelRePart);
+	      }
+	    }
+	  }
+	}
+	mrcStatDataSet(out, 0);
+}
+

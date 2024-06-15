@@ -1,0 +1,53 @@
+#!/bin/sh
+echo "Catdcd for VMD"
+
+thisDcd=`pwd`
+
+max=xxxxx
+i=1
+d=0
+InitFlag=0
+
+dcdLimit=yyyyy
+
+if [ -d dcd ]
+then 
+	echo "don't make 'dcd'"
+else	
+	echo "dir 'dcd' make"
+	mkdir dcd
+fi
+
+while [ $i -le $max ];
+do
+	ii=`echo $i | awk '{printf("%06d",$1);}' `
+	dd=`echo $d | awk '{printf("%06d",$1);}' `
+	filename=file.$ii
+	filename2=out.$dd
+	
+	echo "-------*******--STEP.$ii--*******-------"
+	echo "=======*******---OUT.$dd--*******======="
+	
+	if [ $InitFlag -eq 0 ]
+	then
+		cp output/$filename.dcd dcd/$filename2.dcd
+		InitFlag=1
+	else
+		catdcd -o dcd/output.dcd dcd/$filename2.dcd output/$filename.dcd
+		mv dcd/output.dcd dcd/$filename2.dcd
+	fi
+	if [ $dcdLimit -eq $i ]
+	then
+		if [ $d -eq 0 ]
+		then
+			echo "animate read dcd $thisDcd/dcd/$filename2.dcd waitfor 0" >> test.tcl
+		else
+			echo "animate read dcd $thisDcd/dcd/$filename2.dcd" >> test.tcl
+		fi
+		d=`expr $d + 1`
+		dcdLimit=`expr $dcdLimit + 10`
+		InitFlag=0
+	fi
+	i=`expr $i + 1`
+done
+

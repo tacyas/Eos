@@ -1,0 +1,26 @@
+#!/usr/local/bin/bltwish
+#
+#
+proc llDataPrintOptionSet {} {
+	option add *Label.font *Helvetica-Bold-R-*-12-*
+	option add *title.font *Helvetica-Bold-R-*-14-*
+	option add *Entry.font *Courier-Medium-R-*-12-*
+
+	option add *TileOffset          0
+	option add *HighlightThickness      0
+	option add *takeFocus           1
+	
+	option add *graph.elemActiveColor   yellow4
+	option add *graph.elemActiveFill    yellow
+	option add *graph.elemPixels        2 
+	option add *graph.elemScaleSymbols  1
+
+	option add *Graph.psDecorations true
+	option add *Graph.PsLandscape   false
+
+	set visual [winfo screenvisual .] 
+	if { $visual != "staticgray" } {
+	    option add *print.background yellow
+	    option add *quit.background red
+	}
+}

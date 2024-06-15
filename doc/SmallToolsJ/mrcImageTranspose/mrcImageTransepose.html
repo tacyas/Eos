@@ -1,0 +1,216 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=Shift_JIS">
+	<title>mrcImageTranspose</title>
+</head>
+<body>
+
+	<font color="red"><b><h2>mrcImageTranspose<br></h2></b></font>
+	<h4>画像を置き換える</h4>
+
+<!-- オプション説明 -->
+
+	<br>
+	<caption><b>オプション一覧</b></caption>
+	<table border="1">
+		<div align="left">
+		<tr>
+			<th>オプション</th>
+			<th>必須項目/選択項目</th>
+			<th>説明</th>
+			<th>デフォルト</th>
+		</tr>
+		<tr>
+			<td>-i</td>
+			<td>必須</td>
+			<td>入力ファイル設定</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-o</td>
+			<td>必須</td>
+			<td>出力ファイル設定</td>
+			<td>NULL</td>
+		</tr>
+		<tr>
+			<td>-m</td>
+			<td>選択</td>
+			<td>モード１</td>
+			<td>0</td>
+		</tr>
+		<tr>
+			<td>-M</td>
+			<td>選択</td>
+			<td>モード２</td>
+			<td>0</td>
+		</tr>
+		<tr>
+			<td>-h</td>
+			<td>選択</td>
+			<td>ヘルプを表示</td>
+			<td>　</td>
+		</tr>
+	</table>
+	
+<!-- モード説明 -->
+
+	<br>
+	<caption><b>モード１の詳細</b></caption>
+	<table border="1">
+		<div align="left">
+			<tr>
+				<th>モード</th>
+				<th>説明</th>
+			</tr>
+			<tr>
+				<td>0</td>
+				<td>90°左に回転（ｘｙ平面）</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>90°右に回転（ｘｙ平面）</td>
+			</tr>
+			<tr>
+				<td>2</td>
+				<td>90°左に回転（ｙｚ平面）</td>
+			</tr>
+			<tr>
+				<td>3</td>
+				<td>90°右に回転（ｙｚ平面）</td>
+			</tr>
+		</div>
+	</table>
+
+	<br>
+	<caption><b>モード２の詳細</b></caption>
+	<table border="1">
+		<div align="left">
+			<tr>
+				<th>モード</th>
+				<th>説明</th>
+			</tr>
+			<tr>
+				<td>0</td>
+				<td>２次元の画像</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>参照画像（モード１が0または1のときに使用可能）</td>
+			</tr>
+		</div>
+	</table>
+
+	<h4>******実行例******</h4>
+
+<!-- 入力ファイル説明 -->
+
+	<caption><font color="blue">------入力ファイルの画像------</font></caption><br>
+	<div>入力ファイル</div>
+	<table>
+		<tr>
+			<td><img src="b120-2.png" border="0" alt="b120-2.png(6742 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-65.0178<br>
+				94.4699<br>
+				4.85274<br>
+				20.4635<br>
+				0.255794<br></p>
+			</td>
+		</tr>
+	</table>
+
+<!-- 出力ファイル -->
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-m------</font></caption><br>
+	<div>-m=0</div>
+	<table>
+		<tr>
+			<td><img src="outdata1.png" border="0" alt="outdata1.png(6746 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-65.0178<br>
+				94.4699<br>
+				4.85274<br>
+				20.4635<br>
+				0.255794<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<div>-m=1</div>
+	<table>
+		<tr>
+			<td><img src="outdata1-m.png" border="0" alt="outdata1-m.png(6746 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-65.0178<br>
+				94.4699<br>
+				4.85274<br>
+				20.4635<br>
+				0.255794<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<br>
+	<div>-m=2,3はｙｚ平面を対称とする。今回の入力画像は二次元画像のため、実行できない。</div>
+
+	<br>
+	<br>
+	<caption><font color="blue">------オプション　-M------</font></caption><br>
+	<div>-M=0</div>
+	<table>
+		<tr>
+			<td><img src="outdata1.png" border="0" alt="outdata1.png(6746 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-65.0178<br>
+				94.4699<br>
+				4.85274<br>
+				20.4635<br>
+				0.255794<br></p>
+			</td>
+		</tr>
+	</table>
+
+	<div>-M=1</div>
+	<table>
+		<tr>
+			<td><img src="outdata1-m0M1.png" border="0" alt="outdata1-m0M1.png(1016 byte)" width="80" height="80"></td>
+			<td><p align="left">最小<br>
+				最大<br>
+				平均値<br>
+				標準偏差<br>
+				標準誤差<br></p>
+			</td>
+			<td><p align="left">-36.8299<br>
+				9.83613<br>
+				-0.0135904<br>
+				0.621486<br>
+				0.00776857<br></p>
+			</td>
+		</tr>
+	</table>
+
+</body>
+</html>

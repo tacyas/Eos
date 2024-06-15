@@ -1,0 +1,4 @@
+OBJECTNAME = mrcImageColoring
+EXTRA_LIB  = $(LIBGIF) $(LIBX11)
+EXTRA_CCOPTS =
+EXTRA_INC =

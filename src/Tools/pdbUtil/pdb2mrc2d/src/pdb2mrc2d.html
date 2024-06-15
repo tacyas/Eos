@@ -1,0 +1,50 @@
+<HTML>
+<HEAD>
+<TITLE>pdb2mrc2d</TITLE>
+</HEAD>
+<BODY>
+<H1>pdb2mrc2d</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: pdb2mrc2d
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Optional  :OutputDataFile(2D)
+    [-O[utput]           Out3D               (NULL      ).as(outFile             ) ] :Optional  :OutputDataFile(3D)
+    [-d[elta]            dx                  (5.0       ).as(Real                ) 
+                         dy                  (5.0       ).as(Real                ) ] :Essential :delta: dx[A] dy[A]
+    [-s[tart]            sx                  (0.0       ).as(Real                ) 
+                         sy                  (0.0       ).as(Real                ) ] :Optional  :start: startx[A] starty[A]: When -s was not set, image centre is the origin(0,0,0)
+    [-n[umber]           nx                  (0         ).as(Integer             ) 
+                         ny                  (0         ).as(Integer             ) ] :Essential :N:     nx ny (image size)
+    [-Rot[ation]         rotnx               (1         ).as(Integer             ) 
+                         rotny               (1         ).as(Integer             ) ] :Optional  :rotnx rotny
+    [-S[tart]            srotx               (0.0       ).as(Real                ) 
+                         sroty               (0.0       ).as(Real                ) 
+                         srotz               (0.0       ).as(Real                ) ] :Optional  :start(rotx roty rotz):ZXY
+    [-startE[uler]A[ngle]sRotMode            (YOYS      ).as(String              ) 
+                         sRot1               (0.0       ).as(Real                ) 
+                         sRot2               (0.0       ).as(Real                ) 
+                         sRot3               (0.0       ).as(Real                ) ] :Optional  :EulerAngle: Start Angle
+    [-E[uler]A[ngle]Mode RotMode             (YOYS      ).as(String              ) ] :Optional  :RotationMode
+    [-E[uler]A[ngle]Rot1 dRot1               (5.0       ).as(Real                ) 
+                         minRot1             (0.0       ).as(Real                ) 
+                         maxRot1             (180.0     ).as(Real                ) ] :Optional  :FirstRotation
+    [-E[uler]A[ngle]Rot2 dRot2               (5.0       ).as(Real                ) 
+                         minRot2             (0.0       ).as(Real                ) 
+                         maxRot2             (180.0     ).as(Real                ) ] :Optional  :SecondRotation
+    [-w[eight]           Weight              (1.0       ).as(Real                ) ] :Optional  :weight
+    [-sig[ma]            Sigma               (0.0       ).as(Real                ) ] :Optional  :Sigma[A]:Atom radius
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-cuda               cudaDeviceID        (0         ).as(Integer             ) ] :Optional  :UseCuda
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode: 0 Merc; 1: Earth
+----- Attention1 -----
+If both of -s and -startEA, first -s and second -startEA will be performed
+----- Attention2 -----
+Bug fixed: rotation around x-axis. + is changed to - 
+----- Mode -----
+1: 0: equal angle 1: equal area
+2: 0: Mercatol    1: Morwide 
+</PRE>
+</BODY>
+</HTML>

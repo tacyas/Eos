@@ -1,0 +1,526 @@
+%!PS-Adobe-3.0
+%%Creator: A2ps version 4.3
+%%CreationDate: Tue Oct 13 19:17:52 1998
+%%Pages: (atend)
+%%DocumentFonts: Courier Courier-Bold Helvetica Helvetica-Bold
+%%EndComments
+% Copyright (c) 1993, 1994, Miguel Santana, M.Santana@frgu.bull.fr
+
+/$a2psdict 100 dict def
+$a2psdict begin
+
+% General macros.
+/xdef {exch def} bind def
+/getfont {exch findfont exch scalefont} bind def
+
+% Create Courier backspace font
+/backspacefont {
+    /Courier findfont dup length dict begin
+	{ % forall
+	    1 index /FID eq { pop pop } { def } ifelse
+	} forall
+	currentdict /UniqueID known { % if
+	    /UniqueID UniqueID 16#800000 xor def
+	} if
+	CharStrings length 1 add dict begin
+	    CharStrings { def } forall
+	    /backspace { -600 0 0 0 0 0 setcachedevice } bind def
+	    currentdict
+	end
+	/CharStrings exch def
+	/Encoding Encoding 256 array copy def
+	Encoding 8 /backspace put
+	currentdict
+    end
+    definefont pop
+} bind def
+
+% FUNCTIONS
+
+% Function filename: Initialize file printing.
+/fn
+{ /filenm xdef
+  /filenmwidth filenm stringwidth pop def
+  /filenmfont
+       filenmwidth fns gt
+       {
+	       filenmfontname
+	       fnfs fns mul filenmwidth div
+	     getfont
+       }
+       { sfnf }
+     ifelse
+  def
+} bind def
+
+% Function header: prints page header. no page
+% is passed as argument.
+/hp
+  { x sd get  y sd get hs sub 1 add  moveto
+    df setfont
+    gsave
+      x sd get y sd get moveto
+      0 hs 2 div neg rmoveto 
+      hs setlinewidth
+      0.95 setgray
+      pw 0 rlineto stroke
+    grestore
+    gsave
+      dfs hm rmoveto
+      d show				% date/hour
+    grestore
+    gsave
+      pnum cvs pop				% page pop up
+        pw (Page 999) stringwidth pop sub
+        hm
+	  rmoveto
+      (Page ) show pnum show		% page number
+    grestore
+    empty pnum copy pop
+    gsave
+      filenmfont setfont
+         fns filenm stringwidth pop sub 2 div dw add
+          bm 2 mul 
+        add 
+        hm
+      rmoveto
+        filenm show			% file name
+      grestore
+    } bind def
+
+% Function border: prints border page
+/border 
+{ x sd get y sd get moveto
+  gsave				% print four sides
+    0.7 setlinewidth		% of the square
+    pw 0 rlineto
+    0 ph neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+} bind def
+
+% Function hborder: completes border of the header.
+/hborder 
+{ gsave
+	0.7 setlinewidth
+	0 hs neg rmoveto
+	pw 0 rlineto
+	stroke
+  grestore
+} bind def
+
+% Function sheetnumber: prints the sheet number.
+/sn
+    { snx sny moveto
+      df setfont
+      pnum cvs
+	  dup stringwidth pop (0) stringwidth pop sub neg 0 rmoveto show
+      empty pnum copy pop
+    } bind def
+
+% Function loginprint: prints the login id of the requestor.
+/lgp
+    { lx ly moveto
+      df setfont
+      dup stringwidth pop neg 0 rmoveto show
+    } bind def
+
+% Function currentdate: prints the current date.
+/cd
+    { dx dy moveto
+      df setfont
+      (Printed: ) show
+      td show
+    } bind def
+
+% Function filename_footer: prints the file name at bottom of page.
+/fnf
+    { fnx fny moveto
+      df setfont
+      filenm center show
+    } bind def
+
+% Function center: centers text.
+/center
+    { dup stringwidth pop
+      2 div neg 0 rmoveto
+    } bind def
+
+% Function s: print a source line
+/s  { show
+      /y0 y0 bfs sub def
+      x0 y0 moveto
+    } bind def
+
+% Functions b and st: change to bold or standard font
+/b  { show
+      bdf setfont
+    } bind def
+/st { show
+      bf setfont
+    } bind def
+
+% Strings used to make easy printing numbers
+/pnum 12 string def
+/empty 12 string def
+
+% Global initializations
+
+/CourierBack backspacefont
+/filenmfontname /Helvetica-Bold def
+/inch {72 mul} bind def
+
+%
+% Meaning of some variables and functions (coded names)
+%
+%	twp:		twinpages?
+%	sd:		sheet side
+%	l:		line counter
+%	c:		column counter
+%	d:		date
+%	td:		current date (for today)
+%	lg:		login name
+%	fn:		filename printing function
+%	sn:		sheetnumber printing function
+%	cd:		current date printing function
+%	fnf:		filename footer printing function
+%	lgp:		login printing function
+%	hp:		header printing function
+%	y:		y coordinate for the logical page
+%	x:		x coordinate for the logical page
+%	sny:		y coordinate for the sheet number
+%	snx:		x coordinate for the sheet number
+%	dy:		y coordinate for the date
+%	dx:		x coordinate for the date
+%	ly:		y coordinate for the login
+%	lx:		x coordinate for the login
+%	scx:		x coordinate for the sheet center
+%	fny:		y coordinate for the filename (footer)
+%	fnx:		x coordinate for the filename (footer)
+%	fnfs:		filename font size
+%	bfs:		body font size
+%	dfs:		date font size
+%	bfs:		body font size
+%	df:		date font
+%	bf:		body font
+%	bdf:		bold font
+%	sfnf:		standard filename font
+%	dw:		date width
+%	pw:		page width
+%	sw:		sheet width
+%	ph:		page height
+%	sh:		sheet height
+%	hm:		header margin
+%	tm:		top margin
+%	bm:		body margin
+%	rm:		right margin
+%	lm:		left margin
+%	hs:		header size
+%	fns:		filename size
+
+% Initialize page description variables.
+/x0 0 def
+/y0 0 def
+/sh 11.64 inch def
+/sw 8.27 inch def
+/margin 1.4 inch def
+/rm margin 3 div def
+/lm margin 2 mul 3 div def
+/d () def
+/td (Oct 13 1998 19:17) def
+%%EndProlog
+
+/docsave save def
+%%Page: 1 1
+/pagesave save def
+/twp true def
+/fnfs 11 def
+/dfs fnfs 0.8 mul def
+/df /Helvetica dfs getfont def
+/dw df setfont td stringwidth pop def
+/sfnf filenmfontname fnfs getfont def
+/hm fnfs 0.25 mul def
+/hs 0.22 inch def
+/bfs 6.8 def
+/bdf /Courier-Bold bfs getfont def
+/bm bfs 0.7 mul def
+/bf /CourierBack bfs getfont def
+/l 69 def
+/c 89 def
+/pw
+   bf setfont (0) stringwidth pop c mul bm dup add add
+   def
+/ph
+   bfs l mul bm dup add add hs add
+   def
+/fns
+      pw
+      fnfs 4 mul dw add (Page 999) stringwidth pop add
+    sub
+  def
+/tm margin twp {3} {2} ifelse div def
+/sd 0 def
+/y [ rm ph add bm add
+          dup ] def
+/sny dfs dfs add def
+/snx sh tm dfs add sub def
+/dy sny def
+/dx tm dfs add def
+/x [ tm			% left page
+          dup 2 mul pw add	% right page
+        ] def
+/scx sh 2 div def
+/fny dy def
+/fnx scx def
+/ly fnfs 2 div y sd get add def
+/lx snx def
+/d (Oct 13 1998 19:19) def
+( stdin ) fn
+sw 0 translate
+90 rotate
+1 hp
+border
+hborder
+/x0 x 0 get bm add def
+/y0 y 0 get bm bfs add hs add sub def
+x0 y0 moveto
+bf setfont
+( /*) s
+( # %M% %Y% %I%) s
+( # The latest update : %G% at %U%) s
+( #) s
+( #%Z% pvmStart ver %I%) s
+( #%Z% Created by ) s
+( #%Z%) s
+( #%Z% Usage : pvmStart ) s
+( #%Z% Attention) s
+( #%Z%) s
+( */) s
+( ) s
+( static char __sccs_id[] = "%Z%pvmStart ver%I%; Date:%D% %Z%";) s
+( ) s
+( #ifdef PVM) s
+( #undef DEBUG) s
+( #include "genUtil.h") s
+( #include "Memory.h") s
+( #include "String.h") s
+( #include "File.h") s
+( #include "../inc/PVM.h") s
+( #include "pvm3.h") s
+( ) s
+( int*) s
+( pvmServerStart\(char* command, char* argv[], FILE* fptHostList, int* n, int mode\)) s
+( {) s
+(         File   f;) s
+(         char   s[1024];) s
+(         int    numHost;) s
+(         char** hostList;) s
+(         int*   infos;) s
+(         int*   numTasks;) s
+(         int    numTask;) s
+(         int    nTask;) s
+(         int*   tids;) s
+(         int    iTask;) s
+(         int    i;) s
+(         int    info;) s
+( ) s
+(         nTask = *n;) s
+(         f.fpt = fptHostList;) s
+(         if\(NULL==fptHostList\) {) s
+(                 DEBUGPRINT1\("pvmServerStart: Any Host: %s\\n", command\);) s
+(                 tids = \(int*\)memoryAllocate\(sizeof\(int\)*nTask, "in main"\);) s
+(                 numTask = pvm_spawn\(command, argv, PvmTaskDefault|mode, NULL, nTask, tid) s
+( s\);) s
+(                 pvmServerStartError\(numTask, tids, nTask\);) s
+(         } else {) s
+(                 DEBUGPRINT1\("pvmServerStart: Specific Host: %s\\n", command\);) s
+(                 nTask = 0;) s
+(                 numHost  = fileLineNumberGet\(&f, ""\);) s
+(                 if\(0==numHost\) {) s
+(                         fprintf\(stderr, "No host\\n"\);) s
+(                         exit\(EXIT_FAILURE\);) s
+(                 }) s
+(         hostList = \(char**\)memoryAllocate\(sizeof\(char*\)*numHost, "in main"\); ) s
+(         infos    = \(int*\)  memoryAllocate\(sizeof\(int\)*numHost, "in main"\); ) s
+(         numTasks = \(int*\)  memoryAllocate\(sizeof\(int\)*numHost, "in main"\); ) s
+( ) s
+(         fseek\(f.fpt, 0L, SEEK_SET\);) s
+(         for\(i=0; i<numHost; i++\) {) s
+(                 stringGetFromFile\(s, "Host", fptHostList, stdout, 3\);) s
+(                 hostList[i] = stringGetNthWord\(s, 1, " \\t,#"\); ) s
+(                 numTasks[i] = stringGetNthIntegerData\(s, 2, " \\t,#"\); ) s
+(                 if\(0==numTasks[i]\) {) s
+(                         numTasks[i] = 0;) s
+(                 }) s
+(                         DEBUGPRINT3\("%d: %s %d\\n", i, hostList[i], numTasks[i]\);) s
+(                 nTask += numTasks[i]; ) s
+/sd 1 def
+2 hp
+border
+hborder
+/x0 x 1 get bm add def
+/y0 y 1 get bm bfs add hs add sub def
+x0 y0 moveto
+bf setfont
+(         }) s
+(         info = pvm_addhosts\(hostList, numHost, infos\); ) s
+( ) s
+(                 tids = \(int*\)memoryAllocate\(sizeof\(int\)*nTask, "in pvmServerStart"\)     ) s
+( ;) s
+( ) s
+(                 iTask = 0;) s
+(         for\(i=0; i<numHost; i++\) {) s
+(                 numTask = pvm_spawn\(command, argv, PvmTaskHost|mode, hostList[i], numTas) s
+( ks[i], tids+iTask\);) s
+(                         pvmServerStartError\(numTask, tids+iTask, numTasks[i]\);) s
+(                         iTask+= numTask;) s
+(         }) s
+(         }) s
+(         *n = nTask;) s
+( ) s
+(         return tids;) s
+( }) s
+( ) s
+( void) s
+( pvmServerStartError\(int numTask, int* tids, int nTask\)) s
+( {) s
+(         int i;) s
+( ) s
+(     if\(numTask==nTask\) {) s
+(                 return;) s
+(         } else {) s
+(         fprintf\(stderr, "Error:\\n"\);) s
+(                 if\(numTask < 0\) {) s
+(             switch\(numTask\) {) s
+(                 case  PvmBadParam: {) s
+(                     fprintf\(stderr, "PvmBadParam\\n"\);) s
+(                     break;) s
+(                 }) s
+(                 case  PvmNoHost: {) s
+(                     fprintf\(stderr, "PvmNoHost\\n"\);) s
+(                     break;) s
+(                 }) s
+(                 case  PvmNoFile: {) s
+(                     fprintf\(stderr, "PvmNoFile\\n"\);) s
+(                     break;) s
+(                 }) s
+(                 case  PvmNoMem: {) s
+(                     fprintf\(stderr, "PvmNoMem\\n"\);) s
+(                     break;) s
+(                 }) s
+(                 case  PvmSysErr: {) s
+(                     fprintf\(stderr, "PvmSysErr\\n"\);) s
+(                     break;) s
+(                 }) s
+(                 case  PvmOutOfRes: {) s
+(                     fprintf\(stderr, "PvmOutOfRes\\n"\);) s
+(                     break;) s
+(                 }) s
+(             }) s
+(                 } ) s
+(                 for\(i=0; i<nTask; i++\) {) s
+(                 fprintf\(stderr, "%d: %x\\n", i, tids[i]\); ) s
+(             switch\(tids[i]\) {) s
+(                 case  PvmBadParam: {) s
+(                     fprintf\(stderr, "PvmBadParam\\n"\);) s
+(                     break;) s
+(                 }) s
+(                 case  PvmNoHost: {) s
+(                     fprintf\(stderr, "PvmNoHost\\n"\);) s
+(                     break;) s
+(                 }) s
+(                 case  PvmNoFile: {) s
+(                     fprintf\(stderr, "PvmNoFile\\n"\);) s
+/sd 0 def
+1 sn
+fnf
+lg lgp
+pagesave restore
+showpage
+%%Page: 2 2
+/pagesave save def
+/twp true def
+/fnfs 11 def
+/dfs fnfs 0.8 mul def
+/df /Helvetica dfs getfont def
+/dw df setfont td stringwidth pop def
+/sfnf filenmfontname fnfs getfont def
+/hm fnfs 0.25 mul def
+/hs 0.22 inch def
+/bfs 6.8 def
+/bdf /Courier-Bold bfs getfont def
+/bm bfs 0.7 mul def
+/bf /CourierBack bfs getfont def
+/l 69 def
+/c 89 def
+/pw
+   bf setfont (0) stringwidth pop c mul bm dup add add
+   def
+/ph
+   bfs l mul bm dup add add hs add
+   def
+/fns
+      pw
+      fnfs 4 mul dw add (Page 999) stringwidth pop add
+    sub
+  def
+/tm margin twp {3} {2} ifelse div def
+/sd 0 def
+/y [ rm ph add bm add
+          dup ] def
+/sny dfs dfs add def
+/snx sh tm dfs add sub def
+/dy sny def
+/dx tm dfs add def
+/x [ tm			% left page
+          dup 2 mul pw add	% right page
+        ] def
+/scx sh 2 div def
+/fny dy def
+/fnx scx def
+/ly fnfs 2 div y sd get add def
+/lx snx def
+/d (Oct 13 1998 19:19) def
+( stdin ) fn
+sw 0 translate
+90 rotate
+3 hp
+border
+hborder
+/x0 x 0 get bm add def
+/y0 y 0 get bm bfs add hs add sub def
+x0 y0 moveto
+bf setfont
+(                     break;) s
+(                 }) s
+(                 case  PvmNoMem: {) s
+(                     fprintf\(stderr, "PvmNoMem\\n"\);) s
+(                     break;) s
+(                 }) s
+(                 case  PvmSysErr: {) s
+(                     fprintf\(stderr, "PvmSysErr\\n"\);) s
+(                     break;) s
+(                 }) s
+(                 case  PvmOutOfRes: {) s
+(                     fprintf\(stderr, "PvmOutOfRes\\n"\);) s
+(                     break;) s
+(                 }) s
+(             }) s
+(                 }) s
+(                 exit\(EXIT_FAILURE\);) s
+(         }) s
+( }) s
+( ) s
+( #endif) s
+/sd 1 def
+/sd 0 def
+2 sn
+fnf
+lg lgp
+pagesave restore
+showpage
+
+%%Trailer
+%%Pages: 2
+docsave restore end
