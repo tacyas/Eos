@@ -17,11 +17,9 @@ Eos, an extensible and object-oriented system for image analysis of electron mic
 
 ## Install
 
-Easy installation for users
-$ curl -L https://github.com/tacyas/Eos/blob/master/env/install-eos.sh > /tmp/install-eos.sh 
-$ curl -L https://github.com/tacyas/Eos/blob/master/env/Eos_env > /tmp/Eos_env 
+$ git clone 
 $ source /tmp/Eos_env
-$ source /tmp/install-eos.sh
+
 
 ## Contribution
 
