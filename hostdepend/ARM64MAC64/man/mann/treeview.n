@@ -1,0 +1,3900 @@
+'\"
+'\" Copyright 2001-2 by Silicon Metrics Corporation.
+'\"
+'\" Permission to use, copy, modify, and distribute this software and its
+'\" documentation for any purpose and without fee is hereby granted, provided
+'\" that the above copyright notice appear in all copies and that both that the
+'\" copyright notice and warranty disclaimer appear in supporting documentation,
+'\" and that the names of Silicon Metrics or any of their entities not be used
+'\" in advertising or publicity pertaining to distribution of the software
+'\" without specific, written prior permission.
+'\"
+'\" Silicon Metrics disclaims all warranties with regard to this software,
+'\" including all implied warranties of merchantability and fitness.  In no event
+'\" shall Silicon Metrics be liable for any special, indirect or
+'\" consequential damages or any damages whatsoever resulting from loss of use,
+'\" data or profits, whether in an action of contract, negligence or other
+'\" tortuous action, arising out of or in connection with the use or performance
+'\" of this software.  
+'\"
+'\" The hierarchical table widget created by George Howlett.
+'\" Extensive cleanups and enhancements by Peter MacDonald.
+'\"
+'\" The definitions below are for supplemental macros used in Tcl/Tk
+'\" manual entries.
+'\"
+'\" .AP type name in/out ?indent?
+'\"	Start paragraph describing an argument to a library procedure.
+'\"	type is type of argument (int, etc.), in/out is either "in", "out",
+'\"	or "in/out" to describe whether procedure reads or modifies arg,
+'\"	and indent is equivalent to second arg of .IP (shouldn't ever be
+'\"	needed;  use .AS below instead)
+'\"
+'\" .AS ?type? ?name?
+'\"	Give maximum sizes of arguments for setting tab stops.  Type and
+'\"	name are examples of largest possible arguments that will be passed
+'\"	to .AP later.  If args are omitted, default tab stops are used.
+'\"
+'\" .BS
+'\"	Start box enclosure.  From here until next .BE, everything will be
+'\"	enclosed in one large box.
+'\"
+'\" .BE
+'\"	End of box enclosure.
+'\"
+'\" .CS
+'\"	Begin code excerpt.
+'\"
+'\" .CE
+'\"	End code excerpt.
+'\"
+'\" .VS ?version? ?br?
+'\"	Begin vertical sidebar, for use in marking newly-changed parts
+'\"	of man pages.  The first argument is ignored and used for recording
+'\"	the version when the .VS was added, so that the sidebars can be
+'\"	found and removed when they reach a certain age.  If another argument
+'\"	is present, then a line break is forced before starting the sidebar.
+'\"
+'\" .VE
+'\"	End of vertical sidebar.
+'\"
+'\" .DS
+'\"	Begin an indented unfilled display.
+'\"
+'\" .DE
+'\"	End of indented unfilled display.
+'\"
+'\" .SO
+'\"	Start of list of standard options for a Tk widget.  The
+'\"	options follow on successive lines, in four columns separated
+'\"	by tabs.
+'\"
+'\" .SE
+'\"	End of list of standard options for a Tk widget.
+'\"
+'\" .OP cmdName dbName dbClass
+'\"	Start of description of a specific option.  cmdName gives the
+'\"	option's name as specified in the class command, dbName gives
+'\"	the option's name in the option database, and dbClass gives
+'\"	the option's class in the option database.
+'\"
+'\" .UL arg1 arg2
+'\"	Print arg1 underlined, then print arg2 normally.
+'\"
+'\" RCS: @(#) $Id: man.macros,v 1.1.1.1 2009/05/09 16:27:42 pcmacdon Exp $
+'\"
+'\"	# Set up traps and other miscellaneous stuff for Tcl/Tk man pages.
+.if t .wh -1.3i ^B
+.nr ^l \n(.l
+.ad b
+'\"	# Start an argument description
+.de AP
+.ie !"\\$4"" .TP \\$4
+.el \{\
+.   ie !"\\$2"" .TP \\n()Cu
+.   el          .TP 15
+.\}
+.ta \\n()Au \\n()Bu
+.ie !"\\$3"" \{\
+\&\\$1	\\fI\\$2\\fP	(\\$3)
+.\".b
+.\}
+.el \{\
+.br
+.ie !"\\$2"" \{\
+\&\\$1	\\fI\\$2\\fP
+.\}
+.el \{\
+\&\\fI\\$1\\fP
+.\}
+.\}
+..
+'\"	# define tabbing values for .AP
+.de AS
+.nr )A 10n
+.if !"\\$1"" .nr )A \\w'\\$1'u+3n
+.nr )B \\n()Au+15n
+.\"
+.if !"\\$2"" .nr )B \\w'\\$2'u+\\n()Au+3n
+.nr )C \\n()Bu+\\w'(in/out)'u+2n
+..
+.AS Tcl_Interp Tcl_CreateInterp in/out
+'\"	# BS - start boxed text
+'\"	# ^y = starting y location
+'\"	# ^b = 1
+.de BS
+.br
+.mk ^y
+.nr ^b 1u
+.if n .nf
+.if n .ti 0
+.if n \l'\\n(.lu\(ul'
+.if n .fi
+..
+'\"	# BE - end boxed text (draw box now)
+.de BE
+.nf
+.ti 0
+.mk ^t
+.ie n \l'\\n(^lu\(ul'
+.el \{\
+.\"	Draw four-sided box normally, but don't draw top of
+.\"	box if the box started on an earlier page.
+.ie !\\n(^b-1 \{\
+\h'-1.5n'\L'|\\n(^yu-1v'\l'\\n(^lu+3n\(ul'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.el \}\
+\h'-1.5n'\L'|\\n(^yu-1v'\h'\\n(^lu+3n'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.\}
+.fi
+.br
+.nr ^b 0
+..
+'\"	# VS - start vertical sidebar
+'\"	# ^Y = starting y location
+'\"	# ^v = 1 (for troff;  for nroff this doesn't matter)
+.de VS
+.if !"\\$2"" .br
+.mk ^Y
+.ie n 'mc \s12\(br\s0
+.el .nr ^v 1u
+..
+'\"	# VE - end of vertical sidebar
+.de VE
+.ie n 'mc
+.el \{\
+.ev 2
+.nf
+.ti 0
+.mk ^t
+\h'|\\n(^lu+3n'\L'|\\n(^Yu-1v\(bv'\v'\\n(^tu+1v-\\n(^Yu'\h'-|\\n(^lu+3n'
+.sp -1
+.fi
+.ev
+.\}
+.nr ^v 0
+..
+'\"	# Special macro to handle page bottom:  finish off current
+'\"	# box/sidebar if in box/sidebar mode, then invoked standard
+'\"	# page bottom macro.
+.de ^B
+.ev 2
+'ti 0
+'nf
+.mk ^t
+.if \\n(^b \{\
+.\"	Draw three-sided box if this is the box's first page,
+.\"	draw two sides but no top otherwise.
+.ie !\\n(^b-1 \h'-1.5n'\L'|\\n(^yu-1v'\l'\\n(^lu+3n\(ul'\L'\\n(^tu+1v-\\n(^yu'\h'|0u'\c
+.el \h'-1.5n'\L'|\\n(^yu-1v'\h'\\n(^lu+3n'\L'\\n(^tu+1v-\\n(^yu'\h'|0u'\c
+.\}
+.if \\n(^v \{\
+.nr ^x \\n(^tu+1v-\\n(^Yu
+\kx\h'-\\nxu'\h'|\\n(^lu+3n'\ky\L'-\\n(^xu'\v'\\n(^xu'\h'|0u'\c
+.\}
+.bp
+'fi
+.ev
+.if \\n(^b \{\
+.mk ^y
+.nr ^b 2
+.\}
+.if \\n(^v \{\
+.mk ^Y
+.\}
+..
+'\"	# DS - begin display
+.de DS
+.RS
+.nf
+.sp
+..
+'\"	# DE - end display
+.de DE
+.fi
+.RE
+.sp
+..
+'\"	# SO - start of list of standard options
+.de SO
+.SH "STANDARD OPTIONS"
+.LP
+.nf
+.ta 4c 8c 12c
+.ft B
+..
+'\"	# SE - end of list of standard options
+.de SE
+.fi
+.ft R
+.LP
+See the \\fBoptions\\fR manual entry for details on the standard options.
+..
+'\"	# OP - start of full description for a single option
+.de OP
+.LP
+.nf
+.ta 4c
+Command-Line Name:	\\fB\\$1\\fR
+Database Name:	\\fB\\$2\\fR
+Database Class:	\\fB\\$3\\fR
+.fi
+.IP
+..
+'\"	# CS - begin code excerpt
+.de CS
+.RS
+.nf
+.ta .25i .5i .75i 1i
+.ft CW
+.sp
+..
+'\"	# CE - end code excerpt
+.de CE
+.fi
+.RE
+.ft R
+.sp
+..
+.de UL
+\\$1\l'|0\(ul'\\$2
+..
+.TH treeview n 2.5 BLT "BLT Built-In Commands"
+.BS
+'\" Note:  do not modify the .SH NAME line immediately below!
+.SH NAME
+treeview \- Create and manipulate hierarchical table widgets
+.BE
+.SH SYNOPSIS
+\fBtreeview\fR \fIpathName \fR?\fIoptions\fR?
+.SH DESCRIPTION
+The \fBtreeview\fR widget displays a \fBtree\fR of data with
+styles, tags, and data sharing (via \fItree data objects\fR).
+.SH INTRODUCTION
+The \fBtreeview\fR widget manages a collection of entries
+where each entry contains a \fBtree\fR node plus added style and
+attribute information.
+.PP
+Entries are usually inserted into a treeview with a label-list to specify
+the unique hierarchical position relative to \fBroot\fR
+(or the \fB-at\fR node);
+The tail of this label-list is unique within its hierarchical level.
+If no label is given, the generated node-id is used as the label.
+Labels provide a convenient way to index
+entries using the \fB->\fR notation.
+eg.
+.PP
+.CS
+ treeview .t
+ .t insert end
+ .t insert end X
+ .t insert end A {A a} {A b} B C
+ .t insert end a b c {c i} {c ii}   -at root->B
+ set id [.t index root->B->c->i]
+ puts [.t get $id];        # outputs i
+ puts [.t get -full $id];  # outputs {B c i}
+ pack .t
+.CE
+.SH "COLUMN DATA"
+Column data can be stored within an entry using the \fB-data\fR option
+or \fBentry\fR sub-commands, eg.
+.PP
+.CS
+ treeview .t
+ .t column insert end X Y Z
+ .t insert end A -data {X 1 Y 2}
+ .t insert end B -data {X 3 Y 4 Z 5}
+ .t entry conf root->B -data {X 5 Y 4 Z 3}
+ .t entry set  root->A Z 3
+ .t entry incr root->B Y
+ pack .t
+.CE
+.PP
+Labels can be created with auto-generated sequence numbers
+using an empty string or a trailing \fB#auto\fR.
+.PP
+.CS
+ treeview .t
+ .t column insert end X
+ .t insert end {}       -data {X 0};   # Label is "1"
+ .t insert end #auto    -data {X 1};   # Label is "2"
+ .t insert end Foo#auto -data {X 2};   # Label is "Foo1"
+ pack .t
+.CE
+.SH "TREE DATA OBJECT"
+Node data in treeview is actually stored in a tree data object,
+which separates data storage from widget appearance.
+The \fB-tree\fR option can be used to explictly set a tree
+(externally created with the \fBtree\fR command) thus
+giving access to trees more extensive data manipulation facilities, eg.
+.PP
+.CS
+ set t [tree create]
+ $t insert root -label A
+ $t insert root->A -label B -data {X 1}
+ treeview .t -tree $t
+ .t column insert end X
+ pack .t
+.CE
+.PP
+A tree can also be attached to a treeview, eg.
+.PP
+.CS
+ set t [tree create]
+ $t attach [.t cget -tree]
+ set dump [$t dump root]
+ tree destroy $t
+.CE
+.PP
+Note that when inserting data via the \fBtree\fR sub-commands,
+unique label checking is not performed.
+.SH SYNTAX
+.DS
+\fBtreeview \fIpathName \fR?\fIoption value\fR?...
+.DE
+The \fBtreeview\fR command creates a new window \fIpathName\fR and
+makes it into a \fBtreeview\fR widget.  At the time this command is
+invoked, there must not exist a window named \fIpathName\fR, but
+\fIpathName\fR's parent must exist.  Additional options may be
+specified on the command line or in the option database to configure
+aspects of the widget such as its colors and font.  See the
+\fBconfigure\fR operation below for the exact details about what
+\fIoption\fR and \fIvalue\fR pairs are valid.
+.PP
+If successful, \fBtreeview\fR returns the path name of the widget.  It
+also creates a new Tcl command by the same name.  You can use this
+command to invoke various operations that query or modify the widget.
+The operations available are described in the
+.SB "TREEVIEW OPERATIONS"
+section.
+.PP
+Treeview displays nodes as row entries in the widget.  Each entry has a
+text label and icon.  When a node has children, its entry is drawn
+with a small button to the left of the label.  Clicking the mouse over
+this button opens or closes the node.  When a node is \fIopen\fR, its
+children are exposed.  When it is \fIclosed\fR, the children and their
+descedants are hidden.  The button is normally a \fB+\fR or
+\fB\-\fR symbol (ala Windows Explorer), but can be replaced with a
+pair of Tk images (open and closed images).
+.PP
+If the node has data associated with it, they can be displayed in
+columns running vertically on either side the tree.
+You can control
+the color, font, etc of each entry.  Any entry label or data field can
+be edited in-place.
+
+.SH "IDS AND TAGS"
+Nodes can be inserted into a tree using the \fBtreeview\fR widget 
+.PP
+.CS
+  blt::treeview .t
+  set node [.t insert end "one"]
+.CE
+.PP
+or \fBtree\fR command. 
+.PP
+.CS
+ set tree [blt::tree create]
+ set node [$tree insert root -label "one"]
+ blt::treeview .t -tree $tree
+.CE
+.PP
+In both cases, a number identifying the node is returned (the value of
+\fB$node\fR).  This serial number or \fIid\fR uniquely identifies
+the node.  Please note that you can't infer a location or position of
+a node from its id.  The only exception is that the root node is
+always id \fB0\fR. Since nodes may have the same labels or be moved
+within the tree, ids provide an convenient way to identify nodes.  If
+a tree is shared, the ids will be the same regardless if you are using
+by the \fBtreeview\fR widget or the \fBtree\fR command.  Ids are
+recycled only when all nodes are deleted.
+.PP
+A node may also have any number of \fItags\fR associated with it.  A
+tag is just a string of characters, and it may take any form except
+that of an integer.  For example, "\fBx123\fR" is valid, but
+"\fB123\fR" isn't.  The same tag may be associated with many
+different nodes.  This is typically done to associate a group of
+nodes.  Many operations in the \fBtreeview\fR widget take either node
+ids or tag names as arguments.  Using a tag means apply the operation
+to all nodes with that tag.
+.PP
+Commands that take a \fItagnode\fR
+will also accept a list of zero or more integer node numbers (node-list).
+A node-list consist of space separated integers, without leading spaces.
+Node lists can simplify the use of iterating commands and
+are used widely in the \fBtree\fR command.
+.PP
+There are four built-in or psuedo tags:
+.RS
+.TP 1i
+\fBall\fR
+Applies to every node in the tree.
+.TP 1i
+\fBnonroot\fR
+Applies to every node in the tree except the root node.
+.TP 1i
+\fBrootchildren\fR
+Applies to every node in the tree whose parent is the root node.
+.TP 1i
+\fBroot\fR
+Managed automatically by the tree object, \fBroot\fR specifies the node
+that is currently set as the root node for the tree.
+.RE
+.PP
+Tags are shared between clients.  This means for example that
+tags created by the \fBtree\fR command are available in the
+\fBtreeview\fR widget.
+.SH SPECIAL NODE IDS
+There are several special non-numeric ids.  Special ids differ
+from tags in that they are always translated to a single numeric node.
+They also take precedence over tags.  For example, you
+can't use a tag name that is a special id.  These ids are specific to
+the \fBtreeview\fR widget.
+.TP 15
+\fBactive\fR
+The node where the mouse pointer is currently located.
+When a node is active, it is drawn using its active icon 
+(see the \fB\-activeicon\fR option).
+The \fBactive\fR id is changed automatically by moving the mouse
+pointer over another node or by using the \fBentry activate\fR
+operation. Note that there can be only one active node at a time.
+.TP 15
+\fBanchor\fR
+The node representing the fixed end of the current selection.  
+The anchor is set by the \fBselection anchor\fR operation.
+.TP 15
+\fBbottom\fR
+The last viewable node.
+.TP 15
+\fBcurrent\fR
+The node where the mouse pointer is currently located.
+But unlike \fBactive\fR, this id changes while the
+selection is dragged.  It is used to determine the
+current node during button drags.
+.TP 15
+\fBdown\fR
+The next open node from the current focus. The \fBdown\fR of
+the last open node is the same.
+.TP 15
+\fBend\fR
+The last node at depth 1 in tree.  
+.TP 15
+\fBfocus\fR
+The node that currently has focus.  When a node has focus,
+it receives key events.  To indicate focus, the node
+is drawn with a dotted line around its label.  You can change the 
+focus using the \fBfocus\fR operation.
+.TP 15
+\fBlast\fR
+Same as \fBtail\fR.
+.TP 15
+\fBmark\fR
+The node representing the non-fixed end of the current selection.  
+The mark is set by the \fBselection mark\fR operation.
+.TP 15
+\fBnext\fR
+The next open node from the current focus.  But unlike \fBdown\fR,
+when the focus is on last open node, \fBnext\fR wraps around to the 
+root node.
+.TP 15
+\fBnextsibling\fR
+The next sibling from the node with the current focus.  If the node
+is already the last sibling then it is the \fBnextsibling\fR.
+.TP 15
+\fBparent\fR
+The parent of the node with the current focus. The \fBparent\fR
+of the root is also the root.
+.TP 15
+\fBprev\fR
+The last open node from the current focus. But unlike \fBup\fR,
+when the focus is at root, \fBlast\fR wraps around to the last
+open node in the tree.
+.TP 15
+\fBprevsibling\fR
+The previous sibling from the node with the current focus.  If the node
+is already the first sibling then it is the \fBprevsibling\fR.
+.TP 15
+\fBroot\fR
+The root node. You can also use id \fB0\fR to indicate
+the root.
+.TP 15
+\fBtail\fR
+The last node in the tree, viewable or not.
+.TP 15
+\fBtop\fR
+The first node.
+.TP 15
+\fBup\fR
+The last open node (in depth-first order) from the current focus. The
+\fBup\fR of the root node (i.e. the root has focus) is also the root.
+.TP 15
+\fBview.top\fR
+First node that's current visible in the widget.
+.TP 15
+\fBview.bottom\fR
+Last node that's current visible in the widget.
+.TP 15
+\fB@\fIx\fB,\fIy\fR
+Indicates the node that covers the point in the treeview window
+specified by \fIx\fR and \fIy\fR (in pixel coordinates).  If no
+part of the entryd covers that point, then the closest node to that
+point is used.
+.TP 15
+\fB\fIID\fB->\fILABEL\fR->\fILABEL\fR...
+Lookup via node labels, eg. \fI0->Main->Users\fR.
+Quotes can be used around labels that use reserved words or contain
+spaces, eg. \fI0->"Main"->'User Groups'\fR.
+See the \fBtree\fR man page for more details.
+.PP
+A node may be specified as an id or tag. If the specifier is an
+integer then it is assumed to refer to the single node with that id.
+If the specifier is not an integer, it's checked to see if it's a
+special id (such as focus).  Otherwise, it's assumed to be tag.  Some
+operations only operate on a single node at a time; if a tag refers to
+more than one node, then an error is generated.
+.SH DATA FIELDS
+Nodes in treeview can manage \fIdata fields\fR associated with columns.
+Data is displayed in columns running on either side of the
+displayed tree.  Any node that doesn't have a
+specific field will show as blank.  Columns can (interactively) be resized,
+hidden, and, moved.
+.PP
+Nodes can contain disjoint data fields (they aren't required to set all
+fields).  And data manipulated via the \fBtree\fR command
+does not require an associated treeview column at all.
+.SH ARRAY REFERENCES
+Like \fBtree\fR, \fBtreeview\fR supports accessing data
+sub-fields with an \fIarray notation\fR, eg.
+.PP
+.CS
+ treeview .t
+ .t col insert end A
+ .t insert end a -data {A "x 1 y 2 z 3"}
+ .t entry incr  root->a A(x)
+ .t entry set   root->a A(w) 0
+ .t entry unset root->a A(z)
+.CE
+.PP
+Only the following treeview commmands support the \fIarray notation\fR:
+\fBentry get\fR, \fBentry set\fR, \fBentry incr\fR, \fBentry unset\fR,
+and \fBfind -column\fR.
+See \fBtree\fR for more complete support.
+.SH ENTRY BINDINGS
+You can bind Tcl commands to be invoked when events occur on nodes
+(much like Tk canvas items).  You can bind a node using its id or
+its \fIbindtags\fR.  Bindtags are simply names that associate a
+binding with one or more nodes.  There is a built-in tag \fBall\fR
+that all node entries automatically have.
+.SH "TREEVIEW OPERATIONS"
+The \fBtreeview\fR operations are the invoked by specifying
+the widget's pathname, the operation, and any arguments that pertain 
+to that operation.  The general form is:
+.sp
+.CS
+\fIpathName operation \fR?\fIarg arg ...\fR?
+.CE
+.sp
+\fIOperation\fR and the \fIarg\fRs determine the exact behavior of the
+command.  The following operation are available for \fBtreeview\fR widgets:
+.TP
+\fIpathName \fBbbox\fR ?\fB-screen\fR? \fItagOrId...\fR
+Returns a list of 4 numbers, representing a bounding box of around
+the specified entries. The entries is given by one or more \fItagOrId\fR 
+arguments.  
+If the \fB\-screen\fR flag is given, then the x-y coordinates
+of the bounding box are returned as screen coordinates, not 
+virtual coordinates. Virtual coordinates start from \fB0\fR from the
+root node and include the title.
+If the \fB\-world\fR flag is given, then the y coordinate
+the title height is added in.
+The returned list contains the following values.
+.RS
+.TP 1i
+\fIx\fR 
+X-coordinate of the upper-left corner of the bounding box.
+.TP
+\fIy\fR
+Y-coordinate of the upper-left corner of the bounding box.
+.TP
+\fIwidth\fR
+Width of the bounding box.
+.TP
+\fIheight\fR
+Height of the bounding box.
+.RE
+.TP
+\fIpathName \fBbind\fR \fItagName\fR ?\fIsequence command\fR?
+Associates \fIcommand\fR with \fItagName\fR such that whenever the
+event sequence given by \fIsequence\fR occurs for a node with this
+tag, \fIcommand\fR will be invoked.  The syntax is similar to the 
+\fBbind\fR command except that it operates on \fBtreeview\fR entries, 
+rather than widgets.
+The \fItagName\fR can be an entry or tag, or predefined tags such
+as \fBall\fR, \fBEntry\fR or \fBButton\fR.
+See the \fBbind\fR manual entry for
+complete details on \fIsequence\fR and the substitutions performed on 
+\fIcommand\fR before invoking it.  
+.sp
+If all arguments are specified then a new binding is created, replacing 
+any existing binding for the same \fIsequence\fR and \fItagName\fR.
+If the first character of \fIcommand\fR is \fB+\fR then \fIcommand\fR 
+augments an existing binding rather than replacing it. 
+If no \fIcommand\fR argument is provided then the command currently
+associated with \fItagName\fR and \fIsequence\fR (it's an error occurs 
+if there's no such binding) is returned.  If both \fIcommand\fR and 
+\fIsequence\fR are missing then a list of all the event sequences for 
+which bindings have been defined for \fItagName\fR. 
+.TP
+\fIpathName \fBbutton \fIoperation\fR ?\fIargs\fR?
+This command is used to control the button selectors within a 
+\fBtreeview\fR widget.  
+It has several forms, depending on \fIoperation\fR:
+.RS
+.TP
+\fIpathName \fBbutton activate\fR \fItagOrId\fR
+Designates the node given by \fItagOrId\fR as active.  
+When a node is active it's entry is drawn using its active icon 
+(see the \fB\-activeicon\fR option). 
+Note that there can be only one active entry at a time.
+The special id \fBactive\fR indicates the currently active node.
+.TP
+\fIpathName \fBbutton bind\fR \fItagName\fR ?\fIsequence command\fR?
+Associates \fIcommand\fR with \fItagName\fR such that whenever the
+event sequence given by \fIsequence\fR occurs for an button of a
+node entry with this tag, \fIcommand\fR will be invoked.  The syntax is
+similar to the \fBbind\fR command except that it operates on
+\fBtreeview\fR buttons, rather than widgets. See the \fBbind\fR
+manual entry for complete details on \fIsequence\fR and the
+substitutions performed on \fIcommand\fR before invoking it.
+.sp
+If all arguments are specified then a new binding is created, replacing 
+any existing binding for the same \fIsequence\fR and \fItagName\fR.
+If the first character of \fIcommand\fR is \fB+\fR then \fIcommand\fR 
+augments an existing binding rather than replacing it. 
+If no \fIcommand\fR argument is provided then the command currently
+associated with \fItagName\fR and \fIsequence\fR (it's an error occurs 
+if there's no such binding) is returned.  If both \fIcommand\fR and 
+\fIsequence\fR are missing then a list of all the event sequences for 
+which bindings have been defined for \fItagName\fR. 
+.TP
+\fIpathName \fBbutton cget\fR \fIoption\fR
+Returns the current value of the configuration option given
+by \fIoption\fR.
+\fIOption\fR may have any of the values accepted by the \fBconfigure\fR
+operation described below.
+.TP
+\fIpathName \fBbutton configure\fR ?\fIoption\fR? ?\fIvalue option value ...\fR?
+Query or modify the configuration options of the widget.
+If no \fIoption\fR is specified, returns a list describing all of
+the available options for \fIpathName\fR (see \fBTk_ConfigureInfo\fR for
+information on the format of this list).  If \fIoption\fR is specified
+with no \fIvalue\fR, then the command returns a list describing the
+one named option (this list will be identical to the corresponding
+sublist of the value returned if no \fIoption\fR is specified).  If
+one or more \fIoption\-value\fR pairs are specified, then the command
+modifies the given widget option(s) to have the given value(s);  in
+this case the command returns an empty string.
+\fIOption\fR and \fIvalue\fR are described in the section 
+.SB "BUTTON OPTIONS" 
+below.
+.RE
+.TP
+\fIpathName \fBcget\fR \fIoption\fR
+Returns the current value of the configuration option given
+by \fIoption\fR.
+\fIOption\fR may have any of the values accepted by the \fBconfigure\fR
+operation described below.
+.TP
+\fIpathName \fBclose \fR?\fB\-recurse\fR? ?\fB\-trees\fR? \fItagOrId...\fR
+Closes the node specified by \fItagOrId\fR.  In addition, if a Tcl
+script was specified by the \fB\-closecommand\fR option, it is
+invoked.  If the node is already closed, this command has no effect.
+If the \fB\-recurse\fR flag is present, each child node is
+recursively closed.
+The \fB\-trees\fR flag is like \fB\-recurse\fR but operates only on nodes
+with children, excluding the \fIroot\fR.
+.TP
+\fIpathName \fBcolumn \fIoperation\fR ?\fIargs\fR?
+The following operations are available for treeview columns.
+.RS
+.TP
+\fIpathName \fBcolumn activate\fR \fIcolumn\fR
+Sets the active column to \fIcolumn\fR.  \fIColumn\fR is the
+name of a column in the widget.
+When a column is active, it's drawn using its \fB\-activetitlebackground\fR
+and \fB\-activetitleforeground\fR options.  If \fIcolumn\fR is the \fB""\fR,
+then no column will be active.  If no column argument is provided, then
+the name of the currently active column is returned.
+.TP
+\fIpathName \fBcolumn bbox\fR ?\fB-visible\fR? \fIcolumn entry\fR
+Returns a list of 4 numbers, representing a bounding box of around
+the specified entries cell. Giving an entry of \fB-1\fR matches the title row.
+If \fB-visible\fR is given, the width is constrained to not extend
+past the widgets display.
+.TP
+\fIpathName \fBcolumn bind\fR \fIcolumn\fR ?\fIsequence command\fR?
+These deal with the title part of columns.
+Associates \fIcommand\fR with \fIcolumn\fR such that whenever the
+event sequence given by \fIsequence\fR occurs for a column
+node entry with this tag, \fIcommand\fR will be invoked.  The syntax is
+similar to the \fBbind\fR command except that it operates on
+\fBtreeview\fR colunns, rather than widgets. See the \fBbind\fR
+manual entry for complete details on \fIsequence\fR and the
+substitutions performed on \fIcommand\fR before invoking it.
+.TP
+\fIpathName \fBcolumn cget\fR \fIname\fR \fIoption\fR
+Returns the current value of the column configuration option given
+by \fIoption\fR for \fIname\fR.  \fIName\fR is the name of column
+that corresponds to a data field.
+\fIOption\fR may have any of the values accepted by the \fBconfigure\fR
+operation described below.
+.TP
+\fIpathName \fBcolumn configure\fR \fIname\fR ?\fIname\fR ...? ?\fIoption\fR? ?\fIvalue option value \fR ...?
+Query or modify the configuration options of one or more columns
+\fIname\fR. \fIName\fR is the name of the column corresponding
+to a data field.
+If no \fIoption\fR is specified, returns a list describing all of
+the available options for \fIpathName\fR (see \fBTk_ConfigureInfo\fR for
+information on the format of this list).  If \fIoption\fR is specified
+with no \fIvalue\fR, then the command returns a list describing the
+one named option (this list will be identical to the corresponding
+sublist of the value returned if no \fIoption\fR is specified).  If
+one or more \fIoption\-value\fR pairs are specified, then the command
+modifies the given widget option(s) to have the given value(s);  in
+this case the command returns an empty string.
+\fIOption\fR and \fIvalue\fR are described in the section
+.SB "COLUMN OPTIONS" 
+below.
+.TP
+\fIpathName \fBcolumn current\fR
+Get column currently under the mouse.
+.TP
+\fIpathName \fBcolumn delete\fR \fIfield\fR ?\fIfield\fR...?
+Deletes one of more columns designated by \fIfield\fR.
+Requests to delete the tree column are silently ignored.
+Note that this does not delete the data fields themselves.
+.TP
+\fIpathName \fBcolumn index\fR \fIindex\fR
+Return the integer for index.  May use "end" or "end-N".
+.TP
+\fIpathName \fBcolumn insert\fR \fIposition\fR \fIfield\fR  ?\fIfield\fR ...? ?\fIoptions\fR...?
+Inserts one (or more) columns designated by \fIfield\fR.
+A column displays
+each entry node's data field using this name.  If the node doesn't
+define the given field, the cell is left blank.
+\fIPosition\fR
+indicates where in the list of columns to add the new column.  It may be
+either a name, a number or \fBend\fR.
+If multiple column \fIfields\fR are given, only the first can start with a dash.
+If \fIfield\fR is the empty string or \fB#auto\fR,
+a name is generated prefixed by the string \fBCol\fR and a unique integer.
+If \fIfield\fR ends with \fB#auto\fR, the generated name uses it's prefix
+instead.
+The returned values is the created column names.
+Note that the tree column \fI#0\fR is predefined and can not be deleted.
+.TP
+\fIpathName \fBcolumn invoke\fR \fIfield\fR
+Invokes the Tcl command associated with the column \fIfield\fR, 
+if there is one (using the column's \fB\-command\fR option).  
+The command is ignored if the column's \fB\-state\fR option 
+set to \fBdisabled\fR.
+.TP
+\fIpathName \fBcolumn isset ?\fIstartOrTag\fR? ?\fIend\fR?
+Returns list of data columns for elements in range
+actually having data values set in them.
+One possible use for this might be hiding columns which are empty.
+With no arguments, checks only entries on the visible screen.
+With one argument, checks all entries matching a tag or id.
+With two arguments, checks all entries between start and end range.
+.TP
+\fIpathName \fBcolumn istree \fIfield\fR
+Return 1 if column is the tree column.
+.TP
+\fIpathName \fBcolumn move \fIname\fR \fIdest\fR 
+Moves the column \fIname\fR to the destination position.  
+\fIDest\fR is the offset, name of another column or a screen position
+in the form \fB@\fIx\fB,\fIy\fR.
+.TP
+\fIpathName \fBcolumn names ?\fI-visible\fR? ?\fIPATTERN\fR?
+Returns a list of the names of all columns in the widget.
+The list is ordered as the columns are drawn from left-to-right.
+If -visible, then display only columns where -hide is 0.
+A pattern may be specified to limit results.
+.TP
+\fIpathName \fBcolumn nearest\fR \fIx\fR ?\fIy\fR?
+Returns the name of the column closest to the given X-Y screen
+coordinate.  If you provide a \fIy\fR argument (it's optional),
+a name is returned only when if the point is over a column's title.
+.TP
+\fIpathName \fBcolumn offsets\fR
+Returns the starting offsets for each column.
+.TP
+\fIpathName \fBcolumn resize op ...\fR
+Operations for resize where op is one of activate, anchor, mark or set.
+.TP
+\fIpathName \fBcolumn see\fR ?\fB-anchor\fR \fIanchor\fR? \fIfield\fR
+Adjusts the view so that the column given by \fIfield\fR is
+visible in the widget window.
+The node's position on the screen can be set using the
+\fB\-anchor\fR flag.  Its value is a Tk anchor position: \fBw, c, e\fR.
+.TP
+\fIpathName \fBcolumn values\fR ?\fB-visible\fR? ?\fB-default value\fR? \fIfield\fR ?\fIstart\fR? ?\fIend\fR?
+Returns a list of data values for a column.
+The -visible flag excludes the values that are hidden or inside closed subtrees.
+The root nodes does not get included when \fI-hideroot\fR is true.
+The -default option specifies a value to substitute for unset data column cells.
+.RE
+.TP
+\fIpathName \fBconfigure\fR ?\fIoption\fR? ?\fIvalue option value ...\fR?
+Query or modify the configuration options of the widget.
+If no \fIoption\fR is specified, returns a list describing all of
+the available options for \fIpathName\fR (see \fBTk_ConfigureInfo\fR for
+information on the format of this list).  If \fIoption\fR is specified
+with no \fIvalue\fR, then the command returns a list describing the
+one named option (this list will be identical to the corresponding
+sublist of the value returned if no \fIoption\fR is specified).  If
+one or more \fIoption\-value\fR pairs are specified, then the command
+modifies the given widget option(s) to have the given value(s);  in
+this case the command returns an empty string.
+\fIOption\fR and \fIvalue\fR are described in the section
+.SB "TREEVIEW OPTIONS"
+below.
+.TP
+\fIpathName \fBcurselection\fR
+Returns a list containing the ids of all of the entries that are 
+currently selected.
+If there are no entries selected, then the empty string is returned.
+.TP
+\fIpathName \fBdelete \fItagnode\fR...
+Deletes one or more entries given by \fItagnode\fR and its children.
+.TP
+\fIpathName \fBedit ?\fB-test\fR? ?\fB-root\fR? ?\fB-noscroll\fR? ?\fB-scroll\fR? ?\fIX Y\fR?
+Handle cell editing.
+The x,y coordinates are usually required, except when using
+the scroll options.
+.RS
+.TP 1i
+\fB\-noscroll\fR
+Disable scrolling.  Useful when displaying an edit subwindow.
+.TP 1i
+\fB\-scroll\fR
+Re-enable scrolling.  Usually bound to a destroy event of an edit subwindow.
+.TP 1i
+\fB\-root\fR
+Use root coordinates.
+.TP 1i
+\fB\-test\fR
+Test if edit is complete.
+.RE
+.TP
+\fIpathName \fBentry \fIoperation\fR ?\fIargs\fR?
+The following operations are available for treeview entries.
+.RS
+.TP
+\fIpathName \fBentry activate\fR \fItagOrId\fR
+Sets the active entry to the one specified by \fItagOrId\fR.  
+When an entry is active it is drawn using its active icon 
+(see the \fB\-activeicon\fR and \fB\-activeleaficon\fR options). 
+The special id of the currently active node is \fBactive\fR.
+Note that there can be only one active node at a time and
+currently icons must be the same size/shape as the backgrounds are not cleared.
+But \fBbind\fR can be used to overcome these limitations.
+.TP
+\fIpathName \fBentry cget\fR \fIoption\fR
+Returns the current value of the configuration option given
+by \fIoption\fR.
+\fIOption\fR may have any of the values accepted by the \fBconfigure\fR
+operation described below.
+.TP
+\fIpathName \fBentry children\fR \fItagOrId\fR  ?\fIfirst\fR? ?\fIlast\fR?
+Returns a list of ids for the given range of children of \fItagOrId\fR.  
+\fITagOrId\fR is the id or tag of the node to be examined.
+If only a \fIfirst\fR argument is present, then the id 
+of the that child at that numeric position is returned.  If both \fIfirst\fR 
+and \fIlast\fR arguments are given, then the ids of all the children
+in that range are returned.  Otherwise the ids of all children
+are returned.  
+.TP
+\fIpathName \fBentry configure\fR \fItagnode\fR ?\fIoption\fR? ?\fIvalue option value ...\fR?
+Query or modify the configuration options of the widget.
+If no \fIoption\fR is specified, returns a list describing all of
+the available options for \fItagnode\fR (see \fBTk_ConfigureInfo\fR for
+information on the format of this list).  If \fIoption\fR is specified
+with no \fIvalue\fR, then the command returns a list describing the
+one named option (this list will be identical to the corresponding
+sublist of the value returned if no \fIoption\fR is specified).  If
+one or more \fIoption\-value\fR pairs are specified, then the command
+modifies the given widget option(s) to have the given value(s);  in
+this case the command returns an empty string.
+\fIOption\fR and \fIvalue\fR are described below:
+.TP
+\fIpathName \fBentry delete\fR \fItagOrId\fR ?\fIfirst\fR ?\fIlast\fR?
+Deletes the one or more children nodes of the parent \fItagOrId\fR.
+If \fIfirst\fR and \fIlast\fR arguments are present, they are
+positions designating a range of children nodes to be deleted.
+.TP
+\fIpathName \fBentry depth \fItagOrId\fR
+Return tree depth of node where root is 0.
+.TP
+\fIpathName \fBentry down \fItagOrId\fR
+The next open node from the given node. The \fBdown\fR of
+the last open node is the same.
+.TP
+\fIpathName \fBentry exists \fItagOrId\fR
+Return 1 if entry exists.
+.TP
+\fIpathName \fBentry get\fR \fItagOrId\fR ?\fIkey\fR? ?\fIdefault\fR?
+Return a key-field value for an entry.
+When no \fIkey\fR is given, returns the values of all visible columns.
+If the given \fIkey\fR is undefined, return \fIdefault\fR if given, else
+throw an error.
+Unlike \fBentry set\fR, the tree
+is accessed directly so keys not having associated columns are supported.
+.TP
+\fIpathName \fBentry incr\fR \fItagOrId key\fR ?\fIamount\fR?
+Increment value by 1 or given \fIamount\fR and return the value.
+The incr operation normally tries to use integers,
+but uses doubles when one of
+value or \fIamount\fR is a double.
+An array reference may also be used.
+.TP
+\fIpathName \fBentry isbefore \fItagOrId1\fR \fItagOrId2\fR
+Returns 1 if \fItagOrId1\fR is before \fItagOrId2\fR and 0 otherwise.
+.TP
+\fIpathName \fBentry ishidden \fItagOrId\fR
+Returns 1 if the node is currently hidden and 0 otherwise.  A node is
+also hidden if any of its ancestor nodes are closed or hidden.
+.TP
+\fIpathName \fBentry isleaf \fItagOrId\fR
+Returns 1 if the node is a leaf node.
+.TP
+\fIpathName \fBentry isopen \fItagOrId\fR
+Returns 1 if the node is currently open.
+.TP
+\fIpathName \fBentry isset \fR \fItagOrId col\fR
+Return true if the entry sets a column-field (has a value).
+The entry and column both must exist.
+.TP
+\fIpathName \fBentry isvisible \fItagOrId\fR
+Returns 1 if node is not hidden, inside a closed subtree.
+.TP
+\fIpathName \fBentry next \fItagOrId\fR
+The next open node from the given node.  But unlike \fBdown\fR,
+when the focus is on last open node, \fBnext\fR wraps around to the 
+root node.
+.TP
+\fIpathName \fBentry parent \fItagOrId\fR
+Returns parent of the given node.
+.TP
+\fIpathName \fBentry prev \fItagOrId\fR
+The last open node from the given node. But unlike \fBup\fR,
+when the focus is at root, \fBlast\fR wraps around to the last
+open node in the tree.
+.TP
+\fIpathName \fBentry relabel \fItagOrId newLabel\fR
+Change the tree node label associated with an entry.
+This sets the tree node \fIlabel\fR;
+ie. the value returned by the \fBget\fR command.
+Note this is not the same thing as the
+treeview entries \fB-label\fR option.
+Also, the \fB-allowduplicates\fR option must be enabled to use this command
+as no duplicate checking will be performed.
+.TP
+\fIpathName \fBentry select \fItagOrId\fR
+Make the given node visible and give it the focus.
+When in single selectmode, select it (calls \fI::blt::tv::MoveFocus\fR)
+.TP
+\fIpathName \fBentry set \fR \fItagOrId col\fR ?\fIvalue col value ...\fR?
+Get or set column-fields for an entry.  Provides a simple
+way to read or update fields from the \fI-data\fR option of an entry.
+An array reference may also be used.
+.TP
+\fIpathName \fBentry sibling ?\fB-before\fR? \fItagOrId\fR
+The next/previous sibling from the given node.  If the node
+is already the last/first sibling then nothing is returned.
+.TP
+\fIpathName \fBentry size\fR \fB\-recurse\fR \fItagOrId\fR
+Returns the number of children for parent node \fItagOrId\fR.  
+If the \fB\-recurse\fR flag is set, the number of all 
+its descendants is returned.  The node itself is not counted.
+.TP
+\fIpathName \fBentry unset \fR \fItagOrId col\fR
+Unset a column-field for an entry.
+An array reference may also be used.
+.TP
+\fIpathName \fBentry up \fItagOrId\fR
+The last open node (in depth-first order) from the given node. The
+\fBup\fR of the last node is itself.
+.TP
+\fIpathName \fBentry value \fR \fItagOrId\fR ?\fIcol\fR?
+Return the value for an entry column, or all visible columns
+if \fIcol\fR not given.
+Unlike \fBentry set\fR, this gives access to the formatted value
+from \fB\-formatcmd\fR (if there was one).
+.RE
+.TP
+\fIpathName \fBfind \fR?\fIflags\fR? \fIfirst\fR \fIlast\fR
+Finds for all entries matching the criteria given by \fIflags\fR.  A
+list of ids for all matching nodes is returned. \fIFirst\fR and
+\fIlast\fR are ids designating the range of the search in
+depth-first order. If \fIlast\fR is before \fIfirst\fR, then nodes
+are searched in reverse order.  The valid flags are:
+.RS
+.TP 1i
+\fB\-addtag NAME\fR
+Add tag to each matching entry.
+The tag will be created even if no nodes are tagged.
+.TP 1i
+\fB\-cmdargs\fR \fIcolumns\fR
+Specify columns whose values are to be appended to \fB\-command\fR.
+.TP 1i
+\fB\-command\fR \fIcommand\fR
+Invoke \fIcommand\fR for each matching node.  Before \fIcommand\fR is
+invoked, the id of the node is appended. If \fIcommand\fR
+generates an error, processing stops and the \fBfind\fR operation
+returns an error.
+If \fIcommand\fR returns \fBreturn\fR, then the returned integer 
+is used to indicate 1 for match or 0 for mismatch.
+.TP 1i
+\fB\-column\fI col\fR
+Match name against value of given column.
+An array reference may also be used.
+This option must be used in conjunction with
+\fI-name\fR and may not be used with \fI-usepath\fR.
+.TP 1i
+\fB\-count\fR
+Just return the number of matches.
+.TP 1i
+\fB\-depth\fR \fInumber\fR
+Entry must be at depth \fInumber\fR.
+.TP 1i
+\fB\-exact\fR
+Patterns must match exactly.  The is the default.
+.TP 1i
+\fB\-exec\fI string\fR
+Specifies a Tcl script to be evaluated for each matching node.
+If \fB-var\fR was also specified, that variable is set with the value of 
+the node id before each evaluation.  Otherwise,
+percent sustitutions are performed: note this is much
+less efficient than using either \fB-var\fR or \fB-command\fR
+.sp
+The result of each eval gets appended to the return list, unless
+the script issues a CONTINUE, in which case that node is skipped.
+.sp
+The available percent substitutions on \fIstring\fR are:
+.RS 
+.TP 5
+\fB%#\fR
+The id of the node.
+.TP 5
+\fB%W\fR
+The pathname of the widget.
+.TP 5
+\fB%p\fR
+The name of the node.
+.TP 5
+\fB%P\fR
+The full pathname of the node.
+.TP 5
+\fB%V\fR
+The current value (the node name, node label or column value).
+.TP 5
+\fB%F\fR
+Like \fB%V\fR, but returns the on-screen value (from -formatcmd).
+.TP 5
+\fB%C\fR
+The current column.
+.TP 5
+\fB%%\fR
+Translates to a single percent.
+.RE
+.TP 1i
+\fB\-glob\fR
+Use global pattern matching.  Matching is done in a fashion
+similar to that used by \fBstring match\fR.
+.TP 1i
+\fB\-invert\fR
+Invert the meaning of the pattern match for \fB-name\fR.
+.TP 1i
+\fB\-isclosed\fR
+Include only entries that are closed.
+.TP 1i
+\fB\-isempty\fR
+Only match nodes where the specified \fB-column\fR key value
+was unset.
+.TP 1i
+\fB\-ishidden\fR
+Include only entries that are hidden, either because the entry
+has set -hide, or is has style that is hidden.
+The root node is not included.
+.TP 1i
+\fB\-isleaf\fR
+Entry must not have child nodes.
+.TP 1i
+\fB\-ismapped\fR
+Include only entries that are currently all or partly drawn on screen.
+The root node is not included.
+.TP 1i
+\fB\-isopen\fR
+Include only entries that are opened.
+.TP 1i
+\fB\-istree\fR
+Entry must have child nodes.
+.TP 1i
+\fB\-limit\fI number\fR
+Stop searching after \fInumber\fR matches.
+.TP 1i
+\fB\-maxdepth\fR
+Entry must be at depth or lower.
+.TP 1i
+\fB\-mindepth\fR
+Entry must be at depth or higher.
+.TP 1i
+\fB\-name\fI pattern\fR
+Specifies pattern to match against node names.
+.TP 1i
+\fB\-nocase\fR
+Comparisison is ignores case.  For -regexp, the target string
+gets lower cased (but not the pattern).
+.TP 1i
+\fB\-notop\fR
+Exclude the \fB-top\fR or starting node.
+.TP 1i
+\fB\-regexp\fR
+Use regular expression pattern matching (i.e. the same as implemented
+by the \fBregexp\fR command).  
+.TP 1i
+\fB\-reldepth\fR 
+Change the meaning of \fB\-depth\fR, \fB\-mindepth\fR and \fB\-maxdepth\fR
+to be relative to the \fB\-top\fR node.
+.TP 1i
+\fB\-return\fI col\fR
+Instead of the node id, return data value of named column.
+If \fIcol\fR starts with a %, performs percent substitution
+as per \fB-command\fR.
+Note that a percent
+substitution longer than 2 chars will append values as list elements.
+.TP 1i
+\fB\-top \fInode\fR
+Search is only at \fInode\fR and it's descendants.
+The default is the root node.
+.TP 1i
+\fB\-useformat\fR
+Compare pattern using \fB\-formatcmd\fR value (if there is one) instead key data value.
+.TP 1i
+\fB\-uselabel\fR
+Compare pattern using label (if there is one) instead last component of path.
+.TP 1i
+\fB\-usepath\fR
+Compare pattern using the full path name.
+.TP 1i
+\fB\-userow\fR
+Compare pattern using the node value plus the values of all keys in the row.
+If used with \fB-visible\fR, only the visible column keys are used.
+.TP 1i
+\fB\-visible\fR
+Exclude values that are hidden or inside closed subtrees.
+eg. The root node is excluded if \fI-hideroot\fR is true.
+.TP 1i
+\fB\-withouttag NAME\fR
+Match entries without tag.
+.TP 1i
+\fB\-withtag NAME\fR
+Match entries with tag.
+.TP 1i  
+\fB\-var \fIvariable\fR
+A variable to set with the node id before each iteration of the \fB-exec\fR
+script.
+.TP 1i
+\fB\-option\fR \fIname value\fR
+Specifies an option name and value
+to match against the node entry's configuration option.
+.TP 1i
+\fB\-\-\fR
+Indicates the end of flags.
+.RE
+.TP
+\fIpathName \fBfocus \fR?\fItagOrId\fR?
+Get or set the focus to the node given by \fItagOrId\fR.  When a node
+has focus, it can receive keyboard events.   
+The special id \fBfocus\fR designates the node that currently has focus.
+.TP
+\fIpathName \fBget\fR ?\fB\-full\fR? ?\fB\-labels\fR? \fItagnode\fR \fItagnode\fR...
+Translates one or more ids to their node entry names.  It returns a list of 
+names for all the ids specified.  If the \fB\-full\fR
+flag is set, then the full pathnames are returned.
+If the \fB\-labels\fR
+flag is set, then the full pathnames using labels are returned.  
+.sp
+Note: Except when a called with a single node id (ie. an integer),
+the result will be a list
+(or list of lists when -separator isn't set).
+.TP 
+\fIpathName \fBhide \fR?\fBflags\fR? \fItagOrId\fR...
+Hides all nodes matching the criteria given by \fIflags\fR.
+If no \fItagOrId\fR are given, traverses entire tree.
+The valid flags are described below:
+.RS
+.TP 1i
+\fB\-column\fI col\fR
+Match name against value of given column.  Must be used with
+\fI-name\fR and can not use \fI-usepath\fR.
+.TP 1i
+\fB\-depth\fR \fInumber\fR
+Entry must be at depth \fInumber\fR.
+.TP 1i
+\fB\-exact\fR
+Match patterns exactly.  The is the default.
+.TP 1i
+\fB\-glob\fR
+Use global pattern matching.  Matching is done in a fashion
+similar to that used by \fBstring match\fR.
+.TP 1i
+\fB\-invert\fR
+Invert the meaning of the pattern match for \fB-name\fR or \fB-option\fR.
+.TP 1i
+\fB\-maxdepth\fR
+Entry must be at depth or lower.
+.TP 1i
+\fB\-mindepth\fR
+Entry must be at depth or higher.
+.TP 1i
+\fB\-name\fI pattern\fR
+Specifies pattern to match against node names.
+.TP 1i
+\fB\-nocase\fR
+Ignore case in match.
+.TP 1i
+\fB\-option name value\fR
+Specifies an option name and value
+to match against the node entry's configuration option.
+.TP 1i
+\fB\-regexp\fR
+Use regular expression pattern matching (i.e. the same as implemented
+by the \fBregexp\fR command).  
+.TP 1i
+\fB\-uselabel\fR
+Specifies that the -name pattern is to match the label.
+.TP 1i
+\fB\-usepath\fR
+Specifies that the -name pattern is to match the full path.
+.TP 1i
+\fB\-withouttag NAME\fR
+Match entries with tag.
+.TP 1i
+\fB\-withtag NAME\fR
+Match entries with tag.
+.TP 1i
+\fB\-\-\fR
+Indicates the end of flags.
+.RE
+.TP
+\fIpathName \fBindex \fR?\fB\-at\fR \fItagOrId\fR? ?\fB\-path\fR? ?\fB\-quiet\fR? \fIstring\fR 
+Returns the id of the node specified by \fIstring\fR.  \fIString\fR
+may be a tag or node id.
+Some special ids are normally relative to the node that 
+has focus but the \fB\-at\fR option can be used to change this.
+The \fB\-path\fR flag does a lookup using \fIString\fR as a path
+relative the tree root (unless the \fB\-at\fR option is given).
+The the \fB\-quiet\fR flag is given, lookup failures quietly return
+the empty string.
+.TP
+\fIpathName \fBinsert\fR \fIposition\fR ?\fIpath\fR? ?\fIpath\fR? ... ?\fIoptions...\fR? 
+Inserts one or more nodes at child \fIposition\fR (a number or \fBend\fR)
+in the parent node.
+The parent node is either \fBroot\fR or the value given by \fB-at\fR.
+The returned value is list of ids for the new entries.
+Only the first \fIpath\fR may start with a dash.
+.sp
+\fIPath\fR is the pathname of the new node.
+By default, pathnames are a Tcl list (each element is a path
+component) however the \fB\-separator\fR option
+can be used to change this.  Pathnames are normally
+relative to the root, but the \fB\-at\fR switch lets you select
+a different parent node.
+If \fIpath\fR is ommitted, it defaults to \fI#auto\fR.
+A \fIpath\fR name of \fI#auto\fR will generate a name.
+This attempts to use the tree node name as the \fIpath\fR name.
+.sp
+If the last component of a \fIpath\fR name 
+ends in \fI#auto\fR, the path is
+generated using the string prefix (before #auto)
+followed by a sequential number unique within the
+parent, eg. \fB.t insert end {users u#auto}\fR.
+.sp
+Note that all ancestors of the new node must already exist, unless the
+\fB\-autocreate\fR option is set.  It is also an error if a node
+already exists, unless the \fB\-allowduplicates\fR option is set.
+.sp
+For large flat trees setting \fB\-allowduplicates\fR to true 
+can greatly speedup loading #auto as it avoids checking overhead.
+This is the fastest way to bulk load large numbers of nodes
+(next to using \fB-tree\fR).
+.sp
+The \fIoption\fR arguments
+may be any of the values accepted by
+\fBentry configure\fR as described in the
+.SB "ENTRY OPTIONS"
+section below, or any unabbreviated \fBinsert-option\fR.
+Note that for multi-node inserts \fBinsert-options\fR will apply
+to all following nodes, and only the first \fIpath\fR can start with a dash.
+.sp
+The valid \fBinsert-options\fR are:
+.RS
+.TP 8
+\fB-at\fR \fInodeid\fR
+Specify the parent node to insert entries into.  The default is \fBroot\fR.
+.TP 8
+\fB-node\fR \fInum\fR
+The \fB\-node\fR switch lets you specify a tree node number id
+directly instead of having one generating automatically.
+For multi-node inserts, the node number gets incremented.
+.TP 8
+\fB-styles\fR \fIlist\fR
+The \fB\-styles\fR switch specifies a list of column/stylename
+pairs to set for entries having a \fB\-data\fR option. 
+.TP 8
+\fB-tags\fR \fIlist\fR
+The \fB\-tags\fR switch specifies a list of tags to add
+to the new entries.
+.RE
+.TP
+\fIpathName \fBmove \fItagnode\fR \fIhow\fR \fIdestId\fR
+Moves the node(s) given by \fItagnode\fR to the destination node.  The
+node can not be an ancestor of the destination.  \fIDestId\fR is
+the id of the destination node and can not be the root of the
+tree.  In conjunction with \fIhow\fR, it describes how the move is
+performed.
+.RS
+.TP 8
+\fBbefore\fR
+Moves the node before the destination node.
+.TP 8
+\fBafter\fR
+Moves the node after the destination node.
+.TP 8
+\fBinto\fR
+Moves the node to the end of the destination's list of children.
+.RE
+.TP
+\fIpathName \fBnearest\fR  ?\fB-root\fR?  ?\fB-strict\fR? \fIx y\fR ?\fIvarName\fR?
+Returns the id of the node entry closest to the given X-Y screen
+coordinate.  If the coordinate is not directly over any node, then the
+nearest node is returned.  If the argument \fIvarName\fR is present,
+this is a Tcl variable that is set to either \fBbutton\fR,
+\fBicon\fR, \fBlabel\fR, \fBtitle\fR, \fBtitlelabel\fR, \fBtitleicon\fR, \fBdatalabel\fR, \fBdataicon\fR, or \fB""\fR depending what part of the
+entry the coordinate lies.
+The -root option subtracts the windows root from the coordinates.
+The -strict option fails the match if not directly
+over a node, eg. in the title or past end of last row.
+.TP
+\fIpathName \fBopen \fR?\fB\-recurse\fR? ?\fB\-parent\fR? ?\fB\-trees\fR? \fItagnode...\fR
+Opens the one or more nodes specified by \fItagnode\fR.  
+If a node is not already open, the Tcl script specified by the 
+\fB\-opencommand\fR option is invoked. If the \fB\-recurse\fR flag 
+is present, then each descendant is recursively opened.  
+The \fB\-trees\fR flag is like \fB\-recurse\fR but operates only on nodes
+with children.
+The \fB\-parent\fR flag ensures visibility by opening all parent nodes.
+.TP
+\fIpathName \fBrange\fR ?\fB-open\fR? \fIfirst last\fR
+Returns the ids in depth-first order of the nodes
+between the \fIfirst\fR and \fIlast\fR ids.  If the \fB\-open\fR
+flag is present, it indicates to consider only open nodes.
+If \fIlast\fR is before \fIfirst\fR, then the ids are
+returned in reverse order.
+.TP
+\fIpathName \fBscan\fR \fIoption args\fR
+This command implements scanning.  It has
+two forms, depending on \fIoption\fR:
+.RS
+.TP
+\fIpathName \fBscan mark \fIx y\fR
+Records \fIx\fR and \fIy\fR and the current view in the treeview
+window;  used in conjunction with later \fBscan dragto\fR commands.
+Typically this command is associated with a mouse button press in
+the widget.  It returns an empty string.
+.TP
+\fIpathName \fBscan dragto \fIx y\fR.
+Computes the difference between its \fIx\fR and \fIy\fR
+arguments and the \fIx\fR and \fIy\fR arguments to the last
+\fBscan mark\fR command for the widget.
+It then adjusts the view by 10 times the
+difference in coordinates.  This command is typically associated
+with mouse motion events in the widget, to produce the effect of
+dragging the list at high speed through the window.  The return
+value is an empty string.
+.RE
+.TP
+\fIpathName \fBsee\fR ?\fB\-anchor \fIanchor\fR? \fItagOrId\fR
+Adjusts the view of entries so that the node given by \fItagOrId\fR is
+visible in the widget window.  It is an error if \fBtagOrId\fR is a
+tag that refers to more than one node.  The node's position
+on the screen can be set using the
+\fB\-anchor\fR flag.
+Its value is \fBw\fR, but can be any one of the Tk anchor positions.
+.TP
+\fIpathName \fBselection \fIoption arg\fR
+This command is used to adjust the selection within a \fBtreeview\fR
+widget.  It has several forms, depending on \fIoption\fR:
+.RS
+.TP
+\fIpathName \fBselection anchor ?\fItagOrId\fR? ?\fIcolumn\fR?
+Sets the selection anchor to the node given by \fItagOrId\fR.
+If \fItagOrId\fR refers to a non-existent node, then the closest
+node is used.
+The selection anchor is the end of the selection that is fixed
+while dragging out a selection with the mouse.
+The special id \fBanchor\fR may be used to refer to the anchor
+node.  With no arguments, returns anchor entry and column if any.
+.TP
+\fIpathName \fBselection cells\fR
+Returns pairs of nodes and columns for all selected cells.
+The -selectmode must be \fIcell\fR or \fImulticell\fR.
+.TP
+\fIpathName \fBselection clear \fIfirst \fR?\fIlast\fR? ?\fIcolumn\fR?
+Removes the entries between \fIfirst\fR and \fIlast\fR
+(inclusive) from the selection.  Both \fIfirst\fR and 
+\fIlast\fR are ids representing a range of entries.
+If \fIlast\fR isn't given, then only \fIfirst\fR is deselected.
+Entries outside the selection are not affected.
+.TP
+\fIpathName \fBselection clearall\fR
+Clears the entire selection.  
+.TP
+\fIpathName \fBselection mark \fItagOrId\fR ?\fIcolumn\fR?
+Sets the selection mark to the node given by \fItagOrId\fR.  This
+causes the range of entries between the anchor and the mark to be
+temporarily added to the selection.  The selection mark is the end of
+the selection that is fixed while dragging out a selection with the
+mouse.  The special id \fBmark\fR may be used to refer to the current 
+mark node.
+If \fItagOrId\fR refers to a non-existent node, then the mark
+is ignored.
+Resetting the mark will unselect
+the previous range.  Setting the anchor finalizes the range.
+.TP
+\fIpathName \fBselection includes \fItagOrId\fR ?\fIcolumn\fR?
+Returns 1 if the node given by \fItagOrId\fR is currently
+selected, 0 if it isn't.
+.TP
+\fIpathName \fBselection present\fR
+Returns 1 if any nodes are currently selected and 0 otherwise.
+.TP
+\fIpathName \fBselection set \fIfirst \fR?\fIlast\fR? ?\fIcolumn\fR?
+Selects all of the nodes in the range between
+\fIfirst\fR and \fIlast\fR, inclusive, without affecting
+the selection state of nodes outside that range.
+.TP
+\fIpathName \fBselection toggle \fIfirst \fR?\fIlast\fR? ?\fIcolumn\fR?
+Selects/deselects nodes in the range between
+\fIfirst\fR and \fIlast\fR, inclusive, from the selection.
+If a node is currently selected, it becomes deselected, and
+visa versa.
+.RE
+.TP 
+\fIpathName \fBshow \fR?\fBflags\fR? \fItagOrId\fR...
+Un-hide nodes matching the criteria given by \fIflags\fR.
+If no \fItagOrId\fR are given, traverses entire tree.
+The \fIflags\fR are the same as for the \fBhide\fR command.
+.TP
+\fIpathName \fBsort\fR ?\fIoperation\fR? \fIargs...\fR
+.RS
+.TP
+\fIpathName \fBsort auto\fR ?\fIboolean\fR
+Turns on/off automatic sorting of node entries.  If \fIboolean\fR is
+true, entries will be automatically sorted as they are opened,
+closed, inserted, or deleted.  If no \fIboolean\fR argument is
+provided, the current state is returned.
+.TP
+\fIpathName \fBsort cget\fR \fIoption\fR
+Returns the current value of the configuration option given
+by \fIoption\fR.
+\fIOption\fR may have any of the values accepted by the \fBconfigure\fR
+operation described below.
+.TP
+\fIpathName \fBsort configure\fR ?\fIoption\fR? ?\fIvalue option value ...\fR?
+Query or modify the sorting configuration options of the widget.
+If no \fIoption\fR is specified, returns a list describing all of
+the available options for \fIpathName\fR (see \fBTk_ConfigureInfo\fR for
+information on the format of this list).  If \fIoption\fR is specified
+with no \fIvalue\fR, then the command returns a list describing the
+one named option (this list will be identical to the corresponding
+sublist of the value returned if no \fIoption\fR is specified).  If
+one or more \fIoption\-value\fR pairs are specified, then the command
+modifies the given sorting option(s) to have the given value(s);  in
+this case the command returns an empty string.
+\fIOption\fR and \fIvalue\fR are described below:
+.RS
+.TP
+\fB\-column\fI string\fR
+Specifies the column to sort. Entries in the widget are rearranged
+according to this column.  If \fIcolumn\fR is \fB""\fR then
+no sort is performed.
+.TP
+\fB\-command\fI string\fR
+Specifies a Tcl procedure to be called when sorting nodes. 
+The procedure is called with 6 arguments: the pathname of the widget,
+the node id of two entries, the column key being sorted
+and the label values of the two entries.  The procedure returns 1 if the first
+node is greater than the second, -1 is the second is greater, and 0
+if equal.  
+.TP
+\fB\-decreasing\fI boolean\fR
+Indicates to sort in ascending/descending order.  If \fIboolean\fR 
+is true, then the entries as in descending order. The default is 
+\fBno\fR.
+.TP
+\fB\-mode\fI string\fR
+Specifies how to compare entries when sorting. \fIString\fR
+may be one of the following:
+.TP
+\fB\-setflat\fI bool\fR
+Used by SortColumn to remember if tree was forced to flat by a sort.
+.RS 
+.TP 1.5i
+\fBascii\fR
+Use string comparison based upon the ASCII collation order.
+.TP 1.5i
+\fBdictionary\fR 
+Use dictionary-style comparison.  This is the same as \fBascii\fR
+except (a) case is ignored except as a tie-breaker and (b) if two
+strings contain embedded numbers, the numbers compare as integers, not
+characters.  For example, "bigBoy" sorts between
+"bigbang" and "bigboy", and "x10y" sorts between "x9y" and "x11y".
+.TP 1.5i
+\fBinteger\fR
+Compares fields as integers.
+.TP 1.5i
+\fBreal\fR
+Compares fields as floating point numbers.
+.TP 1.5i
+\fBcommand\fR
+Use the Tcl proc specified by the \fB\-command\fR option to compare entries 
+when sorting.   If no command is specified, the sort reverts to 
+\fBdictionary\fR sorting.
+.RE
+.RE
+.TP
+\fIpathName \fBsort once\fR ?\fIflags\fR? \fItagOrId...\fR
+Sorts the children for each entries specified by \fItagOrId\fR.  
+By default, entries are sorted by name, but you can specify a 
+Tcl proc to do your own comparisons.
+.RS
+.TP 1.5i
+\fB\-recurse\fR
+Recursively sort the entire branch, not just the children.
+.RE
+.RE
+.TP
+\fIpathName \fBstyle \fIoperation\fR ?\fIargs\fR?
+Styles control how data is to be rendered by the widget.
+They are created with the \fBcreate\fR subcommands (described below)
+A default style name \fBtext\fR is builtin.  It is of type
+\fItextbox\fR and is used as the default style for columns.
+Styles may also be applied to entries, individual cells or
+widget options.  For example, the \fB-altstyle\fR option applies a style to
+every second visible row entry while the
+\fB-levelstyles\fR option can specify a different style for each node level.
+.sp
+The following operations are available for treeview styles.
+.RS
+.TP
+\fIpathName \fBstyle activate\fR ?\fIentry\fR? ?\fIcolumn\fR?
+Get or sets a particular cell as state to active.
+With two arguments sets the current cell to active. With no arguments
+returns the active cell.   With one argument whose entry is 0, sets no
+cell to active.
+.TP
+\fIpathName \fBstyle cget\fR \fIstylename option\fR
+Returns the current value of the configuration option given
+by \fIoption\fR.
+\fIOption\fR may have any of the values accepted by the \fBconfigure\fR
+operation described below.
+.TP
+\fIpathName \fBstyle configure\fR ?\fIstylename option\fR? ?\fIvalue option value ...\fR?
+Query or modify the configuration options of the widget.
+If no \fIoption\fR is specified, returns a list describing all of
+the available options for \fIpathName\fR (see \fBTk_ConfigureInfo\fR for
+information on the format of this list).  If \fIoption\fR is specified
+with no \fIvalue\fR, then the command returns a list describing the
+one named option (this list will be identical to the corresponding
+sublist of the value returned if no \fIoption\fR is specified).  If
+one or more \fIoption\-value\fR pairs are specified, then the command
+modifies the given widget option(s) to have the given value(s);  in
+this case the command returns an empty string.
+\fIOption\fR and \fIvalue\fR are described below:
+.TP
+\fIpathName \fBstyle create\fR \fI...\fR?
+Create a named style.
+For a full list of style options, see the section
+\fISTYLE OPTIONS\fR below.
+.RS
+.TP
+\fIpathName \fBstyle create barbox\fR \fIstylename\fR ?\fIoption value option value ...\fR?
+A \fBbarbox\fR displays numeric data plus a progressbar.
+.TP
+\fIpathName \fBstyle create checkbox\fR \fIstylename\fR ?\fIoption value option value ...\fR?
+A \fBcheckbox\fR style displays boolean or 2-valued data.
+.TP
+\fIpathName \fBstyle create combobox\fR \fIstylename\fR ?\fIoption value option value ...\fR?
+A \fBcombobox\fR style displays multi-valued data.
+.TP
+\fIpathName \fBstyle create textbox\fR \fIstylename\fR ?\fIoption value option value ...\fR?
+A \fBtextbox\fR style displays general text data.
+.TP
+\fIpathName \fBstyle create windowbox\fR ?\fIstylename\fR? ?\fIoption value option value ...\fR?
+The special style \fBwindowbox\fR suports embedding subwindows within data
+cells.
+.RE
+.TP
+\fIpathName \fBstyle find\fR \fIstylename ?column? ?node? ...\fR
+Get all entries with the given style for a given column in the given nodes.
+When no column is given, looks in entry and data columns.
+Duplicates are not eliminated.
+cell.
+.TP
+\fIpathName \fBstyle forget\fR \fIstylename ...\fR
+Eliminates one or more style names
+whose reference count have reached zero (i.e. nothing is using it).
+Requests to delete styles that are still in use are quietly ignored.
+Note that the reference count of style \fBtext\fR is always greater than zero.
+.TP
+\fIpathName \fBstyle get\fR \fIcolumn tagorid\fR
+Return the style(s) for column and nodes.
+cell.
+.TP
+\fIpathName \fBstyle highlight\fR \fIstylename ?on|off?\fR
+Turns on/off highlighting for a particular style.  Used primarily for
+columns.
+.TP
+\fIpathName \fBstyle names\fR
+Lists the names of all the current styles in the treeview widget.
+%.TP
+%\fIpathName \fBstyle priority\fR \fIcolumn node\fR
+%Get the priority style for the given cell.
+.TP
+\fIpathName \fBstyle set\fR \fIstylename column node ...\fR
+Sets a style for a given column for all the ids given.
+If column is the tree, sets the entry style,
+otherwise sets the style in the data column,
+thus setting the style for a single
+cell in an entry.  The style name may be an empty string to unset the style.
+Cells that do not have a value may not have a style set and so are
+silently ignored.
+The number of cells that actually get set with a style is
+returned.
+.TP
+\fIpathName \fBstyle slaves\fR ?\fB-col \fIcol\fR? ?\fB-id \fInode\fR? ?\fB-style \fIstyleName\fR? ?\fB-visible \fIbool\fR? ?\fB-info \fIpath\fR?
+With no arguments, lists all embedded window slaves.
+The \fI-col\fR argument shows only windows in the given column.
+The \fI-id\fR argument shows only windows for the given entry.
+The \fI-style\fR argument shows only windows with the given style.
+The \fI-visible\fR argument shows only windows that are visible or invisible.
+The \fI-info\fR argument dumps all information for a single window.
+.TP
+\fIpathName \fBstyle type\fR ?\fIname\fR? ?\fInewtype\fR?
+With no arguments, return list of all available styles.
+With one argument, return the style type of \fIname\fR. 
+With two arguments, change the style type of \fIname\fR to \fInewtype\fR,
+and reset all style options back to the defaults.
+.TP
+\fIpathName \fBstyle use\fR \fIstylename\fR
+Return the use count for a style.
+Note: in order to remove a style with \fBstyle forget\fR,
+this count must be \fB0\fR.
+.RE
+.TP
+\fIpathName \fBtag \fIoperation args\fR
+Tags are a general means of selecting and marking nodes in the tree.
+A tag is just a string of characters, and it may take any form except
+that of an integer.  The same tag may be associated with many
+different nodes.  
+.sp
+Both \fIoperation\fR and its arguments determine the exact behavior of
+the command.  The operations available for tags are listed below.
+.RS
+.TP
+\fIpathName\fR \fBtag add\fR \fIstring\fR ?\fIid\fR...?
+Adds the tag \fIstring\fR to one of more entries.
+If no nodes are given, just creates the tag.
+.TP
+\fIpathName\fR \fBtag delete\fR \fIstring\fR \fItagnode\fR...
+Deletes the tag \fIstring\fR from one or more entries.  
+.TP
+\fItreeName\fR \fBtag exists\fR \fIstring\fR ?\fIid\fR?
+If an \fIid\fR is given, return 1 (or 0)  if entry has (or hasn't) the tag.
+Otherwise, returns 1 if at least one entry has tag \fIstring\fR.
+.TP
+\fIpathName\fR \fBtag forget\fR \fIstring\fR
+Removes the tag \fIstring\fR from all entries.  It's not an error if no
+entries are tagged as \fIstring\fR.
+.TP
+\fIpathName\fR \fBtag names\fR ?\fIid\fR?
+Returns a list of tags used.  If an \fIid\fR argument
+is present, only those tags used by the node designated by \fIid\fR 
+are returned.
+.TP
+\fIpathName\fR \fBtag nodes\fR  \fIname\fR ?\fIname\fR ...?
+Returns a list of ids that have any of the \fIname\fR tags.  If no node
+is tagged as \fIname\fR, then an empty list is returned.
+.RE
+.TP
+\fIpathName \fBtoggle \fItagnode\fR
+Opens or closes the node given by \fItagOrId\fR.  If the corresponding 
+\fB\-opencommand\fR or \fB\-closecommand\fR option is set, then that
+command is also invoked. 
+.TP
+\fIpathName \fBxview \fIargs\fR
+This command is used to query and change the horizontal position of the
+information in the widget's window.  It can take any of the following
+forms:
+.RS
+.TP
+\fIpathName \fBxview\fR
+Returns a list containing two elements.
+Each element is a real fraction between 0 and 1;  together they describe
+the horizontal span that is visible in the window.
+For example, if the first element is .2 and the second element is .6,
+20% of the \fBtreeview\fR widget's text is off-screen to the left, 
+the middle 40% is visible
+in the window, and 40% of the text is off-screen to the right.
+These are the same values passed to scrollbars via the \fB\-xscrollcommand\fR
+option.
+.TP
+\fIpathName \fBxview\fR \fItagOrId\fR
+Adjusts the view in the window so that the character position given by
+\fItagOrId\fR is displayed at the left edge of the window.
+Character positions are defined by the width of the character \fB0\fR.
+.TP
+\fIpathName \fBxview moveto\fI fraction\fR
+Adjusts the view in the window so that \fIfraction\fR of the
+total width of the \fBtreeview\fR widget's text is off-screen to the left.
+\fIfraction\fR must be a fraction between 0 and 1.
+.TP
+\fIpathName \fBxview scroll \fInumber what\fR
+This command shifts the view in the window left or right according to
+\fInumber\fR and \fIwhat\fR.
+\fINumber\fR must be an integer.
+\fIWhat\fR must be either \fBunits\fR or \fBpages\fR or an abbreviation
+of one of these.
+If \fIwhat\fR is \fBunits\fR, the view adjusts left or right by
+\fInumber\fR character units (the width of the \fB0\fR character)
+on the display;  if it is \fBpages\fR then the view adjusts by
+\fInumber\fR screenfuls.
+If \fInumber\fR is negative then characters farther to the left
+become visible;  if it is positive then characters farther to the right
+become visible.
+.RE
+.TP
+\fIpathName \fByview \fI?args\fR?
+This command is used to query and change the vertical position of the
+text in the widget's window.
+It can take any of the following forms:
+.RS
+.TP
+\fIpathName \fByview\fR
+Returns a list containing two elements, both of which are real fractions
+between 0 and 1.
+The first element gives the position of the node at the
+top of the window, relative to the widget as a whole (0.5 means
+it is halfway through the treeview window, for example).
+The second element gives the position of the node just after
+the last one in the window, relative to the widget as a whole.
+These are the same values passed to scrollbars via the \fB\-yscrollcommand\fR
+option.
+.TP
+\fIpathName \fByview\fR \fItagOrId\fR
+Adjusts the view in the window so that the node given by
+\fItagOrId\fR is displayed at the top of the window.
+.TP
+\fIpathName \fByview moveto\fI fraction\fR
+Adjusts the view in the window so that the node given by \fIfraction\fR
+appears at the top of the window.
+\fIFraction\fR is a fraction between 0 and 1;  0 indicates the first
+node, 0.33 indicates the node one-third the
+way through the \fBtreeview\fR widget, and so on.
+.TP
+\fIpathName \fByview scroll \fInumber what\fR
+This command adjusts the view in the window up or down according to
+\fInumber\fR and \fIwhat\fR.
+\fINumber\fR must be an integer.
+\fIWhat\fR must be either \fBunits\fR or \fBpages\fR.
+If \fIwhat\fR is \fBunits\fR, the view adjusts up or down by
+\fInumber\fR lines;  if it is \fBpages\fR then
+the view adjusts by \fInumber\fR screenfuls.
+If \fInumber\fR is negative then earlier nodes
+become visible;  if it is positive then later nodes
+become visible.
+.RE
+.SH TREEVIEW EDITING
+A column of data is editable when  its \fB-edit\fR option is set to True
+For column 0, edit changes an entries \fI-label\fR option.
+For all other columns, edit will update the \fI-data\fR fields.
+Tree data traces can also be used for edit control.
+Most of the following applies to textbox styles.
+However, combobox and checkbox also generate <<TreeViewEditStart/End>> events
+while barbox and windowbox are not editable.
+.PP
+Text editing is aborted with <Escape> and finished with <Return>.
+A newline may be inserted with a <Control-r>.
+Native Tk widgets are now used for builtin editing, using the
+path \fB$w.edit\fR.
+By default an \fBentry\fR widget will be used,  however, column editing options
+can be changed via \fB-editopts\fR
+and \fB-validatecmd\fR. Moreover, columns with a combobox style
+can provide popup list of options in a listbox
+using the following style options: \fB-choices, -choicecmd, -choicekey, -choiceicons\fR
+Two virtual events can be used to gain control the during edit:
+\fI<<TreeViewEditStart>>\fR and \fI<<TreeViewEditEnd>>\fR.
+The column index is passed in %x, and the entry-row index is passed in %y.
+eg.
+.CS
+treeview .t
+bind .t <<TreeViewEditStart>> {EditStart %W %x %y}
+bind .t <<TreeViewEditEnd>> {EditEnd %W %x %y}
+.CE
+These gain control at the start and end of editing respectively,
+and are general alternatives to \fI-editopts\fR -startcmd and -endcmd.
+For further details see \fIblt::tv::EditCell\fR in
+\fB$blt_library/treeview.tcl\fR.
+.SH "TREEVIEW OPTIONS"
+In addition to the \fBconfigure\fR operation, widget configuration
+options may also be set by the Tk \fBoption\fR command.  The class
+resource name is \fBTreeView\fR.
+.CS
+option add *TreeView.Foreground white
+option add *TreeView.Background blue
+.CE
+The following widget options are available:
+.TP
+\fB\-activeicons \fIimages\fR
+Specifies images to be displayed for an entry's icon
+when it is active. \fIImages\fR is a list of two Tk images: 
+the first image is displayed when the node is open, the
+second when it is closed.
+.TP
+\fB\-activeleaficons \fIimages\fR
+Specifies images to be displayed for an leaf entry's icon
+when it is active. \fIImages\fR is a list of two Tk images: 
+the first image is displayed when the node is open, the
+second when it is closed.
+.TP
+\fB\-allowduplicates \fIboolean\fR
+If \fIboolean\fR is true, allow nodes with duplicate pathnames
+when inserting new nodes.  Otherwise flag an error.
+The default is \fBno\fR.
+.TP
+\fB\-altstyle \fIstylename\fR
+Set a style to use on every other row.  This provides a simple way
+to implement alternating row colors without explicitly
+setting entry options.  Note \fB-altstyle\fR has limitations.
+Mostly it is used for setting the background, foreground and tile.
+Currently the font will not be used in height sizing, and the icon is ignored.
+.TP
+\fB\-autocreate \fIboolean\fR
+If \fIboolean\fR is true, automatically create missing ancestor 
+nodes when inserting new nodes. Otherwise flag an error.
+The default is \fBno\fR.
+.TP
+\fB\-background \fIcolor\fR
+Sets the background color of the widget.  The default is \fBwhite\fR.
+.TP
+\fB\-borderwidth \fIpixels\fR
+Sets the width of the 3\-D border around the outside edge of the widget.  The
+\fB\-relief\fR option determines if the border is to be drawn.  The
+default is \fB2\fR.
+.TP
+\fB\-button \fIstring\fR
+Indicates whether a entries should display button.
+If set to anything other than the default of \fIauto\fR, buttons
+will not be displayed.
+.TP
+\fB\-closecommand \fIstring\fR
+Specifies a Tcl script to be invoked when a node is closed.  You can
+overrider this for individual entries using the entry's \fB\-closecommand\fR 
+option. The default is \fB""\fR.
+Percent substitutions are performed on \fIstring\fR before 
+it is executed.  The following substitutions are valid:
+.RS 
+.TP 5
+\fB%W\fR
+The pathname of the widget.
+.TP 5
+\fB%p\fR
+The name of the node.
+.TP 5
+\fB%P\fR
+The full pathname of the node.
+.TP 5
+\fB%#\fR
+The id of the node.
+.TP 5
+\fB%%\fR
+Translates to a single percent.
+.RE
+.TP
+\fB\-columnshowhighlight \fIbool\fR
+Enable display highlight color when column activated.
+Default is false.
+.TP
+\fB\-cursor \fIcursor\fR
+Specifies the widget's cursor.  The default cursor is \fB""\fR.
+.TP
+\fB\-dashes \fInumber\fR
+Sets the dash style of the horizontal and vertical lines drawn connecting 
+entries. \fINumber\fR is the length in pixels of the dashes and gaps in
+the line. If \fInumber\fR is \fB0\fR, solid lines will 
+be drawn. The default is \fB1\fR (dotted).
+.TP
+\fB\-emptystyle \fIstylename\fR
+Set a style to be used for empty cells.
+.TP
+\fB\-entryshowhighlight \fIbool\fR
+Enable display highlight color when entry activated.
+Default is false.
+.TP
+\fB\-exportselection \fIboolean\fR 
+Indicates if the selection is exported.  If the widget is exporting its
+selection then it will observe the standard X11 protocols for handling
+the selection.  Selections are available as type \fBSTRING\fR;
+the value of the selection will be the label of the selected nodes,
+separated by newlines.  The default is \fBno\fR.
+.TP
+\fB\-fillnull \fIboolean\fR 
+Indicates that empty data columns are to be drawn anyways,
+and to apply the \fI-nullstyle\fR if defined.
+Turning this off will leave unsightly gaps where attributes (eg. background
+and underline) were normally expected to be displayed.
+The default is \fByes\fR.
+.TP
+\fB\-flat \fIboolean\fR
+Indicates whether to display the tree as a flattened list. 
+If \fIboolean\fR is true, then the hierarchy will be a list of full
+paths for the nodes.  Hide and show are not supported in flat mode.
+This option also has affect on sorting. 
+See the 
+.SB "sort command"
+for more information.
+The default is \fBno\fR.
+.TP
+\fB\-focusdashes \fIdashList\fR 
+Sets the dash style of the outline rectangle drawn around the entry
+label of the node that current has focus. \fINumber\fR is the length
+in pixels of the dashes and gaps in the line.  If
+\fInumber\fR is \fB0\fR, a solid line will be drawn. The default is
+\fB1\fR.
+.TP
+\fB\-focusforeground \fIcolor\fR 
+Sets the color of the focus rectangle. 
+The default is \fBblack\fR.
+.TP
+\fB\-focusheight \fIvalue\fR 
+Set the height in pixels to reserve for focus highlighting above
+and below the line.
+The default is \fB1\fR, but setting this to 0 will result in a
+more compact display.
+.TP
+\fB\-font \fIfontName\fR 
+Specifies the font to use for text.  The default is \fBTkDefaultFont\fR.
+.TP
+\fB\-foreground \fIcolor\fR 
+Sets the text color of entry labels.  You can override this for individual
+entries with the entry's \fB\-foreground\fR configuration option.  
+The default is
+\fBblack\fR.
+.TP
+\fB\-height \fIpixels\fR
+Specifies the requested height of widget.  The default is
+\fB400\fR.
+.TP
+\fB\-formatcmd \fIscriptcmd\fR 
+Command called to format the displayed data value.
+Percent substitutions are performed on \fIscriptcmd\fR as per \fIfind -exec\fR.
+The called command returns the value to be displayed.
+This may be overridden by column or style \fB-formatcmd\fR.
+For the tree column, has no effect when using -showfull with -flat.
+.TP
+\fB\-hidedataicons \fIboolean\fR
+If \fIboolean\fR is true, it indicates that data column icons
+(set via styles)
+should not be displayed.  The default is \fBno\fR.
+.TP
+\fB\-hidedatatext \fIboolean\fR
+If \fIboolean\fR is true, it indicates that that data column text
+should not be displayed.  The default is \fBno\fR.
+.TP
+\fB\-hideicons \fIboolean\fR
+If \fIboolean\fR is true, it indicates that tree column icons
+should not be displayed.  The default is \fBno\fR.
+.TP
+\fB\-hideleaves \fIboolean\fR
+If \fIboolean\fR is true, it indicates that no leaves
+should be displayed.  The default is \fBno\fR.
+.TP
+\fB\-hideroot \fIboolean\fR
+If \fIboolean\fR is true, it indicates that no entry for the root node 
+should be displayed.  The default is \fBno\fR.
+.TP 
+\fB\-highlightbackground  \fIcolor\fR
+Specifies the normal color of the traversal highlight region when
+the widget does not have the input focus.  
+.TP 
+\fB\-highlightcolor \fIcolor\fR
+Specifies the color of the traversal highlight rectangle when
+the widget has the input focus. 
+The default is \fBblack\fR.
+.TP 
+\fB\-highlightthickness \fIpixels\fR
+Specifies the width of the highlight rectangle indicating when the
+widget has input focus. The value may have any of the forms acceptable
+to \fBTk_GetPixels\fR.  If the value is zero, no focus highlight will
+be displayed.  The default is \fB2\fR.
+.TP
+\fB\-icons \fIimages\fR
+Specifies images for the entry's icon.
+\fIImages\fR is a list of two Tk images: 
+the first image is displayed when the node is open, the
+second when it is closed.
+.TP
+\fB\-imagecmd \fIscriptcmd\fR
+Specifies a command to call the first time an image is displayed
+for any image used in the \fB-images\fR, \fB-*icon\fR,
+and \fB-*icons\fR options.
+Percent substitutions is performed on \fIscriptcmd\fR as per \fIfind -exec\fR,
+with the image name being used as the value (%V).
+The called command can either modify the image or set a new icon.
+.sp
+The main use of \fB-imagecmd\fR is to perform image loading on demand
+as they become visible for the first time.  To use it,
+an icon option must be set with a placeholder image.
+When this becomes visible the first time,
+the callback will replaces it with a real image.
+The callback may also add tags, styles or even dynamically load data, eg.
+.CS
+
+  proc ICMD {w id col img} {
+    $w entry conf $id -icon blt::tv::normalFile
+    #$img conf -file [GetFile $id $col]
+    $w tag add addimg $id
+  }
+
+  pack [treeview .t -imagecmd {ICMD %W %# %C %V}]
+  foreach i {A B C} {
+    .t insert end  $i -icons [image create photo]
+  }
+.CE
+.TP
+\fB\-inlinedata \fIbool\fR
+Enables that data column values that start with a \fB@\fR and are
+a list of length 2, are to be interpreted as
+an inline style or image name.
+If value is the name of an image, a style is created
+using the name of image with -icon set to that image.
+A style is applied to the cell in the manner of \fBstyle set\fR.
+Default is \fItrue\fR.
+.TP
+\fB\-insertfirst\fInum\fR
+Upon inserts use forward search of tree label for num elements,
+then fall back to a reverse search. The default is 1,
+which provides for very fast insertions
+at the begining or near the end of really long trees.
+Set to -1 for forward search only, for example, if using \fI-allowduplicates\fR.
+.TP
+\fB\-leaficons \fIimages\fR
+Specifies images for a leaf entry's icons.
+\fIImages\fR is a list of two Tk images: 
+the first image is displayed when the node is open, the
+second when it is closed.
+.TP
+\fB\-levelpad \fIpixels\fR
+Indentation to add when displaying sub-tree levels.
+.TP
+\fB\-levelstyles \fIstylenames\fR
+Set a list of styles to use for entries at a given level.
+The first style is used for entries at level 1, the second for level 2, etc.
+This provides a simple way
+to specify colors for entries at a given level without explicitly
+setting entry options.
+.TP
+\fB\-linecolor \fIcolor\fR
+Sets the color of the connecting lines drawn between entries.  
+The default is \fBblack\fR.
+.TP
+\fB\-linespacing \fIpixels\fR
+Sets the number of pixels spacing between entries.  
+The default is \fB0\fR.
+.TP
+\fB\-linewidth \fIpixels\fR
+Set the width of the lines drawn connecting entries.  If \fIpixels\fR
+is \fB0\fR, no vertical or horizontal lines are drawn. 
+The default is \fB1\fR.
+.TP
+\fB\-minheight \fIpixels\fR
+Set the minimum height for entries.  Default is \fI0\fR.
+.TP
+\fB\-nextauto\fInum\fR
+For inserts at the root node, the start number for the next #auto insert.
+This is automatically incremented at each insert which
+speeds up bulk #auto inserts.
+.TP
+\fB\-nextsubauto\fInum\fR
+For inserts not into the root node, the number
+the next child #auto insert starts it's search from.
+The default is \fB1\fR.
+.TP
+\fB\-newtags \fIboolean\fR 
+If \fIboolean\fR is true, when sharing a tree object (see the
+\fB\-tree\fR option), don't share its tags too.  
+The default is \fB0\fR.
+.TP
+\fB\-noautocloseleaf \fIboolean\fR
+If \fIboolean\fR is true, then opening a leaf node will leave it in
+open mode.  The default is \fBfalse\fR, which automatically sets the
+mode of a leaf node back to closed without invoking \fB-closecommand\fR.
+.TP
+\fB\-nofocusselectbackground \fIcolor\fR
+Background select color when focus lost.
+.TP
+\fB\-nofocusselectforeground \fIcolor\fR
+Foreground select color when focus lost.
+.TP
+\fB\-openanchor \fIstring\fR
+When a node with children is opened, defines the -anchor used
+to the see sub-command.  Must be one of: \fBn c s\fR.
+The default is \fBc\fR.
+.TP
+\fB\-opencommand \fIstring\fR
+Specifies a Tcl script to be invoked when a node is open.  
+You can override this for individual entries with the entry's
+\fB\-opencommand\fR configuration option.  The default is \fB""\fR.
+Percent substitutions are performed on \fIstring\fR before 
+it is executed.  The following substitutions are valid:
+.RS 
+.TP 5
+\fB%W\fR
+The pathname of the widget.
+.TP 5
+\fB%p\fR
+The name of the node.
+.TP 5
+\fB%P\fR
+The full pathname of the node.
+.TP 5
+\fB%#\fR
+The id of the node.
+.TP 5
+\fB%%\fR
+Translates to a single percent.
+.RE
+.TP
+\fB\-padx \fIpixels\fR
+Set the padding on left and right of widget.
+.TP
+\fB\-pady \fIpixels\fR
+Set the padding on top and bottom of widget.
+.TP
+\fB\-relief \fIrelief\fR
+Specifies the 3-D effect for the widget.  \fIRelief\fR
+specifies how the \fBtreeview\fR widget should appear relative to widget 
+it is packed into; for example, \fBraised\fR means the \fBtreeview\fR widget 
+should appear to protrude.  The default is \fBsunken\fR.
+.TP
+\fB\-resizecursor \fIstring\fR
+Cursor to use on resize.
+.TP
+\fB\-rootnode \fInum\fR
+Specifiy the node number that is to be the root.
+This allows a subtree to appear as the root.
+Multiple treeviews may share a tree with different root nodes,
+and thus supporting subviews.  Default is 0.
+.TP
+\fB\-scrollmode \fImode\fR 
+Specifies the style of scrolling to be used.
+There are three different modes of scrolling: \fBlistbox\fR,
+\fBcanvas\fR, and \fBhierbox\fR.  In \fBlistbox\fR mode, the last
+entry can always be scrolled to the top of the widget.  In \fBhierbox\fR
+mode, the last entry is always drawn at the bottom of the widget.
+The default is \fBhierbox\fR.
+.RS
+.TP 1i
+\fBlistbox\fR
+Like the \fBlistbox\fR widget, the last entry can always be
+scrolled to the top of the widget window.  This allows the scrollbar
+thumb to shrink as the last entry is scrolled upward.
+.TP 1i
+\fBhierbox\fR
+Like the \fBhierbox\fR widget, the last entry can only be
+viewed at the bottom of the widget window.  The scrollbar
+stays a constant size.  
+.TP 1i
+\fBcanvas\fR
+Like the \fBcanvas\fR widget, the entries are bound within
+the scrolling area. 
+.RE
+.TP
+\fB\-scrolltile \fIbool\fR 
+Specifies if tiling should scroll with widget.
+The default is \fBfalse\fR.
+.TP 
+\fB\-selectbackground \fIcolor\fR
+Sets the background color selected node entries.
+The default is \fB#ffffea\fR.
+.TP 
+\fB\-selectborderwidth \fIpixels\fR
+Sets the width of the raised 3-D border drawn around the labels 
+of selected entries. The default is \fB0\fR.
+.TP
+\fB\-selectcommand \fIstring\fR
+Specifies a Tcl script to invoked when the set of selected
+nodes changes.
+The default is \fB""\fR.
+.TP
+\fB\-selectforeground\fR \fIcolor\fB
+Sets the color of the labels of selected node entries while the
+widget has focus. 
+The default is \fBblack\fR.
+.TP 
+\fB\-selectmode \fImode\fR
+Specifies the selection mode. If \fImode\fR is 
+\fBsingle\fR, only one node can be selected
+at a time.  If \fBmultiple\fR more than one
+node can be selected.
+If \fBnone\fR no selection is displayed.
+If \fIcell\fR or \fImulticell\fR then selection is for cells
+rather than whole nodes (rows).
+The default is \fBsingle\fR.
+.TP
+\fB\-selectrelief \fIrelief\fR
+Specifies the 3-D effect of the selected text in the edit window.  
+\fIRelief\fR indicates how the text should appear relative to the edit
+window; for example, \fBraised\fR means the text should
+appear to protrude.  The default is \fBflat\fR.
+.TP
+\fB\-selecttile \fIimage\fR
+Set a tile background image to use for selection.
+.TP
+\fB\-separator \fIstring\fR
+Specifies the character sequence to use when spliting the path components.  
+The separator may be several characters wide (such as "::")
+Consecutive separators in a pathname are treated as one.
+If \fIstring\fR is the empty string, the pathnames are Tcl lists. 
+If \fIstring\fR is the \fBnone\fR, no splitting will is done.
+Each element is a path component.   The default is \fB""\fR.
+.TP
+\fB\-showfull \fIboolean\fR
+Show full path name when in \fB-flat\fR mode.
+The default is \fItrue\fR.
+.TP
+\fB\-showtitles \fIboolean\fR
+If \fIboolean\fR is false, column titles are not be displayed.  
+The default is \fByes\fR.
+.TP 
+\fB\-sortselection \fIboolean\fR
+If \fIboolean\fR is true, nodes in the selection are ordered as they
+are currently displayed (depth-first or sorted), not in the order
+they were selected. The default is \fBno\fR.
+.TP
+\fB\-stylecommand \fIstring\fR
+Specifies a Tcl command to handle references to unknown styles.
+The call performs the same substitutions as the \fI-exec\fR option in
+the \fBfind\fR command, except \fIstring\fR is used for \fB%V\fR.
+The called command is expected to create the style.
+The default values is \fB"%W style create textbox %V"\fR.
+.sp
+Dynamic creation is performed for any style used in
+the \fBconfigure\fR subcommands.
+It also handles inline data of the form 
+for the image passed after the @ sign
+(see the \fI-inlinedata\fR option).
+.TP
+\fB\-substyle \fIstylename\fR
+Set a style for use with the \fB-sublabel\fR.
+Note: you can hide all \fIsublabels\fR by using a style
+with the \fB-hide\fR option set.
+.TP
+\fB\-takefocus\fR \fIfocus\fR 
+Provides information used when moving the focus from window to window
+via keyboard traversal (e.g., Tab and Shift-Tab).  If \fIfocus\fR is
+\fB0\fR, this means that this window should be skipped entirely during
+keyboard traversal.  \fB1\fR means that the this window should always
+receive the input focus.  An empty value means that the traversal
+scripts make the decision whether to focus on the window.
+The default is \fB"1"\fR.
+.TP
+\fB\-tile \fIimage\fR
+Set background tile image.
+.TP
+\fB\-titlefont \fIfont\fR
+Font to use for titles.
+.TP
+\fB\-titlepad \fIN\fR
+Pad to add above and below title.
+.TP
+\fB\-tree \fItree\fR
+Use an externally created data \fItree\fR object.
+Using a \fBtree\fR command facilitates data access, tracing, and
+loading/saving. eg.
+.CS
+  set t [tree create]
+  set n 0
+  while {[incr n]<30000} {
+     $t insert end -data {A 0 B 0}
+  }
+  pack [treeview .tv -tree $t]
+  .tv column insert end A B
+.CE
+.TP
+\fB\-trim \fIstring\fR
+Specifies a string leading characters to trim from entry pathnames 
+before parsing.  This only makes sense if the \fB\-separator\fR is also
+set.  The default is \fB""\fR.
+.TP
+\fB\-underline \fIheight\fR
+Draw an underline of the given height below each entry across its entire width.
+Use in conjunction with column reliefs this provides a grid like effect.
+The default height is 0.
+.TP
+\fB\-width \fIpixels\fR
+Sets the requested width of the widget.  If \fIpixels\fR is 0, then
+the with is computed from the contents of the \fBtreeview\fR widget.
+The default is \fB200\fR.
+.TP 
+\fB\-xscrollcommand \fIstring\fR
+Specifies the prefix for a command used to communicate with horizontal
+scrollbars.  Whenever the horizontal view in the widget's window 
+changes, the widget will generate a Tcl command by concatenating the 
+scroll command and two numbers.  If this option is not specified, then 
+no command will be executed.
+.TP
+\fB\-xscrollincrement\fR \fIpixels\fR
+Sets the horizontal scrolling distance. The default is 20 pixels.
+.TP
+\fB\-yscrollcommand \fIstring\fR
+Specifies the prefix for a command used to communicate with vertical
+scrollbars.   Whenever the vertical view in the widget's window 
+changes, the widget will generate a Tcl command by concatenating the 
+scroll command and two numbers.  If this option is not specified, then 
+no command will be executed.
+.TP
+\fB\-yscrollincrement\fR \fIpixels\fR
+Sets the vertical scrolling distance. The default is 20 pixels.
+.SH "ENTRY OPTIONS"
+Many widget configuration options have counterparts in entries.  For
+example, there is a \fB\-closecommand\fR configuration option for both
+widget itself and for individual entries.  Options set at the widget
+level are global for all entries.  If the entry configuration option
+is set, then it overrides the widget option.  This is done to avoid
+wasting memory by replicated options.  Most entries will have
+redundant options.
+.PP
+There is no resource class or name for entries.
+.TP
+\fB\-activeicons \fIimages\fR
+Specifies images to be displayed as the entry's icon
+when it is active. This overrides the global \fB\-activeicons\fR
+configuration option for the specific entry.
+\fIImages\fR is a list of two Tk images: 
+the first image is displayed when the node is open, the
+second when it is closed.
+.TP
+\fB\-bindtags \fItagList\fR
+Specifies the binding tags for nodes.  \fITagList\fR is a list
+of binding tag names.  The tags and their order will determine how
+events are handled for nodes.  Each tag in the list matching the current 
+event sequence will have its Tcl command executed.  The default value 
+is \fBall\fR.
+.TP
+\fB\-button \fIstring\fR
+Indicates whether a button should be displayed on the left side
+of the node entry.  \fIString\fR can be \fByes\fR, \fBno\fR, 
+or \fBauto\fR.  If \fBauto\fR, then a button is automatically
+displayed if the node has children.  This is the default.
+.TP
+\fB\-closecommand \fIstring\fR
+Specifies a Tcl script to be invoked when the node is closed.  This
+overrides the global \fB\-closecommand\fR option for this entry.
+The default is \fB""\fR.
+Percent substitutions are performed on \fIstring\fR before 
+it is executed.  The following substitutions are valid:
+.RS 
+.TP 5
+\fB%W\fR
+The pathname of the widget.
+.TP 5
+\fB%p\fR
+The name of the node.
+.TP 5
+\fB%P\fR
+The full pathname of the node.
+.TP 5
+\fB%#\fR
+The id of the node.
+.TP 5
+\fB%%\fR
+Translates to a single percent.
+.RE
+.TP
+\fB\-data \fIlist\fR
+Initializes or change data fields for the node.  \fIList\fR is a list of 
+name-value pairs to be set.  Note, this can not be used to unset or
+forget values for columns, meaning an empty list does nothing.
+For unsetting use \fBentry unset\fR.
+The default is \fB""\fR.
+.TP
+\fB\-font \fIfontName\fR 
+Sets the font for entry row text.  This overrides the widget's
+\fB\-font\fR option for this node.
+.TP
+\fB\-forcetree \fIbool\fR
+Force node to be treated as a tree, even if it has no children.
+This differs from \fI-button\fR above in that all drawing
+and querying aspects of the node are treated as a tree.
+This option is useful primarily for deferring loading until a tree is opened.
+The default is \fBfalse\fR.
+.TP
+\fB\-foreground \fIcolor\fR 
+Sets the text color of the entry label.  This overrides the widget's
+\fB\-foreground\fR configuration option.  The default is \fB""\fR.
+.TP
+\fB\-height \fInum\fR
+Set height for entry.
+.TP
+\fB\-hide \fIbool\fR
+Hide the entry.
+.TP
+\fB\-icons \fIimages\fR
+Specifies images to be displayed for the entry's icon.
+This overrides the global \fB\-icons\fR configuration option.
+\fIImages\fR is a list of two Tk images: 
+the first image is displayed when the node is open, the
+second when it is closed.
+.TP
+\fB-isopen\fR \fIbool\fR
+Specify if the entries is in the open state.
+The default is \fBfalse\fR.
+.TP
+\fB\-label \fIstring\fR
+Sets the text for the entry's displayed label.
+If set to  \fB""\fR, the label of the tree node is displayed
+The default is \fB""\fR  (see \fBentry relabel\fR).
+.TP
+\fB\-opencommand \fIstring\fR
+Specifies a Tcl script to be invoked when the entry is opened.  
+This overrides the widget's \fB\-opencommand\fR option for this node.  
+The default is \fB""\fR. 
+Percent substitutions are performed on \fIstring\fR before 
+it is executed.  The following substitutions are valid:
+.RS 
+.TP 5
+\fB%W\fR
+The pathname of the widget.
+.TP 5
+\fB%p\fR
+The name of the node.
+.TP 5
+\fB%P\fR
+The full pathname of the node.
+.TP 5
+\fB%#\fR
+The id of the node.
+.TP 5
+\fB%%\fR
+Translates to a single percent.
+.RE
+.TP
+\fB\-shadow \fIcolor\fR 
+Set shadow color for text.
+.TP
+\fB\-state \fIvalue\fR
+Set the state of the entry where \fIvalue\fR is one of:
+\fBnormal\fR, \fBactive\fR, \fBdisabled\fR.
+The default state is \fBnormal\fR.
+When the state is set to \fBdisabled\fR, the text color
+displays using \fB-disabledforeground\fR and the
+node ignores any attempted \fBopen\fR or \fBclose\fR.
+.TP
+\fB\-style \fIstylename\fR
+Set the style to use for the entry. This will override the column
+style, just as \fIstyle set\fR will override an entry style.
+This is useful mostly for seting bg/fg/font
+for a row.  Other options may or may not do nothing.
+Note, setting icon in a style will apply to all value
+columns, but not the tree column.
+.TP
+\fB\-sublabel \fIstring\fR
+Sets the text for the entry's sub-label to be displayed to the right
+of the nodes \fB-label\fR value.  This is rendered using the
+\fB-substyle\fR style.
+.TP
+\fB\-underline \fInum\fR
+Character to underline in an entries text label.  Default is -1.
+.TP
+\fB\-userdata \fIlist\fR
+Extra space available for storing user data.
+.SH "BUTTON OPTIONS"
+Button configuration options may also be set by the \fBoption\fR command.
+The resource subclass is \fBButton\fR.   The resource name is always
+\fBbutton\fR.
+.CS
+option add *TreeView.Button.Foreground white
+option add *TreeView.button.Background blue
+.CE
+The following are the configuration options available for buttons.
+.TP
+\fB\-activebackground \fIcolor\fR
+Sets the background color of active buttons.  A button
+is made active when the mouse passes over it or by the 
+\fBbutton activate\fR operation.  
+.TP
+\fB\-activeforeground \fIcolor\fR
+Sets the foreground color of active buttons.  A button
+is made active when the mouse passes over it or by the 
+\fBbutton activate\fR operation.  
+.TP
+\fB\-activeimages \fIimages\fR
+Specify images to use for active buttons.
+.TP
+\fB\-background \fIcolor\fR
+Sets the background of the button.  The default is \fBwhite\fR.
+.TP
+\fB\-borderwidth \fIpixels\fR
+Sets the width of the 3\-D border around the button.  
+The \fB\-relief\fR option determines if a border is to be drawn.  The
+default is \fB1\fR.
+.TP
+\fB\-closerelief \fIrelief\fR
+Specifies the 3-D effect for the closed button.  \fIRelief\fR
+indicates how the button should appear relative to the widget; 
+for example, \fBraised\fR means the button should
+appear to protrude.  The default is \fBsolid\fR.
+.TP
+\fB\-cursor \fIcursor\fR
+Sets the widget's cursor.  The default cursor is \fB""\fR.
+.TP
+\fB\-foreground \fIcolor\fR 
+Sets the foreground color of buttons. 
+The default is \fBblack\fR.
+.TP
+\fB\-images \fIimages\fR
+Specifies images to be displayed for the button.
+\fIImages\fR is a list of two Tk images: 
+the first image is displayed when the button is open, the
+second when it is closed.  If the \fIimages\fR is the empty string,
+then a plus/minus gadget is drawn.  The default is \fB""\fR.
+.TP
+\fB\-openrelief \fIrelief\fR
+Specifies the 3-D effect of the open button.  \fIRelief\fR
+indicates how the button should appear relative to the widget; 
+for example, \fBraised\fR means the button should
+appear to protrude.  The default is \fBflat\fR.
+.TP
+\fB\-size \fIpixels\fR
+Sets the requested size of the button.  
+The default is \fB0\fR.
+.SH "STYLE OPTIONS"
+Five style types are available: \fBtextbox, combobox, checkbox, barbox, windowbox\fR.
+Autocreated styles are by default of type \fBtextbox\fR.
+A \fBbarbox\fR provides progressbars for numeric cell values.
+The special style \fBwindowbox\fR supports embedded subwindows within data
+cells.
+.sp
+The resource subclass is the name of the style, titlized, ie.
+.CS
+option add *TreeView.TextBoxStyle.tvBackground white
+option add *TreeView.ComboBoxStyle.tvBackground green
+option add *TreeView.CheckBoxStyle.tvBackground blue
+.CE
+A default textbox style \fItext\fR comes predefined and is set for
+each columns \fI-style\fR option.
+Styles may also be associated with
+entry-rows and/or cells, as follows:
+.sp
+.CS
+treeview .t -width 300 -height 200
+pack .t -fill both -expand y
+ .t col insert end Size Age Weight
+ .t style create combobox MyStyle0 -bg red
+ .t style create textbox MyStyle1 -bg blue
+ .t style create textbox MyStyle2 -bg green
+ .t style create textbox MyStyle3 -bg orange
+
+ .t col conf Size -style MyStyle0
+ foreach i {Able Baker Charlie} {
+  .t insert end $i -data {Size 1 Age 2 Weight 3}
+ }
+ .t entry conf 2 -style MyStyle2
+ .t style set MyStyle3 Weight 3
+ .t insert end Empty
+ .t conf -emptystyle MyStyle1
+.CE
+.sp
+See also the widget options \fI-altstyle\fR, \fI-emptystyle\fR and \fI-levelstyles\fR.
+The following are available for all but the windowbox type.
+Note, some of these options are utilized only in particular contexts:
+.TP
+\fB\-activebackground \fIcolor\fR 
+Specifies the active background color of a style. 
+Alias is \fB\-activebg\fR.
+.TP
+\fB\-activeforeground \fIcolor\fR 
+Specifies the active foreground color of a style. 
+Alias is \fB\-activefg\fR.
+.TP
+\fB\-background \fIcolor\fR 
+Background color override.  Default is empty.
+.TP
+\fB\-cursor \fIcursorname\fR 
+Specifies the cursor of a style. This cursor for the widget when an
+element is activated.
+.TP
+\fB\-editopts \fIvalues\fR
+Cell option name/value pairs for the builtin text edit facilty.
+These are appended to the columns \fB-editopts\fR.
+See \fBcolumn -editopts\fR.
+.TP
+\fB\-font \fIfontName\fR 
+Sets the font for a style.
+.TP
+\fB\-foreground \fIcolor\fR 
+Specifies the foreground color of a style. 
+Alias is \fB\-fg\fR.
+.TP
+\fB\-gap \fIN\fR 
+Specifies the gap.
+.TP
+\fB\-hide \fIbool\fR 
+Values or subtext having a style with hide on are to be hidden.
+Columns and entries are unaffected.
+.TP
+\fB\-highlightbackground \fIcolor\fR 
+Specifies the highlight background color of a style. 
+Alias is \fB\-highlightbg\fR.
+.TP
+\fB\-highlightforeground \fIcolor\fR 
+Specifies the highlight foreground color of a style. 
+Alias is \fB\-highlightfg\fR.
+.TP
+\fB\-icon \fIname\fR 
+Specifies the icon.
+.TP
+\fB\-priority\fR \fIN\fR 
+Specifies a priority for the style.  Higher priorities
+are used for overriding bg/fg/font.  The default 0.
+.TP
+\fB\-readonly\fR \fIbool\fR 
+Disallow editing for a cell whose column has \fB-edit\fR set to true.
+The default is \fBFalse\fR.
+.TP
+\fB\-shadow \fIshadow\fR 
+Set shadow.
+.TP
+\fB\-tile \fIimg\fR 
+Set tiling.
+.TP
+The following additional configuration options are available for textbox:
+.TP
+\fB\-formatcmd \fIscriptcmd\fR 
+Command called to format the displayed key-data value.
+Percent substitutions are performed on \fIscriptcmd\fR as per \fIfind -exec\fR.
+The called command returns the value to be displayed.
+.TP
+\fB\-iconside \fIN\fR 
+Specifies which side of the text the icon is placed.  Default is left.
+.TP
+\fB\-side \fIN\fR 
+Specifies which side of cell to anchor contents.  Default is top.
+.TP
+The following additional configuration options are available for combobox:
+.TP
+\fB\-buttonicons \fIicons\fR 
+A pair of icons to use for the button icon.
+The second icon is drawn when \fBstyle activate\fR is used
+on a cell (managed automatically by the editing code).
+.TP
+\fB\-borderwidth \fIpixel\fR 
+Size of border.
+.TP
+\fB\-buttonborderwidth \fIpixel\fR 
+Size of buttons border
+.TP
+\fB\-buttonrelief \fIrelief\fR 
+Relief of button.
+.TP
+\fB\-choicecmd \fIcmd\fR 
+Command called to get the list of choices for editing,
+after the following substitutions: \fB%X %Y %C %# %W %%\fR.
+Used by the library proc \fIblt::tv::EditCell\fR which
+implements builtin editing.
+.TP
+\fB\-choicekey \fIkey\fR 
+Key field to in the current node to get the list of choices from.
+.TP
+\fB\-choices \fIlst\fR 
+A list of choices for editing.
+.TP
+The following additional configuration options are available for checkbox:
+.TP
+\fB\-boxcolor \fIcolor\fR 
+Color of box.
+.TP
+\fB\-boxsize \fInum\fR 
+Size of box.
+.TP
+\fB\-checkcolor \fIcolor\fR 
+Color of check.
+.TP
+\fB\-checkicons \fIimages\fR 
+A pair of icons to use to represent the on/off state
+instead of drawing a checkbox.
+.TP
+\fB\-fillcolor \fIcolor\fR 
+Color of fill.
+.TP
+\fB\-halo \fInum\fR 
+Halo around checkbox in which to accept a click.  If \fInum\fR is less
+than zero, accept a click anywhere in the cell.  The default is \fB0\fR.
+.TP
+\fB\-linewidth \fInum\fR 
+Line size.
+.TP
+\fB\-offvalue \fIval\fR 
+Value representing off.
+.TP
+\fB\-onvalue \fIval\fR 
+Value representing on.
+.TP
+\fB\-showvalue \fIbool\fR 
+Show value as well..
+.TP
+The following additional configuration options are available for barbox:
+.TP
+\fB\-barbg \fIcolor\fR 
+Color for the background of the bar.
+Default is the empty string.
+.TP
+\fB\-boxcolor \fIcolor\fR 
+Color of box around bar.
+.TP
+\fB\-barfg \fIcolor\fR 
+Color for the foreground of the bar.
+Default is green.
+.TP
+\fB\-barheight \fInum\fR 
+Height of bar.  Default 10.
+.TP
+\fB\-barwidth \fInum\fR 
+Width of bar.  Default 80.
+.TP
+\fB\-filltile \fItile\fR 
+Image to tile-fill bar with.
+.TP
+\fB\-formatcmd \fIscriptcmd\fR 
+Command called to format the displayed value.
+Percent substitutions are performed on \fIscriptcmd\fR as per \fIfind -exec\fR.
+The called command returns the value to be displayed.
+.TP
+\fB\-linewidth \fInum\fR 
+Width of border around the bar.  Default is 1.
+.TP
+\fB\-maxvalue \fIval\fR 
+The maxiumum value.  Default is 100.0.
+.TP
+\fB\-minvalue \fIval\fR 
+The miniumum value.  Default is 0.0.
+.TP
+\fB\-showvalue \fIbool\fR 
+Show the numeric value.
+.TP
+Only the following configuration options are available with windowbox:
+.TP
+\fB\-minheight \fInum\fR 
+Minimum height of window.
+Window height will be taller if the
+the entry height is greater than num.
+Default is 0.
+.TP
+\fB\-minwidth \fInum\fR 
+Minimum width of window.  Window width will be wider if the
+the column width is greater than num.
+Default is 0.
+.TP
+\fB\-sticky \fIval\fR 
+Stickiness of the window inside the cell, as defined by the \fBgrid\fR command.
+The default value is \fBw\fR.
+.TP
+\fB\-windowcmd \fIstring\fR 
+Command invoked to return window path.
+Percent substitutions are performed on \fIstring\fR before 
+it is executed.  The following substitutions are valid:
+.RS 
+.TP 5
+\fB%W\fR
+The pathname of the widget.
+.TP 5
+\fB%p\fR
+The name of the node.
+.TP 5
+\fB%P\fR
+The full pathname of the node.
+.TP 5
+\fB%#\fR
+The id of the node.
+.TP 5
+\fB%C\fR
+The column identifier.
+.TP 5
+\fB%%\fR
+Translates to a single percent.
+.RE
+.SH "COLUMN OPTIONS"
+Column configuration options may also be set by the \fBoption\fR command.
+The resource subclass is \fBColumn\fR.   The resource name is the 
+name of the column.
+.CS
+option add *TreeView.Column.Foreground white
+option add *TreeView.treeView.Background blue
+.CE
+The following configuration options are available for columns.
+.TP
+\fB\-activetitlebackground \fIcolor\fR
+Active title background color.
+.TP
+\fB\-activetitleforeground \fIcolor\fR
+Active title foreground color.
+.TP
+\fB\-autowidth \fIvalue\fR
+If the maximum width of a column exceeds the given
+value, then the column width uses this value instead \fB\-width\fR.
+When value is zero or \fB\-width\fR is non-zero, has no effect.
+Allows setting a default column width limit, while still
+permitting the user to manually resize larger (unlike \fB-max\fR).
+The default value is 0.
+.TP
+\fB\-background \fIcolor\fR
+Sets the background color of the column.  This overrides
+the widget's \fB\-background\fR option. The default is \fBwhite\fR.
+.TP
+\fB\-bindtags \fIstring\fR
+Set binding tags for column.
+.TP
+\fB\-borderwidth \fIpixels\fR
+Sets the width of the 3\-D border of the column.  
+The \fB\-relief\fR option determines if a border is to be drawn.  The
+default is \fB0\fR.
+.TP
+\fB\-colorpattern \fIpatcolors\fR
+Alter foreground color based on a string match against the cell data value.
+Pattern/color pairs are specified in \fIpatcolors\fR.
+If the pattern matches, then color becomes the foreground
+of the data cell.
+This provides a low-overhead way to display different colors
+depending only on the form of data.
+.TP
+\fB\-colorregexp \fIpatcolors\fR
+Does the same thing as \fB\-colorpattern\fR, except uses
+regexp instead, and has a lower priority.
+.TP
+\fB\-command \fIstring\fR
+Set command for use by \fBinvoke\fR.  This is called everytime the column
+is selected.  For example, sortable columns can
+be enabled by a setting this to \fI{blt::tv::SortColumn %W %C}\fR,
+or sort tree children of with \fI{blt::tv::SortTree %W %C}\fR.
+Note that SortColumn can temporarily change the treeview mode to -flat.
+The following substitutions are valid:
+.RS 
+.TP 5
+\fB%W\fR
+The pathname of the widget.
+.TP 5
+\fB%C\fR
+The column identifier.
+.TP 5
+\fB%%\fR
+Translates to a single percent.
+.RE
+.TP
+\fB\-edit \fInum\fR
+Indicates if the column's data fields can be edited
+via the builtin editing facility. If \fInum\fR is 
+True the data fields in the column can be edited.
+The default is \fBFalse\fR.
+.TP
+\fB\-editopts \fIvalues\fR
+Sub-option pair settings for the builtin text edit facilty implemented by
+\fI::blt::tv::EditCol\fR.
+Note, these are used only for cells with a style type of \fBtextbox\fR
+and \fBcombobox\fR.
+Following is partial documentation of the fBtextbox\fR
+(or see \fI::blt::tv::EditCol\fR \fI$blt_library/treeview.tcl\fR).
+.RS 
+.TP 5
+\fI-allowtypes type\fR
+List of types to allow text editing for, or \fB*\fR for all.
+The default is  \fBtextbox\fR.
+.TP 5
+\fI-autonl bool\fR
+Automatically use either an entry, spinbox or text as appropriate.
+The default is to use an entry widget.
+Text containing newlines will use a text widget.
+A column with combobox style where -choices or -choicecmd is set will use
+a spinbox.
+.TP 5
+\fI-choices list\fR
+List of choices for spinbox/combo.
+.TP 5
+\fI-conf values\fR
+Options to pass directly to the widget.
+.TP 5
+\fI-embed bool\fR
+When True the edit window is managed internally via an embedded
+windowbox style. When false \fBplace\fR is used to manage the window.
+The default is \fIFalse\fR.
+An embedded window has
+advantages but will result in a re-layout at the begin and end of editing.
+Note: place is always used for the tree column.
+.TP 5
+\fI-endcmd cmd\fR
+Command to call at end of edit, after the new value is set.
+If a percent is found, command substitution occurs,
+otherwise the call appends 5 arguments: \fIwidget data olddata ind col\fR.
+.TP 5
+\fI-leafs bool\fR
+Limit editing to leafs only.  Default is \fIfalse\fR.
+.TP 5
+\fI-nlkeys opt\fR
+Keys for inserting newline in multiline edits.
+The default value is: \fB<Control-r> <Shift-Return>\fR.
+.TP 5
+\fI-nottnull bool\fR
+Do not edit empty fields that have not had data assigned to them.
+Default is \fIfalse\fR.
+.TP 5
+\fI-optscmd cmd\fR
+Command called to get options.  Called with 3 args: widget ind col.
+Returns name/value pairs which are
+additional options as accepted by \fI-editopts\fR.
+To indicate that a cell is non-editable, return \fB{-readonly True}\fR.
+.TP 5
+\fI-readonly bool\fR
+Cell is readonly.  Do not edit.
+.TP 5
+\fI-sel bool\fR
+Value is initially selected in edit window.
+Default is \fItrue\fR.
+.TP 5
+\fI-startcmd cmd\fR
+Command to call at start of edit.
+If a percent is found, command substitution occurs,
+otherwise the 3 arguments are appended: widget ind col.
+.TP 5
+\fI-tab opts\fR
+Setup a bind for Tab in the edit window (bool or args passed to TabMove).
+.TP 5
+\fI-titles bool\fR
+Enable editing of the title label.  Default is \fIfalse\fR.
+.TP 5
+\fI-treelabel bool\fR
+Edit -tree cmd label rather than treeview label.
+Default is \fBtrue\fR.
+.TP 5
+\fI-type bool\fR
+A basic wize type eg. bool, int, choice
+.TP 5
+\fI-typecol column\fR
+Column/key to get -type from.
+.TP 5
+\fI-vcmd cmd\fR
+Command to override the columns \fB-validatecmd\fR.
+.TP 5
+\fI-widget wid\fR
+The widget to use. Builtin support types are: \fIspinbox, text, entry\fR.
+The default is \fIentry\fR.
+.TP 5
+\fI-withtag tag\fR
+Edit only if has tag.
+.TP 5
+\fI-withouttag tag\fR
+Edit only if does not have tag.
+.TP 5
+\fI-wrap value\fR
+Setting for wrap mode when edit window is a text widget.  Default is \fInone\fR.
+.RE
+For more generalized control of
+editing, bind to the <<TreeViewEditStart/End>> virtual
+events.
+.TP
+\fB\-font \fIfont\fR 
+Sets the font for the column.
+Currently, should not be mixed this with and a \fB-style\fR a font
+for the column.
+.TP
+\fB\-foreground \fIcolor\fR 
+Sets the text color the column.
+.TP
+\fB\-fillcmd \fIscriptcmd\fR
+Demand load data into unset values, just prior to display.
+The call occurs the first time each entry is displayed in the column.
+Only cells not having a value/label set are updated.
+Before calling, the id is appended.  The new value
+should be returned.
+For tree columns the result is used to set the entry label, otherwise
+it sets a data cell value.
+If an error is raised, the value is set to the empty string.
+.sp
+Here is an example that loads a large tree.  It demonstrates that only the
+first dozen or so are update initially, and more as you scroll.
+A practical example might load data from a database.
+.CS
+
+  set t [tree create]
+  $t create -num 10000
+  pack [treeview .t -tree $t]
+
+  proc FillLabel {id} { puts "L$id"; return L$id }
+  proc FillData {id} { return D$id }
+  .t col conf #0 -fillcmd FillLabel
+  .t col insert end A -fillcmd FillData
+.CE
+.TP
+\fB\-hide \fIboolean\fR
+If \fIboolean\fR is true, the column is not displayed.
+The default is \fBno\fR.
+.TP
+\fB\-justify \fIjustify\fR
+Specifies how the column data fields text should be justified within
+the column.  This matters only when the column is wider than the 
+data field to be display.
+\fIJustify\fR must be \fBleft\fR, \fBright\fR, or \fBcenter\fR.  
+The default is \fBcenter\fR.
+.TP
+\fB\-max \fIsize\fR
+Maximum size for column.
+.TP
+\fB\-min \fIsize\fR
+Minimum size for column.
+.TP
+\fB\-pad \fIpad\fR
+Specifies how much padding for the left and right sides of the column.
+\fIPad\fR is a list of one or two screen distances.  If \fIpad\fR
+has two elements, the left side of the column is padded by the first
+distance and the right side by the second.  If \fIpad\fR has just one
+distance, both the left and right sides are padded evenly.  The
+default is \fB2\fR.
+.TP
+\fB\-relief \fIrelief\fR
+Specifies the 3-D effect of the column.  \fIRelief\fR
+specifies how the column should appear relative to the widget; 
+for example, \fBraised\fR means the column should
+appear to protrude.  The default is \fBflat\fR.
+.TP
+\fB\-ruledashes \fIvalue\fR
+Set resize rule is dashed.
+.TP
+\fB\-scrolltile \fIbool\fR
+Tile image scrolls.
+.TP
+\fB\-sortaltcolumns \fIlist\fR
+List of alternate columns sort can use when cell values are equal.
+It is an error to include the current or tree column.
+.TP
+\fB\-sortcommand \fIscript\fR
+Command to actually compare entries during sort.
+.TP
+\fB\-sortmode \fImode\fR
+Used by scripts to set -mode for sort command (eg. blt::tv::SortColumn).
+.TP
+\fB\-state \fIstate\fR
+Sets the state of the column. If \fIstate\fR is \fBdisable\fR then
+the column title can not be activated nor invoked.
+The default is \fBnormal\fR.
+.TP
+\fB\-style \fIstylename\fR
+Set the style to use for column.
+.TP
+\fB\-tile \fIimage\fR
+Image to tile column with.
+.TP
+\fB\-title \fIstring\fR
+Sets the title for the column.
+The default is \fB""\fR.
+.TP
+\fB\-titlearrow \fIvalue\fR
+Forces an arrow to be drawn in the title.
+The \fIvalue\fR is one of: \fBleft right up down none\fR 
+and defaults to \fBnone\fR.
+This is used when implementing custom sorts as the indicator.
+.TP
+\fB\-titlebackground \fIcolor\fR 
+Background for title.
+.TP
+\fB\-titleborderwidth \fIsize\fR 
+Border size.
+.TP
+\fB\-titlefont \fIfont\fR
+Font for column title.
+.TP
+\fB\-titlejustify \fIjust\fR
+Side to place title.
+.TP
+\fB\-titleforeground \fIcolor\fR 
+Sets the foreground color of the column title. 
+The default is \fBblack\fR.
+.TP
+\fB\-titlerelief \fIrelief\fR 
+Relief for title.
+.TP
+\fB\-titleshadow \fIcolor\fR 
+Sets the color of the drop shadow of the column title.  
+The default is \fB""\fR.
+.TP
+\fB\-titlestyle \fIstyle\fR 
+A style to use for titles.
+.TP
+\fB\-width \fInum\fR
+The user requested width for the column.
+.TP
+\fB\-underline \fInum\fR
+Character to underline in column title text.  Default is -1.
+.TP
+\fB\-validatecmd \fIcommand\fR
+This option provides a command for validating or post processing edits
+from the builtin column edit feature
+(enabled with \fIcol conf -edit 1\fR).
+If a percent is found, command substitution occurs,
+otherwise 5 arguments are appended: \fIwidget data olddata ind col\fR.
+The called command should return \fInewvalue\fR, possibly with modifications.
+To revert to the original value, just return \fI$oldvalue\fR
+To continue editing, use \fBreturn -code return\fR
+.RE
+.TP
+\fB\-weight \fIfloat\fR 
+Weighting to apply extra space.
+.TP
+\fB\-width \fIpixels\fR
+Sets the requested width of the column.  This overrides
+the computed with of the column.  If \fIpixels\fR is 0,
+the width is computed as from the contents of the column. The
+default is \fB0\fR.
+.SH "EMBEDDED WINDOWS"
+Embedded windows is supported for columns or cells via the special
+style type \fBwindowbox\fR.
+If \fI-windowcmd\fR is not being used, the cell data
+is assumed to contain the widget name, or tail part of a widget name.
+If the data does not provide a valid window it is silently ignored and
+nothing is displayed.
+If multiple cells try to display the same widget simultaneously,
+only the first one appears.
+The normal Tk slave window rules apply (ie. must be child of the parent).
+.sp
+.SH "OLD TEXT EDITING OPTIONS"
+\fBSECTION OBSOLETE\fR.
+.sp
+This section is obsolete and has been replaced with builtin editing using
+a Tk entry widget.  See \fBTREEVIEW EDITING\fR above.
+.sp
+Text edit window configuration options may also be set by the Tk
+\fBoption\fR command. The resource class is \fBTreeViewEditor\fR.
+The resource name is always \fBedit\fR.
+.CS
+option add *TreeViewEditor.Foreground white
+option add *edit.Background blue
+.CE
+The following are the configuration options available for the
+text editing window.
+.TP
+\fB\-background \fIcolor\fR
+Sets the background of the text edit window.  The default is \fBwhite\fR.
+.TP
+\fB\-borderwidth \fIpixels\fR
+Sets the width of the 3\-D border around the edit window.  
+The \fB\-relief\fR option determines if a border is to be drawn.  The
+default is \fB1\fR.
+.TP
+\fB\-exportselection \fIboolean\fR
+Indicates if the text selection is exported.  If the edit window is 
+exporting its selection then it will observe the standard X11 protocols 
+for handling the selection.  Selections are available as type \fBSTRING\fR.
+The default is \fBno\fR.
+.TP
+\fB\-relief \fIrelief\fR
+Specifies the 3-D effect of the edit window.  \fIRelief\fR
+indicates how the background should appear relative to the edit
+window; for example, \fBraised\fR means the background should
+appear to protrude.  The default is \fBsolid\fR.
+.TP
+\fB\-selectbackground \fIcolor\fR
+Sets the background of the selected text in the edit window.  
+The default is \fBwhite\fR.
+.TP
+\fB\-selectborderwidth \fIpixels\fR
+Sets the width of the 3\-D border around the selected text in the 
+edit window.  The \fB\-selectrelief\fR option determines if a border 
+is to be drawn.  The default is \fB1\fR.
+.TP
+\fB\-selectforeground \fIcolor\fR
+Sets the foreground of the selected text in the edit window.  
+The default is \fBwhite\fR.
+.TP
+\fB\-selectrelief \fIrelief\fR
+Specifies the 3-D effect of the selected text in the edit window.  
+\fIRelief\fR indicates how the text should appear relative to the edit
+window; for example, \fBraised\fR means the text should
+appear to protrude.  The default is \fBflat\fR.
+.SH "DEFAULT BINDINGS"
+Tk automatically creates class bindings for treeviews that give them
+Motif-like behavior.  Much of the behavior of a \fBtreeview\fR widget is determined
+by its \fB\-selectmode\fR option, which selects one of two ways
+of dealing with the selection.
+.PP
+If the selection mode is \fBsingle\fR, only one node can be 
+selected at a time.
+Clicking button 1 on an node selects
+it and deselects any other selected item.
+.PP
+If the selection mode is \fBmultiple\fR,
+any number of entries may be selected at once, including discontiguous
+ranges.  Clicking Control-Button-1 on a node entry
+toggles its selection state without affecting any other entries.
+Pressing Shift-Button-1 on a node entry selects
+it, extends the selection.
+.IP [0]
+The virtual event <<TreeViewFocusEvent>> is generated for each
+keyboard and mouse initiated change in focus.  It is up to
+the user to determine if the focus actually changed.
+.IP [1]
+In \fBextended\fR mode, the selected range can be adjusted by pressing
+button 1 with the Shift key down:  this modifies the selection to
+consist of the entries between the anchor and the entry under
+the mouse, inclusive.
+The un-anchored end of this new selection can also be dragged with
+the button down.
+.IP [2]
+In \fBextended\fR mode, pressing button 1 with the Control key down
+starts a toggle operation: the anchor is set to the entry under
+the mouse, and its selection state is reversed.  The selection state
+of other entries isn't changed.
+If the mouse is dragged with button 1 down, then the selection state
+of all entries between the anchor and the entry under the mouse
+is set to match that of the anchor entry;  the selection state of
+all other entries remains what it was before the toggle operation
+began.
+.IP [3]
+If the mouse leaves the treeview window with button 1 down, the window
+scrolls away from the mouse, making information visible that used
+to be off-screen on the side of the mouse.
+The scrolling continues until the mouse re-enters the window, the
+button is released, or the end of the hierarchy is reached.
+.IP [4]
+Mouse button 2 may be used for scanning.
+If it is pressed and dragged over the \fBtreeview\fR widget, the contents of
+the hierarchy drag at high speed in the direction the mouse moves.
+.IP [5]
+If the Up or Down key is pressed, the location cursor (active
+entry) moves up or down one entry, as does Control-p and Control-n.
+If the selection mode is \fBbrowse\fR or \fBextended\fR then the
+new active entry is also selected and all other entries are
+deselected.
+In \fBextended\fR mode the new active entry becomes the
+selection anchor.
+.IP [6]
+In \fBextended\fR mode, Shift-Up and Shift-Down move the location
+cursor (active entry) up or down one entry and also extend
+the selection to that entry in a fashion similar to dragging
+with mouse button 1.
+.IP [7]
+The Left and Right keys scroll the \fBtreeview\fR widget view left and right
+by the width of the character \fB0\fR.
+Control-Left and Control-Right scroll the \fBtreeview\fR widget view left and
+right by the width of the window.
+.IP [8]
+The Prior and Next keys scroll the \fBtreeview\fR widget view up and down
+by one page (the height of the window), as does Control-u and Control-d.
+.IP [9]
+The Home and End keys scroll the \fBtreeview\fR widget horizontally to
+the left and right edges, respectively.
+.IP [10]
+Control-Home sets the location cursor to the first entry, 
+selects that entry, and deselects everything else
+in the widget.
+.IP [11]
+Control-End sets the location cursor to the last entry, 
+selects that entry, and deselects everything else
+in the widget.
+.IP [12]
+In \fBextended\fR mode, Control-Shift-Home extends the selection
+to the first entry and Control-Shift-End extends
+the selection to the last entry.
+.IP [13]
+In \fBmultiple\fR mode, Control-Shift-Home moves the location cursor
+to the first entry and Control-Shift-End moves
+the location cursor to the last entry.
+.IP [14]
+The space and Select keys make a selection at the location cursor
+(active entry) just as if mouse button 1 had been pressed over
+this entry.
+.IP [15]
+In \fBextended\fR mode, Control-Shift-space and Shift-Select
+extend the selection to the active entry just as if button 1
+had been pressed with the Shift key down.
+.IP [16]
+In \fBextended\fR mode, the Escape key cancels the most recent
+selection and restores all the entries in the selected range
+to their previous selection state.
+.IP [17]
+Control-slash selects everything in the widget, except in
+\fBsingle\fR and \fBbrowse\fR modes, in which case it selects
+the active entry and deselects everything else.
+.IP [18]
+Control-backslash deselects everything in the widget, except in
+\fBbrowse\fR mode where it has no effect.
+.IP [19]
+The F16 key (labelled Copy on many Sun workstations) or Meta-w
+copies the selection in the widget to the clipboard, if there is
+a selection.
+.PP
+The behavior of \fBtreeview\fR widgets can be changed by defining new bindings 
+for individual widgets or by redefining the class bindings.
+.SS WIDGET BINDINGS
+In addition to the above behavior, the following additional behavior
+is defined by the default widget class (TreeView) bindings.
+.IP \fB<ButtonPress-2>\fR 
+Starts scanning. 
+.IP \fB<B2-Motion>\fR 
+Adjusts the scan.
+.IP \fB<ButtonRelease-2>\fR
+Stops scanning.
+.IP \fB<B1-Leave>\fR 
+Starts auto-scrolling.
+.IP \fB<B1-Enter>\fR
+Starts auto-scrolling 
+.IP \fB<KeyPress-Up>\fR 
+Moves the focus to the previous entry.
+.IP \fB<KeyPress-Down>\fR 
+Moves the focus to the next entry.
+.IP \fB<Shift-KeyPress-Up>\fR
+Moves the focus to the previous sibling.
+.IP \fB<Shift-KeyPress-Down>\fR
+Moves the focus to the next sibling.
+.IP \fB<KeyPress-Prior>\fR 
+Moves the focus to first entry.  Closed or hidden entries
+are ignored.
+.IP \fB<KeyPress-Next>\fR 
+Move the focus to the last entry. Closed or hidden entries
+are ignored.
+.IP \fB<KeyPress-Left>\fR 
+Closes the entry.  It is not an error if the entry has no children.
+.IP \fB<KeyPress-Right>\fR 
+Opens the entry, displaying its children.  It is not an
+error if the entry has no children.
+.IP \fB<KeyPress-space>\fR 
+In "single" select mode this selects the entry.  In "multiple" mode,
+it toggles the entry (if it was previous selected, it is not
+deselected).
+.IP \fB<KeyRelease-space>\fR 
+Turns off select mode.
+.IP \fB<KeyPress-Return>\fR 
+Sets the focus to the current entry.
+.IP \fB<KeyRelease-Return>\fR 
+Turns off select mode.
+.IP \fB<KeyPress>\fR 
+Moves to the next entry whose label starts with the letter typed.
+.IP \fB<KeyPress-Home>\fR 
+Moves the focus to first entry.  Closed or hidden entries
+are ignored.
+.IP \fB<KeyPress-End>\fR 
+Move the focus to the last entry. Closed or hidden entries
+are ignored.
+.IP \fB<Control-a>\fR 
+Move to parent of current entry.
+.IP \fB<Control-o>\fR 
+Open current entry.
+.IP \fB<Control-Shift-O>\fR 
+Open current entry recursively.
+.IP \fB<Double-ButtonRelease-1>\fR 
+Edit cell.
+.IP \fB<Alt-Double-ButtonRelease-1>\fR 
+Edit cell.
+.IP \fB<Control-KeyPress-minus>\fR 
+Close parent of current entry.
+.IP \fB<Control-F1>\fR 
+Opens all tree nodes.
+.IP \fB<Control-F2>\fR
+Closes all tree nodes (except root).
+.IP \fB<Control-F3>\fR
+Toggle flat mode.
+.IP \fB<Control-F4>\fR
+Reset all column widths back to 0 allowing autosizing.
+.IP \fB<Control-Shift-O>\fR 
+Open focus tree node recursively.
+.IP \fB<Control-Shift-C>\fR 
+Close focus tree node recursively.
+.SS BUTTON BINDINGS
+Buttons have bindings.  There are associated with the "all" bindtag
+(see the entry's -bindtag option).  You can use the \fBbind\fR
+operation to change them.
+.IP \fB<Enter>\fR 
+Highlights the button of the current entry.
+.IP \fB<Leave>\fR 
+Returns the button back to its normal state.
+.IP \fB<ButtonRelease-1>\fR
+Adjust the view so that the current entry is visible.
+.SS ENTRY BINDINGS
+Entries have default bindings.  There are associated with the "all"
+bindtag (see the entry's -bindtag option).  You can use the \fBbind\fR
+operation to modify them.
+.IP \fB<Enter>\fR 
+Highlights the current entry.
+.IP \fB<Leave>\fR 
+Returns the entry back to its normal state.
+.IP \fB<ButtonPress-1>\fR 
+Sets the selection anchor the current entry.
+.IP \fB<Double-ButtonPress-1>\fR
+Toggles the selection of the current entry.
+.IP \fB<B1-Motion>\fR
+For "multiple" mode only.  Saves the current location of the
+pointer for auto-scrolling.  Resets the selection mark.  
+.IP \fB<ButtonRelease-1>\fR
+For "multiple" mode only.  Sets the selection anchor to the 
+current entry.
+.IP \fB<Shift-ButtonPress-1>\fR
+For "multiple" mode only. Extends the selection.
+.IP \fB<Shift-Double-ButtonPress-1>\fR 
+Place holder. Does nothing.
+.IP \fB<Shift-B1-Motion>\fR 
+Place holder. Does nothing.
+.IP \fB<Shift-ButtonRelease-1>\fR 
+Stop auto-scrolling.
+.IP \fB<Control-ButtonPress-1>\fR 
+For "multiple" mode only.  Toggles and extends the selection.
+.IP \fB<Control-Double-ButtonPress-1>\fR
+Place holder. Does nothing.
+.IP \fB<Control-B1-Motion>\fR 
+Place holder. Does nothing.
+.IP \fB<Control-ButtonRelease-1>\fR 
+Stops auto-scrolling.
+.IP \fB<Control-Shift-ButtonPress-1>\fR 
+???
+.IP \fB<Control-Shift-Double-ButtonPress-1>\fR
+Place holder. Does nothing.
+.IP \fB<Control-Shift-B1-Motion>\fR 
+Place holder. Does nothing.
+.SS COLUMN BINDINGS
+Columns have bindings too.  They are associated with the column's
+"all" bindtag (see the column -bindtag option).  You can use the
+\fBcolumn bind\fR operation to change them.
+.IP \fB<Enter>\fR 
+Highlights the current column title.
+.IP \fB<Leave>\fR 
+Returns the column back to its normal state.
+.IP \fB<ButtonRelease-1>\fR
+Invokes the command (see the column's -command option) if one
+if specified.  
+.SS COLUMN RULE BINDINGS
+These are bindings associated with the tag \fBRule\fR.
+.IP \fB<Enter>\fR 
+Highlights the current and activates the ruler.
+.IP \fB<Leave>\fR 
+Returns the column back to its normal state. Deactivates the
+ruler.
+.IP \fB<ButtonPress-1>\fR 
+Sets the resize anchor for the column.
+.IP \fB<B1-Motion>\fR 
+Sets the resize mark for the column.
+.IP \fB<ButtonRelease-1>\fR 
+Adjust the size of the column, based upon the resize anchor and mark
+positions.
+.SH QUICKSTART 
+TreeFill is a utility function to simplify tree data loading
+from a human-readable string.  The string
+uses line indentation to indicate tree depth.
+The indentation is in multiples of 4 spaces, relative to the first line. eg.
+.CS
+ pack [treeview .t]
+ .t column insert end X Y Z
+ blt::tv::TreeFill .t {
+     A 1 2 3
+     B 4 5 6
+         x 7 8 9
+         y 10 11 12
+             a 1 2 "Level a"
+             b 1 2 "Level b"
+     C 1 2 3
+ }
+ .t open -trees all
+ .t entry conf 0->B->y->a -state disabled
+.CE
+Any column names not defined are generated.
+To load a table instead of a tree, simply set the -flat option first. eg.
+.CS
+ pack [treeview .t -flat 1]
+ .t column conf #0 -hide 1
+ .t column insert end Name Age Sex
+ blt::tv::TreeFill .t {
+     "Tom Brown" 9 M
+     "Mike Small" 8 M
+     "Tina Baker" 7 F
+ }
+.CE
+.SH EXAMPLE
+The \fBtreeview\fR command creates a new widget.  
+.CS
+treeview .t \-bg white
+.CE
+A new Tcl command \fB.t\fR is also created.  This command can be used
+to query and modify the \fBtreeview\fR widget.  For example, to change the 
+background
+color of the table to "green", you use the new command and the widget's
+\fBconfigure\fR operation.
+.CS
+# Change the background color.
+\&.t configure \-background "green"
+.CE
+By default, the \fBtreeview\fR widget will automatically create a new tree object
+to contain the data.  The name of the new tree is the pathname of the
+widget.  Above, the new tree object name is ".t".  But you can use the
+\fB\-tree\fR option to specify the name of another tree.
+.CS
+# View the tree "myTree".
+\&.t configure \-tree "myTree"
+.CE
+When a new tree is created, it contains only a root node.  The node
+is automatically opened.  The id of the root node is always
+\fB0\fR (you can use also use the special id \fBroot\fR). The
+\fBinsert\fR operation lets you insert one or more new entries into
+the tree.  The last argument is the node's \fIpathname\fR.  
+.CS
+# Create a new entry named "myEntry"
+set id [\&.t insert end "myEntry"]
+.CE
+This appends a new node named "myEntry".  It will positioned as the
+last child of the root of the tree (using the position "end").  You
+can supply another position to order the node within its siblings.
+.CS
+# Prepend "fred".
+set id [\&.t insert 0 "fred"]
+.CE
+Entry names do not need to be unique.  By default, the node's label
+is its name.  To supply a different text label, add the \fB\-label\fR
+option.
+.CS
+# Create a new node named "fred"
+set id [\&.t insert end "fred" -label "Fred Flintstone"]
+.CE
+The \fBinsert\fR operation returns the id of the new node.  You can
+also use the \fBindex\fR operation to get this information.
+.CS
+# Get the id of "fred"
+\&.t index "fred"
+.CE
+To insert a node somewhere other than root, use the \fB\-at\fR switch.
+It takes the id of the node where the new child will be added.
+.CS
+# Create a new node "barney" in "fred".
+\&.t insert end "barney" -at $id
+.CE
+A pathname describes the path to an entry in the hierarchy.  It's a
+list of entry names that compose the path in the tree.  Therefore, you
+can also add "barney" to "fred" as follows.
+.CS
+# Create a new sub-entry of "fred"
+\&.t insert end "fred barney" 
+.CE
+Every name in the list is ancestor of the next.  All ancestors must
+already exist.  That means that an entry "fred" is an ancestor of
+"barney" and must already exist.  But you can use the
+\fB\-autocreate\fR configuration option to force the creation of
+ancestor nodes.
+.CS
+# Force the creation of ancestors.
+\&.t configure -autocreate yes 
+\&.t insert end "fred barney wilma betty" 
+.CE
+Sometimes the pathname is already separated by a character sequence
+rather than formed as a list.  A file name is a good example of this.
+You can use the \fB\-separator\fR option to specify a separator string
+to split the path into its components.  Each pathname inserted is
+automatically split using the separator string as a separator.
+Multiple separators are treated as one.
+.CS
+\&.t configure -separator /
+\&.t insert end "/usr/local/tcl/bin" 
+.CE
+If the path is prefixed by extraneous characters, you can
+automatically trim it off using the \fB\-trim\fR option.  It removed
+the string from the path before it is parsed.
+.CS
+\&.t configure -trim C:/windows -separator /
+\&.t insert end "C:/window/system" 
+.CE
+.PP
+You can delete entries with the \fBdelete\fR operation.  It takes one or
+more tags of ids as its argument. It deletes the entry and all its
+children.
+.CS
+\&.t delete $id
+.CE
+Entries have several configuration options.  They control the appearance
+of the entry's icon and label.  We have already seen the \fB\-label\fR
+option that sets the entry's text label.   The \fBentry configure\fR
+operation lets you set or modify an entry's configuration options.
+.CS
+\&.t entry configure $id -color red -font fixed
+.CE
+You can hide an entry and its children using the \fB\-hide\fR option.
+.CS
+\&.t entry configure $id -hide yes
+.CE
+More that one entry can be configured at once.  All entries specified
+are configured with the same options.
+.CS
+\&.t entry configure $i1 $i2 $i3 $i4 -color brown 
+# or ...
+\&.t entry configure [list $i1 $i2 $i3 $i4] -color brown 
+.CE
+An icon is displayed for each entry.  It's a Tk image drawn to the
+left of the label.  You can set the icon with the entry's
+\fB\-icons\fR option.  It takes a list of two image names: one to
+represent the open entry, another when it is closed.
+.CS
+set im1 [image create photo -file openfolder.gif]
+set im2 [image create photo -file closefolder.gif]
+\&.t entry configure $id -icons "$im1 $im2"
+.CE
+If \fB\-icons\fR is set to the empty string, no icons are display.
+.PP
+If an entry has children, a button is displayed to the left of the
+icon. Clicking the mouse on this button opens or closes the
+sub-hierarchy.  The button is normally a \fB+\fR or \fB\-\fR
+symbol, but can be configured in a variety of ways using the \fBbutton
+configure\fR operation.  For example, the \fB+\fR and \fB\-\fR
+symbols can be replaced with Tk images.
+.CS
+set im1 [image create photo -file closefolder.gif]
+set im2 [image create photo -file downarrow.gif]
+\&.t button configure $id -images "$im1 $im2" \\
+    -openrelief raised -closerelief raised
+.CE
+Entries can contain an arbitrary number of \fIdata fields\fR.  Data
+fields are name-value pairs.  Both the value and name are strings.
+The entry's \fB\-data\fR option lets you set data fields.
+.CS
+\&.t entry configure $id -data {mode 0666 group users}
+.CE
+The \fB\-data\fR takes a list of name-value pairs.  
+.PP
+You can display these data fields as \fIcolumns\fR in the
+\fBtreeview\fR widget.  You can create and configure columns with
+the \fBcolumn\fR operation.  For example, to add a new column to the
+widget, use the \fBcolumn insert\fR operation.  The last argument is
+the name of the data field that you want to display.
+.CS
+\&.t column insert end "mode"
+.CE
+The column title is displayed at the top of the column.  By default,
+it's is the field name.  You can override this using the column's
+\fB\-title\fR option.
+.CS
+\&.t column insert end "mode" -title "File Permissions"
+.CE
+Columns have several configuration options.  The \fBcolumn
+configure\fR operation lets you query or modify column options.
+.CS
+\&.t column configure "mode" -justify left
+.CE
+The \fB\-justify\fR option says how the data is justified within in
+the column.  The \fB\-hide\fR option indicates whether the column is
+displayed.
+.CS
+\&.t column configure "mode" -hide yes
+.CE
+Entries can be selected by clicking on the mouse.  Selected entries
+are drawn using the colors specified by the \fB\-selectforeground\fR 
+and \fB\-selectbackground\fR configuration options.
+The selection itself is managed by the \fBselection\fR operation.
+.CS
+# Clear all selections
+\&.t selection clear 0 end
+# Select the root node
+\&.t selection set 0 
+.CE
+The \fBcurselection\fR operation returns a list of ids of
+all the selected entries.
+.CS
+set ids [\&.t curselection]
+.CE
+You can use the \fBget\fR operation to convert the ids to 
+their pathnames.
+.CS
+set names [eval .t get -full $ids]
+.CE
+If a treeview is exporting its selection (using the
+\fB\-exportselection\fR option), then it will observe the standard X11
+protocols for handling the selection.  Treeview selections are
+available as type \fBSTRING\fR; the value of the selection will be the
+pathnames of the selected entries, separated by newlines.
+.PP
+The \fBtreeview\fR supports two modes of selection: \fBsingle\fR
+and \fBmultiple\fR.  In single select mode, only one entry can be
+selected at a time, while multiple select mode allows several entries
+to be selected.  The mode is set by the widget's \fB\-selectmode\fR
+option.
+.CS
+\&.t configure -selectmode "multiple"
+.CE
+You can be notified when the list of selected entries changes.  The widget's
+\fB\-selectcommand\fR specifies a Tcl procedure that is called whenever
+the selection changes.
+.CS
+proc SelectNotify { widget } {
+   set ids [\&$widget curselection]
+}
+\&.t configure -selectcommand "SelectNotify .t"
+.CE
+The widget supports the standard Tk scrolling and scanning operations.
+The \fBtreeview\fR can be both horizontally and vertically. You can
+attach scrollbars to the \fBtreeview\fR the same way as the listbox
+or canvas widgets.
+.CS
+scrollbar .xbar -orient horizontal -command ".t xview"
+scrollbar .ybar -orient vertical -command ".t yview"
+\&.t configure -xscrollcommand ".xbar set" \\
+    -yscrollcommand ".ybar set"
+.CE
+Entries can be programmatically opened or closed using the \fBopen\fR
+and \fBclose\fR operations respectively.  
+.CS
+\&.t open $id
+\&.t close $id
+.CE
+When an entry is opened, a Tcl procedure can be automatically invoked.
+The \fB\-opencommand\fR option specifies this procedure.  This
+procedure can lazily insert entries as needed.
+.CS
+proc AddEntries { dir } {
+   eval .t insert end [glob -nocomplain $dir/*] 
+}
+\&.t configure -opencommand "AddEntries %P"
+.CE
+Now when an entry is opened, the procedure \fBAddEntries\fR is
+called and adds children to the entry.  Before the command is invoked,
+special "%" substitutions (like \fBbind\fR) are performed. Above,
+\fB%P\fR is translated to the pathname of the entry.
+.PP
+The same feature exists when an entry is closed.  The
+\fB\-closecommand\fR option specifies the procedure.
+.CS
+proc DeleteEntries { id } {
+   .t entry delete $id 0 end
+}
+\&.t configure -closecommand "DeleteEntries %#"
+.CE
+When an entry is closed, the procedure \fBDeleteEntries\fR is called
+and deletes the entry's children using the \fBentry delete\fR operation
+(\fB%#\fR is the id of entry).
+.SH OLD TREEVIEW EDITS
+\fBNOTE: This section is OBSOLETE.  Native Tk widgets are now used for editing.\fR.
+.TP
+When editing the subwidget .edit is available.
+.TP
+\fIpathName.\fBedit \fIoperation\fR ?\fIargs\fR?
+This operation is used to provide text editing for cells (data 
+fields in a column) or entry labels.
+It has several forms, depending on \fIoperation\fR:
+.RS
+.TP
+\fIpathName.\fBedit apply\fR
+Applies the edited buffer, replacing the entry label
+or data field. The edit window is hidden.
+.TP
+\fIpathName.\fBedit cancel\fR
+Cancels the editing operation, reverting the entry label 
+or data value back to the previous value. The edit window is hidden.
+.TP
+\fIpathName.\fBedit cget\fI value\fR
+Returns the current value of the configuration option given
+by \fIoption\fR.
+\fIOption\fR may have any of the values accepted by the \fBconfigure\fR
+operation described below.
+.TP
+\fIpathName.\fBedit configure\fR ?\fIoption value\fR?
+Query or modify the configuration options of the edit window.
+If no \fIoption\fR is specified, returns a list describing all of
+the available options (see \fBTk_ConfigureInfo\fR for
+information on the format of this list).  If \fIoption\fR is specified
+with no \fIvalue\fR, then the command returns a list describing the
+one named option (this list will be identical to the corresponding
+sublist of the value returned if no \fIoption\fR is specified).  If
+one or more \fIoption\-value\fR pairs are specified, then the command
+modifies the given widget option(s) to have the given value(s);  in
+this case the command returns an empty string.
+\fIOption\fR and \fIvalue\fR are described in the section 
+.SB "TEXT EDITING OPTIONS" 
+below.
+.RE
+.TP
+\fIpathName.\fBedit delete\fI first last\fR
+Deletes the characters in the edit buffer between the two given
+character positions.  
+.TP
+\fIpathName.\fBedit get\fR ?\fI\-root\fR? \fIx y\fR
+.TP
+\fIpathName.\fBedit icursor\fI index\fR
+.TP
+\fIpathName.\fBedit index\fI index\fR
+Returns the text index of given \fIindex\fR.
+.TP
+\fIpathName.\fBedit insert\fI index string\fR
+Insert the text string \fIstring\fR into the edit buffer at the index 
+\fIindex\fR.  For example, the index 0 will prepend the buffer.
+.TP
+\fIpathName.\fBedit selection\fI args\fR
+This operation controls the selection of the editing window.  Note
+that this differs from the selection of entries.
+It has the following forms:
+.RS
+.TP
+\fIpathName.\fBedit selection adjust\fI index\fR
+Adjusts either the first or last index of the selection.
+.TP
+\fIpathName.\fBedit selection clear\fR
+Clears the selection.
+.TP
+\fIpathName.\fBedit selection from\fI index\fR
+Sets the anchor of the selection.
+.TP
+\fIpathName.\fBedit selection present\fR
+Indicates if a selection is present.
+.TP
+\fIpathName.\fBedit selection range\fI start end\fR
+Sets both the anchor and mark of the selection.
+.TP
+\fIpathName.\fBedit selection to\fI index\fR
+Sets the unanchored end (mark) of the selection.
+.RE
+.SH "LABEL ISSUES"
+Entries take a \fB-label\fR option that can be used to
+specify the text to display.
+This is not the same thing as the node label.
+.PP
+By default labels are checked for duplicates by \fBinsert\fR,
+which can slow down large (10k+) inserts.
+Setting \fB-allowduplicates\fR to 1 disables this checking.
+.PP
+An entries label can be changed either by 
+by setting \fB-allowduplicates\fR to 1 and using treeviews \fBentry relabel\fR
+or by using trees \fBlabel\fR command.
+.PP
+Instead of lists, a separator can be specified with \fB-separator\fR.
+Thus for managing files we might use:
+.PP
+.CS
+ treeview .t -separator / -autocreate 1
+ .t insert end  mann/text.n mann/canvas.n
+ .t insert end  Help Search Close -at root->mann->text.n
+ pack .t
+.SH "NOTES"
+Text cells in display height can be at most 64K pixels high per row.
+.SH KEYWORDS
+treeview, widget

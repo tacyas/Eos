@@ -1,0 +1,11 @@
+prefix=/Users/tacyas/Eos/util/ARM64MAC64
+exec_prefix=/Users/tacyas/Eos/util/ARM64MAC64
+libdir=/Users/tacyas/Eos/util/ARM64MAC64/lib
+includedir=/Users/tacyas/Eos/util/ARM64MAC64/include
+GSL_CBLAS_LIB=-lgslcblas
+
+Name: GSL
+Description: GNU Scientific Library
+Version: 2.7
+Libs: -L/Users/tacyas/Eos/util/ARM64MAC64/lib -lgsl ${GSL_CBLAS_LIB}  -lm 
+Cflags: -I/Users/tacyas/Eos/util/ARM64MAC64/include

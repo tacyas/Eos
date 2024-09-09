@@ -1,0 +1,1 @@
+../lmrcImageStudentCalculate.c

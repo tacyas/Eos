@@ -1,0 +1,1 @@
+../eosStarFileWrite.c

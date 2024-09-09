@@ -1,0 +1,28 @@
+SRC = \
+map2DCoordGet.c \
+
+OBJ = \
+map2DCoordGet.o \
+
+SHAREDOBJ = \
+map2DCoordGet.sharedo \
+
+REALOBJ = \
+ARM64MAC64/map2DCoordGet.o \
+
+REALSHAREDOBJ = \
+ARM64MAC64/map2DCoordGet.sharedo \
+
+OBJDEBUG = \
+map2DCoordGet.debugo \
+
+REALOBJDEBUG = \
+ARM64MAC64/map2DCoordGet.debugo \
+
+OBJCUDAGDB = \
+map2DCoordGet.cudagdb.o \
+
+REALOBJCUDAGDB = \
+ARM64MAC64/map2DCoordGet.cudagdb.o \
+
+

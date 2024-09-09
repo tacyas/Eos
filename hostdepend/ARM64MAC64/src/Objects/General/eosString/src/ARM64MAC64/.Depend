@@ -1,0 +1,4 @@
+ARM64MAC64/stringGet.o:stringGet.o
+ARM64MAC64/stringGetFromFile.o:stringGetFromFile.o
+ARM64MAC64/stringIsSame.o:stringIsSame.o
+ARM64MAC64/stringUtil.o:stringUtil.o

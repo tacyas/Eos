@@ -1,0 +1,1 @@
+../lmrcImageLogicalOperation.c

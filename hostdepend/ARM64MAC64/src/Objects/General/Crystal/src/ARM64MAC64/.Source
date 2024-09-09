@@ -1,0 +1,55 @@
+SRC = \
+crystalHelix.c \
+crystalInfoFile.c \
+crystalInit.c \
+crystalUtil.c \
+
+OBJ = \
+crystalHelix.o \
+crystalInfoFile.o \
+crystalInit.o \
+crystalUtil.o \
+
+SHAREDOBJ = \
+crystalHelix.sharedo \
+crystalInfoFile.sharedo \
+crystalInit.sharedo \
+crystalUtil.sharedo \
+
+REALOBJ = \
+ARM64MAC64/crystalHelix.o \
+ARM64MAC64/crystalInfoFile.o \
+ARM64MAC64/crystalInit.o \
+ARM64MAC64/crystalUtil.o \
+
+REALSHAREDOBJ = \
+ARM64MAC64/crystalHelix.sharedo \
+ARM64MAC64/crystalInfoFile.sharedo \
+ARM64MAC64/crystalInit.sharedo \
+ARM64MAC64/crystalUtil.sharedo \
+
+OBJDEBUG = \
+crystalHelix.debugo \
+crystalInfoFile.debugo \
+crystalInit.debugo \
+crystalUtil.debugo \
+
+REALOBJDEBUG = \
+ARM64MAC64/crystalHelix.debugo \
+ARM64MAC64/crystalInfoFile.debugo \
+ARM64MAC64/crystalInit.debugo \
+ARM64MAC64/crystalUtil.debugo \
+
+OBJCUDAGDB = \
+crystalHelix.cudagdb.o \
+crystalInfoFile.cudagdb.o \
+crystalInit.cudagdb.o \
+crystalUtil.cudagdb.o \
+
+REALOBJCUDAGDB = \
+ARM64MAC64/crystalHelix.cudagdb.o \
+ARM64MAC64/crystalInfoFile.cudagdb.o \
+ARM64MAC64/crystalInit.cudagdb.o \
+ARM64MAC64/crystalUtil.cudagdb.o \
+
+

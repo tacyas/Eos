@@ -1,0 +1,402 @@
+'\"
+'\" Copyright 1991-1997 by Bell Labs Innovations for Lucent Technologies.
+'\"
+'\" Permission to use, copy, modify, and distribute this software and its
+'\" documentation for any purpose and without fee is hereby granted, provided
+'\" that the above copyright notice appear in all copies and that both that the
+'\" copyright notice and warranty disclaimer appear in supporting documentation,
+'\" and that the names of Lucent Technologies any of their entities not be used
+'\" in advertising or publicity pertaining to distribution of the software
+'\" without specific, written prior permission.
+'\"
+'\" Lucent Technologies disclaims all warranties with regard to this software,
+'\" including all implied warranties of merchantability and fitness.  In no event
+'\" shall Lucent Technologies be liable for any special, indirect or
+'\" consequential damages or any damages whatsoever resulting from loss of use,
+'\" data or profits, whether in an action of contract, negligence or other
+'\" tortuous action, arising out of or in connection with the use or performance
+'\" of this software.  
+'\"
+'\" Graph widget created by Sani Nassif and George Howlett.
+'\"
+'\" The definitions below are for supplemental macros used in Tcl/Tk
+'\" manual entries.
+'\"
+'\" .AP type name in/out ?indent?
+'\"	Start paragraph describing an argument to a library procedure.
+'\"	type is type of argument (int, etc.), in/out is either "in", "out",
+'\"	or "in/out" to describe whether procedure reads or modifies arg,
+'\"	and indent is equivalent to second arg of .IP (shouldn't ever be
+'\"	needed;  use .AS below instead)
+'\"
+'\" .AS ?type? ?name?
+'\"	Give maximum sizes of arguments for setting tab stops.  Type and
+'\"	name are examples of largest possible arguments that will be passed
+'\"	to .AP later.  If args are omitted, default tab stops are used.
+'\"
+'\" .BS
+'\"	Start box enclosure.  From here until next .BE, everything will be
+'\"	enclosed in one large box.
+'\"
+'\" .BE
+'\"	End of box enclosure.
+'\"
+'\" .CS
+'\"	Begin code excerpt.
+'\"
+'\" .CE
+'\"	End code excerpt.
+'\"
+'\" .VS ?version? ?br?
+'\"	Begin vertical sidebar, for use in marking newly-changed parts
+'\"	of man pages.  The first argument is ignored and used for recording
+'\"	the version when the .VS was added, so that the sidebars can be
+'\"	found and removed when they reach a certain age.  If another argument
+'\"	is present, then a line break is forced before starting the sidebar.
+'\"
+'\" .VE
+'\"	End of vertical sidebar.
+'\"
+'\" .DS
+'\"	Begin an indented unfilled display.
+'\"
+'\" .DE
+'\"	End of indented unfilled display.
+'\"
+'\" .SO
+'\"	Start of list of standard options for a Tk widget.  The
+'\"	options follow on successive lines, in four columns separated
+'\"	by tabs.
+'\"
+'\" .SE
+'\"	End of list of standard options for a Tk widget.
+'\"
+'\" .OP cmdName dbName dbClass
+'\"	Start of description of a specific option.  cmdName gives the
+'\"	option's name as specified in the class command, dbName gives
+'\"	the option's name in the option database, and dbClass gives
+'\"	the option's class in the option database.
+'\"
+'\" .UL arg1 arg2
+'\"	Print arg1 underlined, then print arg2 normally.
+'\"
+'\" RCS: @(#) $Id: man.macros,v 1.1.1.1 2009/05/09 16:27:42 pcmacdon Exp $
+'\"
+'\"	# Set up traps and other miscellaneous stuff for Tcl/Tk man pages.
+.if t .wh -1.3i ^B
+.nr ^l \n(.l
+.ad b
+'\"	# Start an argument description
+.de AP
+.ie !"\\$4"" .TP \\$4
+.el \{\
+.   ie !"\\$2"" .TP \\n()Cu
+.   el          .TP 15
+.\}
+.ta \\n()Au \\n()Bu
+.ie !"\\$3"" \{\
+\&\\$1	\\fI\\$2\\fP	(\\$3)
+.\".b
+.\}
+.el \{\
+.br
+.ie !"\\$2"" \{\
+\&\\$1	\\fI\\$2\\fP
+.\}
+.el \{\
+\&\\fI\\$1\\fP
+.\}
+.\}
+..
+'\"	# define tabbing values for .AP
+.de AS
+.nr )A 10n
+.if !"\\$1"" .nr )A \\w'\\$1'u+3n
+.nr )B \\n()Au+15n
+.\"
+.if !"\\$2"" .nr )B \\w'\\$2'u+\\n()Au+3n
+.nr )C \\n()Bu+\\w'(in/out)'u+2n
+..
+.AS Tcl_Interp Tcl_CreateInterp in/out
+'\"	# BS - start boxed text
+'\"	# ^y = starting y location
+'\"	# ^b = 1
+.de BS
+.br
+.mk ^y
+.nr ^b 1u
+.if n .nf
+.if n .ti 0
+.if n \l'\\n(.lu\(ul'
+.if n .fi
+..
+'\"	# BE - end boxed text (draw box now)
+.de BE
+.nf
+.ti 0
+.mk ^t
+.ie n \l'\\n(^lu\(ul'
+.el \{\
+.\"	Draw four-sided box normally, but don't draw top of
+.\"	box if the box started on an earlier page.
+.ie !\\n(^b-1 \{\
+\h'-1.5n'\L'|\\n(^yu-1v'\l'\\n(^lu+3n\(ul'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.el \}\
+\h'-1.5n'\L'|\\n(^yu-1v'\h'\\n(^lu+3n'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.\}
+.fi
+.br
+.nr ^b 0
+..
+'\"	# VS - start vertical sidebar
+'\"	# ^Y = starting y location
+'\"	# ^v = 1 (for troff;  for nroff this doesn't matter)
+.de VS
+.if !"\\$2"" .br
+.mk ^Y
+.ie n 'mc \s12\(br\s0
+.el .nr ^v 1u
+..
+'\"	# VE - end of vertical sidebar
+.de VE
+.ie n 'mc
+.el \{\
+.ev 2
+.nf
+.ti 0
+.mk ^t
+\h'|\\n(^lu+3n'\L'|\\n(^Yu-1v\(bv'\v'\\n(^tu+1v-\\n(^Yu'\h'-|\\n(^lu+3n'
+.sp -1
+.fi
+.ev
+.\}
+.nr ^v 0
+..
+'\"	# Special macro to handle page bottom:  finish off current
+'\"	# box/sidebar if in box/sidebar mode, then invoked standard
+'\"	# page bottom macro.
+.de ^B
+.ev 2
+'ti 0
+'nf
+.mk ^t
+.if \\n(^b \{\
+.\"	Draw three-sided box if this is the box's first page,
+.\"	draw two sides but no top otherwise.
+.ie !\\n(^b-1 \h'-1.5n'\L'|\\n(^yu-1v'\l'\\n(^lu+3n\(ul'\L'\\n(^tu+1v-\\n(^yu'\h'|0u'\c
+.el \h'-1.5n'\L'|\\n(^yu-1v'\h'\\n(^lu+3n'\L'\\n(^tu+1v-\\n(^yu'\h'|0u'\c
+.\}
+.if \\n(^v \{\
+.nr ^x \\n(^tu+1v-\\n(^Yu
+\kx\h'-\\nxu'\h'|\\n(^lu+3n'\ky\L'-\\n(^xu'\v'\\n(^xu'\h'|0u'\c
+.\}
+.bp
+'fi
+.ev
+.if \\n(^b \{\
+.mk ^y
+.nr ^b 2
+.\}
+.if \\n(^v \{\
+.mk ^Y
+.\}
+..
+'\"	# DS - begin display
+.de DS
+.RS
+.nf
+.sp
+..
+'\"	# DE - end display
+.de DE
+.fi
+.RE
+.sp
+..
+'\"	# SO - start of list of standard options
+.de SO
+.SH "STANDARD OPTIONS"
+.LP
+.nf
+.ta 4c 8c 12c
+.ft B
+..
+'\"	# SE - end of list of standard options
+.de SE
+.fi
+.ft R
+.LP
+See the \\fBoptions\\fR manual entry for details on the standard options.
+..
+'\"	# OP - start of full description for a single option
+.de OP
+.LP
+.nf
+.ta 4c
+Command-Line Name:	\\fB\\$1\\fR
+Database Name:	\\fB\\$2\\fR
+Database Class:	\\fB\\$3\\fR
+.fi
+.IP
+..
+'\"	# CS - begin code excerpt
+.de CS
+.RS
+.nf
+.ta .25i .5i .75i 1i
+.ft CW
+.sp
+..
+'\"	# CE - end code excerpt
+.de CE
+.fi
+.RE
+.ft R
+.sp
+..
+.de UL
+\\$1\l'|0\(ul'\\$2
+..
+.TH eps n 2.5 BLT "BLT Built-In Commands"
+.BS
+'\" Note:  do not modify the .SH NAME line immediately below!
+.SH NAME
+eps \-  Encapsulated PostScript canvas item.
+.SH SYNOPSIS
+\fIcanvas\fB create eps \fIx y \fR?\fIoption value\fR?...
+.BE
+.SH DESCRIPTION
+The \fBeps\fR canvas item lets you place encapulated PostScript (EPS)
+on a canvas, controlling its size and placement.  The EPS item is
+displayed either as a solid rectangle or a preview image.  The preview
+image is designated in one of two ways: 1) the EPS file
+contains an ASCII hexidecimal preview, or 2) a Tk photo image.  When
+the canvas generates PostScript output, the EPS will be inserted with
+the proper translation and scaling to match that of the EPS item. So
+can use the canvas widget as a page layout tool.
+.SH EXAMPLE
+Let's say you have for PostScript files of four graphs which you
+want to tile two-by-two on a single page.  Maybe you'd like
+to annotate the graphs by putting a caption at the bottom of
+each graph.
+.PP
+Normally, you would have to resort to an external tool or write your
+own PostScript program.  The \fBeps\fR canvas item lets you do this
+through Tk's canvas widget.  An \fBeps\fR item displays an
+image (or rectangle) representing the encapsulated PostScript file.
+It also scales and translates the EPS file when the canvas is printed.
+
+.SH SYNTAX
+.DS
+\fIcanvas \fBcreate eps \fIx y \fR?\fIoption value\fR?...
+.DE
+The \fBeps\fR item creates a new canvas item. \fICanvas\fR is the name
+of a \fBcanvas\fR widget.  You must supply the X-Y coordinate of
+the new eps item.  How the coordinate is exactly interpretered is 
+controlled by the \fB\-anchor\fR option (see below).
+.PP
+Additional options may be specified on the command line to configure
+aspects of the eps item such as its color, stipple, and font.  The
+following \fIoption\fR and \fIvalue\fR pairs are valid.
+.TP
+\fB\-anchor \fIanchor\fR
+Tells how to position the EPS item relative to its X-Y coordinate.
+The default is \fBcenter\fR.
+.TP
+\fB\-background \fIcolor\fR
+Sets the background color of the EPS rectangle.
+.TP
+\fB\-borderwidth \fIpixels\fR
+Sets the width of the 3\-D border around the outside edge of the item.  The
+\fB\-relief\fR option determines if the border is to be drawn.  The
+default is \fB0\fR.
+.TP
+\fB\-file \fIfileName\fR
+Specifies the name of the EPS file.  The first line of an
+EPS file must start with "%!PS" and contain a "EPS" version
+specification.  The other requirement is that there be a "%%BoundingBox:"
+entry which contains four integers representing the lower-left and
+upper-right coordinates of the area bounding the EPS.
+The default is \fB""\fR.
+.TP
+\fB\-font \fIfontName\fR 
+Specifies the font of the title. The default is
+\fB*-Helvetica-Bold-R-Normal-*-18-180-*\fR.
+.TP
+\fB\-foreground \fIcolor\fR
+Specifies the foreground color of the EPS rectangle.  The option
+matters only when the \fB\-stipple\fR option is set.
+The default is \fBwhite\fR.
+.TP
+\fB\-height \fIpixels\fR
+Specifies the height EPS item.  If \fIpixels\fR is \fB0\fR, then
+the height is determined from the PostScript "BoundingBox:" entry
+in the EPS file.
+The default is \fB0\fR.
+.TP
+\fB\-image \fIphoto\fR
+Specifies the name of a Tk photo image to be displayed as in
+the item as a preview image.  This option overrides any preview
+specification found in the EPS file.
+The default is \fB""\fR.
+.TP
+\fB\-justify \fIjustify\fR
+Specifies how the title should be justified.  This matters only when
+the title contains more than one line of text. \fIJustify\fR must be
+\fBleft\fR, \fBright\fR, or \fBcenter\fR.  The default is
+\fBcenter\fR.
+.TP
+\fB\-relief \fIrelief\fR
+Specifies the 3-D effect for the EPS item.  \fIRelief\fR
+specifies how the item should appear relative to canvas; 
+for example, \fBraised\fR means the item should appear to 
+protrude.  The default is \fBflat\fR.
+.TP
+\fB\-shadowcolor \fIcolor\fR
+Specifies the color of the drop shadow used for the title.  The
+option with the \fB\-shadowoffset\fR option control how the
+title's drop shadow appears.
+The default is \fBgrey\fR.
+.TP
+\fB\-shadowoffset \fIpixels\fR
+Specifies the offset of the drop shadow from the title's text.
+If \fIpixels\fR is \fB0\fR, no shadow will be seen.
+The default is \fB0\fR.
+.TP
+\fB\-showimage \fIboolean\fR
+Indicates whether to display the image preview (if one exists), 
+or a simple rectangle.  
+The default is \fByes\fR.
+.TP
+\fB\-stipple \fIbitmap\fR
+Specifies a bitmap to used to stipple the rectangle representing
+the EPS item.  The default is \fB""\fR.
+.TP
+\fB\-title \fIstring\fR
+Sets the title of the EPS item.  If \fIstring\fR is \fB""\fR,
+then the title specified by the PostScript "Title:" entry
+is used.  You can set the string a single space to display
+no title.  The default is \fB""\fR.
+.TP
+\fB\-titleanchor \fIanchor\fR
+Tells how to position the title within EPS item.
+The default is \fBn\fR.
+.TP
+\fB\-titlecolor \fIcolor\fR
+Specifies the color of the title.  
+The default is \fBwhite\fR.
+.TP
+\fB\-titlerotate \fIdegrees\fR
+Sets the rotation of the title.  \fIDegrees\fR is a real number
+representing the angle of rotation.  
+The title is first rotated in space and then placed according to 
+the \fB\-titleanchor\fR position.  The default rotation is \fB0.0\fR.
+.TP
+\fB\-width \fIpixels\fR
+Specifies the width EPS item.  If \fIpixels\fR is \fB0\fR, then
+the width is determined from the PostScript "BoundingBox:" entry
+in the EPS file.
+The default is \fB0\fR.
+\fB5i\fR.

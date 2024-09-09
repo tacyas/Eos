@@ -1,0 +1,46 @@
+SRC = \
+contourCreate.c \
+lcontour2ps.c \
+lmrc2contour.c \
+
+OBJ = \
+contourCreate.o \
+lcontour2ps.o \
+lmrc2contour.o \
+
+SHAREDOBJ = \
+contourCreate.sharedo \
+lcontour2ps.sharedo \
+lmrc2contour.sharedo \
+
+REALOBJ = \
+ARM64MAC64/contourCreate.o \
+ARM64MAC64/lcontour2ps.o \
+ARM64MAC64/lmrc2contour.o \
+
+REALSHAREDOBJ = \
+ARM64MAC64/contourCreate.sharedo \
+ARM64MAC64/lcontour2ps.sharedo \
+ARM64MAC64/lmrc2contour.sharedo \
+
+OBJDEBUG = \
+contourCreate.debugo \
+lcontour2ps.debugo \
+lmrc2contour.debugo \
+
+REALOBJDEBUG = \
+ARM64MAC64/contourCreate.debugo \
+ARM64MAC64/lcontour2ps.debugo \
+ARM64MAC64/lmrc2contour.debugo \
+
+OBJCUDAGDB = \
+contourCreate.cudagdb.o \
+lcontour2ps.cudagdb.o \
+lmrc2contour.cudagdb.o \
+
+REALOBJCUDAGDB = \
+ARM64MAC64/contourCreate.cudagdb.o \
+ARM64MAC64/lcontour2ps.cudagdb.o \
+ARM64MAC64/lmrc2contour.cudagdb.o \
+
+

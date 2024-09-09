@@ -1,0 +1,28 @@
+SRC = \
+monoSound.c \
+
+OBJ = \
+monoSound.o \
+
+SHAREDOBJ = \
+monoSound.sharedo \
+
+REALOBJ = \
+ARM64MAC64/monoSound.o \
+
+REALSHAREDOBJ = \
+ARM64MAC64/monoSound.sharedo \
+
+OBJDEBUG = \
+monoSound.debugo \
+
+REALOBJDEBUG = \
+ARM64MAC64/monoSound.debugo \
+
+OBJCUDAGDB = \
+monoSound.cudagdb.o \
+
+REALOBJCUDAGDB = \
+ARM64MAC64/monoSound.cudagdb.o \
+
+

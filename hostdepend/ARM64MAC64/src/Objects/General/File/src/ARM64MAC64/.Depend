@@ -1,0 +1,3 @@
+ARM64MAC64/fileInfo.o:fileInfo.o
+ARM64MAC64/fileInit.o:fileInit.o
+ARM64MAC64/fileOpen.o:fileOpen.o

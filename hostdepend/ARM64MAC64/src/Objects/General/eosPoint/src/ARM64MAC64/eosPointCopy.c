@@ -1,0 +1,1 @@
+../eosPointCopy.c

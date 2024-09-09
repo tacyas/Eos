@@ -1,0 +1,1 @@
+../arrayWrite.c

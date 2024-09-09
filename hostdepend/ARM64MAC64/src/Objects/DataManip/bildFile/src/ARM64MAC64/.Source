@@ -1,0 +1,28 @@
+SRC = \
+lmrc2bild.c \
+
+OBJ = \
+lmrc2bild.o \
+
+SHAREDOBJ = \
+lmrc2bild.sharedo \
+
+REALOBJ = \
+ARM64MAC64/lmrc2bild.o \
+
+REALSHAREDOBJ = \
+ARM64MAC64/lmrc2bild.sharedo \
+
+OBJDEBUG = \
+lmrc2bild.debugo \
+
+REALOBJDEBUG = \
+ARM64MAC64/lmrc2bild.debugo \
+
+OBJCUDAGDB = \
+lmrc2bild.cudagdb.o \
+
+REALOBJCUDAGDB = \
+ARM64MAC64/lmrc2bild.cudagdb.o \
+
+

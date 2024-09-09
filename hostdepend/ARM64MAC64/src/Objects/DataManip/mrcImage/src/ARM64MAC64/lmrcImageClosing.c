@@ -1,0 +1,1 @@
+../lmrcImageClosing.c

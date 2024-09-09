@@ -1,0 +1,459 @@
+'\"
+'\" Copyright 1991-2001 by Bell Labs Innovations for Lucent Technologies.
+'\"
+'\" Permission to use, copy, modify, and distribute this software and its
+'\" documentation for any purpose and without fee is hereby granted, provided
+'\" that the above copyright notice appear in all copies and that both that the
+'\" copyright notice and warranty disclaimer appear in supporting documentation,
+'\" and that the names of Lucent Technologies any of their entities not be used
+'\" in advertising or publicity pertaining to distribution of the software
+'\" without specific, written prior permission.
+'\"
+'\" Lucent Technologies disclaims all warranties with regard to this software,
+'\" including all implied warranties of merchantability and fitness.  In no event
+'\" shall Lucent Technologies be liable for any special, indirect or
+'\" consequential damages or any damages whatsoever resulting from loss of use,
+'\" data or profits, whether in an action of contract, negligence or other
+'\" tortuous action, arising out of or in connection with the use or performance
+'\" of this software.  
+'\"
+'\" Bitmap command created by George Howlett.
+'\"
+'\" The definitions below are for supplemental macros used in Tcl/Tk
+'\" manual entries.
+'\"
+'\" .AP type name in/out ?indent?
+'\"	Start paragraph describing an argument to a library procedure.
+'\"	type is type of argument (int, etc.), in/out is either "in", "out",
+'\"	or "in/out" to describe whether procedure reads or modifies arg,
+'\"	and indent is equivalent to second arg of .IP (shouldn't ever be
+'\"	needed;  use .AS below instead)
+'\"
+'\" .AS ?type? ?name?
+'\"	Give maximum sizes of arguments for setting tab stops.  Type and
+'\"	name are examples of largest possible arguments that will be passed
+'\"	to .AP later.  If args are omitted, default tab stops are used.
+'\"
+'\" .BS
+'\"	Start box enclosure.  From here until next .BE, everything will be
+'\"	enclosed in one large box.
+'\"
+'\" .BE
+'\"	End of box enclosure.
+'\"
+'\" .CS
+'\"	Begin code excerpt.
+'\"
+'\" .CE
+'\"	End code excerpt.
+'\"
+'\" .VS ?version? ?br?
+'\"	Begin vertical sidebar, for use in marking newly-changed parts
+'\"	of man pages.  The first argument is ignored and used for recording
+'\"	the version when the .VS was added, so that the sidebars can be
+'\"	found and removed when they reach a certain age.  If another argument
+'\"	is present, then a line break is forced before starting the sidebar.
+'\"
+'\" .VE
+'\"	End of vertical sidebar.
+'\"
+'\" .DS
+'\"	Begin an indented unfilled display.
+'\"
+'\" .DE
+'\"	End of indented unfilled display.
+'\"
+'\" .SO
+'\"	Start of list of standard options for a Tk widget.  The
+'\"	options follow on successive lines, in four columns separated
+'\"	by tabs.
+'\"
+'\" .SE
+'\"	End of list of standard options for a Tk widget.
+'\"
+'\" .OP cmdName dbName dbClass
+'\"	Start of description of a specific option.  cmdName gives the
+'\"	option's name as specified in the class command, dbName gives
+'\"	the option's name in the option database, and dbClass gives
+'\"	the option's class in the option database.
+'\"
+'\" .UL arg1 arg2
+'\"	Print arg1 underlined, then print arg2 normally.
+'\"
+'\" RCS: @(#) $Id: man.macros,v 1.1.1.1 2009/05/09 16:27:42 pcmacdon Exp $
+'\"
+'\"	# Set up traps and other miscellaneous stuff for Tcl/Tk man pages.
+.if t .wh -1.3i ^B
+.nr ^l \n(.l
+.ad b
+'\"	# Start an argument description
+.de AP
+.ie !"\\$4"" .TP \\$4
+.el \{\
+.   ie !"\\$2"" .TP \\n()Cu
+.   el          .TP 15
+.\}
+.ta \\n()Au \\n()Bu
+.ie !"\\$3"" \{\
+\&\\$1	\\fI\\$2\\fP	(\\$3)
+.\".b
+.\}
+.el \{\
+.br
+.ie !"\\$2"" \{\
+\&\\$1	\\fI\\$2\\fP
+.\}
+.el \{\
+\&\\fI\\$1\\fP
+.\}
+.\}
+..
+'\"	# define tabbing values for .AP
+.de AS
+.nr )A 10n
+.if !"\\$1"" .nr )A \\w'\\$1'u+3n
+.nr )B \\n()Au+15n
+.\"
+.if !"\\$2"" .nr )B \\w'\\$2'u+\\n()Au+3n
+.nr )C \\n()Bu+\\w'(in/out)'u+2n
+..
+.AS Tcl_Interp Tcl_CreateInterp in/out
+'\"	# BS - start boxed text
+'\"	# ^y = starting y location
+'\"	# ^b = 1
+.de BS
+.br
+.mk ^y
+.nr ^b 1u
+.if n .nf
+.if n .ti 0
+.if n \l'\\n(.lu\(ul'
+.if n .fi
+..
+'\"	# BE - end boxed text (draw box now)
+.de BE
+.nf
+.ti 0
+.mk ^t
+.ie n \l'\\n(^lu\(ul'
+.el \{\
+.\"	Draw four-sided box normally, but don't draw top of
+.\"	box if the box started on an earlier page.
+.ie !\\n(^b-1 \{\
+\h'-1.5n'\L'|\\n(^yu-1v'\l'\\n(^lu+3n\(ul'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.el \}\
+\h'-1.5n'\L'|\\n(^yu-1v'\h'\\n(^lu+3n'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.\}
+.fi
+.br
+.nr ^b 0
+..
+'\"	# VS - start vertical sidebar
+'\"	# ^Y = starting y location
+'\"	# ^v = 1 (for troff;  for nroff this doesn't matter)
+.de VS
+.if !"\\$2"" .br
+.mk ^Y
+.ie n 'mc \s12\(br\s0
+.el .nr ^v 1u
+..
+'\"	# VE - end of vertical sidebar
+.de VE
+.ie n 'mc
+.el \{\
+.ev 2
+.nf
+.ti 0
+.mk ^t
+\h'|\\n(^lu+3n'\L'|\\n(^Yu-1v\(bv'\v'\\n(^tu+1v-\\n(^Yu'\h'-|\\n(^lu+3n'
+.sp -1
+.fi
+.ev
+.\}
+.nr ^v 0
+..
+'\"	# Special macro to handle page bottom:  finish off current
+'\"	# box/sidebar if in box/sidebar mode, then invoked standard
+'\"	# page bottom macro.
+.de ^B
+.ev 2
+'ti 0
+'nf
+.mk ^t
+.if \\n(^b \{\
+.\"	Draw three-sided box if this is the box's first page,
+.\"	draw two sides but no top otherwise.
+.ie !\\n(^b-1 \h'-1.5n'\L'|\\n(^yu-1v'\l'\\n(^lu+3n\(ul'\L'\\n(^tu+1v-\\n(^yu'\h'|0u'\c
+.el \h'-1.5n'\L'|\\n(^yu-1v'\h'\\n(^lu+3n'\L'\\n(^tu+1v-\\n(^yu'\h'|0u'\c
+.\}
+.if \\n(^v \{\
+.nr ^x \\n(^tu+1v-\\n(^Yu
+\kx\h'-\\nxu'\h'|\\n(^lu+3n'\ky\L'-\\n(^xu'\v'\\n(^xu'\h'|0u'\c
+.\}
+.bp
+'fi
+.ev
+.if \\n(^b \{\
+.mk ^y
+.nr ^b 2
+.\}
+.if \\n(^v \{\
+.mk ^Y
+.\}
+..
+'\"	# DS - begin display
+.de DS
+.RS
+.nf
+.sp
+..
+'\"	# DE - end display
+.de DE
+.fi
+.RE
+.sp
+..
+'\"	# SO - start of list of standard options
+.de SO
+.SH "STANDARD OPTIONS"
+.LP
+.nf
+.ta 4c 8c 12c
+.ft B
+..
+'\"	# SE - end of list of standard options
+.de SE
+.fi
+.ft R
+.LP
+See the \\fBoptions\\fR manual entry for details on the standard options.
+..
+'\"	# OP - start of full description for a single option
+.de OP
+.LP
+.nf
+.ta 4c
+Command-Line Name:	\\fB\\$1\\fR
+Database Name:	\\fB\\$2\\fR
+Database Class:	\\fB\\$3\\fR
+.fi
+.IP
+..
+'\"	# CS - begin code excerpt
+.de CS
+.RS
+.nf
+.ta .25i .5i .75i 1i
+.ft CW
+.sp
+..
+'\"	# CE - end code excerpt
+.de CE
+.fi
+.RE
+.ft R
+.sp
+..
+.de UL
+\\$1\l'|0\(ul'\\$2
+..
+.TH bitmap n 2.5 BLT "BLT Built-In Commands"
+.BS
+'\" Note:  do not modify the .SH NAME line immediately below!
+.SH NAME
+bitmap \- Define a new bitmap from a Tcl script
+.SH SYNOPSIS
+\fBbitmap define \fIbitmapName data\fR ?\fIoption value\fR?...
+.sp
+\fBbitmap compose \fIbitmapName text\fR ?\fIoption value\fR?...
+.sp
+\fBbitmap exists \fIbitmapName\fR
+.sp
+\fBbitmap source \fIbitmapName\fR
+.sp
+\fBbitmap data \fIbitmapName\fR
+.sp
+\fBbitmap height \fIbitmapName\fR
+.sp
+\fBbitmap width \fIbitmapName\fR
+.BE
+.SH DESCRIPTION
+The \fBbitmap\fR command lets you create new bitmaps directly from your
+Tcl script.  The bitmap can be specified as a list of data or a text string
+which is converted into a bitmap.  You can arbitrarily scale
+or rotate the bitmap too.
+.SH INTRODUCTION
+Bitmaps are commonly used within Tk.  In label and button widgets, you
+display bitmaps them instead of text strings and in the canvas and
+text widgets, they're used for stippling.  But Tk let's you can create
+new bitmaps only by reading the bitmap data from a file.  This makes
+bitmaps cumbersome to manage, especially in packaging the program as a
+\fBwish\fR script, since each bitmap must be its own file.  It would
+be nicer if you could create new bitmaps directly from your Tcl script.
+.PP
+The \fBbitmap\fR command lets you do just that.  You can specify the
+bitmap as in various formats (such as the X11 bitmap format).  You can
+also compose a bitmap from a text string.  The \fBbitmap\fR command
+also lets you and arbitrarily rotate or scale the bitmap.  For example, you
+could use this to create button widgets with the text label rotated 90
+degrees.
+.SH EXAMPLE
+<<<<<<< bitmap.mann
+You can define a new bitmap with the \fBdefine\fR operation.  For
+example, let's say you are using the X11 bitmap "gray1".  Normally to
+use it, you would specify the location of the file.
+.CS
+label .l -bitmap @/usr/X11R6/include/X11/bitmaps/gray1
+.CE
+But you can simply cut and paste the contents of "gray1" into the 
+\fBbitmap\fR command.
+.CS
+bitmap define gray1 {
+    #define gray1_width 2
+    #define gray1_height 2
+    static char gray1_bits[] = {
+       0x01, 0x02};
+}
+label .l -bitmap gray1
+.CE
+Tk will recognize "gray1" as a bitmap which can now be used with any
+widget that accepts bitmaps.
+.CS
+.barchart element configure elem1 -stipple gray1
+.CE
+The bitmap data can be specified in a mulitude of forms.
+The following commands are all equivalent.
+.CS
+bitmap define gray1 {
+    #define gray1_width 2
+    #define gray1_height 2
+    static char gray1_bits[] = {
+       0x01, 0x02};
+}
+bitmap define gray1 { { 2 2 } { 0x01, 0x02 } }
+bitmap define gray1 { { 2 2 } { 0x01 0x02 } }
+bitmap define gray1 { { 2 2 } { 1 2 } }
+.CE
+Either the data is in the standard X11 bitmap form, or it's a list of
+two lists. The first list contains the height and width of the bitmap.
+The second list is the bitmap source data.  Each element of that list
+is an hexadecimal number specifying which pixels are foreground (1)
+and which are background (0) of the bitmap.  Note that the format of
+the source data is exactly that of the XBM format. 
+.P
+You can scale or rotate the bitmap as you create it, by using the
+\fB-scale\fR or\fB-rotate\fR options.
+.CS
+bitmap define gray1 {
+    #define gray1_width 2
+    #define gray1_height 2
+    static char gray1_bits[] = {
+       0x01, 0x02};
+} -scale 2.0 -rotate 90.0
+.CE
+In addition, you can compose bitmaps from text strings.  This makes it
+easy to create rotated buttons or labels.  The text string can have
+multi-line.  
+.CS
+bitmap compose rot_text "This is rotated\\ntext" \\
+	-rotate 90.0 -font fixed
+.CE
+There are also a number of ways to query bitmaps.  This isn't limited
+to bitmaps that you create, but any bitmap.
+.CS
+bitmap exists rot_text
+bitmap width rot_text
+bitmap height rot_text
+bitmap data rot_text
+bitmap source rot_text
+.CE
+The \fBexists\fR operation indicates if a bitmap by that name is
+defined.  You can query the dimensions of the bitmap using the
+\fBwidth\fR and \fBheight\fR operations. The \fBdata\fR operation
+returns the list of the data used to create the bitmap.  
+For example, you could query the data of a bitmap and \fBsend\fR 
+it across the network to another Tk application.
+.CS
+set data [bitmap data @/usr/X11R6/include/X11/bitmaps/ghost.xbm]
+send {wish #2} bitmap define ghost $data
+.CE
+.SH OPERATIONS
+The following operations are available for \fBbitmap\fR:
+.TP
+\fBbitmap compose \fIbitmapName text \fR?\fIoption value\fR?...
+Creates a bitmap \fIbitmapName\fR from the text string \fItext\fR.
+A bitmap \fIbitmapName\fR can not already exist.  
+The following options are available.
+.RS
+.TP
+\fB\-font \fIfontName\fR 
+Specifies a font to use when drawing text into the bitmap.
+If this option isn't specified then \fIfontName\fR defaults to 
+\fB*-Helvetica-Bold-R-Normal-*-140-*\fR.
+.TP
+\fB\-rotate \fItheta\fR
+Specifies the angle of rotation of the text in the bitmap.
+\fITheta\fR is a real number representing the angle in degrees.
+It defaults to \fB0.0\fR degrees.
+.TP
+\fB\-scale \fIvalue\fR
+Specifies the scale of the bitmap.
+\fIValue\fR is a real number representing the scale.  A scale
+of 1.0 indicates no scaling is necessary, while 2.0 would
+double the size of the bitmap.  There is no way to specify
+differents scales for the width and height of the bitmap.
+The default scale is \fB1.0\fR.
+.RE
+.TP
+\fBbitmap data \fIbitmapName\fR 
+Returns a list of both the
+dimensions of the bitmap \fIbitmapName\fR and its source data.
+.TP
+\fBbitmap define \fIbitmapName data\fR \fR?\fIoption value\fR?...
+Associates \fIbitmapName\fR with in-memory bitmap data so that
+\fIbitmapName\fR can be used in later calls to \fBTk_GetBitmap\fR.
+The \fIbitmapName\fR argument is the name of the bitmap; it must not
+previously have been defined in either a call to Tk_DefineBitmap or
+\fBbitmap\fR.  The argument \fIdata\fP describes the bitmap to
+be created.  It is either the X11 bitmap format (a C structure) or
+a list of two lists: the dimensions and source data.  The dimensions 
+are a list of two numbers which are the width
+and height of the bitmap.  The source data is a list of hexadecimal
+values in a format similar to the X11 or X10 bitmap format.  The
+values may be optionally separated by commas and do not need to be
+prefixed with "0x".  The following options are available.
+.RS
+.TP
+\fB\-rotate \fItheta\fR
+Specifies how many degrees to rotate the bitmap.
+\fITheta\fR is a real number representing the angle.
+The default is \fB0.0\fR degrees.
+.TP
+\fB\-scale \fIvalue\fR
+Specifies how to scale the bitmap.
+\fIValue\fR is a real number representing the scale.  A scale
+of 1.0 indicates no scaling is necessary, while 2.0 would
+double the size of the bitmap.  There is no way to specify
+differents scales for the width and height of the bitmap.
+The default scale is \fB1.0\fR.
+.RE
+.TP
+\fBbitmap exists \fIbitmapName\fR 
+Returns \fB1\fR if a bitmap \fIbitmapName\fR exists, otherwise \fB0\fR. 
+.TP
+\fBbitmap height \fIbitmapName\fR 
+Returns the height in pixels of the bitmap \fIbitmapName\fR.
+.TP
+\fBbitmap source \fIbitmapName\fR 
+Returns the source data of the bitmap \fIbitmapName\fR. The source data is a 
+list of the hexadecimal values.  
+.TP
+\fBbitmap width \fIbitmapName\fR 
+Returns the width in pixels of the bitmap \fIbitmapName\fR.
+.SH LIMITATIONS
+Tk currently offers no way of destroying bitmaps.  Once a bitmap is
+created, it exists until the application terminates.
+.SH KEYWORDS
+bitmap

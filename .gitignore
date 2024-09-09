@@ -25,15 +25,15 @@ hostdepend/ALPHA/
 hostdepend/ALPHALINUX/
 hostdepend/ALPHALINUX5/
 hostdepend/ALPHAOSF1/
-hostdepend/ARM64MAC64/
+#hostdepend/ARM64MAC64/
 hostdepend/CELLLINUX64/
 hostdepend/HP/
 hostdepend/I386LINUX/
 hostdepend/I686LINUX/
 hostdepend/SGI/
 hostdepend/SPARC/
-hostdepend/X86LINUX64/
-hostdepend/X86MAC64/
+#hostdepend/X86LINUX64/
+#hostdepend/X86MAC64/
 
 #
 *.o
@@ -52,7 +52,7 @@ bin/wish/*/tclIndex
 
 #util
 util/src.org/
-util/ARM64MAC64
+#util/ARM64MAC64
 
 #
 data/
@@ -61,10 +61,10 @@ PrevReleased/
 backup/
 database/
 distribute/
-optional/
+#optional/
 others/
 others2/
-tutorial/
+#tutorial/
 zephyr/
 pione/
 log/

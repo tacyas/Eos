@@ -1,0 +1,82 @@
+SRC = \
+decoder.c \
+gifFileInit.c \
+gifFileWrite.c \
+gifUtil.c \
+gifcompr.c \
+gifencod.c \
+lmrc2gif.c \
+
+OBJ = \
+decoder.o \
+gifFileInit.o \
+gifFileWrite.o \
+gifUtil.o \
+gifcompr.o \
+gifencod.o \
+lmrc2gif.o \
+
+SHAREDOBJ = \
+decoder.sharedo \
+gifFileInit.sharedo \
+gifFileWrite.sharedo \
+gifUtil.sharedo \
+gifcompr.sharedo \
+gifencod.sharedo \
+lmrc2gif.sharedo \
+
+REALOBJ = \
+ARM64MAC64/decoder.o \
+ARM64MAC64/gifFileInit.o \
+ARM64MAC64/gifFileWrite.o \
+ARM64MAC64/gifUtil.o \
+ARM64MAC64/gifcompr.o \
+ARM64MAC64/gifencod.o \
+ARM64MAC64/lmrc2gif.o \
+
+REALSHAREDOBJ = \
+ARM64MAC64/decoder.sharedo \
+ARM64MAC64/gifFileInit.sharedo \
+ARM64MAC64/gifFileWrite.sharedo \
+ARM64MAC64/gifUtil.sharedo \
+ARM64MAC64/gifcompr.sharedo \
+ARM64MAC64/gifencod.sharedo \
+ARM64MAC64/lmrc2gif.sharedo \
+
+OBJDEBUG = \
+decoder.debugo \
+gifFileInit.debugo \
+gifFileWrite.debugo \
+gifUtil.debugo \
+gifcompr.debugo \
+gifencod.debugo \
+lmrc2gif.debugo \
+
+REALOBJDEBUG = \
+ARM64MAC64/decoder.debugo \
+ARM64MAC64/gifFileInit.debugo \
+ARM64MAC64/gifFileWrite.debugo \
+ARM64MAC64/gifUtil.debugo \
+ARM64MAC64/gifcompr.debugo \
+ARM64MAC64/gifencod.debugo \
+ARM64MAC64/lmrc2gif.debugo \
+
+OBJCUDAGDB = \
+decoder.cudagdb.o \
+gifFileInit.cudagdb.o \
+gifFileWrite.cudagdb.o \
+gifUtil.cudagdb.o \
+gifcompr.cudagdb.o \
+gifencod.cudagdb.o \
+lmrc2gif.cudagdb.o \
+
+REALOBJCUDAGDB = \
+ARM64MAC64/decoder.cudagdb.o \
+ARM64MAC64/gifFileInit.cudagdb.o \
+ARM64MAC64/gifFileWrite.cudagdb.o \
+ARM64MAC64/gifUtil.cudagdb.o \
+ARM64MAC64/gifcompr.cudagdb.o \
+ARM64MAC64/gifencod.cudagdb.o \
+ARM64MAC64/lmrc2gif.cudagdb.o \
+
+

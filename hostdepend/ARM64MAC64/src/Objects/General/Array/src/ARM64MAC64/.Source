@@ -1,0 +1,73 @@
+SRC = \
+arrayInfo.c \
+arrayInit.c \
+arrayPCA.c \
+arrayRead.c \
+arrayWrite.c \
+larray2mrc.c \
+
+OBJ = \
+arrayInfo.o \
+arrayInit.o \
+arrayPCA.o \
+arrayRead.o \
+arrayWrite.o \
+larray2mrc.o \
+
+SHAREDOBJ = \
+arrayInfo.sharedo \
+arrayInit.sharedo \
+arrayPCA.sharedo \
+arrayRead.sharedo \
+arrayWrite.sharedo \
+larray2mrc.sharedo \
+
+REALOBJ = \
+ARM64MAC64/arrayInfo.o \
+ARM64MAC64/arrayInit.o \
+ARM64MAC64/arrayPCA.o \
+ARM64MAC64/arrayRead.o \
+ARM64MAC64/arrayWrite.o \
+ARM64MAC64/larray2mrc.o \
+
+REALSHAREDOBJ = \
+ARM64MAC64/arrayInfo.sharedo \
+ARM64MAC64/arrayInit.sharedo \
+ARM64MAC64/arrayPCA.sharedo \
+ARM64MAC64/arrayRead.sharedo \
+ARM64MAC64/arrayWrite.sharedo \
+ARM64MAC64/larray2mrc.sharedo \
+
+OBJDEBUG = \
+arrayInfo.debugo \
+arrayInit.debugo \
+arrayPCA.debugo \
+arrayRead.debugo \
+arrayWrite.debugo \
+larray2mrc.debugo \
+
+REALOBJDEBUG = \
+ARM64MAC64/arrayInfo.debugo \
+ARM64MAC64/arrayInit.debugo \
+ARM64MAC64/arrayPCA.debugo \
+ARM64MAC64/arrayRead.debugo \
+ARM64MAC64/arrayWrite.debugo \
+ARM64MAC64/larray2mrc.debugo \
+
+OBJCUDAGDB = \
+arrayInfo.cudagdb.o \
+arrayInit.cudagdb.o \
+arrayPCA.cudagdb.o \
+arrayRead.cudagdb.o \
+arrayWrite.cudagdb.o \
+larray2mrc.cudagdb.o \
+
+REALOBJCUDAGDB = \
+ARM64MAC64/arrayInfo.cudagdb.o \
+ARM64MAC64/arrayInit.cudagdb.o \
+ARM64MAC64/arrayPCA.cudagdb.o \
+ARM64MAC64/arrayRead.cudagdb.o \
+ARM64MAC64/arrayWrite.cudagdb.o \
+ARM64MAC64/larray2mrc.cudagdb.o \
+
+

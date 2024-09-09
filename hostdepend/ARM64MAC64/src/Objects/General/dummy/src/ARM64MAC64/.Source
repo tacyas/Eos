@@ -1,0 +1,28 @@
+SRC = \
+ctype_b.c \
+
+OBJ = \
+ctype_b.o \
+
+SHAREDOBJ = \
+ctype_b.sharedo \
+
+REALOBJ = \
+ARM64MAC64/ctype_b.o \
+
+REALSHAREDOBJ = \
+ARM64MAC64/ctype_b.sharedo \
+
+OBJDEBUG = \
+ctype_b.debugo \
+
+REALOBJDEBUG = \
+ARM64MAC64/ctype_b.debugo \
+
+OBJCUDAGDB = \
+ctype_b.cudagdb.o \
+
+REALOBJCUDAGDB = \
+ARM64MAC64/ctype_b.cudagdb.o \
+
+

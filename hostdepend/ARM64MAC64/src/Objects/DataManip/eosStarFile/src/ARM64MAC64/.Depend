@@ -1,0 +1,4 @@
+ARM64MAC64/eosStarFileDataGet.o:eosStarFileDataGet.o
+ARM64MAC64/eosStarFileLoopDataGet.o:eosStarFileLoopDataGet.o
+ARM64MAC64/eosStarFileRead.o:eosStarFileRead.o
+ARM64MAC64/eosStarFileWrite.o:eosStarFileWrite.o

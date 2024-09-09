@@ -1,0 +1,1 @@
+../gifcompr.c

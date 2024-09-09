@@ -1,0 +1,55 @@
+SRC = \
+memoryAllocate.c \
+memoryByteSwap.c \
+memoryClear.c \
+memoryCopy.c \
+
+OBJ = \
+memoryAllocate.o \
+memoryByteSwap.o \
+memoryClear.o \
+memoryCopy.o \
+
+SHAREDOBJ = \
+memoryAllocate.sharedo \
+memoryByteSwap.sharedo \
+memoryClear.sharedo \
+memoryCopy.sharedo \
+
+REALOBJ = \
+ARM64MAC64/memoryAllocate.o \
+ARM64MAC64/memoryByteSwap.o \
+ARM64MAC64/memoryClear.o \
+ARM64MAC64/memoryCopy.o \
+
+REALSHAREDOBJ = \
+ARM64MAC64/memoryAllocate.sharedo \
+ARM64MAC64/memoryByteSwap.sharedo \
+ARM64MAC64/memoryClear.sharedo \
+ARM64MAC64/memoryCopy.sharedo \
+
+OBJDEBUG = \
+memoryAllocate.debugo \
+memoryByteSwap.debugo \
+memoryClear.debugo \
+memoryCopy.debugo \
+
+REALOBJDEBUG = \
+ARM64MAC64/memoryAllocate.debugo \
+ARM64MAC64/memoryByteSwap.debugo \
+ARM64MAC64/memoryClear.debugo \
+ARM64MAC64/memoryCopy.debugo \
+
+OBJCUDAGDB = \
+memoryAllocate.cudagdb.o \
+memoryByteSwap.cudagdb.o \
+memoryClear.cudagdb.o \
+memoryCopy.cudagdb.o \
+
+REALOBJCUDAGDB = \
+ARM64MAC64/memoryAllocate.cudagdb.o \
+ARM64MAC64/memoryByteSwap.cudagdb.o \
+ARM64MAC64/memoryClear.cudagdb.o \
+ARM64MAC64/memoryCopy.cudagdb.o \
+
+

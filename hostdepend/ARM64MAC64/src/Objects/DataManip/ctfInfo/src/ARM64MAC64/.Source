@@ -1,0 +1,181 @@
+SRC = \
+ctfDeterminationFromPhaseComparison.c \
+ctfFunction.c \
+ctfInfoPVM.c \
+ctfInfoRead.c \
+ctfInfoWrite.c \
+ctfInfoWrite2.c \
+ctfWeight.c \
+ctfZeroPoint.c \
+ctfforbayes.c \
+ctfforbayescheck.c \
+defocuslikelihood.c \
+lastigmatismDetection.c \
+lctfDetermination.c \
+lctfDetermine.c \
+lmolecularEnvelope.c \
+lmrcFSInfoScatteringAngularDistributionAverageSection.c \
+powerspectraTangentLine.c \
+thonRing.c \
+
+OBJ = \
+ctfDeterminationFromPhaseComparison.o \
+ctfFunction.o \
+ctfInfoPVM.o \
+ctfInfoRead.o \
+ctfInfoWrite.o \
+ctfInfoWrite2.o \
+ctfWeight.o \
+ctfZeroPoint.o \
+ctfforbayes.o \
+ctfforbayescheck.o \
+defocuslikelihood.o \
+lastigmatismDetection.o \
+lctfDetermination.o \
+lctfDetermine.o \
+lmolecularEnvelope.o \
+lmrcFSInfoScatteringAngularDistributionAverageSection.o \
+powerspectraTangentLine.o \
+thonRing.o \
+
+SHAREDOBJ = \
+ctfDeterminationFromPhaseComparison.sharedo \
+ctfFunction.sharedo \
+ctfInfoPVM.sharedo \
+ctfInfoRead.sharedo \
+ctfInfoWrite.sharedo \
+ctfInfoWrite2.sharedo \
+ctfWeight.sharedo \
+ctfZeroPoint.sharedo \
+ctfforbayes.sharedo \
+ctfforbayescheck.sharedo \
+defocuslikelihood.sharedo \
+lastigmatismDetection.sharedo \
+lctfDetermination.sharedo \
+lctfDetermine.sharedo \
+lmolecularEnvelope.sharedo \
+lmrcFSInfoScatteringAngularDistributionAverageSection.sharedo \
+powerspectraTangentLine.sharedo \
+thonRing.sharedo \
+
+REALOBJ = \
+ARM64MAC64/ctfDeterminationFromPhaseComparison.o \
+ARM64MAC64/ctfFunction.o \
+ARM64MAC64/ctfInfoPVM.o \
+ARM64MAC64/ctfInfoRead.o \
+ARM64MAC64/ctfInfoWrite.o \
+ARM64MAC64/ctfInfoWrite2.o \
+ARM64MAC64/ctfWeight.o \
+ARM64MAC64/ctfZeroPoint.o \
+ARM64MAC64/ctfforbayes.o \
+ARM64MAC64/ctfforbayescheck.o \
+ARM64MAC64/defocuslikelihood.o \
+ARM64MAC64/lastigmatismDetection.o \
+ARM64MAC64/lctfDetermination.o \
+ARM64MAC64/lctfDetermine.o \
+ARM64MAC64/lmolecularEnvelope.o \
+ARM64MAC64/lmrcFSInfoScatteringAngularDistributionAverageSection.o \
+ARM64MAC64/powerspectraTangentLine.o \
+ARM64MAC64/thonRing.o \
+
+REALSHAREDOBJ = \
+ARM64MAC64/ctfDeterminationFromPhaseComparison.sharedo \
+ARM64MAC64/ctfFunction.sharedo \
+ARM64MAC64/ctfInfoPVM.sharedo \
+ARM64MAC64/ctfInfoRead.sharedo \
+ARM64MAC64/ctfInfoWrite.sharedo \
+ARM64MAC64/ctfInfoWrite2.sharedo \
+ARM64MAC64/ctfWeight.sharedo \
+ARM64MAC64/ctfZeroPoint.sharedo \
+ARM64MAC64/ctfforbayes.sharedo \
+ARM64MAC64/ctfforbayescheck.sharedo \
+ARM64MAC64/defocuslikelihood.sharedo \
+ARM64MAC64/lastigmatismDetection.sharedo \
+ARM64MAC64/lctfDetermination.sharedo \
+ARM64MAC64/lctfDetermine.sharedo \
+ARM64MAC64/lmolecularEnvelope.sharedo \
+ARM64MAC64/lmrcFSInfoScatteringAngularDistributionAverageSection.sharedo \
+ARM64MAC64/powerspectraTangentLine.sharedo \
+ARM64MAC64/thonRing.sharedo \
+
+OBJDEBUG = \
+ctfDeterminationFromPhaseComparison.debugo \
+ctfFunction.debugo \
+ctfInfoPVM.debugo \
+ctfInfoRead.debugo \
+ctfInfoWrite.debugo \
+ctfInfoWrite2.debugo \
+ctfWeight.debugo \
+ctfZeroPoint.debugo \
+ctfforbayes.debugo \
+ctfforbayescheck.debugo \
+defocuslikelihood.debugo \
+lastigmatismDetection.debugo \
+lctfDetermination.debugo \
+lctfDetermine.debugo \
+lmolecularEnvelope.debugo \
+lmrcFSInfoScatteringAngularDistributionAverageSection.debugo \
+powerspectraTangentLine.debugo \
+thonRing.debugo \
+
+REALOBJDEBUG = \
+ARM64MAC64/ctfDeterminationFromPhaseComparison.debugo \
+ARM64MAC64/ctfFunction.debugo \
+ARM64MAC64/ctfInfoPVM.debugo \
+ARM64MAC64/ctfInfoRead.debugo \
+ARM64MAC64/ctfInfoWrite.debugo \
+ARM64MAC64/ctfInfoWrite2.debugo \
+ARM64MAC64/ctfWeight.debugo \
+ARM64MAC64/ctfZeroPoint.debugo \
+ARM64MAC64/ctfforbayes.debugo \
+ARM64MAC64/ctfforbayescheck.debugo \
+ARM64MAC64/defocuslikelihood.debugo \
+ARM64MAC64/lastigmatismDetection.debugo \
+ARM64MAC64/lctfDetermination.debugo \
+ARM64MAC64/lctfDetermine.debugo \
+ARM64MAC64/lmolecularEnvelope.debugo \
+ARM64MAC64/lmrcFSInfoScatteringAngularDistributionAverageSection.debugo \
+ARM64MAC64/powerspectraTangentLine.debugo \
+ARM64MAC64/thonRing.debugo \
+
+OBJCUDAGDB = \
+ctfDeterminationFromPhaseComparison.cudagdb.o \
+ctfFunction.cudagdb.o \
+ctfInfoPVM.cudagdb.o \
+ctfInfoRead.cudagdb.o \
+ctfInfoWrite.cudagdb.o \
+ctfInfoWrite2.cudagdb.o \
+ctfWeight.cudagdb.o \
+ctfZeroPoint.cudagdb.o \
+ctfforbayes.cudagdb.o \
+ctfforbayescheck.cudagdb.o \
+defocuslikelihood.cudagdb.o \
+lastigmatismDetection.cudagdb.o \
+lctfDetermination.cudagdb.o \
+lctfDetermine.cudagdb.o \
+lmolecularEnvelope.cudagdb.o \
+lmrcFSInfoScatteringAngularDistributionAverageSection.cudagdb.o \
+powerspectraTangentLine.cudagdb.o \
+thonRing.cudagdb.o \
+
+REALOBJCUDAGDB = \
+ARM64MAC64/ctfDeterminationFromPhaseComparison.cudagdb.o \
+ARM64MAC64/ctfFunction.cudagdb.o \
+ARM64MAC64/ctfInfoPVM.cudagdb.o \
+ARM64MAC64/ctfInfoRead.cudagdb.o \
+ARM64MAC64/ctfInfoWrite.cudagdb.o \
+ARM64MAC64/ctfInfoWrite2.cudagdb.o \
+ARM64MAC64/ctfWeight.cudagdb.o \
+ARM64MAC64/ctfZeroPoint.cudagdb.o \
+ARM64MAC64/ctfforbayes.cudagdb.o \
+ARM64MAC64/ctfforbayescheck.cudagdb.o \
+ARM64MAC64/defocuslikelihood.cudagdb.o \
+ARM64MAC64/lastigmatismDetection.cudagdb.o \
+ARM64MAC64/lctfDetermination.cudagdb.o \
+ARM64MAC64/lctfDetermine.cudagdb.o \
+ARM64MAC64/lmolecularEnvelope.cudagdb.o \
+ARM64MAC64/lmrcFSInfoScatteringAngularDistributionAverageSection.cudagdb.o \
+ARM64MAC64/powerspectraTangentLine.cudagdb.o \
+ARM64MAC64/thonRing.cudagdb.o \
+
+

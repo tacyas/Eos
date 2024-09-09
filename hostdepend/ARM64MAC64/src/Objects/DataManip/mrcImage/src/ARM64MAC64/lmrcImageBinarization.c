@@ -1,0 +1,1 @@
+../lmrcImageBinarization.c

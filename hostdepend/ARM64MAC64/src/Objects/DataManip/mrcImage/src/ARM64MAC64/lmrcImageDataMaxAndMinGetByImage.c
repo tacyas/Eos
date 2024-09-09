@@ -1,0 +1,1 @@
+../lmrcImageDataMaxAndMinGetByImage.c

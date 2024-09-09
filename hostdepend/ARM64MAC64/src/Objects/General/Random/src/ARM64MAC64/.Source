@@ -1,0 +1,46 @@
+SRC = \
+randomNormal.c \
+randomUniform.c \
+srandom.c \
+
+OBJ = \
+randomNormal.o \
+randomUniform.o \
+srandom.o \
+
+SHAREDOBJ = \
+randomNormal.sharedo \
+randomUniform.sharedo \
+srandom.sharedo \
+
+REALOBJ = \
+ARM64MAC64/randomNormal.o \
+ARM64MAC64/randomUniform.o \
+ARM64MAC64/srandom.o \
+
+REALSHAREDOBJ = \
+ARM64MAC64/randomNormal.sharedo \
+ARM64MAC64/randomUniform.sharedo \
+ARM64MAC64/srandom.sharedo \
+
+OBJDEBUG = \
+randomNormal.debugo \
+randomUniform.debugo \
+srandom.debugo \
+
+REALOBJDEBUG = \
+ARM64MAC64/randomNormal.debugo \
+ARM64MAC64/randomUniform.debugo \
+ARM64MAC64/srandom.debugo \
+
+OBJCUDAGDB = \
+randomNormal.cudagdb.o \
+randomUniform.cudagdb.o \
+srandom.cudagdb.o \
+
+REALOBJCUDAGDB = \
+ARM64MAC64/randomNormal.cudagdb.o \
+ARM64MAC64/randomUniform.cudagdb.o \
+ARM64MAC64/srandom.cudagdb.o \
+
+

@@ -1,0 +1,1 @@
+../lmrcImageSymmetryFind.c

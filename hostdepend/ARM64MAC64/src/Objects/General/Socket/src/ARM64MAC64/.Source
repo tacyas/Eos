@@ -1,0 +1,37 @@
+SRC = \
+socketClient.c \
+socketServer.c \
+
+OBJ = \
+socketClient.o \
+socketServer.o \
+
+SHAREDOBJ = \
+socketClient.sharedo \
+socketServer.sharedo \
+
+REALOBJ = \
+ARM64MAC64/socketClient.o \
+ARM64MAC64/socketServer.o \
+
+REALSHAREDOBJ = \
+ARM64MAC64/socketClient.sharedo \
+ARM64MAC64/socketServer.sharedo \
+
+OBJDEBUG = \
+socketClient.debugo \
+socketServer.debugo \
+
+REALOBJDEBUG = \
+ARM64MAC64/socketClient.debugo \
+ARM64MAC64/socketServer.debugo \
+
+OBJCUDAGDB = \
+socketClient.cudagdb.o \
+socketServer.cudagdb.o \
+
+REALOBJCUDAGDB = \
+ARM64MAC64/socketClient.cudagdb.o \
+ARM64MAC64/socketServer.cudagdb.o \
+
+

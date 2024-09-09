@@ -1,0 +1,46 @@
+SRC = \
+tgaFileInit.c \
+tgaFilePrint.c \
+tgaFileRead.c \
+
+OBJ = \
+tgaFileInit.o \
+tgaFilePrint.o \
+tgaFileRead.o \
+
+SHAREDOBJ = \
+tgaFileInit.sharedo \
+tgaFilePrint.sharedo \
+tgaFileRead.sharedo \
+
+REALOBJ = \
+ARM64MAC64/tgaFileInit.o \
+ARM64MAC64/tgaFilePrint.o \
+ARM64MAC64/tgaFileRead.o \
+
+REALSHAREDOBJ = \
+ARM64MAC64/tgaFileInit.sharedo \
+ARM64MAC64/tgaFilePrint.sharedo \
+ARM64MAC64/tgaFileRead.sharedo \
+
+OBJDEBUG = \
+tgaFileInit.debugo \
+tgaFilePrint.debugo \
+tgaFileRead.debugo \
+
+REALOBJDEBUG = \
+ARM64MAC64/tgaFileInit.debugo \
+ARM64MAC64/tgaFilePrint.debugo \
+ARM64MAC64/tgaFileRead.debugo \
+
+OBJCUDAGDB = \
+tgaFileInit.cudagdb.o \
+tgaFilePrint.cudagdb.o \
+tgaFileRead.cudagdb.o \
+
+REALOBJCUDAGDB = \
+ARM64MAC64/tgaFileInit.cudagdb.o \
+ARM64MAC64/tgaFilePrint.cudagdb.o \
+ARM64MAC64/tgaFileRead.cudagdb.o \
+
+

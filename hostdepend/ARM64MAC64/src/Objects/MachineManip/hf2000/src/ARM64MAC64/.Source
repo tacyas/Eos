@@ -1,0 +1,91 @@
+SRC = \
+hf2000Close.c \
+hf2000Command.c \
+hf2000Init.c \
+hf2000Read.c \
+hf2000Write.c \
+lhf2000LenzCurrent.c \
+lhf2000SpecimenPosition.c \
+ltkhf2000.c \
+
+OBJ = \
+hf2000Close.o \
+hf2000Command.o \
+hf2000Init.o \
+hf2000Read.o \
+hf2000Write.o \
+lhf2000LenzCurrent.o \
+lhf2000SpecimenPosition.o \
+ltkhf2000.o \
+
+SHAREDOBJ = \
+hf2000Close.sharedo \
+hf2000Command.sharedo \
+hf2000Init.sharedo \
+hf2000Read.sharedo \
+hf2000Write.sharedo \
+lhf2000LenzCurrent.sharedo \
+lhf2000SpecimenPosition.sharedo \
+ltkhf2000.sharedo \
+
+REALOBJ = \
+ARM64MAC64/hf2000Close.o \
+ARM64MAC64/hf2000Command.o \
+ARM64MAC64/hf2000Init.o \
+ARM64MAC64/hf2000Read.o \
+ARM64MAC64/hf2000Write.o \
+ARM64MAC64/lhf2000LenzCurrent.o \
+ARM64MAC64/lhf2000SpecimenPosition.o \
+ARM64MAC64/ltkhf2000.o \
+
+REALSHAREDOBJ = \
+ARM64MAC64/hf2000Close.sharedo \
+ARM64MAC64/hf2000Command.sharedo \
+ARM64MAC64/hf2000Init.sharedo \
+ARM64MAC64/hf2000Read.sharedo \
+ARM64MAC64/hf2000Write.sharedo \
+ARM64MAC64/lhf2000LenzCurrent.sharedo \
+ARM64MAC64/lhf2000SpecimenPosition.sharedo \
+ARM64MAC64/ltkhf2000.sharedo \
+
+OBJDEBUG = \
+hf2000Close.debugo \
+hf2000Command.debugo \
+hf2000Init.debugo \
+hf2000Read.debugo \
+hf2000Write.debugo \
+lhf2000LenzCurrent.debugo \
+lhf2000SpecimenPosition.debugo \
+ltkhf2000.debugo \
+
+REALOBJDEBUG = \
+ARM64MAC64/hf2000Close.debugo \
+ARM64MAC64/hf2000Command.debugo \
+ARM64MAC64/hf2000Init.debugo \
+ARM64MAC64/hf2000Read.debugo \
+ARM64MAC64/hf2000Write.debugo \
+ARM64MAC64/lhf2000LenzCurrent.debugo \
+ARM64MAC64/lhf2000SpecimenPosition.debugo \
+ARM64MAC64/ltkhf2000.debugo \
+
+OBJCUDAGDB = \
+hf2000Close.cudagdb.o \
+hf2000Command.cudagdb.o \
+hf2000Init.cudagdb.o \
+hf2000Read.cudagdb.o \
+hf2000Write.cudagdb.o \
+lhf2000LenzCurrent.cudagdb.o \
+lhf2000SpecimenPosition.cudagdb.o \
+ltkhf2000.cudagdb.o \
+
+REALOBJCUDAGDB = \
+ARM64MAC64/hf2000Close.cudagdb.o \
+ARM64MAC64/hf2000Command.cudagdb.o \
+ARM64MAC64/hf2000Init.cudagdb.o \
+ARM64MAC64/hf2000Read.cudagdb.o \
+ARM64MAC64/hf2000Write.cudagdb.o \
+ARM64MAC64/lhf2000LenzCurrent.cudagdb.o \
+ARM64MAC64/lhf2000SpecimenPosition.cudagdb.o \
+ARM64MAC64/ltkhf2000.cudagdb.o \
+
+

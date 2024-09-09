@@ -1,0 +1,46 @@
+SRC = \
+lmrc2png.c \
+pngFileInit.c \
+pngFileWrite.c \
+
+OBJ = \
+lmrc2png.o \
+pngFileInit.o \
+pngFileWrite.o \
+
+SHAREDOBJ = \
+lmrc2png.sharedo \
+pngFileInit.sharedo \
+pngFileWrite.sharedo \
+
+REALOBJ = \
+ARM64MAC64/lmrc2png.o \
+ARM64MAC64/pngFileInit.o \
+ARM64MAC64/pngFileWrite.o \
+
+REALSHAREDOBJ = \
+ARM64MAC64/lmrc2png.sharedo \
+ARM64MAC64/pngFileInit.sharedo \
+ARM64MAC64/pngFileWrite.sharedo \
+
+OBJDEBUG = \
+lmrc2png.debugo \
+pngFileInit.debugo \
+pngFileWrite.debugo \
+
+REALOBJDEBUG = \
+ARM64MAC64/lmrc2png.debugo \
+ARM64MAC64/pngFileInit.debugo \
+ARM64MAC64/pngFileWrite.debugo \
+
+OBJCUDAGDB = \
+lmrc2png.cudagdb.o \
+pngFileInit.cudagdb.o \
+pngFileWrite.cudagdb.o \
+
+REALOBJCUDAGDB = \
+ARM64MAC64/lmrc2png.cudagdb.o \
+ARM64MAC64/pngFileInit.cudagdb.o \
+ARM64MAC64/pngFileWrite.cudagdb.o \
+
+

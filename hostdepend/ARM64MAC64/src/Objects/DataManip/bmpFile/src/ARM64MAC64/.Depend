@@ -1,0 +1,3 @@
+ARM64MAC64/bmpFileInfo.o:bmpFileInfo.o
+ARM64MAC64/bmpFileRead.o:bmpFileRead.o
+ARM64MAC64/lbmp2mrc.o:lbmp2mrc.o

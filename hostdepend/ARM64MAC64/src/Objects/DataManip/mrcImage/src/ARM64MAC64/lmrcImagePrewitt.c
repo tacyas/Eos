@@ -1,0 +1,1 @@
+../lmrcImagePrewitt.c

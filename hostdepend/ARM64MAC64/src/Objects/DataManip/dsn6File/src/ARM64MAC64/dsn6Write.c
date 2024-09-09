@@ -1,0 +1,1 @@
+../dsn6Write.c

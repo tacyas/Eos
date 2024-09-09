@@ -1,0 +1,2111 @@
+'\"
+'\" Copyright 1991-1997 by Lucent Technologies, Inc.
+'\"
+'\" Permission to use, copy, modify, and distribute this software and its
+'\" documentation for any purpose and without fee is hereby granted, provided
+'\" that the above copyright notice appear in all copies and that both that the
+'\" copyright notice and warranty disclaimer appear in supporting documentation,
+'\" and that the names of Lucent Technologies any of their entities not be used
+'\" in advertising or publicity pertaining to distribution of the software
+'\" without specific, written prior permission.
+'\"
+'\" Lucent Technologies disclaims all warranties with regard to this software,
+'\" including all implied warranties of merchantability and fitness.  In no event
+'\" shall Lucent Technologies be liable for any special, indirect or
+'\" consequential damages or any damages whatsoever resulting from loss of use,
+'\" data or profits, whether in an action of contract, negligence or other
+'\" tortuous action, arising out of or in connection with the use or performance
+'\" of this software.  
+'\"
+'\" Tree command created by George Howlett.
+'\" Extensive cleanups and enhancements by Peter MacDonald.
+'\"
+'\" The definitions below are for supplemental macros used in Tcl/Tk
+'\" manual entries.
+'\"
+'\" .AP type name in/out ?indent?
+'\"	Start paragraph describing an argument to a library procedure.
+'\"	type is type of argument (int, etc.), in/out is either "in", "out",
+'\"	or "in/out" to describe whether procedure reads or modifies arg,
+'\"	and indent is equivalent to second arg of .IP (shouldn't ever be
+'\"	needed;  use .AS below instead)
+'\"
+'\" .AS ?type? ?name?
+'\"	Give maximum sizes of arguments for setting tab stops.  Type and
+'\"	name are examples of largest possible arguments that will be passed
+'\"	to .AP later.  If args are omitted, default tab stops are used.
+'\"
+'\" .BS
+'\"	Start box enclosure.  From here until next .BE, everything will be
+'\"	enclosed in one large box.
+'\"
+'\" .BE
+'\"	End of box enclosure.
+'\"
+'\" .CS
+'\"	Begin code excerpt.
+'\"
+'\" .CE
+'\"	End code excerpt.
+'\"
+'\" .VS ?version? ?br?
+'\"	Begin vertical sidebar, for use in marking newly-changed parts
+'\"	of man pages.  The first argument is ignored and used for recording
+'\"	the version when the .VS was added, so that the sidebars can be
+'\"	found and removed when they reach a certain age.  If another argument
+'\"	is present, then a line break is forced before starting the sidebar.
+'\"
+'\" .VE
+'\"	End of vertical sidebar.
+'\"
+'\" .DS
+'\"	Begin an indented unfilled display.
+'\"
+'\" .DE
+'\"	End of indented unfilled display.
+'\"
+'\" .SO
+'\"	Start of list of standard options for a Tk widget.  The
+'\"	options follow on successive lines, in four columns separated
+'\"	by tabs.
+'\"
+'\" .SE
+'\"	End of list of standard options for a Tk widget.
+'\"
+'\" .OP cmdName dbName dbClass
+'\"	Start of description of a specific option.  cmdName gives the
+'\"	option's name as specified in the class command, dbName gives
+'\"	the option's name in the option database, and dbClass gives
+'\"	the option's class in the option database.
+'\"
+'\" .UL arg1 arg2
+'\"	Print arg1 underlined, then print arg2 normally.
+'\"
+'\" RCS: @(#) $Id: man.macros,v 1.1.1.1 2009/05/09 16:27:42 pcmacdon Exp $
+'\"
+'\"	# Set up traps and other miscellaneous stuff for Tcl/Tk man pages.
+.if t .wh -1.3i ^B
+.nr ^l \n(.l
+.ad b
+'\"	# Start an argument description
+.de AP
+.ie !"\\$4"" .TP \\$4
+.el \{\
+.   ie !"\\$2"" .TP \\n()Cu
+.   el          .TP 15
+.\}
+.ta \\n()Au \\n()Bu
+.ie !"\\$3"" \{\
+\&\\$1	\\fI\\$2\\fP	(\\$3)
+.\".b
+.\}
+.el \{\
+.br
+.ie !"\\$2"" \{\
+\&\\$1	\\fI\\$2\\fP
+.\}
+.el \{\
+\&\\fI\\$1\\fP
+.\}
+.\}
+..
+'\"	# define tabbing values for .AP
+.de AS
+.nr )A 10n
+.if !"\\$1"" .nr )A \\w'\\$1'u+3n
+.nr )B \\n()Au+15n
+.\"
+.if !"\\$2"" .nr )B \\w'\\$2'u+\\n()Au+3n
+.nr )C \\n()Bu+\\w'(in/out)'u+2n
+..
+.AS Tcl_Interp Tcl_CreateInterp in/out
+'\"	# BS - start boxed text
+'\"	# ^y = starting y location
+'\"	# ^b = 1
+.de BS
+.br
+.mk ^y
+.nr ^b 1u
+.if n .nf
+.if n .ti 0
+.if n \l'\\n(.lu\(ul'
+.if n .fi
+..
+'\"	# BE - end boxed text (draw box now)
+.de BE
+.nf
+.ti 0
+.mk ^t
+.ie n \l'\\n(^lu\(ul'
+.el \{\
+.\"	Draw four-sided box normally, but don't draw top of
+.\"	box if the box started on an earlier page.
+.ie !\\n(^b-1 \{\
+\h'-1.5n'\L'|\\n(^yu-1v'\l'\\n(^lu+3n\(ul'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.el \}\
+\h'-1.5n'\L'|\\n(^yu-1v'\h'\\n(^lu+3n'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.\}
+.fi
+.br
+.nr ^b 0
+..
+'\"	# VS - start vertical sidebar
+'\"	# ^Y = starting y location
+'\"	# ^v = 1 (for troff;  for nroff this doesn't matter)
+.de VS
+.if !"\\$2"" .br
+.mk ^Y
+.ie n 'mc \s12\(br\s0
+.el .nr ^v 1u
+..
+'\"	# VE - end of vertical sidebar
+.de VE
+.ie n 'mc
+.el \{\
+.ev 2
+.nf
+.ti 0
+.mk ^t
+\h'|\\n(^lu+3n'\L'|\\n(^Yu-1v\(bv'\v'\\n(^tu+1v-\\n(^Yu'\h'-|\\n(^lu+3n'
+.sp -1
+.fi
+.ev
+.\}
+.nr ^v 0
+..
+'\"	# Special macro to handle page bottom:  finish off current
+'\"	# box/sidebar if in box/sidebar mode, then invoked standard
+'\"	# page bottom macro.
+.de ^B
+.ev 2
+'ti 0
+'nf
+.mk ^t
+.if \\n(^b \{\
+.\"	Draw three-sided box if this is the box's first page,
+.\"	draw two sides but no top otherwise.
+.ie !\\n(^b-1 \h'-1.5n'\L'|\\n(^yu-1v'\l'\\n(^lu+3n\(ul'\L'\\n(^tu+1v-\\n(^yu'\h'|0u'\c
+.el \h'-1.5n'\L'|\\n(^yu-1v'\h'\\n(^lu+3n'\L'\\n(^tu+1v-\\n(^yu'\h'|0u'\c
+.\}
+.if \\n(^v \{\
+.nr ^x \\n(^tu+1v-\\n(^Yu
+\kx\h'-\\nxu'\h'|\\n(^lu+3n'\ky\L'-\\n(^xu'\v'\\n(^xu'\h'|0u'\c
+.\}
+.bp
+'fi
+.ev
+.if \\n(^b \{\
+.mk ^y
+.nr ^b 2
+.\}
+.if \\n(^v \{\
+.mk ^Y
+.\}
+..
+'\"	# DS - begin display
+.de DS
+.RS
+.nf
+.sp
+..
+'\"	# DE - end display
+.de DE
+.fi
+.RE
+.sp
+..
+'\"	# SO - start of list of standard options
+.de SO
+.SH "STANDARD OPTIONS"
+.LP
+.nf
+.ta 4c 8c 12c
+.ft B
+..
+'\"	# SE - end of list of standard options
+.de SE
+.fi
+.ft R
+.LP
+See the \\fBoptions\\fR manual entry for details on the standard options.
+..
+'\"	# OP - start of full description for a single option
+.de OP
+.LP
+.nf
+.ta 4c
+Command-Line Name:	\\fB\\$1\\fR
+Database Name:	\\fB\\$2\\fR
+Database Class:	\\fB\\$3\\fR
+.fi
+.IP
+..
+'\"	# CS - begin code excerpt
+.de CS
+.RS
+.nf
+.ta .25i .5i .75i 1i
+.ft CW
+.sp
+..
+'\"	# CE - end code excerpt
+.de CE
+.fi
+.RE
+.ft R
+.sp
+..
+.de UL
+\\$1\l'|0\(ul'\\$2
+..
+.TH tree n 2.5 BLT "BLT Built-In Commands"
+.BS
+'\" Note:  do not modify the .SH NAME line immediately below!
+.SH NAME
+tree \-  Create and manage tree data objects.
+.SH SYNOPSIS
+\fBtree create\fR  ?\fB-fixed\fR? ?\fB-dictset\fR? ?\fB-keyhash\fR \fIN\fR? ?\fItreeName\fR?
+.sp
+\fBtree destroy\fR \fItreeName\fR...
+.sp
+\fBtree names\fR ?\fIpattern\fR?
+.sp
+\fBtree op\fR \fIsubcmd\fR ?\fIsubsubcmd ...\fR? \fItreeName\fR ?\fIarg arg ...\fR?
+.BE
+.SH DESCRIPTION
+The \fBtree command\fR is used to create, destroy, and
+provide Tcl access to a \fBtree object\fR.
+A \fBtree object\fR
+is an ordered tree of nodes where each node can have
+data key-values, tags and a label.
+The \fBtreeview\fR widget uses a \fBtree object\fR.
+
+.SH INTRODUCTION
+
+Tree provides Tcl with a rich API for managing complex data structures.
+Here is a simple example.
+.PP
+.CS
+ set t [tree create]
+ set id [$t insert 0]
+ $t set $id X 2
+ set n [$t get $id X]
+
+ # Create a node with label
+ $t insert 0 -label A
+ $t set 0->A    X 1
+ set n [$t get 0->A X]
+.CE
+.PP
+Labels provide convenient \fB->\fR indexing relative a starting node.
+.PP
+Nodes may also be created with initial data values.
+.PP
+.CS
+ $t insert 0 -label A -data {X 1   Y "a 1 b 2"}
+ $t incr  0->A X 3
+ $t set   0->A Y(a) 4
+.CE
+.PP
+Note round braces are used to access sub-values in a \fBdict-array\fR.
+See the section
+.SB "DICT-ARRAYS"
+below for details.
+.CE
+.SH SYNTAX
+.TP
+\fBtree create\fR ?\fB-fixed\fR? ?\fB-dictset\fR? ?\fB-keyhash\fR \fIN\fR? ?\fItreeName\fR?
+Creates a new tree object.  The name of the new tree is returned
+and a Tcl command is created.
+If no \fItreeName\fR argument is present, then the name of the tree is
+automatically generated in the form "\fBtree0\fR", "\fBtree1\fR",
+etc relative to the current namespace.
+A tree name (if given) can not start with a dash.
+Tree names containing the substring "\fB#auto\fR" will
+be replaced with a generated identifier.  For example, the
+name \fBdata#auto\fR will translate to \fBdatatree0\fR.
+Note that when
+the Tcl command is deleted the \fBtree object\fR also gets freed.
+.sp
+Newly created trees always contain a single root node with id \fB0\fR
+that can not be deleted.
+.sp
+Switches for \fBcreate\fR are listed below:
+.RS
+.TP 1i
+\fB\-fixed\fR
+Make \fBinsert\fR automatically set the \fB\-fixed\fR flag.
+This will disallow later setting of keys not given
+as \fI\-data\fR to the insert.  This includes dict-array keys.
+See the \fBfixed\fR sub-command.
+.TP 1i
+\fB\-dictset\fR
+Define that any update of an \fBarray\fR field will coerce the
+array object to a dict object.
+a dict will preserve order of sub-field keys on update.
+See the \fBdictset\fR sub-command.
+.TP 1i
+\fB\-keyhash\fR \fIsize\fR
+Define the size beyond which node key storage starts using
+a hash (the default is 21 keys).  Normally
+small numbers of keys are stored as a list.  But once more than
+\fIsize\fR keys are added to a node, key storage converts to a hash.
+This affects the order of key iteration (eg. for \fBget\fR/\fBnames\fR/\fBvalues\fR).
+A list will iterate in the order in which keys were added,  
+whereas the order of a hash is undetermined.
+For large numbers of
+ordered keys, specify a really large \fIsize\fR (eg. 1000000).
+.RE
+
+.TP
+\fBtree destroy\fR \fItreeName\fR...
+Releases one of more trees.  The Tcl command associated with
+\fItreeName\fR is also removed.  Trees are reference counted.  The
+internal tree data object isn't destroyed until no one else is using
+the tree.
+.TP
+\fBtree names\fR ?\fIpattern\fR?
+Returns the names of all tree objects.  if a \fIpattern\fR argument
+is given, then the only those trees whose name matches pattern will
+be listed.
+.TP
+\fBtree op\fR \fIsubcmd\fR ?\fIsubsubcmd ...\fR? \fItreeName\fR ?\fIarg arg ...\fR?
+Provide direct calls to sub-commands, without going through the object command.
+Aside from self documentating,
+it allows wize to provide support checked tree calls.
+.SH NODE IDS AND TAGS
+Nodes in a tree object may be referenced by id or by tag.
+Each node has a unique serial number or id that is assigned to it
+at creation. The id of an node never changes or is reused
+unless all nodes in a tree are delete.
+.PP
+A node may also have any number of tags associated with it.  A tag is
+just a string of characters, and it may take any form but
+can not start with
+an integer.  For example, "\fBx123\fR" is valid, but "\fB123x\fR"
+is not.  The same tag may be associated with one
+or multiple nodes (ranges or \fItagnode\fR).
+Ranges are commonly used to group nodes in various interesting ways.
+.PP
+Commands that take a \fItagnode\fR can operate on ranges and
+will accept either a tag or a list of zero or more integer node numbers.
+A node-list may contain only integers, and can not have leading spaces.
+Node-lists simplify the use of iterating commands because
+it avoids excessive use of \fBeval\fR.
+.PP
+There are four built-in or psuedo tags:
+.RS
+.TP 1i
+\fBall\fR 
+Applies to every node in the tree.
+.TP 1i
+\fBnonroot\fR
+Applies to every node in the tree except the root node.
+.TP 1i
+\fBrootchildren\fR
+Applies to every node in the tree whose parent is the root node.
+.TP 1i
+\fBroot\fR
+Managed automatically by the tree object, \fBroot\fR specifies the node
+that is currently set as the root node for the tree.
+.RE
+.PP
+When specifying nodes in tree object commands, if the specifier is an
+integer then it is assumed to refer to the single node with that id.
+If the specifier is not an integer, then it is assumed to refer to all
+of the nodes in the tree that have a tag matching the specifier.  The
+symbol \fInode\fR is used below to indicate that an argument specifies
+either an id or a tag that selects a single node.
+A \fItagnode\fR is either a tag that selects a group of
+nodes, or it's a list of zero or more integer node numbers.
+Many tree commands only operate on a single node at a
+time; if \fInode\fR is specified in a way that names multiple items, then
+an error "refers to more than one node" is generated.
+.SH NODE MODIFIERS
+You can also specify node in relation to another node by appending one
+or more modifiers to the node id or tag after \fB->\fR.
+A modifier refers to a node
+in relation to the specified node.  For example, 
+"\fBroot->firstchild\fR"
+selects the first subtree of the root node.
+.PP
+The following modifiers are available:
+.RS
+.TP 1i
+\fBfirstchild\fR 
+Selects the first child of the node.  
+.TP 1i
+\fBlastchild\fR 
+Selects the last child of the node.  
+.TP 1i
+\fBnextnode\fR 
+Selects the next node in preorder to the node.  
+.TP 1i
+\fBnextsibling\fR 
+Selects the next sibling of the node.  
+.TP 1i
+\fBparentnode\fR 
+Selects the parent of the node.  
+.TP 1i
+\fBprevnode\fR 
+Selects the previous node in preorder to the node.  
+.TP 1i
+\fBprevsibling\fR 
+Selects the previous sibling of the node.  
+.TP 1i
+\fBmaxnode\fR 
+The maximum node number.
+.TP 1i
+"\fIlabel\fR"
+.TP 1i
+\'\fIlabel\fR'
+.TP 1i
+\fIlabel\fR
+Selects the child node whose label is \fIlabel\fR.  Enclosing \fIlabel\fR in 
+quotes (double or single) supports labels with embedded spaces and
+prevents matching reserved words (eg. a node labeled "parentnode").
+If mulitiple child nodes
+have the same label, the first matching node is used.
+.RE
+.PP
+It's an error if the node can't be found.  For example,
+\fBlastchild\fR and \fBfirstchild\fR will generate errors if the node
+has no children.  The exception to this is the \fBindex\fR operation which
+returns -1, allowing you to test if a modifier is valid.
+.SH TREE OPERATIONS
+Once you create a tree object, you can use its Tcl command 
+to query or modify it.  The
+general form is
+.DS
+\fItreeName\fR \fIoperation\fR ?\fIarg\fR?...
+.DE
+Both \fIoperation\fR and its arguments determine the exact behavior of
+the command.  The operations available for trees are listed below.
+.TP
+\fItreeName\fR \fBancestor\fR \fInode1\fR \fInode2\fR
+Returns the mutual ancestor of the two nodes \fInode1\fR and
+\fInode2\fR.  The ancestor can be one of the two nodes.  For example,
+if \fInode1\fR and \fInode2\fR are the same nodes, their ancestor is
+\fInode1\fR.
+.TP
+\fItreeName\fR \fBappend\fR \fInode key\fR \fIstring\fR ?\fIstring ...\fR?
+Append one or more strings to node/key value.
+.TP
+\fItreeName\fR \fBappendi\fR \fItagnode key\fR \fIstring\fR ?\fIstring ...\fR?
+The same as \fBappend\fR but accepts a multi-node tag and an
+undefined key will be initialized to {}.  Returns the number of nodes
+updated.
+.TP
+\fItreeName\fR \fBapply\fR \fInode\fR ?\fIswitches\fR?
+Runs commands for all nodes matching the criteria given by
+\fIswitches\fR for the subtree designated by \fInode\fR.  By default
+all nodes match, but you can set switches to narrow the match.  This
+operation differs from \fBfind\fR in two ways: 1) Tcl commands can be
+invoked both pre- and post-traversal of a node and 2) the tree is
+always traversed in depth first order.
+.sp
+The \fB\-exact\fR, \fB\-glob\fR, 
+and \fB\-regexp\fR switches indicate both what kind of pattern matching
+to perform and the pattern.  By default each pattern will be compared
+with the node label.  You can set more than one of these switches.  If 
+any of the patterns match (logical or), the node matches.  
+If the \fB\-key\fR switch is
+used, it designates the data field to be matched.  
+.sp
+The valid switches are listed
+below:
+.RS
+.TP 1i
+\fB\-depth\fR \fInumber\fR
+Descend at most \fInumber\fR (a non-negative integer) levels
+If \fInumber\fR is \fB1\fR this means only apply the tests
+to the children of \fInode\fR.
+.TP 1i
+\fB\-exact\fR \fIstring\fR
+Matches each node using \fIstring\fR.  The node must match \fIstring\fR
+exactly.
+.TP 1i
+\fB\-glob\fR \fIstring\fR
+Test each node to \fIstring\fR using global pattern
+matching.  Matching is done in a fashion similar to that used by
+\fBstring match\fR.
+.TP 1i
+\fB\-invert\fR
+Invert the results of the pattern matching of \fB-name\fR.
+.TP 1i
+\fB\-isleaf\fR
+Only test nodes with no children.
+.TP 1i
+\fB\-istree\fR
+Only test nodes with children.
+.TP 1i
+\fB\-key\fR \fIkey\fR
+.TP 1i
+\fB\-keyglob\fR \fIkey\fR
+.TP 1i
+\fB\-keyregexp\fR \fIkey\fR
+.TP 1i
+\fB\-keyexact\fR \fIkey\fR
+If pattern matching is selected (using the \fB\-exact\fR,
+\fB\-glob\fR, or \fB\-regexp\fR switches), compare the values of the
+data field keyed by \fIkey\fR instead of the node's label.  If no
+pattern matching switches are set, then any node with this data key
+will match.  The field names may also be patterns using \fB-keyglob\fR, etc.
+.TP 1i
+\fB\-nocase\fR
+Ignore case when matching patterns.
+.TP 1i
+\fB\-precommand\fR \fIcommand\fR
+Invoke \fIcommand\fR for each matching node.  Before \fIcommand\fR is
+invoked, the id of the node is appended.  You can control 
+processing by the return value of \fIcommand\fR.  If \fIcommand\fR 
+generates an error, processing stops and the \fBfind\fR operation 
+returns an error.  But if \fIcommand\fR returns \fBbreak\fR, then 
+processing stops, no error is generated.  If \fIcommand\fR returns 
+\fBcontinue\fR, then processing
+stops on that subtree and continues on the next.
+.TP 1i
+\fB\-postcommand\fR \fIcommand\fR
+Invoke \fIcommand\fR for each matching node.  Before \fIcommand\fR is
+invoked, the id of the node is appended.  You can control 
+processing by the return value of \fIcommand\fR.  If \fIcommand\fR 
+generates an error, processing stops and the \fBfind\fR operation 
+returns an error.  But if \fIcommand\fR returns \fBbreak\fR, then 
+processing stops, no error is generated.  If \fIcommand\fR returns 
+\fBcontinue\fR, then processing
+stops on that subtree and continues on the next.
+.TP 1i
+\fB\-regexp\fR \fIstring\fR
+Test each node using \fIstring\fR as a regular expression pattern.
+.TP 1i
+\fB\-tag\fR \fIstring\fR
+Only test nodes that have the tag \fIstring\fR.
+.TP 1i
+\fB\-usepath\fR
+Use the node's full path when comparing nodes.  The node's full
+path is a list of labels, starting from the root of each ancestor
+and the node label.  The default is to compare only the node label.
+.RE
+.TP
+\fItreeName\fR \fBattach\fR ?\fB-notags\fR? ?\fItreeObject\fR?
+Queries or
+attaches to an existing tree object \fItreeObject\fR.  This is primarly
+used where the tree object was previously created via the C API (eg.
+via TreeView).  The current
+tree associated with \fItreeName\fR is discarded.  In addition, the
+current set of tags, notifier events, and traces are removed.
+If \fB-notags\fR is given, tags will not be shared.
+.TP
+\fItreeName\fR \fBchildren\fR  ?\fB-labels\fR? \fInode\fR ?\fIfirst\fR? ?\fIlast\fR?
+Returns a list of children for \fInode\fR.  If \fInode\fR is a leaf,
+then an empty string is returned.  If \fIfirst\fR and/or \fIlast\fR
+are given they are the integer index of the children to display.
+If the \fB-labels\fR option is used,
+labels are returned instead of the nodes.
+.TP
+\fItreeName\fR \fBcopy\fR \fIsrcNode\fR ?\fIdestTree\fR? \fIparentNode\fR ?\fIswitches\fR?
+Copies \fIsrcNode\fR into \fIparentNode\fR. Both nodes \fIsrcNode\fR and
+\fIparentNode\fR must already exist. The id of the new node is
+returned. You can copy from one tree to another.  If a \fIdestTree\fR 
+argument is present, it indicates the name of the destination tree.  
+By default both the source and destination trees are the same. The valid 
+\fIswitches\fR are listed below:
+.RS
+.TP
+\fB\-label\fR \fIstring\fR
+Label \fIdestNode\fR as \fIstring\fR.  By default, \fIdestNode\fR has
+the same label as \fIsrcNode\fR.
+.TP
+\fB\-overwrite\fR
+Overwrite nodes that already exist.  Normally nodes are always
+created, even if there already exists a node by the same name.  This
+switch indicates to add or overwrite the node's data fields.
+.TP
+\fB\-recurse\fR
+Recursively copy all the subtrees of \fIsrcNode\fR as well.  In this case,
+\fIsrcNode\fR can't be an ancestor of \fIdestNode\fR as it would result
+in a cyclic copy.
+.TP
+\fB\-reverse\fR
+Reverse the direction of the copy.
+.TP
+\fB\-tags\fR
+Copy tag inforation.  Normally the following node is copied: its 
+label and data fields.  This indicates to copy tags as well.
+.RE
+.TP
+\fItreeName\fR \fBcreate\fR ?\fIswitches\fR?
+Cause the creation of zero or more nodes.
+Exactly one of \fB-num\fR, \fB-nodes\fR or \fB-path\fR is required.
+This can create all nodes in a given \fB-path\fR
+or efficiently populate a tree with large numbers
+of nodes.
+The return values is the id of the last created node (or \fB-path\fR element).
+The valid flags for \fIswitches\fR are described below.
+.RS
+.TP 1i
+\fB\-fixed\fR 
+Set the fixed flag.
+.TP 1i
+\fB\-data\fR \fIlist\fR
+Data to set in each node.
+.TP 1i
+\fB\-labelstart\fR \fInumber\fR
+The label generated nodes is to use
+a sequence number starting from \fInumber\fR.
+The default is to just use the node id.
+.TP 1i
+\fB\-nodes\fR \fIlist\fR 
+List of nodes ids to create.
+The \fB\-offset\fR option can specify
+a constant to add.
+.TP 1i
+\fB\-num\fR \fInumber\fR 
+The number of nodes to create.
+.TP 1i
+\fB\-offset\fR \fInumber\fR 
+Number to add to each element in \fB-nodes\fR.
+For example, if loading sqlite rowids you should use 1.
+The default is 0.
+.TP 1i
+\fB\-parent\fR \fInode\fR 
+The \fInode\fR to insert children into.
+The default is the root node.
+.TP 1i
+\fB\-path\fR \fIpathList\fR 
+Verify that a path exists and create any missing nodes.
+Uses labels in \fIpathList\fR to lookup nodes, creating
+them if not found.  The id for the last
+node in the path is returned (created or not).
+.TP 1i
+\fB\-pos\fR \fInumber\fR 
+The position where to insert child nodes.
+The default is -1, meaning append.
+.TP 1i
+\fB\-prefix\fR \fIstr\fR 
+String prefix to add to each nodes label.
+.TP 1i
+\fB\-start\fR \fInumber\fR 
+Node nuber to start from when using \fB-num\fR.  The default is 1.
+.TP 1i
+\fB\-tags\fR \fItagList\fR 
+List of tags to add to each newly created node.
+.RE
+.TP
+\fItreeName\fR \fBdegree\fR \fInode\fR 
+Returns the number of children of \fInode\fR.
+.TP
+\fItreeName\fR \fBdelete\fR \fInode\fR...
+Recursively deletes one or more nodes from the tree.  
+The node and all its descendants are removed.   The one exception
+is the root node.  In this case, only its descendants are removed.
+The root node will remain.  Any tags or 
+traces on the nodes are released.
+.TP
+\fItreeName\fR \fBdepth\fR \fInode\fR 
+Returns the depth of the node.  The depth is the number of 
+steps from the node to the root of the tree.  The depth of the
+root node is \fB0\fR.
+.TP
+\fItreeName\fR \fBdictset\fR ?\fIbool\fR?
+Get or set the dictset flag for the tree which causes any set of an
+array sub-fields to force the value to type dict.
+Unlike array types, dicts preserve the order of elements.
+Setting this to one has the same effect as using the \fB-dictset\fR
+flag at tree creation time.
+.TP
+\fItreeName\fR \fBdump\fR \fInode\fR ?\fIswitches\fR?
+Save tree data for \fInode\fR and its descendants.
+With the \fB-file\fR option, output goes to the file
+\fIfileName\fR (this is unsupported in a safe interp).
+With the \fB-channel\fR option, data is output to channel \fIchan\fR.
+If neither option is given, the dump is returned as data.
+.sp
+The subtree designated by \fInode\fR is
+traversed to obtain the following information for each node: 1) the node's
+path relative to \fInode\fR, 2) a sublist key value pairs
+representing the node's data fields, and 3) a sublist of tags.  
+and 4) the label
+This list returned can be used
+later to copy or restore the tree with the \fBrestore\fR operation.
+.sp
+The valid \fIswitches\fR are listed below.
+.RS
+.TP
+\fB\-channel \fIchan\fR
+Obtain data from from the given channel \fIchan\fR.
+The channel is not closed afterwards.
+.TP
+\fB\-file \fIfileName\fR
+Obtain data from from the file.
+\fIfileName\fR.  This options is unsupported in a safe interp.
+.TP
+\fB\-keys \fIlist\fR
+A list of patterns of matching keys to be dumped.
+.TP
+\fB\-skipkeys \fIlist\fR
+A list of patterns of matching keys not to be dumped.
+.TP
+\fB\-tag \fIpattern\fR
+A pattern match for tags to include in a node dump.
+.TP
+\fB\-skiptag \fIpattern\fR
+A pattern match for tags to not include in a node dump.
+.TP
+\fB\-notags\fR
+Do not restore any tags
+.TP
+\fB\-nopath\fR
+To save space, do not dump the full path for each node.
+Instead output periods for all but the last path element.
+Full paths are used only for partial restores.
+.RE
+.TP
+\fItreeName\fR \fBexists\fR \fInode\fR ?\fIkey\fR?
+Indicates if \fInode\fR exists in the tree.  If a \fIkey\fR argument
+is present then the command also indicates if the named data field 
+exists.
+.TP
+\fItreeName\fR \fBfind\fR ?\fIswitches\fR?
+Finds for all nodes matching the criteria given by \fIswitches\fR 
+for the subtree designated by \fInode\fR.  A list of the selected 
+nodes is returned.  By default all nodes match, but you can set
+switches to narrow the match.
+.sp
+The \fB\-exact\fR, \fB\-glob\fR, 
+and \fB\-regexp\fR switches indicate what kind of pattern matching
+to perform for \fB-name\fR.  By default the pattern will be compared
+with the node label.  If the \fB\-key\fR switch is
+used, it designates the data field to be matched.  
+.sp
+The order in 
+which the nodes are traversed is controlled by the  \fB\-order\fR switch.
+The possible orderings are \fBpreorder\fR, \fBpostorder\fR, \fBinorder\fR, 
+and \fBbreadthfirst\fR.  The default is \fBpreorder\fR.
+.sp
+The valid switches are listed
+below:
+.RS 
+.TP 1i
+\fB\-addtag\fR \fIstring\fR 
+Add the tag \fIstring\fR to each selected node.  
+The tag will be created even if no nodes are tagged.
+.TP 1i
+\fB\-column\fR \fIkey\fR
+Use value with field given by \fIkey\fR.
+Like the \fBtreeview find -column\fR option,
+this key may contain an array referrence.
+.TP 1i
+\fB\-cmdargs\fR \fIcolumns\fR
+Specify columns whose values are to be appended to \fB\-command\fR.
+.TP 1i
+\fB\-command\fR \fIcommand\fR
+Invoke \fIcommand\fR for each matching node.  Before \fIcommand\fR is
+invoked, the id of the node is appended.  You can control 
+processing by the return value of \fIcommand\fR.  If \fIcommand\fR 
+generates an error, processing stops and the \fBfind\fR operation 
+returns an error.  But if \fIcommand\fR returns \fBbreak\fR, then 
+processing stops, no error is generated.  If \fIcommand\fR returns 
+\fBcontinue\fR, then processing
+stops on that subtree and continues on the next.
+If \fIcommand\fR returns \fBreturn\fR, then the returned integer
+is used to indicate 1 for match or 0 for mismatch.
+.TP 1i
+\fB\-count\fR
+Just return the number of matches.
+.TP 1i
+\fB\-depth\fR \fInumber\fR
+Include only nodes with level equal to \fInumber\fR.
+.TP 1i
+\fB\-exact\fR
+Matches each node exactly.
+.TP 1i
+\fB\-exec\fR \fIscript\fR
+Specifies a Tcl script to be evaluated for each matching node.
+If \fB-var\fR was also specified, that variable is set with the value of
+the node id before each evaluation.  Otherwise,
+percent sustitutions are performed: note this is much
+less efficient than using either \fB-var\fR or \fB-command\fR
+.sp
+The result of each eval gets appended to the return list, unless
+the script issues a CONTINUE, in which case that node is skipped.
+.sp
+The available percent substitutions on \fIstring\fR are:
+.RS 
+.TP 5
+\fB%#\fR
+The id of the node.
+.TP 5
+\fB%W\fR
+The pathname of the tree.
+.TP 5
+\fB%p\fR
+The label of the node.
+.TP 5
+\fB%P\fR
+The full pathname of the node.
+.TP 5
+\fB%R\fR
+The -> delimited path from root, eg. "root->able->baker->charlie"
+.TP 5
+\fB%r\fR
+The -> delimited path from 0, eg. "0->able->baker->charlie"
+.TP 5
+\fB%T\fR
+The dot delimited tag path eg. ".able.baker.charlie"
+.TP 5
+\fB%V\fR
+The value if using \fB-key\fR or the label otherwise.
+.TP 5
+\fB%D\fR
+The data for the node, ie. like that returned from \fBget\fR.
+.TP 5
+\fB%%\fR
+Translates to a single percent.
+.RE
+.TP 1i
+\fB\-glob\fR
+Test each node using global pattern
+matching.  Matching is done in a fashion similar to that used by the
+\fBstring match\fR.
+.TP 1i
+\fB\-invert\fR
+Invert the pattern matching of \fB-name\fR.
+.TP 1i
+\fB\-isarray\fR
+Only test nodes where the specified \fB-key\fR value
+is an array.  Can not be used with \fB-name\fR.
+The \fB-invert\fR flag will invert the meaning of the
+check.  Note that this will attempt to convert the key value in
+each traversed node into an array type.
+.TP 1i
+\fB\-isempty\fR
+Only match nodes where the specified \fB-column\fR key value
+was unset.
+.TP 1i
+\fB\-isfixed\fR
+Only test nodes that have used \fBfixed 1\fR.
+.TP 1i
+\fB\-isleaf\fR
+Only test nodes with no children.
+.TP 1i
+\fB\-isnotfixed\fR
+Only test nodes that have not used \fBfixed 1\fR.
+.TP 1i
+\fB\-istree\fR
+Only test nodes with children.
+.TP 1i
+\fB\-keycount\fR \fInum\fR
+Only test if number of keys is equal to \fInum\fR.
+.TP 1i
+\fB\-key\fR \fIkey\fR
+.TP 1i
+\fB\-keyglob\fR \fIkey\fR
+.TP 1i
+\fB\-keyregexp\fR \fIkey\fR
+.TP 1i
+\fB\-keyexact\fR \fIkey\fR
+Compare the values of the data field keyed by \fIkey\fR instead of 
+the node's label. If no \fB\-name\fR pattern is used 
+then any node with this data key will match.
+The key names may also be patterns using \fB-keyglob\fR, etc.
+.TP 1i
+\fB\-limit\fR \fInumber\fR
+Stop processing after \fInumber\fR (a positive integer) matches. 
+.TP 1i
+\fB\-maxdepth\fR \fInumber\fR
+Include only nodes at level \fInumber\fR or less.
+.TP 1i
+\fB\-mindepth\fR \fInumber\fR
+Include only nodes at level \fInumber\fR or greater.
+.TP 1i
+\fB\-name\fR \fIstring\fR
+The name to use for pattern matching.
+.TP 1i
+\fB\-nocase\fR
+Ignore case when matching patterns.
+.TP 1i
+\fB\-nodes \fItagnode\fR
+Search only in \fItagnode\fR, which is either a tag
+or a list of nodes ids.  This makes possible nested searches.
+Note this option is incompatible with
+\fB-top\fR and \fB-notop\fR.
+.TP 1i
+\fB\-notop\fR
+Exclude the \fB-top\fR or starting node.
+.TP 1i
+\fB\-order\fR \fIstring\fR 
+Traverse the tree and process nodes according to \fIstring\fR. \fIString\fR
+can be one of the following:
+.RS
+.TP 1i
+\fBbreadthfirst\fR 
+Process the node and the subtrees at each sucessive level. Each node
+on a level is processed before going to the next level.
+.TP 1i
+\fBinorder\fR 
+Recursively process the nodes of the first subtree, the node itself,
+and any the remaining subtrees.
+.TP 1i
+\fBpostorder\fR 
+Recursively process all subtrees before the node.
+.TP 1i
+\fBpreorder\fR 
+Recursively process the node first, then any subtrees (default).
+.RE
+.TP 1i
+\fB\-usepath\fR
+Use the node's full path when doing the comparison.
+The default is to compare only the node label.
+.TP 1i
+\fB\-regexp\fR
+Test each node using regular expression pattern matching.
+.TP 1i
+\fB\-reldepth\fR
+Change the meaning of \fB\-depth\fR, \fB\-mindepth\fR and \fB\-maxdepth\fR
+to be relative to the \fB\-top\fR node.
+.TP 1i
+\fB\-return \fIkey\fR
+Return the value of the given \fIkey\fR, or the empty string if none.
+If the given \fIkey\fR is the empty string, the node label will be returned.
+If no value was found and the given \fIkey\fR starts with a percent
+returns the sustitution as per \fB-exec\fR.  Note that a percent
+substitution longer than 2 chars will append values as list elements.
+.TP 1i
+\fB\-strict\fR
+Generate an error if a given key value is unset when using \fB-return\fR.
+.TP 1i
+\fB\-top \fInode\fR
+Search is only at \fInode\fR and it's descendants.
+The default is the root node.
+.TP 1i
+\fB\-var \fIvariable\fR
+A variable to set with the node id before each iteration of the \fB-exec\fR
+script.
+.TP 1i
+\fB\-withouttag\fR \fIstring\fR
+Only test nodes that don't have the tag \fIstring\fR.
+.TP 1i
+\fB\-withtag\fR \fIstring\fR
+Only test nodes that have the tag \fIstring\fR.
+.RE
+.TP
+\fItreeName\fR \fBfindchild\fR \fInode\fR \fIlabel\fR
+Searches for a child node \fIlabel\fR in \fInode\fR.  The id of the 
+child node is returned if found.  Otherwise \fB-1\fR is returned.
+This is the same as using \fBindex \fInode->label\fR.
+.TP
+\fItreeName\fR \fBfirstchild\fR \fInode\fR 
+Returns the id of the first child in the \fInode\fR's list
+of subtrees.  If \fInode\fR is a leaf (has no children), 
+then \fB-1\fR is returned.
+.TP
+\fItreeName\fR \fBfixed\fR \fInode\fR ?\fIisfixed\fR?
+Get or set the fixed key-fields flag for a node.
+New key-fields can be added to a node only if fixed is 0 (the default) 
+If \fInode\fR is given as an empty string, operates on the tree flag.
+Note that copied and restored nodes do not preserve the fixed state.
+.TP
+\fItreeName\fR \fBforeach\fR \fIvar tagnode script\fR
+Provides a \fBforeach\fR loop for tree.  For
+each node in \fItagnode\fR the node-id is assigned to \fIvar\fR and then
+\fIscript\fR is evaluated. The \fItagnode\fR is either a tag or a list of
+nodes as described in the section
+.SB NODE IDS AND TAGS
+above.
+.TP
+\fItreeName\fR \fBget\fR \fInode\fR ?\fIkey\fR? ?\fIdefaultValue\fR?
+Returns a list of key-value pairs of data for \fInode\fR.  If \fIkey\fR
+is present, then only the value for that particular data field is
+returned.  It's normally an error if \fInode\fR does not contain the
+data field \fIkey\fR.  But if you provide a \fIdefaultValue\fR
+argument, this value is returned instead (\fInode\fR will still not
+contain \fIkey\fR).  This feature can be used to access a data field of
+\fInode\fR without first testing if it exists.  This operation may
+trigger \fBread\fR data traces.
+.TP
+\fItreeName\fR \fBincr\fR \fInode key\fR ?\fIamount\fR?
+Increment value by 1 or given \fIamount\fR and return the value.
+The incr operation normally tries to use integers,
+but uses doubles when one of
+value or \fIamount\fR is a double.
+.TP
+\fItreeName\fR \fBincri\fR \fItagnode key\fR ?\fIamount\fR?
+The same as \fBincr\fR but accepts a multi-node tag and an
+undefined key will be initialized to 0.  Returns the number of nodes
+updated.
+.TP
+\fItreeName\fR \fBindex\fR \fInode\fR
+Returns the id of \fInode\fR.  In addition
+to standard node id form,
+\fInode\fR can also be a path (a list of labels from the root) as returned
+by the \fBpath\fR command.
+If \fInode\fR is invalid, then \fB-1\fR is returned.
+.TP
+\fItreeName\fR \fBinsert\fR \fIparent\fR ?\fIswitches\fR? 
+Inserts a new node into parent node \fIparent\fR.  
+The id of the new node is returned.
+The following switches 
+are available:
+.RS
+.TP 1i
+\fB\-after\fR \fIchild\fR 
+Position \fInode\fR after \fIchild\fR.  The node \fIchild\fR must be a 
+child of \fIparent\fR.
+.TP 1i
+\fB\-before\fR \fIchild\fR 
+Position \fInode\fR before \fIchild\fR.  The node \fIchild\fR must be a 
+child of \fIparent\fR.
+.TP 1i
+\fB\-data\fR \fIdataList\fR
+Sets the value for each data field in \fIdataList\fR for the 
+new node. \fIDataList\fR is a list of key-value pairs.
+May not be used in conjuction with \fB-names\fR or  \fB-values\fR.
+.TP 1i
+\fB\-fixed\fR \fIbool\fR
+If \fIbool\fR is 1, set \fBfixed\fR field mode after initializing
+the key/value pairs from \fB-data\fR.
+This disallows creation of new key fields
+after the node is created.
+If not given, the tree default for fixed is used.
+.TP 1i
+\fB\-label\fR \fIstring\fR 
+Designates the labels of the node as \fIstring\fR.  By default, nodes
+are labeled as \fB0\fR, \fB1\fR, etc.
+.TP 1i
+\fB\-names\fR \fInameList\fR
+The names for the data fields.  This must have the same length as
+\fB-values\fR, and may not be used in conjuction with \fB-data\fR.
+.TP 1i
+\fB\-node\fR \fIid\fR 
+Designates the id for the node.  Normally new ids are automatically
+generated.  This allows you to create a node with a specific id.
+It is an error if the id is already used by another node in the tree.
+.TP 1i
+\fB\-pos\fR \fInumber\fR 
+Inserts the node into \fIparent\fR's list of children at 
+position \fInumber\fR.  The default is to append.
+.TP 1i
+\fB\-pretags\fR \fItagList\fR
+Adds each tag in \fItagList\fR to the new node, before
+data is added.  Unlike \fB-tags\fR, traces on these tags
+will fire on key data during the insert.
+.TP 1i
+\fB\-tags\fR \fItagList\fR
+Adds each tag in \fItagList\fR to the new node. \fITagList\fR is a list
+of tags, so be careful if a tag has embedded space.
+.TP 1i
+\fB\-values\fR \fIvalueList\fR
+The values for the data fields.  This must have the same length as
+\fB-names\fR, and may not be used in conjuction with \fB-data\fR.
+.RE
+.TP
+\fItreeName\fR \fBis\fR \fIproperty\fR \fIargs\fR  
+Indicates the property of a node. Both \fIproperty\fR and \fIargs\fR
+determine the property being tested.  Returns \fB1\fR if true and
+\fB0\fR otherwise.  The following \fIproperty\fR and \fIargs\fR 
+are valid:
+.RS
+.TP 1i
+\fBancestor\fR \fInode1\fR \fInode2\fR
+Indicates if \fInode1\fR is an ancestor of \fInode2\fR. 
+.TP 1i
+\fBbefore\fR \fInode1\fR \fInode2\fR
+Indicates if \fInode1\fR is before \fInode2\fR in depth first traversal. 
+.TP 1i
+\fBleaf\fR \fInode\fR
+Indicates if \fInode\fR is a leaf (it has no subtrees).
+.TP 1i
+\fBroot\fR \fInode\fR
+Indicates if \fInode\fR is the designated root.  This can be changed
+by the \fBroot\fR operation.
+.RE
+.TP
+\fItreeName\fR \fBismodified\fR ?\fInodeOrTag\fR? ?\fIisflag\fR?
+Get or set modified state for the tree or nodes.
+With no args returns modified state for tree.
+With one args returns modified state for a node.
+With two args set modified state for one or more nodes.
+In the last case, where ?\fInodeOrTag\fR? is the tag \fBall\fR,
+the state for the tree is also set.
+.sp
+Newly created nodes
+are always considered to be modified until explicitly
+cleared.  After clearing, subsequent updates to keys or tags
+will toggle the node (and tree) modified again.
+.TP
+\fItreeName\fR \fBisset\fR \fInode\fR \fIkey\fR
+Return 1 if key is set in node.
+.TP
+\fItreeName\fR \fBkeys\fR \fInode\fR ?\fItagnode ...\fR?
+Return list of unique keys for all of the given nodes in \fItagnode\fR.
+Keys are in no particular order.
+Accepts nodes and tags or all.  See also \fBnames\fR.
+.TP
+\fItreeName\fR \fBlabel\fR \fInode\fR ?\fInewLabel\fR?
+Returns the label of the node designated by \fInode\fR.  If \fInewLabel\fR
+is present, the node is relabeled using it as the new label.
+.TP
+\fItreeName\fR \fBlappend\fR \fInode key\fR \fIvalue\fR ?\fIvalue ...\fR?
+Append one or more list values to node/key value.
+.TP
+\fItreeName\fR \fBlappendi\fR \fItagnode key\fR \fIvalue\fR ?\fIvalue ...\fR?
+The same as \fBlappend\fR but accepts a multi-node tag and an
+undefined key will be initialized to {}.  Returns the number of nodes
+updated.
+.TP
+\fItreeName\fR \fBlastchild\fR \fInode\fR
+Returns the id of the last child in the \fInode\fR's list
+of subtrees.  If \fInode\fR is a leaf (has no children), 
+then \fB-1\fR is returned.
+.TP
+\fItreeName\fR \fBmodify\fR \fItagnode\fR \fIkey value\fR ?\fIkey value\fR...?
+Update one or more fields in one or more nodes in \fItagnode\fR.
+As with \fBset\fR, \fInode\fR
+can be a tag referring to multiple nodes.
+This is identical to \fBset\fR, except an error is thrown if
+any of the key fields do not exist.
+Despite the error, all nodes that do have said fields get updated.
+For modifying a single node, see \fBupdate\fR.
+.TP
+\fItreeName\fR \fBmove\fR \fInode\fR \fInewParent\fR ?\fIswitches\fR?
+Moves \fInode\fR into \fInewParent\fR. \fINode\fR is appended to the
+list children of \fInewParent\fR.  \fINode\fR can not be an ancestor
+of \fInewParent\fR.  The valid flags for \fIswitches\fR are described below.
+.RS
+.TP 1i
+\fB\-after\fR \fIchild\fR 
+Position \fInode\fR after \fIchild\fR.  The node \fIchild\fR must be a 
+child of \fInewParent\fR.
+.TP 1i
+\fB\-before\fR \fIchild\fR 
+Position \fInode\fR before \fIchild\fR.  The node \fIchild\fR must be a 
+child of \fInewParent\fR.
+.TP 1i
+\fB\-pos\fR \fInumber\fR 
+Inserts \fInode\fR into \fIparent\fR's list of children at 
+position \fInumber\fR. The default is -1 to append the node.
+.RE
+.TP
+\fItreeName\fR \fBnames\fR \fInode\fR ?\fIkey\fR? ?\fIpattern\fR?
+Return key names for \fInode\fR, in the order defined (if possible).
+If a key is given, attempts to return ARRAY fields (see DICT-ARRAYS).
+If a pattern is given, the array keys are limited
+to those matching the glob pattern.
+An error is thrown if the convert to array fails (ie. list-length is odd).
+The \fBtype\fR command can be used to query the type.
+See also \fBvalues\fR.
+.TP
+\fItreeName\fR \fBnext\fR \fInode\fR
+Returns the next node from \fInode\fR in a preorder traversal.
+If \fInode\fR is the last node in the tree, 
+then \fB-1\fR is returned.
+.TP
+\fItreeName\fR \fBnextsibling\fR \fInode\fR
+Returns the node representing the next subtree from \fInode\fR
+in its parent's list of children.  If \fInode\fR is the last child, 
+then \fB-1\fR is returned.
+.TP
+\fItreeName\fR \fBnodeseq\fR ?\fIstart\fR?
+Get or set the \fIstart\fR sequence number for subsequent
+node insertions not using \fB-node\fR.  The default is 0.
+.TP
+\fItreeName\fR \fBnotify\fR \fIargs\fR 
+Manages notification events that indicate that the tree structure has 
+been changed.
+See the 
+.SB "NOTIFY OPERATIONS"
+section below.
+.TP
+\fItreeName\fR \fBoldvalue\fR ?\fInewvalue\fR?
+Return the value from before the last (untraced) change operation.
+This is used primarly by write traces wishing to
+restore a key to it's pre-write value (eg. read-only variables).
+The oldvalue is saved internally everytime a change operation occurs
+to a key value by deferring its deallocation.
+Changes made during node traces do not affect oldvalue.
+.sp
+If \fInewvalue\fR is provided, the current value of oldvalue is
+discarded and replaced. This is useful really only for releasing large objects.
+.TP
+\fItreeName\fR \fBparent\fR \fInode\fR
+Returns the parent node of \fInode\fR.  If \fInode\fR is the root
+of the tree, 
+then \fB-1\fR is returned.
+.TP
+\fItreeName\fR \fBpath\fR \fInode\fR ?\fIdelim\fR? ?\fIprefix\fR?
+Returns the full path (from root) of \fInode\fR using the node labels.
+If \fIdelim\fR is not specified, the result is a list.
+Otherwise, the result is a string starting with \fIprefix\fR and
+each element of the path separated by \fIdelim\fR.
+This latter form is useful for building tags like: \fB.able.baker\fR
+.TP
+\fItreeName\fR \fBposition\fR  ?\fB-sort\fR? ?\fB-format\fR \fIftype\fR? \fInode\fR ?\fInode\fR ...?
+Returns the position of the node(s) in its parent's list of children.
+Positions are numbered from 0.
+The position of the root node is always 0.
+The value of \fIftype\fR is one of:
+\fBposition parent-at-position id+position id+parent-at-position\fR.
+.TP
+\fItreeName\fR \fBprevious\fR \fInode\fR
+Returns the previous node from \fInode\fR in a preorder traversal.
+If \fInode\fR is the root of the tree, 
+then \fB-1\fR is returned.
+.TP
+\fItreeName\fR \fBprevsibling\fR \fInode\fR
+Returns the node representing the previous subtree from \fInode\fR
+in its parent's list of children.  If \fInode\fR is the first child, 
+then \fB-1\fR is returned.
+.TP
+\fItreeName\fR \fBrestore\fR \fInode\fR \fIswitches\fR
+Performs the inverse function of the \fBdump\fR operation, restoring
+nodes to the tree. The format of the input data is exactly what is 
+returned by the \fBdump\fR operation.  It's a list containing information
+for each node to be restored.  The information consists of 1) the relative
+path of the node, 2) a sublist of key value pairs representing the 
+node's data, 3) a list of tags for the node, and 4) the label.
+Nodes are created 
+starting from \fInode\fR. Nodes can be listed in any order.  If a node's 
+path describes ancestor nodes that do not already exist, they are 
+automatically created.
+.sp
+The valid \fIswitches\fR are listed below.  Exactly one
+of \fB-channel\fR,  \fB-file\fR or  \fB-data\fR must be specified.
+.RS
+.TP
+\fB\-addtags\fR
+List of tags to add to each node restored node.
+Each tag will be created only if a node loaded.
+.TP
+\fB\-channel \fIchan\fR
+Obtain data from from the given channel \fIchan\fR.
+The channel is not closed afterwards.
+.TP
+\fB\-data \fIstring\fR
+Data input is from the given \fIstring\fR.
+.TP
+\fB\-file \fIfileName\fR
+Obtain data from from the file.
+\fIfileName\fR.  This options is unsupported in a safe interp.
+.TP
+\fB\-keys \fIlist\fR
+A list of patterns of matching keys to be restored.
+.TP
+\fB\-skipkeys \fIlist\fR
+A list of patterns of matching keys not to be restored.
+.TP
+\fB\-tag \fIpattern\fR
+A pattern match for tags to include in a node restore.
+.TP
+\fB\-skiptag \fIpattern\fR
+A pattern match for tags to not include in a node restore.
+.TP
+\fB\-notags\fR
+Do not restore any tags
+.TP
+\fB\-overwrite\fR
+Overwrite nodes that already exist.  Normally nodes are always
+created, even if there already exists a node by the same name.  This
+switch indicates to overwrite existing node's data fields.
+.RE
+.TP
+\fItreeName\fR \fBroot\fR ?\fInode\fR?
+Returns the id of the root node.  Normally this is node \fB0\fR.  If
+a \fInode\fR argument is provided, it will become the new root of the
+tree. This lets you temporarily work within a subset of the tree.
+Changing root affects operations such as \fBnext\fR, \fBpath\fR,
+\fBprevious\fR, etc.
+.TP
+\fItreeName\fR \fBset\fR \fItagnode\fR \fIkey value\fR ?\fIkey value\fR...?
+Sets one or more data fields in \fInode\fR. \fItagode\fR may 
+be a tag that represents several nodes and a count of the number
+of nodes updated is returned.
+\fIKey\fR is the
+name of the data field to be set, or an array-like reference such as \fBfield(subkey)\fR.
+See the
+.SB "DICT-ARRAYS"
+section below.  \fIValue\fR is the respective keys value.
+The  \fIKey\fR  will be created if it does not exists (see \fBmodify\fR).
+.sp
+The set operation triggers \fBwrite\fR and \fBcreate\fR data traces.
+.TP
+\fItreeName\fR \fBsize\fR \fInode\fR
+Returns the number of nodes in the subtree. This includes the node
+and all its descendants.  The size of a leaf node is 1.
+.TP
+\fItreeName\fR \fBsort\fR \fInode\fR ?\fIswitches\fR? 
+Return nodes in sorted order.
+.RS
+.TP 1i
+\fB\-ascii\fR 
+Compare strings using the ASCII  collation order.
+.TP 1i
+\fB\-command\fR \fIstring\fR
+Use command \fIstring\fR as a comparison command.  To compare two
+elements, evaluate a Tcl script consisting of command with the five
+elements appended as additional arguments:
+\fIthe tree, node1, node1, label1, label2\fR.
+The script should return
+an integer less than, equal to, or greater than zero if the first
+element is to be considered less than, equal to, or greater than the
+second, respectively.
+.TP 1i
+\fB\-decreasing\fR
+Sort in decreasing order (largest items come first).
+.TP 1i
+\fB\-dictionary\fR
+Compare strings using a dictionary-style comparison.  This is the same 
+as \fB\-ascii\fR except (a) case is ignored except as a tie-breaker and (b) 
+if two strings contain embedded numbers, the numbers compare as integers, not
+characters.  For example, in \fB\-dictionary\fR mode, bigBoy sorts between
+bigbang and bigboy, and x10y sorts between x9y and x11y.
+.TP 1i
+\fB\-integer\fR
+Compare the nodes as integers.  
+.TP 1i
+\fB\-key\fR \fIstring\fR
+Sort based upon the node's data field keyed by \fIstring\fR. Normally
+nodes are sorted according to their label.
+label.
+.TP 1i
+\fB\-real\fR
+Compare the nodes as real numbers.
+.TP 1i
+\fB\-recurse\fR
+Recursively sort the entire subtree rooted at \fInode\fR.
+.TP 1i
+\fB\-reorder\fR 
+Recursively sort subtrees for each node.  \fBWarning\fR.  Unlike
+the normal flat sort, where a list of nodes is returned, this will
+reorder the tree.  
+.TP 1i
+\fB\-usepath\fR
+Compare the full path of each node.  The default is to compare only the node
+label.
+.RE
+.TP
+\fItreeName\fR \fBsqlload\fR ?\fIswitches\fR? \fIdbhfile\fR \fIsqlstmt\fR
+Load tree with the results of evaling the SQL in \fIsqlstmt\fR using
+\fIdbhfile\fR.
+The evaluated SQL creates one tree-node per row result.
+The returned value is the number of rows loaded.
+\fIDbhfile\fR is either an \fBsqlite3\fR database handle,
+or an \fBsqlite3\fR file.
+.sp
+The \fBsqlload\fR command can populate a tree with 10k nodes
+about 7 times faster than \fBsqlite3 eval\fR.
+It also preserves NULL values
+and object types (eg. int or double) used internally
+by sqlite.  This eliminates later reconversion within tree.
+See the
+.SB "SQLLOAD EXAMPLE"
+below.
+.sp
+The following switches are available:
+.RS
+.TP 1i
+\fB\-addtags \fItaglist\fR
+The tags in \fItaglist\fR to add to each inserted node.
+Each tag will be created only if a node loaded.
+.TP 1i
+\fB\-fixed\fR
+Set the \fBfixed\fR flag to disallow new keys after creation.
+.TP 1i
+\fB\-key \fIname\fR
+Store the entire result in the key \fIname\fR instead
+of creating one key per column.
+Array notation can be used to then access column results.
+This is more efficent as it initially stores just one
+object per row.  Conversion to an array
+is at the first array access (if that occurs).
+.TP 1i
+\fB\-labelcol \fIcolumn\fR
+The value of \fIcolumn\fR is used as the label.
+By default the label is the node id.
+.TP 1i
+\fB\-maprowid \fInum\fR
+This option maps the node id to the rowid plus the constant \fInum\fR.
+The key for \fBrowid\fR will also not be created.
+This is applicable only if \fBrowid\fR is returned in the result-set
+of \fIsqlstmt\fR.
+If \fBrowid\fR is not in the result set, this option is ignored.
+If mapping fails (because the tree already contains a requested node)
+the load will abort at that point
+with an error.  Note that \fInum\fR must be >= 1 since sqlite
+rowids start from 0, but the root node of the tree uses the node-id 0.
+.TP 1i
+\fB\-max \fInum\fR
+The maximum number of rows to return.  The default is 100,000.
+Note that SQL queries on large tables should probably always use LIMIT.
+.TP 1i
+\fB\-nullvalue \fIstring\fR
+Define value to use for null values.  The default is no value,
+meaning do not set key if value is null.
+Note this is different from the sqlite Tcl extension which uses
+an empty string for NULL.
+.TP 1i
+\fB\-parent \fIstring\fR
+The node where results are
+inserted as child nodes.  The default is the tree root.
+.TP 1i
+\fB\-pathcol \fIcolumn\fR
+Name of column containing the full path where node is to be created.
+This works like \fB\-treecols\fR, but uses a singl columns.
+.TP 1i
+\fB\-skipcols \fIcolumns\fR
+The given \fIcolumns\fR are not to be added as keys.  This is useful mostly
+in conjuction with \fB-tagcol\fR, \fB-labelcol\fR, \fB-pathcol\fR.
+.TP 1i
+\fB\-pos \fInum\fR
+Where to insert into parents list of children.
+Default is -1, meaning to append.
+.TP 1i
+\fB\-tagcol \fIcolumn\fR
+The value of \fIcolumn\fR is added as a tag.
+.TP 1i
+\fB\-treecols \fIcolumns\fR
+Columns whose values concatenated
+give the path of where node is to be created.
+This works like \fB\-pathcol\fR, but uses multiple columns.
+.RE
+.TP
+\fItreeName\fR \fBsum\fR ?\fIswitches\fR? \fItagnode key\fR ?\fIkey ...\fR?
+Add values in key fields for all \fItagnode\fR and return the sum.
+Values that are not doubles (or integer) are ignored.
+.RS
+.TP 1i
+\fB\-diff\fI value\fR 
+Double value difference to ignore and not do update for \fB-runtotal\fR.
+This is unused when using \fB\-int\fR.
+.TP 1i
+\fB\-force\fR 
+Force update \fB-runtotal\fR even if value was unchanged.
+Normally, a check is made to avoid updating unchanged values.
+.TP 1i
+\fB\-int\fR 
+Use and accept only integer values.
+.TP 1i
+\fB\-runtotal \fIkey\fR 
+Place running total in the given key field (if changed).
+.TP 1i
+\fB\-start \fInum\fR 
+The start value for the sum: default is 0.
+.RE
+.TP
+\fItreeName\fR \fBsupdate\fR \fInode\fR \fIkey value\fR ?\fIkey value\fR...?
+Like \fBupdate\fR, but uses a string comparison
+to avoid writes if the value will not be changed.  This is useful primarily
+for avoiding unnecessary write traces.
+.TP
+\fItreeName\fR \fBtag\fR \fIargs\fR
+Manages tags for the tree object.
+See the 
+.SB "TAG OPERATIONS"
+section below.
+.TP
+\fItreeName\fR \fBtrace\fR \fIargs\fR
+Manages traces for data fields in the tree object.
+Traces cause Tcl commands to be executed whenever a data field of a
+node is created, read, written, or unset.  Traces can be set for a
+specific node or a tag, representing possibly many nodes.
+See the 
+.SB "TRACE OPERATIONS"
+section below.
+.TP
+\fItreeName\fR \fBtype\fR \fInode\fR \fIkey\fR
+Return type of value.  This is the introspected type from the Tcl_Obj
+value passed to set.
+.TP
+\fItreeName\fR \fBupdate\fR \fInode\fR \fIkey value\fR ?\fIkey value\fR...?
+Like \fBmodify\fR, except an error is generated if a tag
+is used that applies to more than one node.
+.TP
+\fItreeName\fR \fBunset\fR \fInode\fR \fIkey\fR...
+Removes one or more data fields from \fInode\fR. \fINode\fR may 
+be a tag that represents several nodes.  \fIKey\fR is the
+name of the data field to be removed.  It's not an error is
+\fInode\fR does not contain \fIkey\fR.
+A count of the number of nodes unset is returned.
+This operation may trigger \fBunset\fR data traces.
+.TP
+\fItreeName\fR \fBvalues\fR \fInode\fR ?\fIkey\fR? ?\fIwithnames\fR?
+Return values for \fInode\fR.
+The values are returned in the same order as the keys
+returned from \fBnames\fR.
+.sp
+If a \fIkey\fR is given,
+array values get returned for the \fIkey\fR value.
+If \fIwithname\fR is \fBTrue\fR, then key
+names are also returned with the values.  This differs from \fBget\fR
+in that the result is a true Tcl list object, not an array object.
+If subsequently using an array value in a list context,
+this can be more efficient by
+avoiding a split on string representations.
+.TP
+\fItreeName\fR \fBvecdump\fR \fIvector\fR \fIkey\fR ?\fItagnode\fR?
+Dump key field to a vector.  With no \fItagnode\fR, dumps every node
+to the 1-1 corresponding vector index.  With \fItag\fR dumps
+nodes to consequetive vector elements.
+.TP
+\fItreeName\fR \fBvecload\fR \fIvector\fR \fIkey\fR ?\fItagnode\fR?
+Loads key field from a vector.  With no \fItagnode\fR, loads every node
+from the 1-1 corresponding vector index.  With \fItag\fR loads
+nodes from consequetive vector elements.
+.TP
+\fItreeName\fR \fBwith\fR \fIvariable\fR ?\fIswitch\fR? \fItagnode script\fR
+For each node in \fItagnode\fR,
+evaluate the \fIscript\fR after assigning key values to
+elements of the array \fIvariable\fR.
+The \fB-keys\fR limits which keys may be assigned.
+If \fIscript\fR completes normally,
+and any of the key values change in the \fIvariable\fR, then the
+updates are reflected back into the key values
+(unless \fB-noupdate\fR is used).
+Unsetting a variable key
+will cause that change to be ignored.  New elements added to the
+array variable are ignored.
+.sp
+Doing a \fBreturn\fR, \fBbreak\fR, or \fBcontinue\fR inside
+\fIscript\fR will still cause updates to copy back, but
+processing will stop and (unless \fB-break\fR is used)
+the return code will become the return code to the caller.
+This means that a \fBbreak\fR, \fBcontinue\fR, and
+\fBreturn\fR will propagate up through
+multiple nested \fBwith\fR statements to the
+to an enclosing \fBforeach\fR, \fBwhile\fR, etc.
+But \fB-break\fR can be used to change this, making \fBwith\fR behave more
+like a \fBforeach\fR loop.
+.sp
+If \fB-keys\fR is not used, the list of key names will be
+stored in \fIvariable(*)\fR and the node id
+stored in \fIvariable(#)\fR (which could then
+be overwritten by a key of that name).
+By default, the array is not cleaned up before or after each execution.
+However, if \fB-unset\fR is used, the array is unset at the start of each
+iteration, and \fB-init\fR can be used to specify a default value.
+Also, long running queries can speed up by initializing variables 
+prior to the call to \fBwith\fR.
+.sp
+If the \fIvariable\fR name string is zero length, an simple
+variables are used instead of an array,
+and * and # do not get set.
+Note, when not using -keys, arbitrary local variables can get overwritten.
+.sp
+If \fB-array\fR is used, \fBwith\fR operates on the keys of an tree array/dict
+instead of the keys of the node.
+.sp
+Upon normal completion, the number of times \fIscript\fR
+was evaluated is returned.
+.sp
+The valid switches are listed below:
+.RS
+.TP 1i
+\fB-array\fR \fIkey\fR
+Specifies a
+single key that is to be treated as an array-dict.
+The fields of the array for that one key are then used
+(instead of keys from the whole node).
+This changes the meaning of \fB-keys\fR and \fB-glob\fR to be the
+keys of the array rather than the keys of the node.
+Nodes missing the given array key will be skipped.
+If a key value can not be converted to an array,
+an error will occur.
+.TP 1i
+\fB-break\fR
+Treat \fBbreak\fR and \fBcontinue\fR like \fBforeach\fR does
+rather than just passing them up to the enclosing script body.
+.TP 1i
+\fB-init\fI value\fR
+Variables specified by \fB-keys\fR are to be initialized to \fIvalue\fR
+for each node where key is missing.
+.TP 1i
+\fB-keys\fR \fIkeylist\fR
+Copy only the named keys and does not set (*).
+.TP 1i
+\fB-glob\fR \fIpattern\fR
+Pattern to limit matching keys.  Can not be used with \fB-keys\fR.
+.TP 1i
+\fB-noupdate\fR
+Ignore changes to array variables. This
+do not copy changed variables back into tree nodes.
+.TP 1i
+\fB-unset\fR
+Unset the array variable at the begin of each evaluation.
+.RE
+.RE
+.SH DICT-ARRAYS
+Round braces can be used to access sub-values of a key value.
+In effect, this means each key value can be an array (or dict), eg.
+.PP
+.CS
+ set t [tree create]
+ set n [$t insert 0 -data {a 1   b 2   c "x 9 y 8 z 7"}]
+ $t get $n;          #  a 1 b 2 c {x 9 y 8 z 7}
+ $t get $n c;        #  x 9 y 8 z 7
+ $t get $n c(y);     # 8
+ $t update $n c(y) 8.6
+ $t get $n c;        # x 9 y 8.6 z 7
+ $t unset $n c(y)
+ $t get $n c;        # x 9 z 7
+ $t set $n d 10
+ $t incr $n d
+.CE
+.PP
+If a key value is a dict object tree will make use of it.
+If not, on access it converts the value to a pure \fBarray\fR hash object.
+The following example shows the type in a comment after each operation.
+.PP
+.CS
+ set t [tree create]
+ $t insert 0 -label A;
+ $t set   0->A  X [dict create a 1 b 2 c 3];   # dict
+ array set q { x 1 y 2 };
+ $t set   0->A  Y [array get q];               # dict
+ $t set   0->A  Z {m 0 n 1};                   # string
+ $t incr  0->A  Z(m);                          # array
+ dict size [$t get 0->A Z];                    # dict
+.CE
+.PP
+One advantage of using a dict is that it preserves order.
+See \fBdictset\fR.
+.SH TAG OPERATIONS
+Tags are a general means of selecting and marking nodes in the tree.
+A tag is just a string of characters, and it may take any form except
+that of an integer.  The same tag may be associated with many
+different nodes.  
+.PP
+Most tree operations use tags.  And several operations let you
+operate on multiple nodes at once.  For example, you can use the
+\fBset\fR operation with the tag \fBall\fR to set a data field in 
+for all nodes in the tree.
+.PP
+Tags are invoked by the \fBtag\fR operation.  The
+general form is
+.DS
+\fItreeName\fR \fBtag\fR \fIoperation\fR ?\fIarg\fR?...
+.DE
+Both \fIoperation\fR and its arguments determine the exact behavior of
+the command.  The operations available for tags are listed below.
+.TP
+\fItreeName\fR \fBtag add\fR \fIstring\fR ?\fInode\fR?...
+Adds the tag \fIstring\fR to zero or more nodes.
+If no nodes are given, just creates the tag.
+A count of the number of nodes tagged is returned.
+.TP
+\fItreeName\fR \fBtag delete\fR \fIstring\fR \fInode\fR...
+Remove the tag \fIstring\fR from one or more nodes.  
+A count of the number of nodes visited is returned.
+Calling \fBtag delete\fR with a builtin tag is ignore.
+.TP
+\fItreeName\fR \fBtag dump\fR \fItagnode\fR ?\fIswitches\fR?
+Dump the nodes specified by the tag \fItagnode\fR.
+.sp
+The valid \fIswitches\fR are listed below.
+.RS
+.TP
+\fB\-keys \fIlist\fR
+A list of patterns of matching keys to be dumped.
+.TP
+\fB\-skipkeys \fIlist\fR
+A list of patterns of matching keys not to be dumped.
+.TP
+\fB\-tag \fIpattern\fR
+A pattern match for tags to include in a node dump.
+.TP
+\fB\-skiptag \fIpattern\fR
+A pattern match for tags to not include in a node dump.
+.TP
+\fB\-notags\fR
+Do not dump the tags.
+.TP
+\fB\-nopath\fR
+To save space, do not dump the full path for each node.
+Instead output periods for all but the last path element.
+Full paths are used only for partial restores.
+.RE
+.TP
+\fItreeName\fR \fBtag exists\fR \fIstring\fR ?\fIid\fR?
+If an \fIid\fR is given, return 1 (or 0)  if node has (or hasn't) the tag.
+Otherwise, returns 1 if at least one nodes has tag \fIstring\fR.
+.TP
+\fItreeName\fR \fBtag forget\fR \fIstring\fR ?\fIstring\fR ...?
+Removes the tag definition for one or more of \fIstring\fR.
+It's not an error if the tag \fIstring\fR does not exist.
+.TP
+\fItreeName\fR \fBtag lookups\fR ?\fIpattern\fR?
+Dump a lookup table (dictionary)
+of nodes-to-tags, or tags-to-nodes if \fIpattern\fR
+is given.
+With no arguments, returns a pair list of nodes/tags,
+for nodes that have tags.
+With an argument, returns a pair list of tags/nodes.
+\fBlookups\fR provides efficient bulk processing when dealing with
+large numbers of nodes and/or tags.
+.TP
+\fItreeName\fR \fBtag names\fR ?\fB-glob\fR? ?\fB-regexp\fR? ?\fB-nocase\fR?  ?\fInode\fR? ?\fInode ...\fR?
+Returns a list of tags used by the tree.  If no \fInode\fR argument
+is given, returns a list of all known tags.  Otherwise, returns
+the union of the tags used by all given \fInode\fR numbers.
+Patterns can be used via \fB-glob\fR or \fB-regexp\fR.
+If \fB-nocase\fR is used, the pattern is expected to be all lower case.
+.TP
+\fItreeName\fR \fBtag nodes\fR \fIstring\fR ?\fIstring ...\fR?
+Returns a list of any nodes that have any of given \fIstring\fR tag.  If no node
+is tagged with any of the \fIstring\fR, then an empty string is returned.
+.SH TRACE OPERATIONS
+Data fields can be traced much like tracing Tcl
+variables.  Data traces cause a Tcl command to be executed whenever
+data fields are created, read, written, or unset.
+A trace can apply to one or more nodes.  You can trace a specific node
+by using its id, or a group of nodes by a their tag.
+Note: operations on arrays trigger on the whole key value,
+not the individual array element.
+.PP
+The tree's \fBget\fR, \fBset\fR, and \fBunset\fR operations can 
+trigger various traces.  The \fBget\fR operation can cause 
+a \fIread\fR  trace to fire.  The \fBset\fR operation causes a \fIwrite\fR 
+trace to fire.  And if the data field is written for the first time, you
+will also get a \fIcreate\fR trace.
+The \fBunset\fR operation triggers \fIunset\fR traces.
+.PP
+Data traces are invoked by the \fBtrace\fR
+operation.  The general form is
+.DS
+\fItreeName\fR \fBtrace\fR \fIoperation\fR ?\fIarg\fR?...
+.DE
+Both \fIoperation\fR and its arguments determine the exact behavior of
+the command.  The operations available for traces are listed below.
+.TP
+\fItreeName\fR \fBtrace create\fR \fInode\fR \fIkey\fR \fIops\fR \fIcommand\fR ?-bgerror?
+Create a trace on data fields (or tags for tag traces)
+given by the pattern in \fIkey\fR.  The \fInode\fR argument
+can be a nodeid, or a tag to refer to multiple nodes eg. \fIall\fR.
+The return value is an identifier that can
+be used with "\fBtrace info\fR" or "\fBtrace delete\fR".
+Traces are temporarily disabled while executing \fIcommand\fR within the trace.
+.sp
+\fICommand\fR is a command prefix, to which
+four arguments are appended before invocation:
+\fItreeName\fR, \fInodeid\fR, \fIkey\fR and, \fIops\fR.
+If an error occurs in \fIcommand\fR (and \fI-bgerror\fR was not used)
+the invoking operation will also abort.
+.sp
+\fIOps\fR indicates which operations are of
+interest.  It consists of one or more of the following letters:
+.RS
+.TP
+\fBr\fR
+Invoke \fIcommand\fR whenever \fIkey\fR is read.
+.TP
+\fBw\fR
+Invoke \fIcommand\fR whenever \fIkey\fR is written.
+.TP
+\fBc\fR
+Invoke \fIcommand\fR whenever \fIkey\fR is created.
+.TP
+\fBu\fR 
+Invoke \fIcommand\fR whenever \fIkey\fR is unset,
+typically with the \fBunset\fR command.
+to that.
+.TP
+\fBe\fR
+Invoke \fIcommand\fR whenever \fBexists\fR is used on an non-existant
+key.  This can be used to populate node key data on demand.
+.TP
+\fBt\fR
+Invoke \fIcommand\fR whenever tag \fIkey\fR is added to a node.
+.TP
+\fBm\fR
+Invoke \fIcommand\fR when tag \fIkey\fR gets added to more than one node.
+This trace can be used to enforce tags that should be on at most one node.
+It can avoid later errors with tags used in
+\fBget\fR or other commands not accepting non-unique tags.
+.TP
+\fBd\fR
+Invoke \fIcommand\fR whenever tag \fIkey\fR is \fIdeleted\fR from a node
+using either \fBtag delete\fR or \fBtag forget\fR.
+Node deletion will not trigger this trace.
+.sp
+.RE
+.TP
+\fItreeName\fR \fBtrace delete\fR \fItraceId\fR...
+Deletes one of more traces.  \fITraceId\fR is
+the trace identifier returned by the \fBtrace create\fR operation.
+.TP
+\fItreeName\fR \fBtrace info\fR \fItraceId\fR 
+Returns information about the trace \fItraceId\fR.  \fITraceId\fR
+is a trace identifier previously returned by the \fBtrace create\fR operation.
+It's the same information specified for the \fBtrace create\fR operation.
+It consists of the node id or tag, data field key, a string of letters
+indicating the operations that are traced (it's in the same
+form as \fIops\fR) and, the command prefix.
+.TP
+\fItreeName\fR \fBtrace names\fR
+Returns a list of identifers for all the current traces.
+.SH NOTIFY OPERATIONS
+The purpose of \fBnotify\fR is to get control when structural operations
+occur on a tree.  This is used internally by \fBtreeview\fR or example when a
+tree object is shared.  A client may create nodes,
+sort a tree, move a node, etc.  Notifier
+can cause such operations to generate events,
+resulting in Tcl commands being executed.
+.PP
+The general form of \fBnotify\fR is:
+.PP
+.RS
+\fItreeName\fR \fBnotify\fR \fIoperation\fR ?\fIarg\fR?...
+.RE
+.PP
+The available \fIoperation\fR are as follows:
+.TP
+\fItreeName\fR \fBnotify create\fR ?\fIswitches\fR? \fIcommand\fR ?\fIargs\fR?...  
+Creates a notifier for the tree.  A notify identifier in the form
+"\fBnotify0\fR", "\fBnotify1\fR", etc.  is returned.
+.sp
+\fICommand\fR and \fIargs\fR are saved and invoked whenever the tree
+structure is changed (controlled by \fIswitches\fR). Two arguments are
+appended to \fIcommand\fR and \fIargs\fR before it's invoked: the id
+of the node and a string representing the type of event that occured.
+If an error is returned by \fIcommand\fR
+the invoking operation returns an error (when not using \fI-whenidle\fR).
+One or more of the following switches are used to indicate the events
+that are of interest:
+.RS
+.TP 1i
+\fB\-bgerror\fR 
+Generate a background error if an error occurs.
+.TP 1i
+\fB\-create\fR 
+Invoke \fIcommand\fR whenever a new node is added.
+This is called after the creation.  Returning an error will
+delete the node.
+.TP 1i
+\fB\-delete\fR
+Invoke \fIcommand\fR whenever a node has been deleted.
+This is called before the delete starts to allow aborting it with an error.
+Deletes resulting from failed inserts are ignored.
+.TP 1i
+\fB\-disabletrace\fR 
+Disable traces from firing during a notify event.
+.TP 1i
+\fB\-get\fR 
+Invoke \fIcommand\fR whenever a node with no keys is accessed (via \fBget\fR
+or \fBwith\fR).
+If a node has at least one key, this will not trigger.
+The invocation occurs before the read, meaning it can
+be used to implement demand loading of data keys into empty nodes
+(eg. loading database row data on read).
+.TP 1i
+\fB\-insert\fR
+Invoke \fIcommand\fR when an \fBinsert\fR completes.
+This differs from \fB-create\fR in that the call occurs
+after the label, tags and data are added (but before
+\fB-fixed\fR gets set).
+This trace applies to the subcommands \fBcreate\fR, \fBcopy\fR,
+\fBrestore\fR, \fBsqlload\fR, and
+\fBinsert\fR (both tree and treeview).
+It is useful for verifying key-data, tags and labels.
+Returning an error will delete the node and cause the
+originating command to generate an error.
+.TP 1i
+\fB\-move\fR
+Invoke \fIcommand\fR at the start of a node move.
+.TP 1i
+\fB\-movepost\fR
+Invoke \fIcommand\fR after a node has been moved.
+.TP 1i
+\fB\-sort\fR
+Invoke \fIcommand\fR whenever the tree has been sorted and reordered.
+.TP 1i
+\fB\-relabel\fR
+Invoke \fIcommand\fR at the start of a node relabel.
+.TP 1i
+\fB\-relabelpost\fR
+Invoke \fIcommand\fR after a node has been relabeled.
+.TP 1i
+\fB\-allevents\fR
+Invoke \fIcommand\fR whenever any of the above events occur.
+.TP 1i
+\fB\-whenidle\fR
+When an event occurs don't invoke \fIcommand\fR immediately, but
+queue it to be run the next time the event loop is entered and there 
+are no events to process.  If subsequent events occur before 
+the event loop is entered, \fIcommand\fR will still be 
+invoked only once.
+.RE
+.TP
+\fItreeName\fR \fBnotify delete\fR \fInotifyId\fR 
+Deletes one or more notifiers from the tree.  \fINotifyId\fR is the
+notifier identifier returned by the \fBnotify create\fR operation.
+.TP
+\fItreeName\fR \fBnotify info\fR \fInotifyId\fR
+Returns information about the notify event \fInotifyId\fR.  \fINotifyId\fR
+is a notify identifier previously returned by the \fBnotify create\fR operation.
+It's the same information specified for the \fBnotify create\fR operation.
+It consists of the notify id, a sublist of event flags (it's in the same
+form as \fIflags\fR) and, the command prefix.
+.TP
+\fItreeName\fR \fBnotify names\fR
+Returns a list of identifers for all the current notifiers.
+
+.SH TABLE EXAMPLE
+The following is a simple example.
+.sp
+.CS
+ variable Users {
+     tom  { Name "Tom Brown"  Sex M Age 19  Class {4 5} Rate {A 1 B 2}}
+     mary { Name "Mary Brown" Sex F Age 16  Class {5}   Rate {A 2}}
+     sam  { Name "Sam Spade"  Sex M Age 19  Class {3 4} Rate {B 3}}
+ }
+ set t [tree create]
+ foreach {i d} $Users {
+    # Use name in -tags so we don't have to do "0->mary" etc.
+    $t insert 0 -tags $i -data $d -label $i
+ }
+ 
+ $t update   tom       Sex F   Name "Tomi Brown"
+ $t append   sam       Name " Jr"
+ $t lappend  sam       Class 5
+ $t incr     mary      Age
+ $t update   tom       Rate(A) 2
+ $t incr     0->mary   Age
+ 
+ # Set a trace.
+ proc ::Aupd {t id key op} { tclLog "AA: $t $id $key $op" }
+ $t trace create all Age w ::Aupd
+ $t incr     mary Age
+ 
+ # Display it.
+ pack [treeview .t -tree $t] -fill both -expand y
+ eval .t column insert end [$t keys all]
+.CE
+.SH TREE EXAMPLE
+The following is a nested tree example with updates.
+.sp
+.CS
+ variable Info {
+   system {
+      sol  { OS Linux Version 3.4 }
+      bing { OS Win Version 7 }
+      gui  { OS Mac Version 8 }
+   }
+   network {
+      intra { Address 192.168.1  Netmask 255.255.255.0 }
+      dmz   { Address 192.168.10 Netmask 255.255.255.0 }
+      wan   { Address 0.0.0.0 Netmask 0.0.0.0 Class {A 1 B 4}}
+   }
+   admins {
+      sully { Name "Sully Van Damme" Level 3 }
+      maverick { Name "Maverick Gump" Level 1 }
+   }
+ }
+  
+ set s [tree create]
+ foreach {n vals} $Info {
+   set ind [$s insert 0 -label $n]
+   foreach {i d} $vals {
+      $s insert $ind -label $i -data $d
+   }
+ }
+  
+ set old [$s get  0->system->bing]
+ $s update   0->system->bing   OS Linux Version 3.4
+ $s update   0->network->dmz   Address 192.168.11
+ $s update   0->network->wan   Class(A) 2
+ eval $s set 0->system->bing   $old
+ $s insert   0->admins -label linus -data { Name "Linus Torvalds" Level 9 }
+ 
+ 
+ pack [treeview .s -tree $s -width 600] -fill both -expand y
+ eval .s column insert end [$s keys all]
+.CE
+.SH SQLLOAD EXAMPLE
+Here is an example using \fBsqlload\fR on table \fIcust\fR from a
+database file, and displaying it in a treeview:
+.CS
+  set t [tree create]
+  $t sqlload mydb.dat "select rowid,* from cust"
+  pack [treeview .t -tree $t -width 500] -fill both -expand y
+  eval .t column insert end [lsort [$t keys all]]
+.CE
+Although there is no corresponding \fBsqldump\fR command,
+scripting it is easy.  Following
+is one approach.
+.CS
+  proc sqldump {t db table {ids {}}} {
+      # Dump nodes from tree t into table in open sqlite database db.
+      if {$ids == {}} { set ids [$t children root] }
+      set keys [$t keys $ids]
+      catch { $db eval "CREATE TABLE $table ( [join $keys ,] )" }
+      $t with s $ids {
+          set nams {}
+          set vals {}
+          foreach nam $s(*) {
+              lappend vals \$s($nam)
+              lappend nams $nam
+          }
+          set vals [join $vals ,]
+          set nams [join $nams ,]
+          set q [format {INSERT INTO %s (%s) VALUES (%s)} $table $nams $vals]
+          $db eval $q
+      }
+  }
+  sqlite3 [set db dbhandle] mydb.dat
+  sqldump $t $db cust2
+.CE
+.SH TREE KEY STRING STORAGE
+Key name strings
+are stored by default in a global hash table.
+However, sometimes this can be undesirable (eg. with threading),
+and so the behavior may be changed (at tree create time only).
+To enable per-interp storage of keys, set
+\fBblt::treeKeysLocal\fR to 1 before tree creation.
+To enable per-tree storage of keys, set
+\fBblt::treeKeysLocal\fR to 2 before tree creation.
+The above is unavailable in safe interps.
+.SH C LANGUAGE API
+Blt_TreeApply, 
+Blt_TreeApplyBFS, 
+Blt_TreeApplyDFS, 
+Blt_TreeChangeRoot, 
+Blt_TreeCreate, 
+Blt_TreeCreateEventHandler, 
+Blt_TreeCreateNode, 
+Blt_TreeCreateTrace, 
+Blt_TreeDeleteEventHandler, 
+Blt_TreeDeleteNode, 
+Blt_TreeDeleteTrace, 
+Blt_TreeExists, 
+Blt_TreeFindChild, 
+Blt_TreeFirstChild, 
+Blt_TreeFirstKey, 
+Blt_TreeGetNode, 
+Blt_TreeGetToken, 
+Blt_TreeGetValue, 
+Blt_TreeIsAncestor, 
+Blt_TreeIsBefore, 
+Blt_TreeIsLeaf, 
+Blt_TreeLastChild, 
+Blt_TreeMoveNode, 
+Blt_TreeName, 
+Blt_TreeNextKey, 
+Blt_TreeNextNode, 
+Blt_TreeNextSibling, 
+Blt_TreeNodeDegree, 
+Blt_TreeNodeDepth, 
+Blt_TreeNodeId, 
+Blt_TreeNodeLabel, 
+Blt_TreeNodeParent, 
+Blt_TreePrevNode, 
+Blt_TreePrevSibling, 
+Blt_TreeRelabelNode, 
+Blt_TreeReleaseToken, 
+Blt_TreeRootNode, 
+Blt_TreeSetValue, 
+Blt_TreeSize, 
+Blt_TreeSortNode, and
+Blt_TreeUnsetValue.
+.SH KEYWORDS
+tree, treeview, widget

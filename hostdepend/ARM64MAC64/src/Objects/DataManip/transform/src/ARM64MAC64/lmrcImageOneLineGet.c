@@ -1,0 +1,1 @@
+../lmrcImageOneLineGet.c

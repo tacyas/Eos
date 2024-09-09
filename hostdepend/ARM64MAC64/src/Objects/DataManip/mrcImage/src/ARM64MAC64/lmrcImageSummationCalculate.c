@@ -1,0 +1,1 @@
+../lmrcImageSummationCalculate.c

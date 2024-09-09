@@ -1,0 +1,3 @@
+ARM64MAC64/contourCreate.o:contourCreate.o
+ARM64MAC64/lcontour2ps.o:lcontour2ps.o
+ARM64MAC64/lmrc2contour.o:lmrc2contour.o
