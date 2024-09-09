@@ -1,1 +1,37 @@
-/bin/bash: pdb2mrc2dWithCTF: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>pdb2mrc2dWithCTF</TITLE>
+</HEAD>
+<BODY>
+<H1>pdb2mrc2dWithCTF</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: pdb2mrc2dWithCTF
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :Input: PDB
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :Output: MRC
+    [-N                  Nx                  (2048      ).as(Integer             ) 
+                         Ny                  (2048      ).as(Integer             ) ] :Optional  :Input: Nx Ny [pixel]
+    [-d                  dx                  (1.72      ).as(Real                ) 
+                         dy                  (1.72      ).as(Real                ) ] :Optional  :Input: dx dy [A]
+    [-Centre             cx                  (0         ).as(Real                ) 
+                         cy                  (0         ).as(Real                ) 
+                         cz                  (0         ).as(Real                ) ] :Optional  :Input: CentreX CentreY [A]
+    [-n                  nx                  (64        ).as(Integer             ) 
+                         ny                  (64        ).as(Integer             ) ] :Optional  :Input: nx ny for subimage [pixel]
+    [-kV                 kV                  (200.      ).as(Real                ) ] :Optional  :kV 
+    [-Cs                 Cs                  (1.7       ).as(Real                ) ] :Optional  :Cs 
+    [-d[e]f[ocus]        Defocus             (10000     ).as(Real                ) ] :Optional  :Defocus [A] at z = 0
+    [-A[overP]           AoverP              (0.07      ).as(Real                ) ] :Optional  :AoverP
+    [-Ain                Ain                 (0.2       ).as(Real                ) ] :Optional  :Beta: IlluminationAngle [mrad]
+    [-ctfMode            ctfMode             (33        ).as(Integer             ) ] :Optional  :ctfMode
+    [-E[uler]A[ngle]     EulerAngle          (XEYS      ).as(String              ) 
+                         Rot1                (0         ).as(Real                ) 
+                         Rot2                (0         ).as(Real                ) 
+                         Rot3                (0         ).as(Real                ) ] :Optional  :EulerAngle: [degree]
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+</PRE>
+</BODY>
+</HTML>

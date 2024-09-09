@@ -1,1 +1,36 @@
-/bin/bash: mrc2tiff: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>mrc2tiff</TITLE>
+</HEAD>
+<BODY>
+<H1>mrc2tiff</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrc2tiff
+Options:
+    [-i[nput]            inFile              (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-o[utput]           outFile             (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-H[igh]             High                (0         ).as(Real                ) ] :Optional  :HighThreshold
+    [-L[ow]              Low                 (0         ).as(Real                ) ] :Optional  :LowThreshold
+    [-I[nverse]                                                                    ] :Optional  :Inverse(Black is white)
+    [-raw                                                                          ] :Optional  :raw
+    [-offset             Offset              (0         ).as(Real                ) ] :Optional  :raw
+    [-Z                  Z                   (0         ).as(Integer             ) ] :Optional  :Each: 0<=, SerialSection:-1
+    [-r[esolution]       Resolution          (1.0       ).as(Real                ) ] :Optional  :[A]
+    [-r[esolution]3      ResolutionX         (1.0       ).as(Real                ) 
+                         ResolutionY         (1.0       ).as(Real                ) 
+                         ResolutionZ         (1.0       ).as(Real                ) ] :Optional  :[A]
+    [-e[xtension]        format              (%s.%04d ).as(String              ) ] :Optional  :SerialSectionFormat
+    [-color              colorMode           (0         ).as(Integer             ) ] :Optional  :Color
+    [-colorRange         colorRangeMin       (0         ).as(Real                ) 
+                         colorRangeMax       (100       ).as(Real                ) ] :Optional  :ColorRange
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-M[ode]             Mode                (0         ).as(Integer             ) ] :Optional  :Mode: 0:char 1:short 2:float 6:unsigned short
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode: 
+			0 (8bits), 1(16bits), 2(float)
+			
+--- Attention ---
+Previously, the black and white were inter-changed between mrc and tiff.  Now they are not changed
+</PRE>
+</BODY>
+</HTML>

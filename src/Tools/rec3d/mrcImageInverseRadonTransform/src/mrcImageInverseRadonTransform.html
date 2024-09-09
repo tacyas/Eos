@@ -1,1 +1,29 @@
-/bin/bash: mrcImageInverseRadonTransform: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>mrcImageInverseRadonTransform</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageInverseRadonTransform</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageInverseRadonTransform
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-Rmax               Rmax                (1.0       ).as(Real                ) ] :Optional  :Input: Rmax
+    [-Rmin               Rmin                (1.0       ).as(Real                ) ] :Optional  :Input: Rmin
+    [-b[ack]p[rojection]m[ode]BackProjectionMode  (1         ).as(Integer             ) ] :Optional  :BackProjectionMode
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+    [-T[hreshold]        T                   (1         ).as(Real                ) ] :Optional  :Input: Threshold
+
+----- BackProjectionMode -----
+ 1 = SimpleBackProjection
+ 2 = WeightedBackProjection
+ 3 = RWeightedBackProjectioni             (-Rmax, -Rmin)
+ 4 = CountRWeightedBackProjection         (-Rmax, -Rmin)
+ 5 = WeightedCountRWeightedBackProjection (-Rmax, -Rmin, -T)
+ 6 = SimpleBackProjectionRWeight          (-Rmax, -Rmin)
+</PRE>
+</BODY>
+</HTML>

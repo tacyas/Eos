@@ -1,1 +1,37 @@
-/bin/bash: mrcImageFourierShellCorrelation: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>mrcImageFourierShellCorrelation</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageFourierShellCorrelation</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageFourierShellCorrelation
+Options:
+    [-i1[input1]         In1                 (NULL      ).as(inFile::mrcImage    ) ] :Optional  :Input:
+    [-i2[input2]         In2                 (NULL      ).as(inFile::mrcImage    ) ] :Optional  :Input:
+    [-o[utput]           Out                 (stdout    ).as(outFile::ASCII      ) ] :Optional  :Output:FSC
+    [-SNR                                                                          ] :Optional  :flagSNR
+    [-FSCfull                                                                      ] :Optional  :flagFSCfull
+    [-Cref                                                                         ] :Optional  :flagCref
+    [-NoiseWeighted      Brestore            (-1000     ).as(Real                ) ] :Optional  :flagNoiseWeighted: Cref*exp(-Bfactor/(4*d^2)
+    [-d[elta]            delta               (0         ).as(Real                ) ] :Optional  :Interval of output data(1/A). Default 1/(Nx*size of pixel)
+    [-z[position]        z                   (0         ).as(Integer             ) ] :Optional  :z position of reference file to correlate.For mode2=1 only
+    [-L[owThreshold]     L                   (0         ).as(Real                ) ] :Optional  :Low threshold for mode +2.
+    [-H[ighThreshold]    H                   (0         ).as(Real                ) ] :Optional  :High threshold for mode +2.
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+    [-M[ode2]            mode2               (0         ).as(Integer             ) ] :Optional  :Mode2
+    [-I1[nput array of file]In1Array            (stdin     ).as(inFileList          ) ] :Optional  :InputDataFiles
+----- mode -----
+0: Fourier shell correlation.
+1: Fourier shell phase residual.
++2: Correlation between L and H
++4: Without equator.
+----- mode 2 -----
+0: Correlation between same size images
+1: Correlation between 2D image and image extracted from 3D image.
++2: Correlation between 2D different size images. In1 is compared with center of In2.
+</PRE>
+</BODY>
+</HTML>

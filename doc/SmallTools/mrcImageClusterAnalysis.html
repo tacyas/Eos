@@ -1,1 +1,46 @@
-/bin/bash: mrcImageClusterAnalysis: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>mrcImageClusterAnalysis</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageClusterAnalysis</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageClusterAnalysis
+Options:
+    [-I[nput array of file]In                  (NULL      ).as(inFileListNoOpen    ) ] :Essential :InputDataFiles
+    [-o[utput]           Out                 (stdout    ).as(outFile             ) ] :Optional  :OutputDataFile
+    [-O[utput]                                                                     ] :Optional  :Output: averaged images: filename is xxxx.avg: xxxx is input filename.
+    [-N[umberOfClusters] N                   (1         ).as(Integer             ) ] :Optional  :Number of clusters
+    [-Min[imumCorrelation]Min                 (0.0       ).as(Real                ) ] :Optional  :Minimum: Correlation: Conditions for ending
+    [-Iter[ation]                                                                  ] :Optional  :IterationFlag
+    [-A[uto]R[otation]   AutoRotation        (72        ).as(Integer             ) ] :Optional  :AutoRotation: rotation divided by this value
+    [-A[utoRot]Range     ARMin               (0         ).as(Real                ) 
+                         ARMax               (360       ).as(Real                ) ] :Optional  :AutoRotationRange
+    [-A[uto]R[otation]iter[ation]AutoRotationIteration(2         ).as(Integer             ) ] :Optional  :AutoRotationIteration
+    [-A[uto]R[otation]MethodAutoRotationMethod  (0         ).as(Integer             ) ] :Optional  :Method for Correlation for Auto Rotation
+    [-M[odeForCorrelation]correlationMode     (19        ).as(Integer             ) ] :Optional  :Correlation Mode for AutoRotation
+    [-Log                Log                 (stdout    ).as(appendFile          ) ] :Optional  :Log: Output
+    [-Log2               Log2                (NULL      ).as(appendFile          ) ] :Optional  :Log2: Output: ClusterNode Only
+    [-LogIn              LogIn               (NULL      ).as(inFile              ) ] :Optional  :previousLog: Input
+    [-prevF[ileNum]      prevFileNum         (0         ).as(Integer             ) ] :Optional  :previousLogFileNum: Input
+    [-pthread            pthread             (0         ).as(Integer             ) ] :Optional  :pthread: Input
+    [-NoRecalc                                                                     ] :Optional  :No recalculation of distances
+    [-pvm                                                                          ] :Optional  :Parallel Analysis by PVM
+    [-pvmList            pvmList             (NULL      ).as(inFile              ) ] :Optional  :pvmList: Input
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (2         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+Distance between clusters: mode
+	mode 0: By Correlation
+	mode 1: By Euclid Distance
+	mode 2: By Ward Method (default) : Euclid Length (no rotation) or its square (rotation)
+	mode 3: By Ward Method using Linear Correlation : (1 - Correlation)/(1 + Correlation)
+	mode 4: By Linear Correlation :                   (1 - Correlation)/(1 + Correlation)
+	mode 5: Not supported
+	mode 6: Not supported
+	mode 7: used for method masking
+	mode 8: Not supported.
+</PRE>
+</BODY>
+</HTML>

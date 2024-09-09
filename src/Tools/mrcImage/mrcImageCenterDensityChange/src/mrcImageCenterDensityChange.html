@@ -1,1 +1,31 @@
-/bin/bash: mrcImageCenterDensityChange: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>mrcImageCenterDensityChange</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageCenterDensityChange</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageCenterDensityChange
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-r[adius]min        rmin                (0         ).as(Real                ) ] :Optional  :min radius[A]
+    [-r[adius]max        rmax                (90        ).as(Real                ) ] :Optional  :max radius[A]
+    [-ratio              ratio               (0         ).as(Real                ) ] :Optional  :ratio
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+    [-M[ode]             radiusMode          (0         ).as(Integer             ) ] :Optional  :radiusMode
+----- Additional Usage -----
+----- radiusMode -----
+0: 
+change density from r=0 to r=rmin 
+then connect density gradually from rmin to rmax 
+1: 
+connect density gradually from rmin to rmax 
+change density more than rmax 
+----- mode -----
+0: multiply
+</PRE>
+</BODY>
+</HTML>

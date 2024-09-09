@@ -1,1 +1,32 @@
-/bin/bash: pdb2mrc: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>pdb2mrc</TITLE>
+</HEAD>
+<BODY>
+<H1>pdb2mrc</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: pdb2mrc
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Optional  :OutputDataFile(3D)
+    [-nx                 nx                  (1         ).as(Integer             ) ] :Optional  :Pixel[Def:]
+    [-ny                 ny                  (1         ).as(Integer             ) ] :Optional  :Pixel[Def:]
+    [-nz                 nz                  (1         ).as(Integer             ) ] :Optional  :Pixel[Def:]
+    [-Sx[tart]           Startx              (0.0       ).as(Real                ) ] :Optional  :Startx[A]
+    [-Sy[tart]           Starty              (0.0       ).as(Real                ) ] :Optional  :Starty[A]
+    [-Sz[tart]           Startz              (0.0       ).as(Real                ) ] :Optional  :Startz[A]
+    [-dx                 dx                  (2.5       ).as(Real                ) ] :Optional  :dx
+    [-dy                 dy                  (2.5       ).as(Real                ) ] :Optional  :dy
+    [-dz                 dz                  (2.5       ).as(Real                ) ] :Optional  :dz
+    [-w[eight]           Weight              (1.0       ).as(Real                ) ] :Optional  :Weight
+    [-sig[ma]            Sigma               (0.0       ).as(Real                ) ] :Optional  :Sigma[A]
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+>>> mode 
+mode: DensityMode
+0: Same Gaussian 
+1: WentzelAtomModel
+</PRE>
+</BODY>
+</HTML>

@@ -1,1 +1,24 @@
-/bin/bash: mrcImageCCDNoiseRemove: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>mrcImageCCDNoiseRemove</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageCCDNoiseRemove</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageCCDNoiseRemove
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :Input: mrc
+    [-N[oise]            InNoise             (NULL      ).as(inFile              ) ] :Essential :Input: noise information
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :Output: mrc
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+mode: 0   	random values
+mode: 1   	neighbor point's values
+>>>>> CCD Noise Remove Format
+VLine  x y height width     ; Vertical Line Noise Remove[pixel]
+Square x y height width     ; Square Noise Remove[pixel] 
+</PRE>
+</BODY>
+</HTML>

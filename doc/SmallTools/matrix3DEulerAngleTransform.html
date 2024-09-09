@@ -1,1 +1,29 @@
-/bin/bash: matrix3DEulerAngleTransform: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>matrix3DEulerAngleTransform</TITLE>
+</HEAD>
+<BODY>
+<H1>matrix3DEulerAngleTransform</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: matrix3DEulerAngleTransform
+Options:
+    [-i[nputlist]        In                  (NULL      ).as(inFileListNoOpen    ) ] :Essential :InputDataFileList
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-R[otationalMode]   RotationalMode      (ZONS      ).as(String              ) ] :Optional  :RotationalMode
+    [-M[ultiplyEulerAngle]RotMode             (ZONS      ).as(String              ) 
+                         Rot1                (0.0       ).as(Real                ) 
+                         Rot2                (0.0       ).as(Real                ) 
+                         Rot3                (0.0       ).as(Real                ) ] :Optional  :M * input
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+
+----- input file format -----
+ filename rotationalMode phi theta psi
+    .          .          .    .    . 
+    .          .          .    .    . 
+    .          .          .    .    . 
+
+</PRE>
+</BODY>
+</HTML>

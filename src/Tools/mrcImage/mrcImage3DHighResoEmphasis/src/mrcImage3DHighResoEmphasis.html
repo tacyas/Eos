@@ -1,1 +1,25 @@
-/bin/bash: mrcImage3DHighResoEmphasis: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>mrcImage3DHighResoEmphasis</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImage3DHighResoEmphasis</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImage3DHighResoEmphasis
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-L[owThreshold]     L                   (0         ).as(Real                ) ] :Optional  :Low threshold to modify
+    [-H[ighThreshold]    H                   (0         ).as(Real                ) ] :Optional  :High threshold to modify
+    [-A[value]           A                   (0         ).as(Real                ) ] :Optional  :A value
+    [-B[value]           B                   (0         ).as(Real                ) ] :Optional  :B value
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- algorithm -----
+R<L data*exp(A*L+B*L*L)
+L<R<H data*exp(A*R+B*R*R) 
+R>H data*exp(A*H+B*H*H) 
+</PRE>
+</BODY>
+</HTML>

@@ -1,1 +1,50 @@
-/bin/bash: llDataAxisSearch: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>llDataAxisSearch</TITLE>
+</HEAD>
+<BODY>
+<H1>llDataAxisSearch</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: llDataAxisSearch
+Options:
+    [-i1[nput]           In1                 (NULL      ).as(inFile              ) ] :Optional  :In: NearSide
+    [-i2[nput]           In2                 (NULL      ).as(inFile              ) ] :Optional  :In: FarSide
+    [-o1[utput]          Out1                (NULL      ).as(outFile             ) ] :Optional  :Out: NearSide
+    [-o2[utput]          Out2                (NULL      ).as(outFile             ) ] :Optional  :Out: FarSide
+    [-a[verage]          Avg                 (NULL      ).as(outFile             ) ] :Optional  :Out: Average
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Optional  :Out: FitParam
+    [-op2[utput]         OutP2               (NULL      ).as(outFile             ) ] :Optional  :OutParam2: FitParam Distribution [mrcImage]
+    [-t[ruePitch]        truePitch           (0.0       ).as(Real                ) ] :Optional  :TruePitch[A]
+    [-l[ayer]            L                   (NULL      ).as(inFile              ) ] :Optional  :LayerInfo
+    [-O[mega]            Omin                (0.0       ).as(Real                ) 
+                         Omax                (0.0       ).as(Real                ) 
+                         Odelta              (1.0       ).as(Real                ) ] :Optional  :Omega[degree]
+    [-x[shift]           xmin                (-10.0     ).as(Real                ) 
+                         xmax                (10.0      ).as(Real                ) 
+                         xdelta              (0.1       ).as(Real                ) ] :Optional  :shiftx[A]
+    [-R                  R                   (10.0      ).as(Real                ) ] :Optional  :Resolution[A]
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+----- Layer Line Information File ----- 
+L N Weight
+..........
+
+----- Control File -----
+In1[inFile:NULL]				#In: NearSide
+In2[inFile:NULL]				#In: FarSide
+Out1[outFile:NULL]				#Out: NearSide
+Out2[outFile:NULL]				#Out: FarSide
+Avg[outFile:NULL]				#Out: Average
+Out[outFile:NULL]				#Out: FitParam
+truePitch[Real:NULL]				#TruePitch[A]
+L[inFile:NULL]				#LayerInfo
+Omin[Real:0.0]	Omax[Real:0.0]	Odelta[Real:1.0]				#Omega[degree]
+xmin[Real:-10.0]	xmax[Real:10.0]	xdelta[Real:0.1]				#shiftx[A]
+R[Real:10.0]				#Resolution[A]
+mode[Integer:0]				#Mode
+----- Inside Axis Search Parameter File -----
+info.In1, info.In2, paraFit.Para.R*DEGREE, paraFit.Para.x.Value, paraFit.Para.Omega.Value
+</PRE>
+</BODY>
+</HTML>

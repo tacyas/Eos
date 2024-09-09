@@ -1,1 +1,58 @@
-/bin/bash: mrcImageSymmetryFind: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>mrcImageSymmetryFind</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageSymmetryFind</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageSymmetryFind
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Optional  :Output: correlation
+    [-O[utput]           Out2                (stdout    ).as(outFile             ) ] :Optional  :Output: SymmetryInformation 
+    [-A[verage]          Avg                 (NULL      ).as(outFile             ) ] :Optional  :Output: Average
+    [-centreMode         centreMode          (1         ).as(Integer             ) ] :Optional  :Input: 0 : Gravity of Centre; 1 : Search n-fold
+    [-t1[threshold1]     threshold1          (1.8       ).as(Real                ) ] :Optional  :Threshold of CheckByAdd
+    [-t2[threshold2]     threshold2          (0.9       ).as(Real                ) ] :Optional  :Threshold in deciding the symmetry number
+    [-m1[mode1]          mode1               (3         ).as(Integer             ) ] :Optional  :Mode of Check
+    [-m2[mode2]          mode2               (2         ).as(Integer             ) ] :Optional  :Mode of Substruction
+    [-dr[delta r]        dr                  (1         ).as(Real                ) ] :Optional  :Delta r of outputfile.
+    [-dtheta[delta theta]dtheta              (1         ).as(Real                ) ] :Optional  :Delta theta of outputfile.[DEGREE]
+    [-n[umber]           n                   (10        ).as(Integer             ) ] :Optional  :Check to the number.
+    [-n[umber]Range      nmin                (2         ).as(Integer             ) 
+                         nmax                (10        ).as(Integer             ) ] :Optional  :Check to the number.
+    [-In                 Image               (NULL      ).as(inFileList          ) 
+                         Back                (NULL      ).as(inFileList          ) ] :Optional  :InputDataFile: Image and Back
+    [-rangex             minx                (-3        ).as(Real                ) 
+                         maxx                (3         ).as(Real                ) 
+                         delx                (1         ).as(Real                ) ] :Optional  :Input: 
+    [-rangey             miny                (-3        ).as(Real                ) 
+                         maxy                (3         ).as(Real                ) 
+                         dely                (1         ).as(Real                ) ] :Optional  :Input: 
+    [-rangez             minz                (0         ).as(Real                ) 
+                         maxz                (0         ).as(Real                ) 
+                         delz                (1         ).as(Real                ) ] :Optional  :Input: 
+    [-rrange             rmin                (0         ).as(Real                ) 
+                         rmax                (-1        ).as(Real                ) ] :Optional  :Input: Rrange[A]
+    [-Algorythm                                                                    ] :Optional  :Algorythm
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+----- Additional Usage -----
+>>>> check type mode
+    1 : Check by Add 
+    2 : Check by Correlation 
+    4 : Check by Fourier
+    8 : Check by TTest
+    16 : Check by SRP
+>>>> centre type mode
+    0 : Centre is GC (gravity of centre)
+    1 : Centre is Rotational Symmetry
+    2 : Centre is at Image Centre 
+    3 : Centre is at Image Origin
+>>>> subtrcation type mode
+    0 : No Subtraction
+    1 : Mean Subtraction
+    2 : Min Subtraction
+</PRE>
+</BODY>
+</HTML>

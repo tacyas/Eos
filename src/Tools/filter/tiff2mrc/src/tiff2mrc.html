@@ -1,1 +1,40 @@
-/bin/bash: tiff2mrc: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>tiff2mrc</TITLE>
+</HEAD>
+<BODY>
+<H1>tiff2mrc</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: tiff2mrc
+Options:
+    [-i[nput]            inFile              (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-o[utput]           outFile             (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-r[esolution]       Resolution          (1.0       ).as(Real                ) ] :Optional  :Resolution[A]
+    [-r[esolution]3      ResolutionX         (1.0       ).as(Real                ) 
+                         ResolutionY         (1.0       ).as(Real                ) 
+                         ResolutionZ         (1.0       ).as(Real                ) ] :Optional  :Resolution[A]
+    [-t[ime]             time                (1.0       ).as(Real                ) ] :Optional  :x OptimalTime
+    [-d[irnum]           dirnum              (-1        ).as(Integer             ) ] :Optional  :tiffDirectoryNumber
+    [-I[nverse]                                                                    ] :Optional  :Black<->White
+    [-Signed                                                                       ] :Optional  :Original image is Signed or Not: Default unsigned
+    [-Offset             Offset              (0.0       ).as(Real                ) ] :Optional  :OffsetValue
+    [-Max                Max                 (16        ).as(Real                ) ] :Optional  :MaxValue:2^Max
+    [-Min                Min                 (1         ).as(Real                ) ] :Optional  :MinValue:2^Min: without 0
+    [-realMin            realMin             (0.0       ).as(Real                ) ] :Optional  :Real MinValue
+    [-realMax            realMax             (0.0       ).as(Real                ) ] :Optional  :Real MaxValue
+    [-realMaxBit         realMaxBit          (14        ).as(Real                ) ] :Optional  :Real MaxValue Bit
+    [-sin                sinFile             (NULL      ).as(inFile              ) ] :Optional  :sin file from Zeiss
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-S[hrink]           Shrink              (8         ).as(Integer             ) ] :Optional  :ShrinkMode
+    [-M[ode]             Mode                (0         ).as(Integer             ) ] :Optional  :Mode: mrcMode: Def: if -m 0, -M 0. if -m 1 -M 2
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode: 0 (Direct), 1(Log10(65535/data))
+---- mode ----
+0x0000000f bits: Direct or Log
+0x000000f0 bits: Which Color
+                 R: 00
+                 G: 10
+                 B: 20
+</PRE>
+</BODY>
+</HTML>

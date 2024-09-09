@@ -293,7 +293,14 @@ tiffFileInfo.o: tiffFileInfo.c \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/arm/limits.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/arm/_limits.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/syslimits.h \
-  /Users/tacyas/Eos/include/tiffio.h /Users/tacyas/Eos/include/tiff.h \
+  /Users/tacyas/Eos/util/ARM64MAC64/include/tiffio.h \
+  /Users/tacyas/Eos/util/ARM64MAC64/include/tiff.h \
+  /Users/tacyas/Eos/util/ARM64MAC64/include/tiffconf.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stddef.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/__stddef_max_align_t.h \
+  /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/inttypes.h \
+  /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/inttypes.h \
+  /Users/tacyas/Eos/util/ARM64MAC64/include/tiffvers.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include/stdarg.h
 usage.o: usage.c \
   /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/stdio.h \

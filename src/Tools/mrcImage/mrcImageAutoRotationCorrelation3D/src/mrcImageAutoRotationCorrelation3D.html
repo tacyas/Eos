@@ -1,1 +1,54 @@
-/bin/bash: mrcImageAutoRotationCorrelation3D: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>mrcImageAutoRotationCorrelation3D</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageAutoRotationCorrelation3D</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageAutoRotationCorrelation3D
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :Input: mrc[test]
+    [-r[ef]              Ref                 (NULL      ).as(inFile              ) ] :Essential :Input: mrc[ref]
+    [-o[utput]           Out                 (stdout    ).as(outFile             ) ] :Optional  :Output: Parameter
+    [-cor                Cor                 (NULL      ).as(outFile             ) ] :Optional  :Output: CorMap
+    [-fit                Fit                 (stdout    ).as(outFile             ) ] :Optional  :Output: Best Fit
+    [-E[uler]A[ngle]     EulerAngle          (YOYS      ).as(String              ) ] :Optional  :Input: EulerAngle
+    [-Rot1               Rot1Min             (0.0       ).as(Real                ) 
+                         Rot1Max             (360.0     ).as(Real                ) 
+                         Rot1Delta           (5.0       ).as(Real                ) ] :Optional  :Rot1
+    [-Rot2               Rot2Min             (0.0       ).as(Real                ) 
+                         Rot2Max             (180.0     ).as(Real                ) 
+                         Rot2Delta           (5.0       ).as(Real                ) ] :Optional  :Rot2
+    [-Rot3               Rot3Min             (0.0       ).as(Real                ) 
+                         Rot3Max             (360.0     ).as(Real                ) 
+                         Rot3Delta           (5.0       ).as(Real                ) ] :Optional  :Rot3
+    [-Xrange             XrangeMin           (0         ).as(Real                ) 
+                         XrangeMax           (0         ).as(Real                ) ] :Optional  :Xrange[pixel]: Not set, all space search
+    [-Yrange             YrangeMin           (0         ).as(Real                ) 
+                         YrangeMax           (0         ).as(Real                ) ] :Optional  :Yrange[pixel]: Not set, all space search
+    [-Zrange             ZrangeMin           (0         ).as(Real                ) 
+                         ZrangeMax           (0         ).as(Real                ) ] :Optional  :Zrange[pixel]: Not set, all space search
+    [-M[ode]             Mode                (0         ).as(Integer             ) ] :Optional  :Mode: Correlation Mode
+    [-M[ode]R[otation]   ModeRotation        (0         ).as(Integer             ) ] :Optional  :Mode: Rotation3D Mode
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode: InterpolationMode
+----- Additional Usage -----
+----- -M  CorrelationMode -----
+0: Normal Correlation FxG*
+1: Phase  Correlation FxG*/     |FxG*|
+2: Phase  Correlation FxG*/sqrt(|FxG*|)
+3: Normalized Normal Correlation FxG*/|F||G|)
+16: (0,0) = 0 
+Refinement Correlation Map
+0: sqrt(Sum |Fi-Gi|^2                 / Sum |Gi|^2)
+1:      Sum |Gi||phaseFi - phaseGi|   / Sum |Gi|  
+2: sqrt(Sum |Gi||phaseFi - phaseGi|^2 / Sum |Gi|  )
+----- -MR RotationMode -----
+ 0: padding 0 
+ 1: padding average 
+ +0:  within ellipsoidal area.
+ +16: within square area.
+</PRE>
+</BODY>
+</HTML>

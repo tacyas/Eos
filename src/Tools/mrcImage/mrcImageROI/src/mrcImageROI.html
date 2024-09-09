@@ -1,1 +1,53 @@
-/bin/bash: mrcImageROI: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>mrcImageROI</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageROI</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageROI
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile::mrcImage    ) ] :Essential :Input
+    [-o[utput]           Out                 (NULL      ).as(outFile::mrcImage   ) ] :Essential :Output
+    [-r[oi]              blx                 (0.0       ).as(Real                ) 
+                         bly                 (0.0       ).as(Real                ) 
+                         brx                 (0.0       ).as(Real                ) 
+                         bry                 (0.0       ).as(Real                ) 
+                         trx                 (0.0       ).as(Real                ) 
+                         try                 (0.0       ).as(Real                ) 
+                         tlx                 (0.0       ).as(Real                ) 
+                         tly                 (0.0       ).as(Real                ) ] :Optional  :Rectangle ROI 
+    [-x                  WidthBeforeExpansion(1.0       ).as(Real                ) ] :Optional  :Width  before expansion: /* Default is set by -r */
+    [-y                  HeightBeforeExpansion(1.0       ).as(Real                ) ] :Optional  :Height before expansion: /* Default is set by -r */
+    [-a[ngle]            Angle               (0.0       ).as(Real                ) ] :Optional  :This value [degree] is added to angle of current source image.
+    [-W                  WidthAfterExpansion (1.0       ).as(Real                ) ] :Optional  :Width  after expansion[Pixel]
+    [-H                  HeightAfterExpansion(1.0       ).as(Real                ) ] :Optional  :Height after expansion[Pixel]: 
+		ROI Size is (10,20):
+			If -W 30 -H 40, out (30,40)
+			If -W 30, out (30, 20*30/10)
+			If -H 40, out (10*40/20,40)
+				If omitted, out (10,20)
+    [-Shift              ShiftX              (0.0       ).as(Real                ) 
+                         ShiftY              (0.0       ).as(Real                ) ] :Optional  :ROI ARea Shift [Pixel]
+    [-turePitch          truePitch           (430.0     ).as(Real                ) ] :Optional  :truePitch [A]
+    [-dY                 dY                  (0.0       ).as(Real                ) ] :Optional  :Number of turePitch
+    [-Ly                 Ly                  (5.0       ).as(Real                ) ] :Optional  :Header Length y [A/Pixel]
+    [-S[hrink]           Shrink              (1         ).as(Integer             ) ] :Optional  :When inputfile is shrinked
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-M[ode]             ROIShapeMode        (0         ).as(Integer             ) ] :Optional  :RoiShapeMode
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+---- mode ----
+	0: Nearest Neighbor Method
+	1: Bilinear method
+	2: Cubic Convolution method
+	3: Polynominal method
+---- ROI Shape Mode ----
+	0: Rect
+	4: TiltRect
+---- Note  (Magnification change for normalize)----
+-truePitch, -dY and -Ly options make 
+H[pixel] = truePitch[A] / Ly[A/pixel] x dY 
+</PRE>
+</BODY>
+</HTML>

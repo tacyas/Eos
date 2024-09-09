@@ -1,1 +1,29 @@
-/bin/bash: mrcFFTInfo: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>mrcFFTInfo</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcFFTInfo</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcFFTInfo
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile::mrcImage    ) ] :Essential :Input
+    [-o[utput]           Out                 (NULL      ).as(outFile::ASCII      ) ] :Essential :Output
+    [-a[ngle]            Angle               (0.0       ).as(Real                ) ] :Optional  :Angle
+    [-nDiv[ision]        nDivision           (18        ).as(Integer             ) ] :Optional  :num of Divsion
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+Mode: 
+	 1 :Scattering Angular Distribution(Sum)
+	 2 :X-axis (OutPut: Mag, Phase)
+	 4 :Y-axis (OutPut: Mag, Phase)
+	 5 :Y-axis (Average:Along X-axis)(OutPut: Mag, Phase)
+	 7 :Scattering Angular Distribution(Average, range(angle, nDivion)xnDiv; e.g. (10, 18) -> range(10-360/18/2, 10+360/18/2) x nDiv
+	 8 :Scattering Angular Distribution(Average)
+	+16 :with spacing 
+	+32 :with Angular Distribution(SD)
+	+64 :Log Scaling for |value| 
+</PRE>
+</BODY>
+</HTML>

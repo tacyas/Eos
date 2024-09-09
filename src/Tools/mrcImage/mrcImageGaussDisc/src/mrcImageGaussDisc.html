@@ -1,1 +1,33 @@
-/bin/bash: mrcImageGaussDisc: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>mrcImageGaussDisc</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageGaussDisc</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageGaussDisc
+Options:
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-sigmax             sigmax              (10        ).as(Real                ) ] :Optional  :sigmax[A]
+    [-sigmay             sigmay              (10        ).as(Real                ) ] :Optional  :sigmay[A]
+    [-sigma_range        sigma_range         (3         ).as(Real                ) ] :Optional  :sigma
+    [-weight             weight              (10        ).as(Real                ) ] :Optional  :weight
+    [-size               size                (5         ).as(Real                ) ] :Optional  :Pixel Size[A]
+    [-W[idth]            Width               (0         ).as(Real                ) ] :Optional  :Image Width[A]
+    [-H[eight]           Height              (0         ).as(Real                ) ] :Optional  :Image Height[A]
+    [-cx                 centrex             (0         ).as(Real                ) ] :Optional  :x: Centre[A]
+    [-cy                 centrey             (0         ).as(Real                ) ] :Optional  :y: Centre[A]
+    [-a[ngle]            Angle               (0         ).as(Real                ) ] :Optional  :Angle: [degree]
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (2         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+Gauss Disc is cutted at sigma_range*sigma 
+Gauss Disc = weight * exp ( - ((x^2 / sigmax^2)+(y^2 / sigmay^2)) 
+mrcImageFileSize is (sigma_range*sigmax*2) x (sigma_range*sigmay*2) 
+-----------------------------------------------------------------------------------
+mode 0 char 
+mode 2 float 
+</PRE>
+</BODY>
+</HTML>

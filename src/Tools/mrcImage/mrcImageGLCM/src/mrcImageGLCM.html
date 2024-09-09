@@ -1,1 +1,47 @@
-/bin/bash: mrcImageGLCM: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>mrcImageGLCM</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageGLCM</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageGLCM
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile::mrcImage    ) ] :Essential :Input
+    [-o[utput]           Out                 (NULL      ).as(outFile::mrcImage   ) ] :Optional  :Output:GLImage
+    [-O[utput]           OutInfo             (stdout    ).as(outFile::ASCII      ) ] :Optional  :Output:Information
+    [-e[psilon]          epsilon             (2.2e-16   ).as(Real                ) ] :Optional  :SmallValueForLog
+    [-thres[hold]High    thresHigh           (1.0       ).as(Real                ) ] :Optional  :HighCut
+    [-thres[hold]Low     thresLow            (0.0       ).as(Real                ) ] :Optional  :LowCut
+    [-exceptValue        exceptValue         (0.0       ).as(Real                ) ] :Optional  :Except Value
+    [-range              range               (2.0       ).as(Real                ) ] :Optional  :mean+-range*sd (LowCut-HighCut)
+    [-nHist              nHist               (8         ).as(Integer             ) ] :Optional  :GrayLevel
+    [-offset             offset              (1         ).as(Integer             ) ] :Optional  :Distance
+    [-angle              angleMode           (15        ).as(Integer             ) ] :Optional  :Angle:1-0, 2-45, 4-90, 8-135 for 2D, 2^13-1=8191 for 3D
+    [-areaX              minAreaX            (0         ).as(Real                ) 
+                         maxAreaX            (1.0       ).as(Real                ) ] :Optional  :
+    [-areaY              minAreaY            (0         ).as(Real                ) 
+                         maxAreaY            (1.0       ).as(Real                ) ] :Optional  :
+    [-areaZ              minAreaZ            (0         ).as(Real                ) 
+                         maxAreaZ            (1.0       ).as(Real                ) ] :Optional  :
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+angleMode: 2^0-2^12, 2^13-1 for all
+1: (1, 0, 0)
+2: (1, 1, 0)
+4: (0, 1, 0)
+8: (-1,1, 0)
+16: (1, 0, 1)
+32: (1, 1, 1)
+64: (0, 1, 1)
+128: (-1,1, 1)
+256: (1, 0,-1)
+512: (1, 1,-1)
+1024: (0, 1,-1)
+2048: (-1,1,-1)
+4096: ( 0, 0, 1)
+</PRE>
+</BODY>
+</HTML>

@@ -1,1 +1,37 @@
-/bin/bash: mrcImage1dShiftAverageByAnnealing: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>mrcImage1dShiftAverageByAnnealing</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImage1dShiftAverageByAnnealing</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImage1dShiftAverageByAnnealing
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-s[ignal position]  Signal              (NULL      ).as(inFile              ) ] :Essential :File to define position of signal
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-r[ange]            range               (0         ).as(Integer             ) ] :Optional  :Search range of shift.Default:Nx
+    [-d[elta]            delta               (1.0       ).as(Real                ) ] :Optional  :Spacing of molecule(Pixel).
+    [-T[eperature]       temperature         (1.0       ).as(Real                ) ] :Optional  :Initial temperature.
+    [-iter[ation]        iter                (1000      ).as(Integer             ) ] :Optional  :Number of iteration before reducing temperature.
+    [-eps[ilon]          eps                 (0.001     ).as(Real                ) ] :Optional  :Temperature(T) reduced to (1-epsilon)T.
+    [-tol                tol                 (1e-2      ).as(Real                ) ] :Optional  :Number to identify convergence
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+    [-M[ode2]            mode2               (0         ).as(Integer             ) ] :Optional  :Mode2
+----- mode -----
+0:All search 
+1:annealing method 
+2:mode 1 and refine by powel.
+3:mode 1 and refine by annealing.
+----- mode2 -----
+0:by amplitude 
+1:by power 
+2:by amplitude using only phase 
+3:by power using only phase 
+4:by amplitude using S/sqrt(S) 
+5:by power using only  S/sqrt(S) 
+</PRE>
+</BODY>
+</HTML>

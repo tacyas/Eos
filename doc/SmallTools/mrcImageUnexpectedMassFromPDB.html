@@ -1,1 +1,42 @@
-/bin/bash: mrcImageUnexpectedMassFromPDB: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>mrcImageUnexpectedMassFromPDB</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageUnexpectedMassFromPDB</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageUnexpectedMassFromPDB
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-p[dbFile]          InPDB               (NULL      ).as(inFile              ) ] :Essential :InputPDBDataFile
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-T[hres]            Thres               (0.0       ).as(Real                ) ] :Essential :ThresHold
+    [-D[ata]             Data                (0.0       ).as(Real                ) ] :Essential :AssinedData
+    [-M[ode]             AtomMode            (1         ).as(Integer             ) ] :Optional  :AtomMode
+    [-r[adius]           radius              (3.4       ).as(Real                ) ] :Optional  :Radius
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+>>> Mode:	
+	0: Origin is BottomLeft.
+	1: Origin is Center.(Helix)
+	2: Origin is Center.(3D Single)
+	3: Origin is shown by StartN.
+	16: MaxIsProtein : Default: MinIsProtein
+>>> Algorism
+If MinIsProtein mode, 
+	if density>Thres 
+	then
+		density := density
+	else
+		density := Data
+	endif
+>>> AtomMode 
+	0: Nearest Voxel -> Data
+	1: Nearest and 6-linked voxel -> Data
+	2: Specified spheres(Outside) -> Data
+	3: Inside of Specified spheres  -> Data
+	2: Outside of Specified spheres -> Data
+</PRE>
+</BODY>
+</HTML>

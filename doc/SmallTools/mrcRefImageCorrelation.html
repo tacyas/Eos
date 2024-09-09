@@ -1,1 +1,22 @@
-/bin/bash: mrcRefImageCorrelation: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>mrcRefImageCorrelation</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcRefImageCorrelation</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcRefImageCorrelation
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Optional  :InputDataFile
+    [-r[eference]        Ref                 (NULL      ).as(inFile              ) ] :Essential :ReferenceDataFile
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+    [-I[nput array of file]InArray             (stdin     ).as(inFileList          ) ] :Optional  :InputDataFiles
+    [-z[position]        z                   (0         ).as(Integer             ) ] :Optional  :z position of reference file to correlate.For mode 1 only
+----- Additional Usage -----
+mode 0: To find the images in the reference file of min and max correlation.  Correlation is calclated in the real space.
+mode 1: To calculate the correlation between one image of the reference file and input file.  The calculation is performed in the fourier space and the output is a mrc image file.  option z is needed.
+</PRE>
+</BODY>
+</HTML>

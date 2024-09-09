@@ -1,1 +1,45 @@
-/bin/bash: mrcImageDeconvolution: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>mrcImageDeconvolution</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageDeconvolution</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageDeconvolution
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile::mrcImage    ) ] :Essential :Input: Src
+    [-k[ernel]           Kernel              (NULL      ).as(inFile::mrcImage    ) ] :Essential :Input: Kernel
+    [-k[ernel]centre     KernelCentre        (1         ).as(Integer             ) ] :Optional  :Input: Kernel Centre
+    [-o[utput]           Out                 (NULL      ).as(outFile::mrcImage   ) ] :Essential :Output: Dst
+    [-o[utput]conv       OutConv             (NULL      ).as(outFile::mrcImage   ) ] :Optional  :Output: Conv*Dst to compare with in
+    [-O[utput]           OutASCII            (stdout    ).as(outFile::ASCII      ) ] :Optional  :Output: Param
+    [-O[utput]RMSD       OutRMSD             (NULL      ).as(outFile::mrcImage   ) ] :Optional  :Output: Param
+    [-thresCTF           thresCTF            (1e-4      ).as(Real                ) ] :Optional  :threshold CTF for InverseFilter
+    [-NSRatio            NSRatio             (0.0       ).as(Real                ) ] :Optional  :N/S Ratio for R-dependent Wiener Filter
+    [-NSCoeff            NSCoeff             (0.0       ).as(Real                ) ] :Optional  :N/S Coeff for R-dependent Wiener Filter
+    [-Pad3DMode          Pad3DMode           (1         ).as(Integer             ) ] :Optional  :lmrcImage3DPad Mode
+    [-r[max]             r                   (0         ).as(Real                ) ] :Optional  :Pad3D: [pix] Threshold radius of signal.Default is min(Nx,Ny).
+    [-w[idth]            w                   (1         ).as(Real                ) ] :Optional  :Pad3D: [pix] Width of slope. For mode 1.
+    [-v[alue]            v                   (0         ).as(Real                ) ] :Optional  :Pad3D: Value of out of threshold.
+    [-Floating                                                                     ] :Optional  :Pad3D: Floating
+    [-maxIter            maxIter             (0         ).as(Integer             ) ] :Optional  :maxIteration for Iterative
+    [-minRMSD            minRMSD             (0.0       ).as(Real                ) ] :Optional  :min of MRSD for Iterative
+    [-lambda             lambda              (0.5       ).as(Real                ) ] :Optional  :lambda for Iterative
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+Deconvolution Mode 
+0: No deconvolution
+1: CTF/|CTF| (phase flipping)
+2: CTF       (CTF-Multi)
+3: 1/CTF     (Inverse Filter)
+4: CTF/(SQR(CTF)+SQR(NS))  (Wiener Filter)
+5: SQR(CTF) x CTF/|CTF|    (phase flipping + ctfWeighted)
+6: 1/|CTF|                   (No phase-flipping: Inverse Filter)
+7: |CTF|/(SQR(CTF)+SQR(NS))  (No phase-flipping: Wiener Filter)
+8:  CTF /(SQR(CTF)+SQR(NS*exp(a*R)))  (phase-flipping:    Wiener Filter + Noise)
+9: |CTF|/(SQR(CTF)+SQR(NS*exp(a*R)))  (No phase-flipping: Wiener Filter + Noise)
+</PRE>
+</BODY>
+</HTML>

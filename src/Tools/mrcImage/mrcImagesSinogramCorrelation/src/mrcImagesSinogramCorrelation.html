@@ -1,1 +1,55 @@
-/bin/bash: mrcImagesSinogramCorrelation: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>mrcImagesSinogramCorrelation</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImagesSinogramCorrelation</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImagesSinogramCorrelation
+Options:
+    [-I[nputList]        In                  (NULL      ).as(inFileList          ) ] :Essential :InputDataFileList
+    [-o[utput]H[eader]   OutHeader           (test      ).as(String              ) ] :Optional  :OutputDataFileHeader
+    [-R[sults]d[irectoryname]Rd                  (Result    ).as(String              ) ] :Optional  :output results directory name
+    [-N[ormalCorrelation]d[irectoryname]Nd                  (Normal    ).as(String              ) ] :Optional  :directory name of output normalcorrelation in results directory
+    [-D[erivation]1[DCorrelation]d[irectoryname]D1d                 (Derivation1D).as(String              ) ] :Optional  :directory name of output derivation1Dcorrelation in results directory
+    [-D[erivation]2[DCorrelation]d[irectoryname]D2d                 (Derivation2D).as(String              ) ] :Optional  :directory name of output derivation2Dcorrelation in results directory
+    [-L[engthCorrelation]d[irectoryname]Ld                  (Length    ).as(String              ) ] :Optional  :directory name of output lengthcorrelation in results directory
+    [-C[orrelation]E[xtension]CorrelationExtension(cor       ).as(String              ) ] :Optional  :output correlation file extension
+    [-L[ist]E[xtension]  ListExtension       (list      ).as(String              ) ] :Optional  :output file list extension
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+    [-N[ormalCorrelation]m[ode]Nmode               (0         ).as(Integer             ) ] :Optional  :
+    [-D[erivation]1[DCorrelation]m[ode]D1mode              (0         ).as(Integer             ) ] :Optional  :
+    [-D[erivation]2[DCorrelation]m[ode]D2mode              (0         ).as(Integer             ) ] :Optional  :
+    [-L[engthCorrelation]m[ode]Lmode               (0         ).as(Integer             ) ] :Optional  :
+    [-L[ength]T[hreshold]M[ode]LengthThresholdMode (0         ).as(Integer             ) ] :Optional  :LengthThresholdMode
+    [-L[ength]T[hreshold]M[ode]LengthThresholdRatio(0.25      ).as(Real                ) ] :Optional  :LengthThresholdRatio
+    [-C[reate]M[ode]     CM                  (0         ).as(Integer             ) ] :Optional  :CreateMode
+
+----- create mode -----
+-CM : 0 : image of correlation and list
+      1 : list only
+
+----- mode -----
+>>Nmode  : 0 :     creat normal correlation       (-Nd)
+           1 : not creat normal correlation
+>>D1mode : 0 :     creat derivation1D correlation (-D1d)
+           1 : not creat derivation1D correlation
+>>D2mode : 0 :     creat derivation2D correlation (-D2d)
+           1 : not creat derivation2D correlation
+>>Lmode  : 0 :     creat length correlation       (-Ld, -LTM, -LTR)
+           1 : not creat length correlation
+
+----- directory and file -----
+>>create directory : Rd
+                   : Rd/Nd (D1d, D2d, Ld)
+
+>>create list file        : Rd/Nd/oH-Nd.LE
+                           (Result/Normal/test-Normal.list)
+
+>>create correlation file : Rd/Nd/infile1_infile2.Nd.CE
+                           (Result/Normal/test1_test2.Normal.cor)
+</PRE>
+</BODY>
+</HTML>

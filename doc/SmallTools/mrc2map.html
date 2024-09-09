@@ -1,1 +1,26 @@
-/bin/bash: mrc2map: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>mrc2map</TITLE>
+</HEAD>
+<BODY>
+<H1>mrc2map</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrc2map
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-noswap                                                                       ] :Optional  : NO Byte Swapping 
+    [-shiftx             shiftx              (0.0       ).as(Real                ) ] :Optional  :shiftx
+    [-shifty             shifty              (0.0       ).as(Real                ) ] :Optional  :shifty
+    [-shiftz             shiftz              (0.0       ).as(Real                ) ] :Optional  :shiftz
+    [-mul                mul                 (1.0       ).as(Real                ) ] :Optional  :mrc*mul
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode: 
+		0 : Same as mrc
+		1 : Helix(CentreIsOrigin)
+		2: BottomRight is Origin
+		3:Box Centre is a origin
+</PRE>
+</BODY>
+</HTML>

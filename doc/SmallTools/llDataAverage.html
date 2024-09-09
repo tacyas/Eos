@@ -1,1 +1,39 @@
-/bin/bash: llDataAverage: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>llDataAverage</TITLE>
+</HEAD>
+<BODY>
+<H1>llDataAverage</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: llDataAverage
+Options:
+    [-M[odel]            Model               (NULL      ).as(inFile              ) ] :Essential :Input: ModelFileName(llData)
+    [-i[nput]            In                  (NULL      ).as(inFileList          ) ] :Essential :Input: InputDataFile
+    [-l[ayer]            llInfo              (NULL      ).as(inFile              ) ] :Essential :Input: Layer Line Information
+    [-A[verage]          Ave                 (NULL      ).as(outFile             ) ] :Essential :Output: Averaged File Name
+    [-o[utput]           OutParam            (stdout    ).as(appendFile          ) ] :Optional  :Output: FittedParameter
+    [-o2[utput]          OutParam2           (NULL      ).as(outFileList         ) ] :Optional  :Output: FittedParameter(phi, z)
+    [-O[utput]           Out                 (NULL      ).as(outFileList         ) ] :Optional  :Output: FittedData
+    [-P2[plot]           P2                  (NULL      ).as(outFile             ) ] :Optional  :Output: P2PlotData
+    [-t[ruePitch]        truePitch           (1.0       ).as(Real                ) ] :Optional  :True Pitch
+    [-d[eltaR]           dR                  (1.0       ).as(Real                ) ] :Optional  :deltaR
+    [-r[adial]           rmin                (1.0       ).as(Real                ) 
+                         rmax                (1.0       ).as(Real                ) 
+                         dr                  (1.0       ).as(Real                ) ] :Optional  :Radial[Ratio]
+    [-p[hi]              phimin              (0.0       ).as(Real                ) 
+                         phimax              (180.0     ).as(Real                ) 
+                         dphi                (5.0       ).as(Real                ) ] :Optional  :Phi [degree]
+    [-z[shift]           zmin                (0.0       ).as(Real                ) 
+                         zmax                (60.0      ).as(Real                ) 
+                         dz                  (5.0       ).as(Real                ) ] :Optional  :z [A]
+    [-withoutAntiPole                                                              ] :Optional  :Not Allow Antipole
+    [-C[utValue]         CutValue            (1.0       ).as(Real                ) ] :Optional  :CutValue
+    [-pvm                pvm                 (0         ).as(Integer             ) ] :Optional  :PVM: 
+    [-pvmList            pvmList             (stdin     ).as(inFile              ) ] :Optional  :PVM: HostList
+    [-pvmList            Log                 (stdout    ).as(appendFile          ) ] :Optional  :PVM: HostList
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+</PRE>
+</BODY>
+</HTML>

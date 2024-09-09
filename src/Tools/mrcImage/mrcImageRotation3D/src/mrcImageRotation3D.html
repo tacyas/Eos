@@ -1,1 +1,31 @@
-/bin/bash: mrcImageRotation3D: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>mrcImageRotation3D</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageRotation3D</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageRotation3D
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :Input: mrc
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :Output: mrc
+    [-E[uler]A[ngle]     EulerAngle          (YOYS      ).as(String              ) 
+                         Rot1                (0.0       ).as(Real                ) 
+                         Rot2                (0.0       ).as(Real                ) 
+                         Rot3                (0.0       ).as(Real                ) ] :Optional  :Input: Euler Angle
+    [-N                  Nx                  (-1        ).as(Integer             ) 
+                         Ny                  (-1        ).as(Integer             ) 
+                         Nz                  (-1        ).as(Integer             ) ] :Optional  :OutputImageSize
+    [-M[ode]             Mode                (2         ).as(Integer             ) ] :Optional  :InterpolationMode
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+-m 
+ 0: padding 0 
+ 1: padding average 
+ +0:  within ellipsoidal area.
+ +16: within square area.
+</PRE>
+</BODY>
+</HTML>

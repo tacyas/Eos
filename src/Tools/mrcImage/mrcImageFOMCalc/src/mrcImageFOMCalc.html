@@ -1,1 +1,36 @@
-/bin/bash: mrcImageFOMCalc: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>mrcImageFOMCalc</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageFOMCalc</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageFOMCalc
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Optional  :TestData
+    [-w[eight]           Weight              (1.0       ).as(Real                ) ] :Optional  :Weight
+    [-I[nput]            InList              (NULL      ).as(inFileList          ) ] :Optional  :TestData Set
+    [-r[ef]              Ref                 (NULL      ).as(inFile              ) ] :Essential :Ref, Model Data
+    [-o[utput]           Out                 (stdout    ).as(outFile             ) ] :Optional  :Output: 
+    [-RR[ange]           Rmin                (0.0       ).as(Real                ) 
+                         Rmax                (0.1       ).as(Real                ) ] :Optional  :Ring Range
+    [-dR[ange]           dR                  (0.0       ).as(Real                ) ] :Optional  :Ring Width
+    [-nS[ector]          nSector             (1         ).as(Integer             ) ] :Optional  :Sector Number
+    [-dA[lpha]           dAlpha              (5         ).as(Real                ) ] :Optional  :delta Alpha
+    [-XMax               XMax                (0.0       ).as(Real                ) ] :Optional  :Xmax: If not set, one calc Xmax
+    [-A[uto]S[cale]                                                                ] :Optional  :Auto Scaling
+    [-A[llArea]A[uto]S[cale]AASRMax             (0.05      ).as(Real                ) ] :Optional  :All Area Auto Scaling
+    [-RS[cale]                                                                     ] :Optional  :R Scaling
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+>> -I FileFormat 
+mrc[0]   weight[0]
+mrc[1]   weight[1]
+.....
+mrc[n-1] weight[n-1]
+This algorithm is originated from K. Yonekura for Layer Lines. Nature/SupplmentTable 2 
+</PRE>
+</BODY>
+</HTML>

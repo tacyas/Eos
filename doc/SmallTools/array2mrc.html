@@ -1,1 +1,39 @@
-/bin/bash: array2mrc: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>array2mrc</TITLE>
+</HEAD>
+<BODY>
+<H1>array2mrc</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: array2mrc
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-a[xisOrder]        ax                  (1         ).as(Integer             ) 
+                         ay                  (2         ).as(Integer             ) 
+                         az                  (3         ).as(Integer             ) ] :Optional  :AxisOrder
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+    [-m[ode]m[rcimage]   mm                  (2         ).as(Integer             ) ] :Optional  :Mode of mrcImage
+    [-l[ength]m[rcimage] lm                  (0         ).as(Real                ) ] :Optional  :Length of mrcImage
+    [-l[ength]m[rcimage]3lmx                 (0         ).as(Real                ) 
+                         lmy                 (0         ).as(Real                ) 
+                         lmz                 (0         ).as(Real                ) ] :Optional  :Length of mrcImage
+----- Additional Usage -----
+-- Attension --
+Array format : left-hand
+mrc   format : right-hand
+---------------
+>>> Array Format under Eos. 'nvalue' indicates the number of values in one line, in usual case, nvalue=N0. If so, you need not define nvalue.<<<<
+ndim N0 N1 N2 ... [nvalue]
+data(0,   0,   0,...,        0) data(1,   0,   0,...,        0) data(2,   0,   0,...,        0) ... data(N0-1,   0,   0,...,        0)
+data(0,   1,   0,...,        0) data(1,   1,   0,...,        0) data(2,   1,   0,...,        0) ... data(N0-1,   1,   0,...,        0)
+..............................................................
+data(0,N1-1,   0,...,        0) data(1,N1-1,   0,...,        0) data(2,N1-1,   0,...,        0) ... data(N0-1,N1-1,   0,...,        0)
+data(0,   0,   1,...,        0) data(1,   0,   1,...,        0) data(2,   0,   1,...,        0) ... data(N0-1,   0,   1,...,        0)
+..............................................................
+data(0,N1-1,N2-1,...,Nndim-1-1) data(1,N1-1,N2-1,...,Nndim-1-1) data(2,N1-1,N2-1,...,Nndim-1-1) ... data(N0-1,N1-1,N2-1,...,Nndim-1-1)
+</PRE>
+</BODY>
+</HTML>

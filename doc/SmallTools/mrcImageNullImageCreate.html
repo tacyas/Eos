@@ -1,1 +1,27 @@
-/bin/bash: mrcImageNullImageCreate: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>mrcImageNullImageCreate</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageNullImageCreate</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageNullImageCreate
+Options:
+    [-o[utput]           Out                 (NULL      ).as(outFile::mrcImage   ) ] :Essential :OutputDataFile
+    [-r[eference]        Ref                 (NULL      ).as(inFile::mrcImage    ) ] :Optional  :Input: Reference Header
+    [-Nx[Number of x]    Nx                  (0         ).as(Integer             ) ] :Optional  :Nx:Default Nx of inputfile
+    [-Ny[Number of y]    Ny                  (0         ).as(Integer             ) ] :Optional  :Ny:Default Ny of inputfile
+    [-Nz[Number of z]    Nz                  (0         ).as(Integer             ) ] :Optional  :Nz:Default Nz of inputfile
+    [-v[alue]            Value               (0.0       ).as(Real                ) ] :Optional  :Value of pixel
+    [-d[elta]            d                   (0.0       ).as(Real                ) ] :Optional  :Pixel size
+    [-M[ode]             Mode                (2         ).as(Integer             ) ] :Optional  :ImageMode: 0 char 1 short 2 Float
+    [-Def[ault]                                                                    ] :Optional  :DefaultFixedValueSet
+    [-c[onfig]           configFile          (NULL      ).as(inFile::ASCII       ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+-r is used to define a reference header.
+-Nx etc. are used preferentially.
+</PRE>
+</BODY>
+</HTML>

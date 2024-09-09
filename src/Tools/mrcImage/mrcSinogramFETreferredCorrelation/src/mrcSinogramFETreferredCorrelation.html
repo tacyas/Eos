@@ -1,1 +1,41 @@
-/bin/bash: mrcSinogramFETreferredCorrelation: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>mrcSinogramFETreferredCorrelation</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcSinogramFETreferredCorrelation</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcSinogramFETreferredCorrelation
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :InputFETDataFileList
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputEulerAngleDataFileList
+    [-i[nput]Ref         InR                 (NULL      ).as(inFile              ) ] :Essential :InputReferenceFETDataFileList
+    [-i[nput]Euler       InE                 (NULL      ).as(inFile              ) ] :Essential :InputEulerAngleDataFile
+    [-n[ormalize]m[ode]  NM                  (0         ).as(Integer             ) ] :Optional  :normalizeMode
+    [-o[utputList]m[ode] OM                  (2         ).as(Integer             ) ] :Optional  :outputListMode
+    [-t[op]n[um]         TN                  (10        ).as(Integer             ) ] :Optional  :top number
+    [-refR[ange]         RR                  (15        ).as(Integer             ) ] :Optional  :reference select Range
+    [-w[eight]           WEIGHT              (NULL      ).as(inFile              ) ] :Optional  :CorrelationCalcWeight
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+
+Input EulerAngleDataFile example
+file1	YOYS	-30	60	0
+file2	YOYS	-53.24	10.000	0
+...
+
+normalizeMode 0 : normalize with average and SD of whole inputfile
+                  references and datas will be normalize independently
+              1 : for using normalized inputFETdata
+
+outputListMode 0 : output anglelist  only top1 angle set
+               1 :                   selected angle sets
+               2 :                   top -tn angle sets
+   option -tn,-refR are for outputListMode!=0
+    -tn   : number of referenceMaps be considerd in selection
+    -refR : step size when generate referenceMapSet from 3D image is recommend
+</PRE>
+</BODY>
+</HTML>

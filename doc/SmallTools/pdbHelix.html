@@ -1,1 +1,37 @@
-/bin/bash: pdbHelix: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>pdbHelix</TITLE>
+</HEAD>
+<BODY>
+<H1>pdbHelix</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: pdbHelix
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Optional  :OutputDataFile
+    [-3[D]               Out3D               (NULL      ).as(outFile             ) ] :Optional  :OutputDataFile(3D-mrc)
+    [-2[D]               Out2D               (NULL      ).as(outFile             ) ] :Optional  :OutputDataFile(2D-mrc projection(y-z))
+    [-d[elta]            delta               (5         ).as(Real                ) ] :Optional  :delta[A](mrc-file)
+    [-p[delphi]          delphi              (165       ).as(Real                ) ] :Essential :deltaPhi
+    [-dp[delphi]         deldelphi           (5         ).as(Real                ) ] :Optional  :deltaDeltaPhi
+    [-z[deltaz]          delz                (5         ).as(Real                ) ] :Essential :deltaz
+    [-n[Molecule]        nMolecule           (1         ).as(Integer             ) ] :Essential :NumberOfMolecules
+    [-nx                 nx                  (1         ).as(Integer             ) ] :Optional  :Pixel[Def:]
+    [-ny                 ny                  (1         ).as(Integer             ) ] :Optional  :Pixel[Def:]
+    [-nz                 nz                  (1         ).as(Integer             ) ] :Optional  :Pixel[Def:]
+    [-Sx[tart]           Startx              (0.0       ).as(Real                ) ] :Optional  :Startx[A]
+    [-Sy[tart]           Starty              (0.0       ).as(Real                ) ] :Optional  :Starty[A]
+    [-Sz[tart]           Startz              (0.0       ).as(Real                ) ] :Optional  :Startz[A]
+    [-w[eight]           Weight              (1.0       ).as(Real                ) ] :Optional  :Weight
+    [-dx                 dx                  (2.5       ).as(Real                ) ] :Optional  :dx
+    [-dy                 dy                  (2.5       ).as(Real                ) ] :Optional  :dy
+    [-dz                 dz                  (2.5       ).as(Real                ) ] :Optional  :dz
+    [-startn             startn              (0         ).as(Integer             ) ] :Optional  :start molecule's index
+    [-startC             startID             (A         ).as(Character           ) ] :Optional  :start chain ID
+    [-deltaSeq           deltaSeq            (1000      ).as(Integer             ) ] :Optional  :start chain ID
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+</PRE>
+</BODY>
+</HTML>

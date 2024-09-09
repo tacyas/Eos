@@ -1,1 +1,48 @@
-/bin/bash: FETOrientationSearchByFeatureAlignment: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>FETOrientationSearchByFeatureAlignment</TITLE>
+</HEAD>
+<BODY>
+<H1>FETOrientationSearchByFeatureAlignment</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: FETOrientationSearchByFeatureAlignment
+Options:
+    [-i[nput]            InS                 (NULL      ).as(inFile              ) ] :Optional  :InputSinogramList
+    [-i[nput]2           InS2                (NULL      ).as(inFile              ) ] :Optional  :InputMoreSinogramList
+    [-I[nputFET]         InF                 (NULL      ).as(inFile              ) ] :Optional  :InputFETfileList
+    [-i[nput]a[ngle]     InA                 (NULL      ).as(inFile              ) ] :Optional  :inputAngleList
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Optional  :OutputDataFile
+    [-o[ut]clog          OutLOG              (NULL      ).as(outFile             ) ] :Optional  :OutputCorValueLogFile
+    [-o[ut]a[ngle]       OutA                (NULL      ).as(outFile             ) ] :Optional  :OutputAngleList
+    [-o[ut]2d            Out2D               (NULL      ).as(outFile             ) ] :Optional  :OutputAngleListFormrc3Dto2D
+    [-itm[ax]            ITMAX               (8         ).as(Integer             ) ] :Optional  :iterationMax
+    [-dvm[ax]            DEVMAX              (3         ).as(Integer             ) ] :Optional  :sphereDevideMax
+    [-mitm[ax]           MITMAX              (3         ).as(Integer             ) ] :Optional  :iterationMax Multiple
+    [-mdvm[ax]           MDEVMAX             (3         ).as(Integer             ) ] :Optional  :sphereDevideMax Multiple
+    [-ldn[um]            LDN                 (8         ).as(Integer             ) ] :Optional  :LongaxisDevideNum
+    [-srl[imit]          SRL                 (0.0       ).as(Real                ) ] :Optional  :sphereReconstLimit
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (202       ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+Either -i or -I is essential option.
+Input FETimages: smoothed image is recommend.
+   when you don't have smoothed image, input sinograms is better.
+-ia InputAngleList option is for using handover angledata 
+  input file is from -oa option of previous calculation.
+-ldn option do not work
+mode ABC
+	A=0: calc single initial-set, output single angle-set
+	A=1: calc multi initial-sets, output multi angle-sets
+	A=2: calc multi initial-sets, output selected one angle-set
+	B=0: 
+	C=0: 4 images selected by 90degree rule, consist initial-set, for A=0
+	C=1: 1 image of image has largest radius consists initial-set, for A=0,1,2
+	C=2: 2 images of image has largest radius consist initial-set, for A=1,2
+	C=3: all images with random angles consist initial-set, for A=0,1,2
+   
+-itm, -dvm option is for mode A=0,2	-itm >= -dvm , -dvm <= 3
+-mitm, -mdvm option is for mode A=1,2	-mitm >= -mdvm , -mdvm <= 3 , -mitm <= -itm
+</PRE>
+</BODY>
+</HTML>

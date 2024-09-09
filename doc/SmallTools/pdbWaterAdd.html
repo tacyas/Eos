@@ -1,1 +1,30 @@
-/bin/bash: pdbWaterAdd: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>pdbWaterAdd</TITLE>
+</HEAD>
+<BODY>
+<H1>pdbWaterAdd</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: pdbWaterAdd
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-d[ensity]          Density             (55.55555  ).as(Real                ) ] :Optional  :[M]: Density of Water
+    [-r[adius]           Radius              (100.      ).as(Real                ) ] :Optional  :[A]: Radius of Water Volume: Sphere, Cylinder
+    [-height             Height              (100.      ).as(Real                ) ] :Optional  :[A]: Height of Water Volume : Cylinder
+    [-cube               X                   (100.      ).as(Real                ) 
+                         Y                   (100.      ).as(Real                ) 
+                         Z                   (100.      ).as(Real                ) ] :Optional  :[A]: Cube
+    [-edge               Edge                (3.        ).as(Integer             ) ] :Optional  :layer number: Edge
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+----- Mode: -m  -----
+-m 0 :  sphere   
+-m 1 :  cylinder 
+-m 2 :  Edge     
+-m 3 :  Cube     
+</PRE>
+</BODY>
+</HTML>

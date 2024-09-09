@@ -1,1 +1,32 @@
-/bin/bash: mrcImageCircumferentialProjection: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>mrcImageCircumferentialProjection</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageCircumferentialProjection</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageCircumferentialProjection
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-dang               dang                (10        ).as(Real                ) ] :Optional  :Delta Angle[degree]
+    [-zmin               zmin                (0         ).as(Real                ) ] :Optional  :Z Minimum[A]
+    [-zmax               zmax                (100       ).as(Real                ) ] :Optional  :Z Maximum[A]
+    [-dz                 dz                  (10        ).as(Real                ) ] :Optional  :Delta Z[A]
+    [-rmin               rmin                (0         ).as(Real                ) ] :Optional  :Radius Minimum[A]
+    [-rmax               rmax                (200       ).as(Real                ) ] :Optional  :Radius Maximum[A]
+    [-threshold          threshold           (0         ).as(Real                ) ] :Optional  :Set threshold value.  Averaged density is more than threshold value
+    [-dr                 dr                  (10        ).as(Real                ) ] :Optional  :Delta Radius[A]
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+x --> r
+y --> z
+--------- mode ---------
+0: Out Put Averaged Density (dataSum = dataSum / nang)
+1: Out Put Added    Density (dataSum = dataSum / nang *(2*PI*r))
+2: Out Put Averaged Density more than threshold (dataSum = dataSum / [nang number more than threshold value] *(2*PI*r))
+</PRE>
+</BODY>
+</HTML>

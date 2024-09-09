@@ -1,1 +1,39 @@
-/bin/bash: mrcImageMasking: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>mrcImageMasking</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageMasking</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageMasking
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile              ) ] :Essential :InputDataFile
+    [-o[utput]           Out                 (NULL      ).as(outFile             ) ] :Essential :OutputDataFile
+    [-nx                 nx                  (0         ).as(Real                ) ] :Optional  :[pix] Default:in.HeaderN.x
+    [-ny                 ny                  (0         ).as(Real                ) ] :Optional  :[pix]  Default:in.HeaderN.y
+    [-nz                 nz                  (0         ).as(Real                ) ] :Optional  :[pix] Default:in.HeaderN.z
+    [-cx                 cx                  (0         ).as(Real                ) ] :Optional  :[pix] Default:Center of image
+    [-cy                 cy                  (0         ).as(Real                ) ] :Optional  :[pix] Default:Center of image
+    [-cz                 cz                  (0         ).as(Real                ) ] :Optional  :[pix] Default:Center of image
+    [-Rot[ation]         Euler               (0         ).as(String              ) 
+                         Rot1                (0         ).as(Real                ) 
+                         Rot2                (0         ).as(Real                ) 
+                         Rot3                (0         ).as(Real                ) ] :Optional  :Masking Area Rotation Default: ZONS 0 0 0
+    [-Shape              Shape               (0         ).as(Integer             ) ] :Optional  :Default:Sphere
+    [-Soft[Edge]         Soft                (0         ).as(Integer             ) ] :Optional  :Default:
+    [-SoftWidth          SoftWidth           (0.0       ).as(Real                ) ] :Optional  :[pix] Default:
+    [-Normalize          Normalize           (0         ).as(Integer             ) ] :Optional  :Default:No Op
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- -Shape Option ----- 
+    -Shape 0 : Sphere: radius(nx, ny, nz)
+    -Shape 1 : Square : nx x ny x nz
+    -Shape 2 : Cylinder: radius(nx, ny) x nz
+----- -m Option----- 
+    -m 0 : masked by avg
+    -m 1 : masked by 0
+    -m 2 : masked by 1
+</PRE>
+</BODY>
+</HTML>

@@ -1,1 +1,42 @@
-/bin/bash: llDataMultiCTFCompensation: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>llDataMultiCTFCompensation</TITLE>
+</HEAD>
+<BODY>
+<H1>llDataMultiCTFCompensation</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: llDataMultiCTFCompensation
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFileList          ) ] :Essential :Input: FileList
+    [-M[odel]            Ref                 (NULL      ).as(inFile              ) ] :Essential :Input: Model Data
+    [-l[ayerLine]        llInfo              (NULL      ).as(inFile              ) ] :Essential :Input: Layer Line Information
+    [-A[verageFile]      Ave                 (NULL      ).as(outFile             ) ] :Essential :Output: AverageFile
+    [-o[utput]           OutParam            (NULL      ).as(appendFile          ) ] :Optional  :Output: FittedParameter
+    [-O[utput]           Out                 (NULL      ).as(outFileList         ) ] :Optional  :Output: FileList:  PhaseShift of Each Filament
+    [-o2[utput]          OutParam2           (NULL      ).as(outFileList         ) ] :Optional  :Output: [phi, z] map
+    [-P2[output]         OutParamP2          (NULL      ).as(outFile             ) ] :Optional  :Output: For P-P' 
+    [-N[oise]            Noise               (0.0       ).as(Real                ) ] :Optional  :Noise Ratio
+    [-t[ruePitch]        truePitch           (761.4     ).as(Real                ) ] :Essential :truePitch[A]
+    [-d[eltaR]           deltaR              (1.0       ).as(Real                ) ] :Optional  :deltaR[A]
+    [-r[adial]           rmin                (1.0       ).as(Real                ) 
+                         rmax                (1.0       ).as(Real                ) 
+                         dr                  (1.0       ).as(Real                ) ] :Optional  :Radial[Ratio]
+    [-p[hi]              phimin              (0.0       ).as(Real                ) 
+                         phimax              (180.0     ).as(Real                ) 
+                         dphi                (1.0       ).as(Real                ) ] :Optional  :Phi [degree]
+    [-z[shift]           zmin                (0.0       ).as(Real                ) 
+                         zmax                (180.0     ).as(Real                ) 
+                         dz                  (1.0       ).as(Real                ) ] :Optional  :z [A]
+    [-Rmax               Rmax                (0.1       ).as(Real                ) ] :Optional  :Rmax [/A]
+    [-MaxIter[ation]     MaxIter             (1         ).as(Integer             ) ] :Optional  :MaxIteration
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+---- InputFileFormat ----
+filename weight(NumberOfAveragedFile) deltaF[A] Cs[mm] kV[kV] ratioOfAmpToPhase
+----- Mode -----
+    0: |CTFi|/Sigma(SQR(CTFi))
+    1:  CTFi /Sigma(SQR(CTFi))
+</PRE>
+</BODY>
+</HTML>

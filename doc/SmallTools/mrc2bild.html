@@ -1,1 +1,52 @@
-/bin/bash: mrc2bild: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>mrc2bild</TITLE>
+</HEAD>
+<BODY>
+<H1>mrc2bild</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrc2bild
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile::mrcImage    ) ] :Optional  :Input:mrcImage
+    [-i[nput]3           In0                 (NULL      ).as(inFile::mrcImage    ) 
+                         In1                 (NULL      ).as(inFile::mrcImage    ) 
+                         In2                 (NULL      ).as(inFile::mrcImage    ) ] :Optional  :Input:mrcImagex3
+    [-i[nput]4           InX                 (NULL      ).as(inFile::mrcImage    ) 
+                         InY                 (NULL      ).as(inFile::mrcImage    ) 
+                         InZ                 (NULL      ).as(inFile::mrcImage    ) 
+                         InWeight            (NULL      ).as(inFile::mrcImage    ) ] :Optional  :Input:mrcImagex4
+    [-o[utput]           Out                 (stdout    ).as(outFile::BILD       ) ] :Essential :OutputDataFile
+    [-color              Red                 (1.0       ).as(Real                ) 
+                         Green               (1.0       ).as(Real                ) 
+                         Blue                (1.0       ).as(Real                ) ] :Optional  :Color
+    [-zoom               Zoom                (1.0       ).as(Real                ) ] :Optional  :Zoom
+    [-arrow[Shape]       R1                  (0.1       ).as(Real                ) 
+                         R2                  (0.4       ).as(Real                ) 
+                         Rho                 (0.75      ).as(Real                ) ] :Optional  :Arrow
+    [-skip               skipX               (1         ).as(Integer             ) 
+                         skipY               (1         ).as(Integer             ) 
+                         skipZ               (1         ).as(Integer             ) ] :Optional  :SkipVoxel
+    [-rainbow            RainbowMode         (0         ).as(Integer             ) ] :Optional  :Raibow
+    [-rainbowThresLow    RainbowThresLow     (0         ).as(Real                ) ] :Optional  :RainbowTresLow(color)
+    [-rainbowThresHigh   RainbowThresHigh    (0         ).as(Real                ) ] :Optional  :RainbowTresLow(color)
+    [-rainbowRangeLow    RainbowRangeLow     (0         ).as(Real                ) ] :Optional  :RainbowRange(visible)
+    [-rainbowRangeHigh   RainbowRangeHigh    (0         ).as(Real                ) ] :Optional  :RainbowRange(visible)
+    [-rangeX             RangeXMin           (0         ).as(Real                ) 
+                         RangeXMax           (-1        ).as(Real                ) ] :Optional  :RangeX
+    [-rangeY             RangeYMin           (0         ).as(Real                ) 
+                         RangeYMax           (-1        ).as(Real                ) ] :Optional  :RangeY
+    [-rangeZ             RangeZMin           (0         ).as(Real                ) 
+                         RangeZMax           (-1        ).as(Real                ) ] :Optional  :RangeZ
+    [-rangeR             RangeRCX            (0         ).as(Real                ) 
+                         RangeRCY            (0         ).as(Real                ) 
+                         RangeRCZ            (0         ).as(Real                ) 
+                         RangeRR             (0         ).as(Real                ) ] :Optional  :RangeR
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+0: Arrows
+1: Spheres
+</PRE>
+</BODY>
+</HTML>

@@ -1,1 +1,41 @@
-/bin/bash: mrcImageBinalization: No such file or directory
+<HTML>
+<HEAD>
+<TITLE>mrcImageBinalization</TITLE>
+</HEAD>
+<BODY>
+<H1>mrcImageBinalization</H1>
+<H2>Usage</H2>
+<PRE>
+Usage: mrcImageBinalization
+Options:
+    [-i[nput]            In                  (NULL      ).as(inFile::mrcImage    ) ] :Essential :Input:mrcImage
+    [-o[utput]           Out                 (NULL      ).as(outFile::mrcImage   ) ] :Essential :Output:mrcImage
+    [-O[utput]           OutParam            (stdout    ).as(outFile::ASCII      ) ] :Optional  :Output:Parameters
+    [-t[hreshold]        t                   (0         ).as(Real                ) ] :Optional  :Value of threshold
+    [-d[elta]t[hreshold] deltaThreshold      (0         ).as(Real                ) ] :Optional  :Difference threshold
+    [-s[igma]t[hreshold] sigmaThreshold      (0.5       ).as(Real                ) ] :Optional  :Sigma threshold(BandPath)
+    [-v[alue]            v                   (0         ).as(Real                ) ] :Optional  :Value
+    [-near               near                (0         ).as(Real                ) ] :Optional  :Near[pixel]: Near-area also binary
+    [-nLevel             nLevel              (256       ).as(Integer             ) ] :Optional  :nLevel: For creating histgram by Kittler and Ohtsu 
+    [-c[onfig]           configFile          (NULL      ).as(inFile              ) ] :Optional  :ConfigurationFile
+    [-p[tile]            p                   (0.5       ).as(Real                ) ] :Optional  :p
+    [-m[ode]             mode                (0         ).as(Integer             ) ] :Optional  :Mode
+----- Additional Usage -----
+----- Additional Usage -----
+mode 0: Under thresHold, 0.     Above thresHold, 1.
+     1: Above thresHold, 0.     Under thresHold, 1.
+     2: Under thresHold, value. Above thresHold, unchanged.
+     3: Above thresHold, value. Under thresHold, unchanged.
+     4: thresHold +- sigma, 1.     Others 0.
+     5: thresHold +- sigma, 0.     Others 1.
+     6: thresHold +- sigma, unchanged. Others value.
+     7: thresHold +- sigma, value.     Others unchanged.
+     +16: Automatically Determine threshold by Kittler Method
+     +32: Automatically Determine threshold by Ohtsu Method
+     +48: Automatically Determine threshold by p-tile Method
+          p range: 0.0 - 1.0
+     +64: Automatically Determine threshold by Differential-Histogram Method
+     +80: Automatically Determine threshold by Laplacian-Histogram Method
+</PRE>
+</BODY>
+</HTML>
