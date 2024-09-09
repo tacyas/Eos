@@ -1,0 +1,29 @@
+SOURCE=\
+array2mrc \
+bin2mrc \
+bmp2mrc \
+dm2mrc \
+dmInfo \
+dos2unix \
+emData2mrc \
+imodst2mrc \
+ip2mrc \
+moi2mrc \
+mrc2ascii \
+mrc2bild \
+mrc2fld \
+mrc2gif \
+mrc2hdf \
+mrc2lattice \
+mrc2mrc \
+mrc2png \
+mrc2pov \
+mrc2tiff \
+mrc2viff \
+mrcImage2FFT \
+pdb2ucd \
+raw2mrc \
+test2 \
+tgaInfo \
+tiff2mrc \
+#LastSource

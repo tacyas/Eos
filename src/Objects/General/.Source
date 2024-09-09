@@ -1,0 +1,29 @@
+SOURCE=\
+AI \
+Array \
+Cluster \
+Crystal \
+DataBase \
+Eos \
+File \
+Map2D \
+Matrix3D \
+Memory \
+PVM \
+Random \
+Raw \
+Socket \
+SpecialNumber \
+Vector \
+dummy \
+eosBayes \
+eosCuda \
+eosFunc \
+eosList \
+eosMath \
+eosPThread \
+eosPoint \
+eosString \
+eosXMAIL \
+genUtil \
+#LastSource

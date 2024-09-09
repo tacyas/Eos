@@ -1,0 +1,13 @@
+SOURCE=\
+Display2 \
+Display3 \
+Eos \
+StereoDisplay \
+Visualmake \
+X86MAC64 \
+ctfDisplay \
+imagesClustering \
+imagesView \
+obj3Don2DImageView \
+smolet \
+#LastSource

@@ -9,8 +9,8 @@
 */*/*/*/*/*/*/.EosLog
 
 src/Objects/*/*/doc/*.orig
-src/*/.Source
-src/*/*/.Source
+#src/*/.Source
+#src/*/*/.Source
 
 # Test
 src/Tools/Test/
